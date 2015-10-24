@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_nzm_qxr_tt">
+	<title>Adding Default Attributes</title>
+	<body>
+		<section xslt-conref="explicitly.xsl"/>
+		<section xslt-conref="by-validation.xsl"/>
+		<!--<section xslt-conref="by-type.xsl"/>-->
+		<!-- not working yet, no idea why... -->
+		<section xslt-conref="by-xsd-schema.xsl"/>
+		<section xslt-conref="by-rng-schema.xsl"/>
+	</body>
+</topic>

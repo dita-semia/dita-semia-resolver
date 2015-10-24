@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	
+	<define name="univ-atts" combine="interleave">
+		<optional>
+			<attribute name="xslt-conref"/>
+		</optional>
+		<zeroOrMore>
+			<attribute>
+				<nsName ns="http://www.dita-semia.org/xslt-conref/custom-parameter"/>
+			</attribute>
+		</zeroOrMore>
+	</define>
+
+</grammar>

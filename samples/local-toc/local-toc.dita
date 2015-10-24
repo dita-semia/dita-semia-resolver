@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t">
+  <title>Master Reference</title>
+  <refbody>
+		<section xslt-conref="local-toc.xsl"/>
+	</refbody>
+	<reference id="zt3_52l_tt">
+		<title>1st Reference Topic</title>
+		<shortdesc>This reference contains some information.</shortdesc>
+	</reference>
+	<reference id="xhl_1fl_tt">
+		<title>2nd Reference Topic</title>
+		<shortdesc>This reference contains even more information.</shortdesc>
+	</reference>
+</reference>

@@ -28,5 +28,19 @@ Not done yet.
 ## Samples
 The samples are located in a dedicated samples folder. There is an oXygen project as well hich additionally provides a transformation scenario that resolves the xslt-conrefs on xml level and returns the result.
 
+### adding-default-attr
+This folder contains a single sample with multiple xslt-conrefs demonstrating the different ways you can use to generate the required default attributes (esp. @class):
+- explicitly.xsl: Just add them explicitly when creating an element.
+- by-validation.xsl: Using a schema-aware transformer and importing your schema you can use @xsl:validate. (This only works when your schema is in xsd format.)
+- by-type.xsl: Using a schema-aware transformer and importing your schema you can use @xsl:type. (This only works when your schema is in xsd format.)
+- by-xsd-schema.xsl: You can use @xsi:noNamespaceSchemaLocation in your root element. The attributes will be generated when reparsing your result.
+- by-rng-schema.xsl: You can use <?xml-model href="..." ...?> in your result document. The attributes will be generated when reparsing your result.
+
 ### local-toc
 This sample consists of a reference topic containing child reference topics. The xslt-conref generates an overview of the child topics as unordered list with their titles, their short descriptions and a cross reference.
+
+
+## Compiling
+To compile it with eclipse you have to set the variable OXYGENXML locating the oXyen installation folder (e.g. "C:/Program Files/Oxygen XML Editor"). This needs to be done twice:
+- Eclipse Path variable: Window -> Preferences -> Java -> Build Path -> Classpath Variables
+- For the Ant Builder: Window -> Preferences -> Ant -> Runtime -> Properties
