@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_t4s_vvs_4t">
+  <title>Topic</title>
+  <body>
+		<section>
+			<title>Invalid script url</title>
+			<p id="cxz_ng4_5t" xslt-conref="invalid script"/>
+		</section>
+		<section>
+			<title>Invalid script</title>
+			<p id="sw4_zg4_5t" xslt-conref="invalid-script.xsl"/>
+		</section>
+		<section>
+			<title>Valid script</title>
+			<p id="c3p_bh4_5t" xslt-conref="valid-script.xsl"/>
+		</section>
+	</body>
+</topic>

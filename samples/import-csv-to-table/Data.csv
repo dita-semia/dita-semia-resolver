@@ -1,0 +1,6 @@
+Header 1;Header 2;Header 3
+Data 1.1;Data 1.2;Data 1.3
+Data 2.1;Data 2.2;Data 2.3
+"Text with ""quotation marks""...";"Text
+with
+newlines";"Text;with;Semicolons"

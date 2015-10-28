@@ -16,19 +16,22 @@
     		<xcr:resolve select="."/>
     	</xsl:variable>
     	
-    	<xsl:copy>
-    		
-    		<!-- keep all attributes not related to xslt-conref -->
-    		<xsl:copy-of select="@* except (@xslt-conref, @xslt-conref-sourcce, @xc:*, @xcp:*)"/>
-    		
-    		<!-- copy all attributes from resolved element that don't exist in the original element and are not in the xc-namespace -->
-    		<xsl:variable name="ExistingAttrNameList" as="xs:string*" select="for $i in @* return name($i)"/>
-    		<xsl:copy-of select="$Resolved/@*[not(name(.) = $ExistingAttrNameList)] except $Resolved/@xc:*"/>
+    	<xsl:if test="name($Resolved) != 'no-content'">
+	    	<xsl:copy>
+	    		
+	    		<!-- keep all attributes not related to xslt-conref -->
+	    		<xsl:copy-of select="@* except (@xslt-conref, @xslt-conref-sourcce, @xc:*, @xcp:*)"/>
+	    		
+	    		<!-- copy all attributes from resolved element that don't exist in the original element and are not in the xc-namespace -->
+	    		<xsl:variable name="ExistingAttrNameList" as="xs:string*" select="for $i in @* return name($i)"/>
+	    		<xsl:copy-of select="$Resolved/@*[not(name(.) = $ExistingAttrNameList)] except $Resolved/@xc:*"/>
+	
+	    		<!-- copy all content -->
+	    		<xsl:copy-of select="$Resolved/node()"/>
+	    		
+	    	</xsl:copy>
+    	</xsl:if>
 
-    		<!-- copy all content -->
-    		<xsl:copy-of select="$Resolved/node()"/>
-    		
-    	</xsl:copy>
     </xsl:template>
 	
 </xsl:stylesheet>

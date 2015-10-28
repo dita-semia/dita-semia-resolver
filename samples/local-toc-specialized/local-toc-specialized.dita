@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="reference-with-local-toc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="reference-with-local-toc.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t">
+  <title>Specialized Local Table of Contents</title>
+  <refbody>
+		<section>
+			<title>Overview</title>
+			<local-toc id="swn_wlv_5t"/>
+		</section>
+	</refbody>
+	<reference id="zt3_52l_tt">
+		<title>Reference Topic 1</title>
+		<shortdesc>This reference contains some information.</shortdesc>
+		<refbody>
+			<section>
+				<p id="cvh_xz5_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+					nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+					voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
+					ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+					invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
+					et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+					takimata sanctus est Lorem ipsum dolor sit amet.</p>
+			</section>
+		</refbody>
+	</reference>
+	<reference id="xhl_1fl_tt">
+		<title>Reference Topic 2</title>
+		<shortdesc>This reference contains even more information.</shortdesc>
+		<refbody>
+			<section>
+				<title>Overview</title>
+				<local-toc id="hjx_5jv_5t"/>
+			</section>
+		</refbody>
+		<reference id="kl5_mgv_5t">
+			<title>Child Reference Topic 2.1</title>
+			<shortdesc>This child reference contains some information.</shortdesc>
+			<refbody>
+				<section>
+					<p id="ll5_mgv_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+						diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+						sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+						Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+						amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+						nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+						diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+						clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+						amet.</p>
+				</section>
+			</refbody>
+		</reference>
+		<reference id="ml5_mgv_5t">
+			<title>Child Reference Topic 2.2</title>
+			<shortdesc>This child reference contains even more information.</shortdesc>
+			<refbody>
+				<section>
+					<p id="nl5_mgv_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+						diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+						sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+						Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+						amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+						nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+						diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+						clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+						amet.</p>
+				</section>
+			</refbody>
+		</reference>
+	</reference>
+</reference>

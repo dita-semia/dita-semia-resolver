@@ -1,0 +1,68 @@
+
+@namespace oxy "http://www.oxygenxml.com/extensions/author";
+
+/* Hides the required content that is just needed for display on 
+ xslt-conref for topic, ol/li, ul/li, table */
+*[class~="topic/topic"][xslt-conref]:not([conaction]) > *[class~="topic/topic"],
+*[class~="topic/table"][xslt-conref]:not([conaction]) > *[class~="topic/table"],
+*[class~="topic/ol"][xslt-conref]:not([conaction]) > *[class~="topic/ol"],
+*[class~="topic/ul"][xslt-conref]:not([conaction]) > *[class~="topic/ul"],
+*[class~="topic/dl"][xslt-conref]:not([conaction]) > *[class~="topic/dl"],
+*[class~="topic/prodinfo"][xslt-conref]:not([conaction]) > *[class~="topic/prodinfo"],
+*[class~="topic/ph"][xslt-conref]:not([conaction]) > *[class~="topic/ph"],
+*[class~="topic/dlentry"][xslt-conref]:not([conaction]) > *[class~="topic/dlentry"]
+{
+    display : inherit;
+}
+
+*[class~="topic/simpletable"][xslt-conref]:not([conaction]) > *[class~="topic/simpletable"]
+{
+    display : table;
+}
+
+*[class~="topic/table"][xslt-conref]:not([conaction]) > *,    
+*[class~="topic/simpletable"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/ol"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/ul"][xslt-conref]:not([conaction]) > *, 
+*[class~="topic/topic"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/dl"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/prodinfo"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/ph"][xslt-conref]:not([conaction]) > *,
+*[class~="topic/dlentry"][xslt-conref]:not([conaction]) > *
+{
+    display : none;
+}
+
+
+/* Modify Header before xslt-conref  */
+*[xslt-conref] > oxy|reference:before {
+	display: none !important;
+}
+
+[xslt-conref] {
+background-color: #EFEFEF;
+  content: 
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Edit', 
+		            description, 	'Edit XSLT-Conref script', 
+		            icon, 			url('../img/editContent.gif'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefScript'),
+		   transparent, true,
+		   showIcon, 	true)
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Refresh', 
+		            description, 	'Refresh the XSLT-Conref', 
+		            icon, 			url('../img/Refresh.gif'), 
+		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
+		   transparent, true,
+		   showIcon, 	true)
+  		!important;
+}
+
+*[xslt-conref] no-content {
+	/* Mark content to be invisible in output */
+	font-size: 	0.8em;
+	color:		#999999;
+}

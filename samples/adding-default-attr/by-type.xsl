@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0"
 	xmlns:xsl	= "http://www.w3.org/1999/XSL/Transform"
     xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="#all" >
+    exclude-result-prefixes="#all">
 	
 	<!-- currently the xslt-conref resolver does not support urns... -->
 	<!--<xsl:import-schema schema-location="urn:oasis:names:tc:dita:xsd:topic.xsd"/>-->

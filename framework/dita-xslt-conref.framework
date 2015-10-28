@@ -62,6 +62,33 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>authorExtensionDescriptor/cssDescriptors</String>
+										</field>
+										<field name="index">
+											<Integer>17</Integer>
+										</field>
+										<field name="value">
+											<cssFile>
+												<field name="href">
+													<String>${framework}/css/xslt-conref.css</String>
+												</field>
+												<field name="title">
+													<String></String>
+												</field>
+												<field name="alternate">
+													<Boolean>false</Boolean>
+												</field>
+											</cssFile>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>authorExtensionDescriptor/customReferencesResolver</String>
 										</field>
 										<field name="index">
@@ -145,6 +172,323 @@
 													<String>*</String>
 												</field>
 											</documentTypeRule>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>validationScenarios</String>
+										</field>
+										<field name="index">
+											<Integer>0</Integer>
+										</field>
+										<field name="value">
+											<null/>
+										</field>
+										<field name="patchHandling">
+											<String>removeIndex</String>
+										</field>
+										<field name="anchor">
+											<String>DITA</String>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>validationScenarios</String>
+										</field>
+										<field name="index">
+											<Integer>0</Integer>
+										</field>
+										<field name="value">
+											<validationScenario>
+												<field name="pairs">
+													<list>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>&lt;Default engine></String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>true</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<null/>
+															</field>
+														</validationUnit>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>&lt;Default engine></String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>true</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<validationUnitSchema>
+																	<field name="dtdSchemaPublicID">
+																		<null/>
+																	</field>
+																	<field name="schematronPhase">
+																		<null/>
+																	</field>
+																	<field name="type">
+																		<Integer>7</Integer>
+																	</field>
+																	<field name="uri">
+																		<String>${baseFramework}/resources/dita-1.2-for-xslt2-mandatory.sch</String>
+																	</field>
+																</validationUnitSchema>
+															</field>
+														</validationUnit>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>DITA Validation</String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>true</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<null/>
+															</field>
+														</validationUnit>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>&lt;Default engine></String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>false</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<validationUnitSchema>
+																	<field name="dtdSchemaPublicID">
+																		<null/>
+																	</field>
+																	<field name="schematronPhase">
+																		<null/>
+																	</field>
+																	<field name="type">
+																		<Integer>7</Integer>
+																	</field>
+																	<field name="uri">
+																		<String>${baseFramework}/resources/dita-1.2-for-xslt2-other.sch</String>
+																	</field>
+																</validationUnitSchema>
+															</field>
+														</validationUnit>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>&lt;Default engine></String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>false</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<validationUnitSchema>
+																	<field name="dtdSchemaPublicID">
+																		<null/>
+																	</field>
+																	<field name="schematronPhase">
+																		<null/>
+																	</field>
+																	<field name="type">
+																		<Integer>7</Integer>
+																	</field>
+																	<field name="uri">
+																		<String>${baseFramework}/styleguide/rules/styleguide.sch</String>
+																	</field>
+																</validationUnitSchema>
+															</field>
+														</validationUnit>
+														<validationUnit>
+															<field name="validationType">
+																<validationUnitType>
+																	<field name="validationInputType">
+																		<String>text/xml</String>
+																	</field>
+																</validationUnitType>
+															</field>
+															<field name="url">
+																<String>${currentFileURL}</String>
+															</field>
+															<field name="validationEngine">
+																<validationEngine>
+																	<field name="engineType">
+																		<String>&lt;Default engine></String>
+																	</field>
+																	<field name="allowsAutomaticValidation">
+																		<Boolean>true</Boolean>
+																	</field>
+																</validationEngine>
+															</field>
+															<field name="allowAutomaticValidation">
+																<Boolean>true</Boolean>
+															</field>
+															<field name="extensions">
+																<null/>
+															</field>
+															<field name="validationSchema">
+																<validationUnitSchema>
+																	<field name="dtdSchemaPublicID">
+																		<null/>
+																	</field>
+																	<field name="schematronPhase">
+																		<null/>
+																	</field>
+																	<field name="type">
+																		<Integer>7</Integer>
+																	</field>
+																	<field name="uri">
+																		<String>urn:dita-semia:xslt-conref:schema:xslt-conref.sch</String>
+																	</field>
+																</validationUnitSchema>
+															</field>
+														</validationUnit>
+													</list>
+												</field>
+												<field name="type">
+													<String>Validation_scenario</String>
+												</field>
+												<field name="name">
+													<String>DITA with XSLT-Conref support</String>
+												</field>
+											</validationScenario>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>defaultValidationScenarios</String>
+										</field>
+										<field name="index">
+											<Integer>0</Integer>
+										</field>
+										<field name="value">
+											<null/>
+										</field>
+										<field name="patchHandling">
+											<String>removeIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>defaultValidationScenarios</String>
+										</field>
+										<field name="index">
+											<Integer>0</Integer>
+										</field>
+										<field name="value">
+											<String>DITA with XSLT-Conref support</String>
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>

@@ -5,13 +5,16 @@
 
 package org.DitaSemia.XsltConref;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
+
+
+
 
 
 import org.DitaSemia.JavaBase.DomNodeWrapper;
@@ -25,14 +28,17 @@ public class XsltConref
 //	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(XsltConref.class.getName());
 	
-	public static final String 			ATTR_URL 			= "xslt-conref";
+	public static final String 	ATTR_URL 					= "xslt-conref";
+	public static final String 	PARAM_XPATH_TO_XSLT_CONREF	= "xPathToXsltConref";
+	public static final String 	NAME_NO_CONTENT				= "no-content";
+	public static final String 	NAMESPACE_CUSTOM_PARAMETER	= "http://www.dita-semia.org/xslt-conref/custom-parameter";
+	
+	
 	private final NodeWrapper 			node;
-	private final XslTransformerCache 	transformerCache 	= XslTransformerCache.getTransformerCache();
 	
 	public static XsltConref fromNode(NodeWrapper node)
 	{
-		if (isXsltConref(node)) 
-		{
+		if (isXsltConref(node)) {
 			return new XsltConref(node);
 		}
 		return null;
@@ -54,43 +60,61 @@ public class XsltConref
 	
 	public NodeWrapper resolve()
 	{
-		final URL 			scriptUrl 	= node.resolveUrl(getScriptUriString());
-		final SAXSource 	xmlSource 	= new SAXSource(new InputSource(node.getBaseUri().toExternalForm()));
-		DOMResult 			result 		= new DOMResult();
-		final Transformer 	transformer = transformerCache.getTransformer(scriptUrl);
-		
-		//logger.info("scriptUrl: " + scriptUrl);
-		
-		try 
-		{
+		try {
+			final URL 			scriptUrl 	= getScriptUrl();
+			final SAXSource 	xmlSource 	= new SAXSource(new InputSource(node.getBaseUri().toExternalForm()));
+			DOMResult 			result 		= new DOMResult();
+			final Transformer 	transformer = XslTransformerCache.getInstance().getTransformer(scriptUrl);
+			
+			// set standard parameters
+			transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
+			
+			setCustomParamters(transformer);
+			
+			//logger.info("scriptUrl: " + scriptUrl);
+			
 			transformer.transform(xmlSource, result);
-		} 
-		catch (TransformerException te) 
-		{
-			te.printStackTrace();
-			logger.error("Exception while transforming: " + te.getMessage());
-		}
 
-		return new DomNodeWrapper(result.getNode());
+			return new DomNodeWrapper(result.getNode());
+
+		} catch (TransformerException e) {
+			logger.error("Exception while transforming: " + e.getMessage(), e);
+			return null;
+			// TODO: throw exception with error message to be displayed properly (not only in log file!)
+		} catch (Exception e) {
+			logger.error(e, e);
+			return null;
+			// 	TODO: throw exception with error message to be displayed properly (not only in log file!)
+	}
 	}
 
-	public URL getScriptUri() 
+	public URL getScriptUrl() 
 	{
-		URL url = null;
-		try 
-		{
-			url = new URL(getScriptUriString());
-		} 
-		catch (MalformedURLException e) 
-		{
-			logger.error("MalformedURLException: " + e.getMessage());
-		}
-//		logger.info("getScriptUri: " + url);
-		return url;
+		return node.resolveUrl(node.getAttribute(ATTR_URL));
 	}
 	
-	public String getScriptUriString()
-	{
-		return node.getAttribute(ATTR_URL);
+	private static String createXPathToElement(NodeWrapper node) {
+		String createXPathToElement = "";
+		
+		while ((node != null) && (node.getParent() != null)) {
+			createXPathToElement = "/*[" + node.getChildIndexWithinParent() + "]" + createXPathToElement;
+			node = node.getParent();
+		}
+		
+		//logger.info("createXPathToElement: result = " + createXPathToElement);
+		return createXPathToElement;
+	}
+
+	private void setCustomParamters(Transformer transformer) {
+		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_CUSTOM_PARAMETER);
+		for (String attrName : attrNameList) {
+			//logger.info("attribute: " + attrName);
+			final String paramName 	= attrName.replaceAll("(^[^\\{\\}]*:)|(^\\{.*\\})", "");
+			final String paramValue	= node.getAttribute(attrName);
+			//logger.info("set custom parameter: " + paramName + " = '" + paramValue + "'");
+			if (paramValue != null) {
+				transformer.setParameter(paramName, paramValue);
+			}
+		}
 	}
 }

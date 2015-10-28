@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t">
+  <title>Import Excel-XML to Table</title>
+  <refbody>
+		<simpletable relcolwidth="1.0* 1.0*" id="dc5_lhp_5t" xslt-conref="import-excel-xml-to-table.xsl">
+			<strow/>
+		</simpletable>
+	</refbody>
+</reference>

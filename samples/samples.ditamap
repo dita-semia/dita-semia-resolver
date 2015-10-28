@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:bookmap.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<bookmap>
+    <booktitle>
+        <mainbooktitle>XSLT-Conref Samples Collection</mainbooktitle>
+    </booktitle>
+	<chapter href="local-toc/local-toc.dita"/>
+	<chapter href="local-toc-specialized/local-toc-specialized.dita"/>
+	<chapter href="local-toc-parameterized/local-toc-parameterized.dita"/>
+	<chapter href="import-csv-to-table/import-csv-to-table.dita"/>
+	<chapter href="import-excel-xml-to-table/import-excel-xml-to-table.dita"/>
+	<chapter href="import-cpp-enum/import-cpp-enum.dita"/>
+	<chapter href="svg-simple-test/svg-simple-test.dita"/>
+	<chapter href="adding-default-attr/adding-default-attr.dita"/>
+</bookmap>

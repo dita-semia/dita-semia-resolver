@@ -4,7 +4,7 @@
 	xmlns:xsi	= "http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
     xmlns:xc	= "http://www.dita-semia.org/xsl-conref"
-    exclude-result-prefixes="xs" >
+    exclude-result-prefixes="#all">
 
     <xsl:template match="/">
     	
