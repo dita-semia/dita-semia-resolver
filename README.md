@@ -42,5 +42,6 @@ This sample consists of a reference topic containing child reference topics. The
 
 ## Compiling
 To compile it with eclipse you have to set the variable OXYGENXML locating the oXyen installation folder (e.g. "C:/Program Files/Oxygen XML Editor"). This needs to be done twice:
-- Eclipse Path variable: Window -> Preferences -> Java -> Build Path -> Classpath Variables
+- Ecplipse Path variable: Window -> Preferences -> Java -> Build Path -> Classpath Variables
 - For the Ant Builder: Window -> Preferences -> Ant -> Runtime -> Properties
+Additionally you need an Eclipse Path variable DITA_SEMIA with the root folder of your sources, containing the folder JavaBase.
