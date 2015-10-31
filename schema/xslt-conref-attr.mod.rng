@@ -4,9 +4,12 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
 	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
 	
-	<define name="univ-atts" combine="interleave">
+	<define name="conref-atts" combine="interleave">
 		<optional>
 			<attribute name="xslt-conref"/>
+		</optional>
+		<optional>
+			<attribute name="xslt-conref-source"/>
 		</optional>
 		<zeroOrMore>
 			<attribute>

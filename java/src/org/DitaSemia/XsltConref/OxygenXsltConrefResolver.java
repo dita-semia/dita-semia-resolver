@@ -123,6 +123,7 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 			final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_CUSTOM_PARAMETER);
 			isChanged = 
 					(attributeName.equals(XsltConref.ATTR_URL)) ||
+					(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URL)) ||
 					(attributeName.startsWith(customParameterPrefix + ":"));
 		} else {
 			isChanged = super.isReferenceChanged(node, attributeName);
@@ -151,7 +152,7 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 		
 		if (xsltConref != null)
 		{
-			final String 	resolvedString 	= xsltConref.resolve().toString();
+			final String 	resolvedString 	= xsltConref.resolve().serialize();
 			final XMLReader xmlReader 		= authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();
 			saxSource = new SAXSource(xmlReader, new InputSource(new StringReader(resolvedString)));
 			//logger.info("resolvedString: " +  resolvedString);

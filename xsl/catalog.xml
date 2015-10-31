@@ -3,5 +3,6 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
 	<uri name="urn:dita-semia:xslt-conref:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
+	<uri name="urn:dita-semia:xslt-conref:xsl:class.xsl" 				uri="class.xsl"/>
 	
 </catalog>

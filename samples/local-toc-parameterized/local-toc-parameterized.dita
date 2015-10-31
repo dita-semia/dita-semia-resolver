@@ -4,7 +4,7 @@
 <reference id="topic_t4s_vvs_4t" xmlns:xcp	= "http://www.dita-semia.org/xslt-conref/custom-parameter">
   <title>Parameterized Local Table of Contents</title>
   <refbody>
-		<local-toc id="swn_wlv_5t" xcp:minCount="1"/>
+		<local-toc id="swn_wlv_5t"/>
 	</refbody>
 	<reference id="zt3_52l_tt">
 		<title>Reference Topic 1</title>

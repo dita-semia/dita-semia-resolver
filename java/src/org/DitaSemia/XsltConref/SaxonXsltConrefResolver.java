@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 
 public class SaxonXsltConrefResolver extends ExtensionInstruction {
 
-//	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(SaxonXsltConrefResolver.class.getName());
 	
 	Expression select;
@@ -101,8 +100,8 @@ public class SaxonXsltConrefResolver extends ExtensionInstruction {
     			{
     				try
     				{
-            			final String resolvedString = xsltConref.resolve().toString();
-            			//logger.info("resolvedString: " + resolvedString);
+            			final String resolvedString = xsltConref.resolve().serialize();
+            			logger.info("resolvedString: " + resolvedString);
             			
             			final DocumentInfo 	resultDoc	= context.getConfiguration().buildDocument(new StreamSource(new StringReader(resolvedString)));
             			

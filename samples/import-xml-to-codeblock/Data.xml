@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Message>
+	<Timestamp>2012-01-29T08:39:10Z</Timestamp>
+	<Header>
+		<MessageType>GDV_VU_000</MessageType>
+		<ListMessageId>
+			<MessageId>GDV1234567</MessageId>
+			<MessageId>VU1234HIJKLMNO</MessageId>
+		</ListMessageId>
+	</Header>
+	<Data>
+		<RequestId>42536</RequestId>
+		<TransactionId>001ABCD</TransactionId>
+		<InsuranceCompany>
+			<InsuranceCompanyType>1</InsuranceCompanyType>
+			<InsuranceCompanyId>1234</InsuranceCompanyId>
+		</InsuranceCompany>
+	</Data>
+</Message>

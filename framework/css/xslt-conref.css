@@ -39,30 +39,69 @@
 	display: none !important;
 }
 
-[xslt-conref] {
-background-color: #EFEFEF;
-  content: 
+*[xslt-conref] {
+	background-color: #EFEFEF;
+  	content: 
   		oxy_button(
   			action, oxy_action(
-		            name, 			'Edit', 
-		            description, 	'Edit XSLT-Conref script', 
-		            icon, 			url('../img/editContent.gif'), 
-		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefScript'),
+		            name, 			'Open Script', 
+		            description, 	'Open XSLT-Conref XSL Script file', 
+		            icon, 			url('../img/openScript.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'script'),
 		   transparent, true,
 		   showIcon, 	true)
   		oxy_button(
   			action, oxy_action(
 		            name, 			'Refresh', 
 		            description, 	'Refresh the XSLT-Conref', 
-		            icon, 			url('../img/Refresh.gif'), 
+		            icon, 			url('../img/refreshReference.png'), 
 		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
 		   transparent, true,
 		   showIcon, 	true)
   		!important;
 }
 
+*[xslt-conref][xslt-conref-source] {
+  	content: 
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Open Script', 
+		            description, 	'Open XSLT-Conref XSL Script file', 
+		            icon, 			url('../img/openScript.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'script'),
+		   transparent, true,
+		   showIcon, 	true)
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Open Source', 
+		            description, 	'Open XSLT-Conref XML Source file', 
+		            icon, 			url('../img/openSource.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'scource'),
+		   transparent, true,
+		   showIcon, 	true)
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Refresh', 
+		            description, 	'Refresh the XSLT-Conref', 
+		            icon, 			url('../img/refreshReference.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
+		   transparent, true,
+		   showIcon, 	true)
+  		!important; 
+}
+
 *[xslt-conref] no-content {
 	/* Mark content to be invisible in output */
 	font-size: 	0.8em;
 	color:		#999999;
+}
+
+/* Remove static text, no margins*/
+*[xslt-conref]:not([conaction]):before {
+    content:	"";
+    display:	inline;
+    margin:		0px;
 }

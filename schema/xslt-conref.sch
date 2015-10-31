@@ -14,10 +14,14 @@
 		<sch:rule context="*[@xslt-conref]">
 			<sch:assert test="ds:isScriptValid(resolve-uri(@xslt-conref, base-uri(.)))">
 				Invalid value for @xslt-conref: '<sch:value-of select="@xslt-conref"/>'.
-				The URL of a valid xsl script is required.
-				<sch:value-of select="resolve-uri(@xslt-conref, base-uri(.))"/>
+				The URI of a valid XSL script is required.
+				<!--<sch:value-of select="resolve-uri(@xslt-conref, base-uri(.))"/>-->
 			</sch:assert>
-			
+			<sch:assert test="(string(@xslt-conref-source) = '') or doc-available(resolve-uri(@xslt-conref-source, base-uri(.)))">
+				Invalid value for @xslt-conref-source: '<sch:value-of select="@xslt-conref-source"/>'.
+				An empty value or the URI of a valid XML file is required.
+				<!--<sch:value-of select="resolve-uri(@xslt-conref-source, base-uri(.))"/>-->
+			</sch:assert>
 		</sch:rule>
 	</sch:pattern>
 	

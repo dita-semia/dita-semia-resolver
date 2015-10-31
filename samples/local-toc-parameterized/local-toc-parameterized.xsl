@@ -19,13 +19,13 @@
 	<xsl:param name="xrefPrefix" 		as="xs:string?"/>
 	<xsl:param name="xrefSuffix" 		as="xs:string?"/>
 	
-	<xsl:include href="../../xsl/class.xsl"/>
+	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
 	
     <xsl:template match="/" as="element()">
     	
     	<xsl:variable name="xsltConref" as="element()" 	select="saxon:evaluate($xPathToXsltConref)"/>
-    	<xsl:variable name="baseTopic"	as="element()?" select="$xsltConref/ancestor::reference[1]"/>
-    	<xsl:variable name="childList"	as="element()*"	select="$baseTopic/reference"/>
+    	<xsl:variable name="baseTopic"	as="element()?" select="($xsltConref/ancestor::*[contains(@class, $C_TOPIC)])[last()]"/>
+    	<xsl:variable name="childList"	as="element()*"	select="$baseTopic/*[contains(@class, $C_TOPIC)]"/>
     	
 		<xsl:choose>
 			<xsl:when test="count($childList) >= $minCount">
@@ -33,32 +33,32 @@
 					
 					<!-- section title -->
 					<xsl:if test="string($sectionTitle) != ''">
-						<title class="{$CLASS_TITLE}">
+						<title class="{$CP_TITLE}">
 							<xsl:value-of select="$sectionTitle"/>
 						</title>
 					</xsl:if>
 					
 					<!-- introduction -->
 					<xsl:if test="string($introduction) != ''">
-						<p class="{$CLASS_P}">
+						<p class="{$CP_P}">
 							<xsl:value-of select="$introduction"/>
 						</p>
 					</xsl:if>
 					
 					<!-- list -->
-					<ul class="{$CLASS_UL}">
+					<ul class="{$CP_UL}">
 						<xsl:for-each select="$childList">
-							<li class="{$CLASS_LI}">
+							<li class="{$CP_LI}">
 								
 								<!-- title -->
 								<xsl:choose>
 									<xsl:when test="not($useLiTitle = 'no')">
-										<title class="{$CLASS_TITLE}">
+										<title class="{$CP_TITLE}">
 											<xsl:value-of select="title"/>
 										</title>
 									</xsl:when>
 									<xsl:otherwise>
-										<p class="{$CLASS_P}">
+										<p class="{$CP_P}">
 											<xsl:value-of select="title"/>
 										</p>
 									</xsl:otherwise>
@@ -66,16 +66,16 @@
 								
 								<!-- shortdesc -->
 								<xsl:if test="not($showShortdesc = 'no') and exists(shortdesc)">
-									<p class="{$CLASS_P}">
+									<p class="{$CP_P}">
 										<xsl:copy-of select="shortdesc/node()"/>
 									</p>
 								</xsl:if>
 								
 								<!-- xref -->
 								<xsl:if test="not($addXref = 'no') and exists(@id)">
-									<p class="{$CLASS_P}">
+									<p class="{$CP_P}">
 										<xsl:value-of select="$xrefPrefix"/>
-										<xref href="#{@id}" format="dita" class="{$CLASS_XREF}">
+										<xref href="#{@id}" format="dita" class="{$CP_XREF}">
 											<xsl:value-of select="title"/>	<!-- The DITA link text resolver can't handle the referenced topics!? -->
 										</xref>
 										<xsl:value-of select="$xrefSuffix"/>

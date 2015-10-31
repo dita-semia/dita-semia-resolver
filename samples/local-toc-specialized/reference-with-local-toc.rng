@@ -9,12 +9,14 @@
 	<define name="local-toc.element">
 		<element name="local-toc">
 			<a:documentation>Lists all child references with their title and shortdesc.</a:documentation>
-			<ref name="global-atts"/>
-			<ref name="id-atts"/>
+			<optional>
+				<attribute name="id"/>
+			</optional>
 			<optional>
 				<attribute name="class" a:defaultValue="+ topic/ul dita-semia/local-toc "/>
+			
 			</optional>
-			<!-- TODO: use urn instead. (Not fully supported yet) -->
+			<!-- TODO: use urn instead - schematron validation needs to be adapter -->
 			<!--<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:local-toc-specialized.xsl"/>-->
 			<attribute name="xslt-conref" a:defaultValue="local-toc-specialized.xsl"/>
 		</element>

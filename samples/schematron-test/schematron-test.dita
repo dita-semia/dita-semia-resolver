@@ -13,6 +13,10 @@
 			<p id="sw4_zg4_5t" xslt-conref="invalid-script.xsl"/>
 		</section>
 		<section>
+			<title>Invalid input url</title>
+			<p xslt-conref="valid-script.xsl" id="n3l_rfr_vt" xslt-conref-source="invalid source"/>
+		</section>
+		<section>
 			<title>Valid script</title>
 			<p id="c3p_bh4_5t" xslt-conref="valid-script.xsl"/>
 		</section>

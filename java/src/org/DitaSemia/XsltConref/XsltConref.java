@@ -5,6 +5,7 @@
 
 package org.DitaSemia.XsltConref;
 
+import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
+
 
 
 
@@ -29,6 +31,7 @@ public class XsltConref
 	private static final Logger logger = Logger.getLogger(XsltConref.class.getName());
 	
 	public static final String 	ATTR_URL 					= "xslt-conref";
+	public static final String 	ATTR_XML_SOURCE_URL			= "xslt-conref-source";
 	public static final String 	PARAM_XPATH_TO_XSLT_CONREF	= "xPathToXsltConref";
 	public static final String 	NAME_NO_CONTENT				= "no-content";
 	public static final String 	NAMESPACE_CUSTOM_PARAMETER	= "http://www.dita-semia.org/xslt-conref/custom-parameter";
@@ -58,21 +61,31 @@ public class XsltConref
 		return isXsltConref;
 	}
 	
-	public NodeWrapper resolve()
-	{
+	public NodeWrapper resolve() {
 		try {
 			final URL 			scriptUrl 	= getScriptUrl();
-			final SAXSource 	xmlSource 	= new SAXSource(new InputSource(node.getBaseUri().toExternalForm()));
-			DOMResult 			result 		= new DOMResult();
 			final Transformer 	transformer = XslTransformerCache.getInstance().getTransformer(scriptUrl);
+			SAXSource 			xmlSource 	= null;
+			DOMResult 			result 		= new DOMResult();
 			
-			// set standard parameters
-			transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
-			
+			if (getStartTemplate() != null) {
+				// TODO: create empty source
+				// TODO: set start template
+			} else if (getXmlSourceUrl() != null) {
+				xmlSource = new SAXSource(new InputSource(getXmlSourceUrl().toExternalForm()));
+			} else {
+				// use current document as input
+				
+				// Create string from parsed document instead of using baseUri so document doesn't have to be saved.
+				xmlSource = createSaxSourceFromCurrentDocument();
+
+				// set specific standard parameter
+				transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
+			}
+
 			setCustomParamters(transformer);
-			
+
 			//logger.info("scriptUrl: " + scriptUrl);
-			
 			transformer.transform(xmlSource, result);
 
 			return new DomNodeWrapper(result.getNode());
@@ -85,26 +98,41 @@ public class XsltConref
 			logger.error(e, e);
 			return null;
 			// 	TODO: throw exception with error message to be displayed properly (not only in log file!)
-	}
+		}
 	}
 
-	public URL getScriptUrl() 
-	{
+	
+	public URL getScriptUrl() {
 		return node.resolveUrl(node.getAttribute(ATTR_URL));
 	}
+
 	
-	private static String createXPathToElement(NodeWrapper node) {
-		String createXPathToElement = "";
-		
-		while ((node != null) && (node.getParent() != null)) {
-			createXPathToElement = "/*[" + node.getChildIndexWithinParent() + "]" + createXPathToElement;
-			node = node.getParent();
+	public URL getXmlSourceUrl() {
+		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URL);
+		if ((attrValue != null) && (!attrValue.isEmpty())) {
+			return node.resolveUrl(attrValue);
+		} else {
+			return null;
 		}
-		
-		//logger.info("createXPathToElement: result = " + createXPathToElement);
-		return createXPathToElement;
 	}
 
+	public Object getStartTemplate() {
+		// TODO: ...
+		return null;
+	}
+	
+	private SAXSource createSaxSourceFromCurrentDocument() {
+		final String 	serializedSource 	= node.getDocument().serialize();
+		final SAXSource saxSource 			= new SAXSource(new InputSource(new StringReader(serializedSource)));
+
+		//logger.info("Serialized source: " + serializedSource);
+		
+		saxSource.setSystemId(node.getBaseUri().toExternalForm());
+		
+		return saxSource;
+	}
+
+	
 	private void setCustomParamters(Transformer transformer) {
 		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_CUSTOM_PARAMETER);
 		for (String attrName : attrNameList) {
@@ -116,5 +144,18 @@ public class XsltConref
 				transformer.setParameter(paramName, paramValue);
 			}
 		}
+	}
+	
+	
+	private static String createXPathToElement(NodeWrapper node) {
+		String createXPathToElement = "";
+		
+		while ((node != null) && (node.getParent() != null)) {
+			createXPathToElement = "/*[" + node.getChildIndexWithinParent() + "]" + createXPathToElement;
+			node = node.getParent();
+		}
+		
+		//logger.info("createXPathToElement: result = " + createXPathToElement);
+		return createXPathToElement;
 	}
 }
