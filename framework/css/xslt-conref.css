@@ -79,7 +79,7 @@
 		            description, 	'Open XSLT-Conref XML Source file', 
 		            icon, 			url('../img/openSource.png'), 
 		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
-		            arg-filetype,	'scource'),
+		            arg-filetype,	'source'),
 		   transparent, true,
 		   showIcon, 	true)
   		oxy_button(
