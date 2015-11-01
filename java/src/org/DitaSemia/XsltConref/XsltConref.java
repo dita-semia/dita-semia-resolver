@@ -5,19 +5,14 @@
 
 package org.DitaSemia.XsltConref;
 
-import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
-
-
-
-
-
 
 import org.DitaSemia.JavaBase.DomNodeWrapper;
 import org.DitaSemia.JavaBase.NodeWrapper;
@@ -65,7 +60,7 @@ public class XsltConref
 		try {
 			final URL 			scriptUrl 	= getScriptUrl();
 			final Transformer 	transformer = XslTransformerCache.getInstance().getTransformer(scriptUrl);
-			SAXSource 			xmlSource 	= null;
+			Source 				xmlSource 	= null;
 			DOMResult 			result 		= new DOMResult();
 			
 			if (getStartTemplate() != null) {
@@ -75,9 +70,7 @@ public class XsltConref
 				xmlSource = new SAXSource(new InputSource(getXmlSourceUrl().toExternalForm()));
 			} else {
 				// use current document as input
-				
-				// Create string from parsed document instead of using baseUri so document doesn't have to be saved.
-				xmlSource = createSaxSourceFromCurrentDocument();
+				xmlSource = node.getDocumentAsSource();
 
 				// set specific standard parameter
 				transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
@@ -121,17 +114,6 @@ public class XsltConref
 		return null;
 	}
 	
-	private SAXSource createSaxSourceFromCurrentDocument() {
-		final String 	serializedSource 	= node.getDocument().serialize();
-		final SAXSource saxSource 			= new SAXSource(new InputSource(new StringReader(serializedSource)));
-
-		//logger.info("Serialized source: " + serializedSource);
-		
-		saxSource.setSystemId(node.getBaseUri().toExternalForm());
-		
-		return saxSource;
-	}
-
 	
 	private void setCustomParamters(Transformer transformer) {
 		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_CUSTOM_PARAMETER);
@@ -148,9 +130,10 @@ public class XsltConref
 	
 	
 	private static String createXPathToElement(NodeWrapper node) {
+		final URL baseUri = node.getBaseUri();
 		String createXPathToElement = "";
 		
-		while ((node != null) && (node.getParent() != null)) {
+		while ((node != null) && (node.getParent() != null) && (node.getParent().getBaseUri().equals(baseUri))) {
 			createXPathToElement = "/*[" + node.getChildIndexWithinParent() + "]" + createXPathToElement;
 			node = node.getParent();
 		}

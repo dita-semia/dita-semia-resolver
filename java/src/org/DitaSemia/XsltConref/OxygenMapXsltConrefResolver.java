@@ -20,12 +20,12 @@ import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.ValidatingReferenceResolverException;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.ecss.extensions.dita.conref.DITAConRefResolver;
+import ro.sync.ecss.extensions.dita.map.topicref.DITAMapRefResolver;
 
-public class OxygenXsltConrefResolver extends DITAConRefResolver
+public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 {
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(OxygenXsltConrefResolver.class.getName());
+	private static final Logger logger = Logger.getLogger(OxygenMapXsltConrefResolver.class.getName());
 	
 	@Override
 	public String getDescription() 
