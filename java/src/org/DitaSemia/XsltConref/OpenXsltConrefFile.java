@@ -31,15 +31,20 @@ public class OpenXsltConrefFile implements AuthorOperation {
 
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws IllegalArgumentException, AuthorOperationException {
-
 		try {
 			final int 			caretOffset = authorAccess.getEditorAccess().getCaretOffset();
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
+			//logger.info("nodeAtCaret: " + nodeAtCaret.getDisplayName());
 			
-			final XsltConref 	xsltConref	= XsltConref.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
+			XsltConref 	xsltConref	= XsltConref.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
+			if (xsltConref == null) {
+				// check if the parent node is an XSLT-Conref
+				xsltConref	= XsltConref.fromNode(new AuthorNodeWrapper(nodeAtCaret.getParent(), authorAccess));
+				//logger.info("nodeAtCaret.getParent(): " + nodeAtCaret.getParent().getDisplayName());
+			}
 			if (xsltConref != null) {
 				final String 	filetype 	= (String)args.getArgumentValue(ARG_FILETYPE);
-				logger.info("filetype: " + filetype);
+				//logger.info("filetype: " + filetype);
 				final URL 		url 		= ((filetype != null) && (filetype.equalsIgnoreCase(FILETYPE_SOURCE))) ? xsltConref.getXmlSourceUrl() : xsltConref.getScriptUrl();
 				PluginWorkspaceProvider.getPluginWorkspace().open(url, EditorPageConstants.PAGE_TEXT);
 			}

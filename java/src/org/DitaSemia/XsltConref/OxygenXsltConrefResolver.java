@@ -52,9 +52,8 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 	public String getReferenceSystemID(AuthorNode node, AuthorAccess authorAccess) 
 	{
 		String systemID = null;
-		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, null));
-		if (xsltConref != null) {
-			systemID = xsltConref.getScriptUrl().toString();
+		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
+			systemID = node.getXMLBaseURL().toExternalForm();
 		} else {
 			systemID = super.getReferenceSystemID(node, authorAccess);
 		}

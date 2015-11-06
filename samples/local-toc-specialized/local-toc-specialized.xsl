@@ -30,9 +30,7 @@
                     <xsl:if test="exists(@id)">
                     	<p class="{$CP_P}">
                     		<xsl:text>(Details: </xsl:text>
-                    		<xref href="#{@id}" format="dita" class="{$CP_XREF}">
-                    			<xsl:value-of select="title"/>	<!-- The DITA link text resolver can't handle the referenced topics!? -->
-                    		</xref>
+                    		<xref href="#{@id}" format="dita" class="{$CP_XREF}"/>
                     		<xsl:text>)</xsl:text>
                     	</p>
                     </xsl:if>

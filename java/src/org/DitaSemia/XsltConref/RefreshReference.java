@@ -14,6 +14,7 @@ import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
+import ro.sync.ecss.extensions.api.access.AuthorEditorAccess;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 
 public class RefreshReference implements AuthorOperation {
@@ -27,19 +28,34 @@ public class RefreshReference implements AuthorOperation {
 
 	@Override
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap argumentsMap) throws IllegalArgumentException, AuthorOperationException {
+
+		final AuthorEditorAccess 	editorAccess 	= authorAccess.getEditorAccess();
+		final boolean 				isModified 		= editorAccess.isModified();
+		
 		try {
 			final int 			caretOffset = authorAccess.getEditorAccess().getCaretOffset();
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
 			
-			final XsltConref 	xsltConref	= XsltConref.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
+			AuthorNode 	xsltConrefNode 	= nodeAtCaret;
+			 XsltConref xsltConref		= XsltConref.fromNode(new AuthorNodeWrapper(xsltConrefNode, authorAccess));
+			if (xsltConref == null) {
+				// check if the parent node is an XSLT-Conref
+				xsltConrefNode = nodeAtCaret.getParent();
+				xsltConref	= XsltConref.fromNode(new AuthorNodeWrapper(xsltConrefNode, authorAccess));
+			}
 			
 			if (xsltConref != null) {
 				// ensure the script will be recompiled.
 				XslTransformerCache.getInstance().removeFromCache(xsltConref.getScriptUrl());
 			}
-			authorAccess.getDocumentController().refreshNodeReferences(nodeAtCaret);
+			authorAccess.getDocumentController().refreshNodeReferences(xsltConrefNode);
+			
 		} catch (Exception e) {
 			logger.error(e, e);
+		}
+
+		if (!isModified) {
+			editorAccess.setModified(false);
 		}
 	}
 
