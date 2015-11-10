@@ -101,7 +101,7 @@ public class SaxonXsltConrefResolver extends ExtensionInstruction {
     				try
     				{
             			final String resolvedString = xsltConref.resolve().serialize();
-            			logger.info("resolvedString: " + resolvedString);
+            			//logger.info("resolvedString: " + resolvedString);
             			
             			final DocumentInfo 	resultDoc	= context.getConfiguration().buildDocument(new StreamSource(new StringReader(resolvedString)));
             			

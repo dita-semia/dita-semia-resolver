@@ -5,16 +5,11 @@
 
 package org.DitaSemia.XsltConref;
 
-import java.io.StringReader;
-
 import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.JavaBase.AuthorNodeWrapper;
-import org.DitaSemia.JavaBase.NodeWrapper;
 import org.apache.log4j.Logger;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.ValidatingReferenceResolverException;
@@ -40,7 +35,7 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 		String displayName = null;
 		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, null));
 		if (xsltConref != null) {
-			displayName = xsltConref.getScriptUrl().toString();
+			displayName = xsltConref.getScriptUrlAsString();
 		} else {
 			displayName = super.getDisplayName(node);
 		}
@@ -52,9 +47,8 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 	public String getReferenceSystemID(AuthorNode node, AuthorAccess authorAccess) 
 	{
 		String systemID = null;
-		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, null));
-		if (xsltConref != null) {
-			systemID = xsltConref.getScriptUrl().toString();
+		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
+			systemID = node.getXMLBaseURL().toExternalForm();
 		} else {
 			systemID = super.getReferenceSystemID(node, authorAccess);
 		}
@@ -95,11 +89,7 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 		//logger.info("isReferenceChanged");
 		boolean isChanged = false;
 		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
-			final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_CUSTOM_PARAMETER);
-			isChanged = 
-					(attributeName.equals(XsltConref.ATTR_URL)) ||
-					(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URL)) ||
-					(attributeName.startsWith(customParameterPrefix + ":"));
+			return OxygenXsltConrefResolver.isXsltConrefAttr(node, attributeName);
 		} else {
 			isChanged = super.isReferenceChanged(node, attributeName);
 		}
@@ -116,24 +106,17 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 			super.checkTarget(node, targetDocument);
 		}
 	}
-	
+
 	public SAXSource resolveReference(AuthorNode node, String systemID, AuthorAccess authorAccess, EntityResolver entityResolver) 
-	{	
-		//logger.info("resolveReference");
-		//logger.info("node URL: " + node.getXMLBaseURL().toExternalForm());
-		final NodeWrapper 	nodeWrapper = new AuthorNodeWrapper(node, authorAccess);
-		final XsltConref 	xsltConref 	= XsltConref.fromNode(nodeWrapper);
+	{
+		final XsltConref 	xsltConref 	= XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess));
 		SAXSource 			saxSource 	= null;
-		
 		if (xsltConref != null) {
-			final String 	resolvedString 	= xsltConref.resolve().serialize();
-			final XMLReader xmlReader 		= authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();
-			saxSource = new SAXSource(xmlReader, new InputSource(new StringReader(resolvedString)));
-			//logger.info("resolvedString: " +  resolvedString);
-		} else {
+			saxSource = OxygenXsltConrefResolver.resolveXsltConref(xsltConref, authorAccess);
+		} else { 
 			saxSource = super.resolveReference(node, systemID, authorAccess, entityResolver);
 		}
-		
+		//logger.info("saxSource: " + saxSource);
 		return saxSource;
 	}
 }

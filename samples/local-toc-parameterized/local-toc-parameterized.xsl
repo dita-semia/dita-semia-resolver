@@ -75,9 +75,7 @@
 								<xsl:if test="not($addXref = 'no') and exists(@id)">
 									<p class="{$CP_P}">
 										<xsl:value-of select="$xrefPrefix"/>
-										<xref href="#{@id}" format="dita" class="{$CP_XREF}">
-											<xsl:value-of select="title"/>	<!-- The DITA link text resolver can't handle the referenced topics!? -->
-										</xref>
+										<xref href="#{@id}" format="dita" class="{$CP_XREF}"/>
 										<xsl:value-of select="$xrefSuffix"/>
 									</p>
 								</xsl:if>

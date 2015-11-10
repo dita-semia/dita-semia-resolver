@@ -2,7 +2,9 @@
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
-	<nextCatalog catalog="../schema/catalog.xml"/>
-	<nextCatalog catalog="../xsl/catalog.xml"/>
+	<nextCatalog catalog="local-toc-specialized/catalog.xml"/>
+	<nextCatalog catalog="local-toc-parameterized/catalog.xml"/>
+	<nextCatalog catalog="section-overview/catalog.xml"/>
+	<nextCatalog catalog="schematron-test/catalog.xml"/>
 	
 </catalog>

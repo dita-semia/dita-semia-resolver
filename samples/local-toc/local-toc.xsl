@@ -23,9 +23,7 @@
                     <xsl:if test="exists(@id)">
                     	<p>
                     		<xsl:text>(Details: </xsl:text>
-                    		<xref href="#{@id}" format="dita">
-                    			<xsl:value-of select="title"/>	<!-- The DITA link text resolver can't handle the referenced topics!? -->
-                    		</xref>
+                    		<xref href="#{@id}" format="dita"/>
                     		<xsl:text>)</xsl:text>
                     	</p>
                     </xsl:if>

@@ -6,6 +6,6 @@
 	<classpathentry kind="var" path="OXYGENXML/lib/log4j.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/saxon9ee.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/oxygen.jar"/>
-	<classpathentry kind="var" path="DITA_SEMIA/JavaBase/java/DitaSemiaJavaBase.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JavaBase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

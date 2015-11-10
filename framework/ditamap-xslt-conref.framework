@@ -106,6 +106,23 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>xmlCatalogs</String>
+										</field>
+										<field name="index">
+											<Integer>2</Integer>
+										</field>
+										<field name="value">
+											<String>${oxygenHome}/frameworks/dita/DITA-OT/catalog-dita.xml</String>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>description</String>
 										</field>
 										<field name="index">

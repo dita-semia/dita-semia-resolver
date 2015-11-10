@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	
+	<include href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng"/>
+
+	<define name="section-overview.element">
+		<element name="section-overview">
+			<a:documentation>Generates a list of xref elements to all sections with title.</a:documentation>
+			<optional>
+				<attribute name="id"/>
+			</optional>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/sl dita-semia/section-overview "/>
+			</optional>
+			<!-- TODO: use urn instead - schematron validation needs to be adapted -->
+			<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:section-overview.xsl"/>
+			<!--<attribute name="xslt-conref" a:defaultValue="section-overview.xsl"/>-->
+		</element>
+	</define>
+	
+	<define name="section-overview">
+		<ref name="section-overview.element"/>
+	</define>
+
+	<define name="body.cnt" combine="choice">
+		<choice>
+			<ref name="section-overview"/>
+		</choice>
+	</define>
+</grammar>
