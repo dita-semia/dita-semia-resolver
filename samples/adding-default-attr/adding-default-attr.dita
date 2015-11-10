@@ -6,8 +6,7 @@
 	<body>
 		<section xslt-conref="explicitly.xsl"/>
 		<section xslt-conref="by-validation.xsl"/>
-		<!--<section xslt-conref="by-type.xsl"/>-->
-		<!-- not working yet, no idea why... -->
+		<section xslt-conref="by-type.xsl"/>
 		<section xslt-conref="by-xsd-schema.xsl"/>
 		<section xslt-conref="by-rng-schema.xsl"/>
 	</body>
