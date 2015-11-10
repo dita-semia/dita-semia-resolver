@@ -9,14 +9,16 @@ import java.io.StringReader;
 
 import javax.xml.transform.sax.SAXSource;
 
+import net.sf.saxon.trans.XPathException;
+
 import org.DitaSemia.JavaBase.AuthorNodeWrapper;
-import org.DitaSemia.JavaBase.NodeWrapper;
 import org.apache.log4j.Logger;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
+import ro.sync.ecss.extensions.api.ReferenceResolverException;
 import ro.sync.ecss.extensions.api.ValidatingReferenceResolverException;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
@@ -67,7 +69,7 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 		String referenceUniqueID = null;
 		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, null));
 		if (xsltConref != null) {
-			referenceUniqueID = xsltConref.getScriptUrl().toString();
+			referenceUniqueID = xsltConref.getScriptUrlAsString().toString();
 		} else {
 			referenceUniqueID = super.getReferenceUniqueID(node);
 		}
@@ -94,15 +96,19 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 		//logger.info("isReferenceChanged");
 		boolean isChanged = false;
 		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
-			final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_CUSTOM_PARAMETER);
-			isChanged = 
-					(attributeName.equals(XsltConref.ATTR_URL)) ||
-					(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URL)) ||
-					(attributeName.startsWith(customParameterPrefix + ":"));
+			return isXsltConrefAttr(node, attributeName);
 		} else {
 			isChanged = super.isReferenceChanged(node, attributeName);
 		}
 		return isChanged;
+	}
+	
+	public static boolean isXsltConrefAttr(AuthorNode node, String attributeName) {
+
+		final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_CUSTOM_PARAMETER);
+		return (attributeName.equals(XsltConref.ATTR_URI)) ||
+				(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URI)) ||
+				(attributeName.startsWith(customParameterPrefix + ":"));
 	}
 
 	@Override
@@ -116,22 +122,30 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 		}
 	}
 	
-	public SAXSource resolveReference(AuthorNode node, String systemID, AuthorAccess authorAccess, EntityResolver entityResolver) 
-	{	
-		//logger.info("resolveReference");
-		//logger.info("node URL: " + node.getXMLBaseURL().toExternalForm());
-		final NodeWrapper 	nodeWrapper = new AuthorNodeWrapper(node, authorAccess);
-		final XsltConref 	xsltConref 	= XsltConref.fromNode(nodeWrapper);
+	@Override
+	public SAXSource resolveReference(AuthorNode node, String systemID, AuthorAccess authorAccess, EntityResolver entityResolver) throws ReferenceResolverException
+	{
+		final XsltConref 	xsltConref 	= XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess));
 		SAXSource 			saxSource 	= null;
-		
 		if (xsltConref != null) {
-			final String 	resolvedString 	= xsltConref.resolve().serialize();
-			final XMLReader xmlReader 		= authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();
-			saxSource = new SAXSource(xmlReader, new InputSource(new StringReader(resolvedString)));
-			//logger.info("resolvedString: " +  resolvedString);
+			saxSource = resolveXsltConref(xsltConref, authorAccess);
 		} else {
 			saxSource = super.resolveReference(node, systemID, authorAccess, entityResolver);
 		}
+		return saxSource;
+	}
+
+	public static SAXSource resolveXsltConref(XsltConref xsltConref, AuthorAccess authorAccess) throws ReferenceResolverException
+	{
+		String resolvedString;
+		try {
+			resolvedString = xsltConref.resolve().serialize();
+		} catch (XPathException e) {
+			throw new ReferenceResolverException(e.getMessage(), true, true);
+		}
+		final XMLReader xmlReader = authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();
+		final SAXSource	saxSource = new SAXSource(xmlReader, new InputSource(new StringReader(resolvedString)));
+		//logger.info("resolvedString: " +  resolvedString);
 		
 		return saxSource;
 	}
