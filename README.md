@@ -10,7 +10,7 @@ Just add an xslt-conref attribute to your element and put an URL to the xslt scr
 
 
 ## Installation in oXygen
-To make oXygen resolve your xslt-conrefs you have to configure a reference resolver. This requires you to download the repository dita-semia/JavaBase as well.
+To make oXygen resolve your xslt-conrefs you have to configure a reference resolver. This requires you to download the repository dita-semia/JavaBase as well. The easiest way to get started is by downloading the file DitaSemiaXsltConref.zip from the latest [release](https://github.com/dita-semia/XsltConref/releases).
 
 ### Using the provided custom framework
 The repository includes a framework with hhis reference resolver already configured in the framework folder. To make oXygen use this you have to add the XsltConref folder to the "Locations Preferences" and restart oXygen afterwards.
