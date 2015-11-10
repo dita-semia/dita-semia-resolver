@@ -97,6 +97,11 @@
   		!important; 
 }
 
+*[xslt-conref] > oxy|error:before,
+*[xslt-conref][xslt-conref-source] > oxy|error:before{
+	-oxy-append-content: "[" !important;
+}
+
 *[xslt-conref] no-content {
 	/* Mark content to be invisible in output */
 	font-size: 	0.8em;
