@@ -3,26 +3,40 @@
 	xmlns:sch	= "http://purl.oclc.org/dsdl/schematron"
 	xmlns:sqf	= "http://www.schematron-quickfix.com/validator/process"
 	xmlns:xsl	= "http://www.w3.org/1999/XSL/Transform"
-	xmlns:ds	= "http://www.dita-semia.org"
 	queryBinding="xslt2">
 	
-	<sch:ns uri="http://www.dita-semia.org" prefix="ds"/>
+	<sch:ns uri="java:org.DitaSemia.JavaBase.SchematronUtil" prefix="java"/>
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:check-xslt-conref.xsl"/>
-
 	<sch:pattern>
 		<sch:rule context="*[@xslt-conref]">
-			<sch:assert test="ds:isScriptValid(resolve-uri(@xslt-conref, base-uri(.)))">
-				Invalid value for @xslt-conref: '<sch:value-of select="@xslt-conref"/>'.
-				The URI of a valid XSL script is required.
-				<!--<sch:value-of select="resolve-uri(@xslt-conref, base-uri(.))"/>-->
-			</sch:assert>
-			<sch:assert test="(string(@xslt-conref-source) = '') or doc-available(resolve-uri(@xslt-conref-source, base-uri(.)))">
-				Invalid value for @xslt-conref-source: '<sch:value-of select="@xslt-conref-source"/>'.
-				An empty value or the URI of a valid XML file is required.
-				<!--<sch:value-of select="resolve-uri(@xslt-conref-source, base-uri(.))"/>-->
-			</sch:assert>
+			
+			<sch:let name="scriptAttr" 	value="@xslt-conref"/>
+			<sch:let name="scriptUrl" 	value="java:resolveUri($scriptAttr, .)"/>
+			<sch:let name="sourceAttr" 	value="@xslt-conref-source"/>
+			<sch:let name="sourceUrl" 	value="java:resolveUri($sourceAttr, .)"/>
+			
+			<sch:report test="not(java:fileExists($scriptUrl))">
+				Invalid value for @xslt-conref ('<sch:value-of select="$scriptAttr"/>').
+				Not existing file: '<sch:value-of select="$scriptUrl"/>'.
+			</sch:report>
+			
+			<sch:report test="java:fileExists($scriptUrl) and not(java:isValidXsl($scriptUrl))">
+				Invalid value for @xslt-conref ('<sch:value-of select="$scriptAttr"/>').
+				No valid XSL file: '<sch:value-of select="$scriptUrl"/>'.
+			</sch:report>
+			
+			<sch:report test="(string($sourceAttr) != '') and not(java:fileExists($sourceUrl))">
+				Invalid value for @xslt-conref-source ('<sch:value-of select="$sourceAttr"/>').
+				Not existing file: '<sch:value-of select="$sourceUrl"/>'.
+			</sch:report>
+			
+			<sch:report test="(string($sourceAttr) != '') and java:fileExists($sourceUrl) and not(doc-available($sourceUrl))">
+				Invalid value for @xslt-conref ('<sch:value-of select="$sourceAttr"/>').
+				No valid XML file: '<sch:value-of select="$sourceUrl"/>'.
+			</sch:report>
+			
 		</sch:rule>
 	</sch:pattern>
+
 	
 </sch:schema>
