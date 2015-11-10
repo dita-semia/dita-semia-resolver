@@ -5,7 +5,6 @@
 
 package org.DitaSemia.XsltConref;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -14,7 +13,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
-//import javax.xml.transform.dom.DOMResult;
 
 import javax.xml.transform.sax.SAXSource;
 
@@ -22,11 +20,9 @@ import net.sf.saxon.event.PipelineConfiguration;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.tiny.TinyBuilder;
 
-
-
-//import org.DitaSemia.JavaBase.DomNodeWrapper;
 import org.DitaSemia.JavaBase.NodeWrapper;
 import org.DitaSemia.JavaBase.SaxonNodeWrapper;
+import org.DitaSemia.JavaBase.FileUtil;
 import org.DitaSemia.JavaBase.XslTransformerCache;
 import org.apache.log4j.Logger;
 
@@ -79,24 +75,15 @@ public class XsltConref
 		} else {
 			xmlSource = getXmlSource(); 
 			if (xmlSource != null) {
-				File xmlSourceFile = null;
-				try {
-					//logger.info("File: " + (new URL(xmlSource.getSystemId())).getFile());
-					xmlSourceFile = new File((new URL(xmlSource.getSystemId())).getFile());
-				} catch (MalformedURLException e) {
-					logger.error(e);
-				}
-				if ((xmlSourceFile == null) || (!xmlSourceFile.exists())) {
-					throw new XPathException("Input source could not be found. (URL: '" + xmlSource.getSystemId() + "')");
+				final String sourceUrl = xmlSource.getSystemId();
+				if (!FileUtil.fileExists(sourceUrl)) {
+					throw new XPathException("Input source could not be found. (URL: '" + sourceUrl + "')");
 				}
 			} else {
 				// use current document as input
 				final String baseUri = node.getBaseUri().toExternalForm();
 				try {
 					xmlSource = node.getUriResolver().resolve(baseUri, "");
-					if (xmlSource instanceof SAXSource) {
-						((SAXSource)xmlSource).setXMLReader(null);
-					}
 				} catch (TransformerException e) {
 					logger.error(e);
 					throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI) + "'): " + e.getMessage());
@@ -104,7 +91,11 @@ public class XsltConref
 
 				// set specific standard parameter
 				transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
-			}	
+			}
+			/* Use the default xml reader from saxon to get the attribute default expanded. */
+			if (xmlSource instanceof SAXSource) {
+				((SAXSource)xmlSource).setXMLReader(null);
+			}
 		}
 
 		setCustomParamters(transformer);

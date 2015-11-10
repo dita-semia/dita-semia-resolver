@@ -5,7 +5,7 @@
 	xmlns:xsl	= "http://www.w3.org/1999/XSL/Transform"
 	queryBinding="xslt2">
 	
-	<sch:ns uri="java:org.DitaSemia.JavaBase.SchematronUtil" prefix="java"/>
+	<sch:ns uri="java:org.DitaSemia.JavaBase.FileUtil" prefix="java"/>
 	
 	<sch:pattern>
 		<sch:rule context="*[@xslt-conref]">
@@ -17,22 +17,22 @@
 			
 			<sch:report test="not(java:fileExists($scriptUrl))">
 				Invalid value for @xslt-conref ('<sch:value-of select="$scriptAttr"/>').
-				Not existing file: '<sch:value-of select="$scriptUrl"/>'.
+				Not existing file: '<sch:value-of select="java:decodeUrl($scriptUrl)"/>'.
 			</sch:report>
 			
 			<sch:report test="java:fileExists($scriptUrl) and not(java:isValidXsl($scriptUrl))">
 				Invalid value for @xslt-conref ('<sch:value-of select="$scriptAttr"/>').
-				No valid XSL file: '<sch:value-of select="$scriptUrl"/>'.
+				No valid XSL file: '<sch:value-of select="java:decodeUrl($scriptUrl)"/>'.
 			</sch:report>
 			
 			<sch:report test="(string($sourceAttr) != '') and not(java:fileExists($sourceUrl))">
 				Invalid value for @xslt-conref-source ('<sch:value-of select="$sourceAttr"/>').
-				Not existing file: '<sch:value-of select="$sourceUrl"/>'.
+				Not existing file: '<sch:value-of select="java:decodeUrl($sourceUrl)"/>'.
 			</sch:report>
 			
 			<sch:report test="(string($sourceAttr) != '') and java:fileExists($sourceUrl) and not(doc-available($sourceUrl))">
 				Invalid value for @xslt-conref ('<sch:value-of select="$sourceAttr"/>').
-				No valid XML file: '<sch:value-of select="$sourceUrl"/>'.
+				No valid XML file: '<sch:value-of select="java:decodeUrl($sourceUrl)"/>'.
 			</sch:report>
 			
 		</sch:rule>
