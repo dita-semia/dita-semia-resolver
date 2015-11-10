@@ -4,7 +4,5 @@
 	
 	<nextCatalog catalog="../schema/catalog.xml"/>
 	<nextCatalog catalog="../xsl/catalog.xml"/>
-	<nextCatalog catalog="../samples/local-toc-specialized/catalog.xml"/>
-	<nextCatalog catalog="../samples/local-toc-parameterized/catalog.xml"/>
 	
 </catalog>
