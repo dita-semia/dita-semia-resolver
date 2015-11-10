@@ -499,6 +499,23 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>extensionsBundleClassName</String>
+										</field>
+										<field name="index">
+											<Integer>-1</Integer>
+										</field>
+										<field name="value">
+											<String>org.DitaSemia.XsltConref.OxygenExtensionBundle</String>
+										</field>
+										<field name="patchHandling">
+											<String>set</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>priority</String>
 										</field>
 										<field name="index">

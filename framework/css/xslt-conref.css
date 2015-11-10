@@ -105,3 +105,12 @@
     display:	inline;
     margin:		0px;
 }
+
+*[class~="topic/table"][xslt-conref]:not([conaction])
+*[class~="topic/simpletable"][xslt-conref]:not([conaction]){
+    display : block;
+}
+
+*[class~="topic/row"][xslt-conref] {
+  	content: "" !important;
+}

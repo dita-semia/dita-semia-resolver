@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serialized version="17.0" xml:space="preserve">
-	<map>
+	<serializableOrderedMap>
 		<entry>
 			<String>document.types</String>
 			<documentTypeDescriptor-array>
@@ -113,6 +113,23 @@
 										</field>
 										<field name="value">
 											<String>Darwin Information Typing Architecture with added support for XSLT-Conref</String>
+										</field>
+										<field name="patchHandling">
+											<String>set</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>extensionsBundleClassName</String>
+										</field>
+										<field name="index">
+											<Integer>-1</Integer>
+										</field>
+										<field name="value">
+											<String>org.DitaSemia.XsltConref.OxygenExtensionBundle</String>
 										</field>
 										<field name="patchHandling">
 											<String>set</String>
@@ -4477,5 +4494,5 @@ self::*[contains(@class," map/reltable ")]][1]
 				</documentTypeDescriptor>
 			</documentTypeDescriptor-array>
 		</entry>
-	</map>
+	</serializableOrderedMap>
 </serialized>
