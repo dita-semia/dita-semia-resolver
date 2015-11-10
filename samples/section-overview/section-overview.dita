@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="topic-with-section-overview.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="topic-with-section-overview.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_t4s_vvs_4t">
+  <title>Section Overview</title>
+	<body>
+		<p>Overview of sections</p>
+		<section-overview/>
+		<section id="inx_vxt_wt">
+			<title>1st Section</title>
+			<p>[...]</p>
+		</section>
+		<section id="qqb_wxt_wt">
+			<title>2nd Section</title>
+			<p>[...]</p>
+		</section>
+		<section id="usd_wxt_wt">
+			<title>3rd Section</title>
+			<p>[...]</p>
+		</section>
+	</body>
+</topic>
