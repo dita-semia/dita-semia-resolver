@@ -10,19 +10,23 @@ import java.net.URL;
 import java.util.List;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
-
 import javax.xml.transform.sax.SAXSource;
 
-import net.sf.saxon.event.PipelineConfiguration;
+import net.sf.saxon.s9api.DocumentBuilder;
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.QName;
+import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.XdmAtomicValue;
+import net.sf.saxon.s9api.XdmDestination;
+import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.tiny.TinyBuilder;
 
+import org.DitaSemia.JavaBase.FileUtil;
 import org.DitaSemia.JavaBase.NodeWrapper;
 import org.DitaSemia.JavaBase.SaxonNodeWrapper;
-import org.DitaSemia.JavaBase.FileUtil;
 import org.DitaSemia.JavaBase.XslTransformerCache;
 import org.apache.log4j.Logger;
 
@@ -33,6 +37,7 @@ public class XsltConref
 	
 	public static final String 	ATTR_URI 					= "xslt-conref";
 	public static final String 	ATTR_XML_SOURCE_URI			= "xslt-conref-source";
+	public static final String 	ATTR_START_TEMPLATE			= "xslt-conref-start";
 	public static final String 	PARAM_XPATH_TO_XSLT_CONREF	= "xPathToXsltConref";
 	public static final String 	NAME_NO_CONTENT				= "no-content";
 	public static final String 	NAMESPACE_CUSTOM_PARAMETER	= "http://www.dita-semia.org/xslt-conref/custom-parameter";
@@ -64,50 +69,60 @@ public class XsltConref
 	
 	public NodeWrapper resolve() throws XPathException {
 	
-		final URL 			scriptUrl 	= getScriptUrl();
-		final Transformer 	transformer = XslTransformerCache.getInstance().getTransformer(scriptUrl, node.getUriResolver());
-		Source 				xmlSource 	= null;
-		TinyBuilder 		result		= new TinyBuilder(new PipelineConfiguration(XslTransformerCache.getInstance().getConfiguration()));
+		final URL 				scriptUrl 		= getScriptUrl();
+		final XsltTransformer 	xsltTransformer = XslTransformerCache.getInstance().getTransformer(scriptUrl, node.getUriResolver());
+//		logger.info("xsltTransformer: " + xsltTransformer);
+		final Processor 		processor 		= new Processor(XslTransformerCache.getInstance().getConfiguration());
 		
 		if (getStartTemplate() != null) {
-			// TODO: create empty source
-			// TODO: set start template
+			try {
+				xsltTransformer.setInitialTemplate(new QName(getStartTemplate()));
+			} catch (SaxonApiException e) {
+				//TODO
+				throw new XPathException(e.getMessage());
+			}
 		} else {
-			xmlSource = getXmlSource(); 
-			if (xmlSource != null) {
-				final String sourceUrl = xmlSource.getSystemId();
-				if (!FileUtil.fileExists(sourceUrl)) {
-					throw new XPathException("Input source could not be found. (URL: '" + sourceUrl + "')");
-				}
-			} else {
+			Source 	xmlSource 	= getXmlSource();
+			if (xmlSource == null) {
 				// use current document as input
 				final String baseUri = node.getBaseUri().toExternalForm();
 				try {
 					xmlSource = node.getUriResolver().resolve(baseUri, "");
 				} catch (TransformerException e) {
-					logger.error(e);
-					throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI) + "'): " + e.getMessage());
+					throw new XPathException("Error resolving the source URL: '" + baseUri + "': " + e.getMessage());
 				}
-
 				// set specific standard parameter
-				transformer.setParameter(PARAM_XPATH_TO_XSLT_CONREF, createXPathToElement(node));
+				xsltTransformer.setParameter(new QName(PARAM_XPATH_TO_XSLT_CONREF), new XdmAtomicValue(createXPathToElement(node)));
+			} else if (!FileUtil.fileExists(xmlSource.getSystemId())) {
+				// dedicated error message for this scenario
+				throw new XPathException("Input source could not be found. (URL: '" + xmlSource.getSystemId() + "')");
 			}
-			/* Use the default xml reader from saxon to get the attribute default expanded. */
+			
+			// remove the provided xml reader to force saxon creating its own one using the configuration and, thus, expanding the attribute defaults
 			if (xmlSource instanceof SAXSource) {
 				((SAXSource)xmlSource).setXMLReader(null);
 			}
+			
+			try {
+				final DocumentBuilder 	builder = processor.newDocumentBuilder();
+				final XdmNode 			context = builder.build(xmlSource);
+				xsltTransformer.setInitialContextNode(context);
+			} catch (SaxonApiException e) {
+				throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI) + "'): " + e.getMessage());
+			}
 		}
 
-		setCustomParamters(transformer);
+		setCustomParameters(xsltTransformer);
 
 		//logger.info("scriptUrl: " + scriptUrl);
 		try {
-			transformer.transform(xmlSource, result);
-		} catch (TransformerException e) {
+			final XdmDestination destination = new XdmDestination();
+			xsltTransformer.setDestination(destination);
+			xsltTransformer.transform();
+			return new SaxonNodeWrapper(destination.getXdmNode().getUnderlyingNode());
+		} catch (SaxonApiException e) {
 			throw new XPathException("Runtime Error. " + e.getMessage());
-		}
-
-		return new SaxonNodeWrapper(result.getLastCompletedElement());
+		} 
 	}
 
 	
@@ -154,13 +169,12 @@ public class XsltConref
 	}
 	
 
-	public Object getStartTemplate() {
-		// TODO: ...
-		return null;
+	public String getStartTemplate() {
+		return node.getAttribute(ATTR_START_TEMPLATE);
 	}
 	
 	
-	private void setCustomParamters(Transformer transformer) {
+	private void setCustomParameters(XsltTransformer xsltTransformer) {
 		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_CUSTOM_PARAMETER);
 		for (String attrName : attrNameList) {
 			//logger.info("attribute: " + attrName);
@@ -168,7 +182,7 @@ public class XsltConref
 			final String paramValue	= node.getAttribute(attrName);
 			//logger.info("set custom parameter: " + paramName + " = '" + paramValue + "'");
 			if (paramValue != null) {
-				transformer.setParameter(paramName, paramValue);
+				xsltTransformer.setParameter(new QName(paramName), new XdmAtomicValue(paramValue));
 			}
 		}
 	}
