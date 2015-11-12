@@ -33,81 +33,6 @@
     display : none;
 }
 
-
-/* Modify Header before xslt-conref  */
-*[xslt-conref] > oxy|error:before,
-*[xslt-conref] > oxy|reference:before {
-    background-color: rgb(240, 240, 240) !important;
-	display: -oxy-morph !important;
-  	content: 
-  		oxy_button(
-			action, oxy_action(
-		            name, 			'Open Script', 
-		            description, 	'Open XSLT-Conref XSL Script file', 
-		            icon, 			url('../img/openScript.png'), 
-		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
-		            arg-filetype,	'script'),
-			transparent, 				true,
-			showIcon, 					true,
-			enableInReadOnlyContext, 	true)
-  		oxy_button(
-  			action, oxy_action(
-		            name, 			'Refresh', 
-		            description, 	'Refresh the XSLT-Conref', 
-		            icon, 			url('../img/refreshReference.png'), 
-		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
-			transparent, 				true,
-			showIcon, 					true,
-			enableInReadOnlyContext, 	true)
-  		!important;
-}
-
-*[xslt-conref][xslt-conref-source] > oxy|error:before,
-*[xslt-conref][xslt-conref-source] > oxy|reference:before {
-  	content: 
-  		oxy_button(
-  			action, oxy_action(
-		            name, 			'Open Script', 
-		            description, 	'Open XSLT-Conref XSL Script file', 
-		            icon, 			url('../img/openScript.png'), 
-		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
-		            arg-filetype,	'script'),
-			transparent, 				true,
-			showIcon, 					true,
-			enableInReadOnlyContext, 	true)
-  		oxy_button(
-  			action, oxy_action(
-		            name, 			'Open Source', 
-		            description, 	'Open XSLT-Conref XML Source file', 
-		            icon, 			url('../img/openSource.png'), 
-		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
-		            arg-filetype,	'source'),
-			transparent, 				true,
-			showIcon, 					true,
-			enableInReadOnlyContext, 	true)
-  		oxy_button(
-  			action, oxy_action(
-		            name, 			'Refresh', 
-		            description, 	'Refresh the XSLT-Conref', 
-		            icon, 			url('../img/refreshReference.png'), 
-		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
-			transparent, 				true,
-			showIcon, 					true,
-			enableInReadOnlyContext, 	true)
-  		!important; 
-}
-
-*[xslt-conref] > oxy|error:before,
-*[xslt-conref][xslt-conref-source] > oxy|error:before{
-	-oxy-append-content: "[" !important;
-}
-
-*[xslt-conref] no-content {
-	/* Mark content to be invisible in output */
-	font-size: 	0.8em;
-	color:		#999999;
-}
-
 /* avoid double border on conref reference table */
 *[class~="topic/simpletable"][conref]:not([conaction]),
 *[class~="topic/simpletable"][conkeyref]:not([conaction]),
@@ -125,6 +50,7 @@
     margin:		0px;
 }
 
+
 *[class~="topic/table"][xslt-conref]:not([conaction])
 *[class~="topic/simpletable"][xslt-conref]:not([conaction]){
     display : block;
@@ -132,4 +58,73 @@
 
 *[class~="topic/row"][xslt-conref] {
   	content: "" !important;
+}
+
+
+/* Modify Header before xslt-conref  */
+
+@OpenXsltConrefScriptButton: 
+		oxy_button(
+			action, oxy_action(
+		            name, 			'Open Script', 
+		            description, 	'Open XSLT-Conref XSL Script file', 
+		            icon, 			url('../img/openScript.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'script'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+			
+@OpenXsltConrefSourceButton: 
+		oxy_button(
+  			action, oxy_action(
+		            name, 			'Open Source', 
+		            description, 	'Open XSLT-Conref XML Source file', 
+		            icon, 			url('../img/openSource.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'source'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+
+@XsltConrefRefreshButton: 
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Refresh', 
+		            description, 	'Refresh the XSLT-Conref', 
+		            icon, 			url('../img/refreshReference.png'), 
+		            operation, 		'org.DitaSemia.XsltConref.RefreshReference'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+
+*[xslt-conref] > oxy|error:before,
+*[xslt-conref] > oxy|reference:before {
+    background-color: rgb(240, 240, 240) !important;
+	display: -oxy-morph !important;
+  	content: 
+  		@OpenXsltConrefScriptButton
+  		@XsltConrefRefreshButton
+  		!important;
+}
+
+*[xslt-conref][xslt-conref-source] > oxy|error:before,
+*[xslt-conref][xslt-conref-source] > oxy|reference:before {
+  	content: 
+  		@OpenXsltConrefScriptButton
+  		@OpenXsltConrefSourceButton
+  		@XsltConrefRefreshButton
+  		!important; 
+}
+
+*[xslt-conref] > oxy|error:before,
+*[xslt-conref][xslt-conref-source] > oxy|error:before{
+	-oxy-append-content: "[" !important;
+}
+
+/* support the no-content result element */
+*[xslt-conref] no-content {
+	/* Mark content to be invisible in output */
+	font-size: 	0.8em;
+	color:		#999999;
 }
