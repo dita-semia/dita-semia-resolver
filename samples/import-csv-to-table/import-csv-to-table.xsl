@@ -6,14 +6,16 @@
     exclude-result-prefixes	= "#all"
 	expand-text				= "yes">
 	
+	<xsl:param name="csvFile" as="xs:string"/>
+	
 	<xsl:include href="../../xsl/csv-to-xml.xsl"/>
 	<xsl:include href="../../xsl/class.xsl"/>
 	
 	<xsl:output method="xml" indent="yes"/>
 	
-    <xsl:template match="/">
+    <xsl:template name="ImportCsv">
     	
-    	<xsl:variable name="csvCode" 	as="xs:string" 	select="unparsed-text(resolve-uri('Data.csv'))"/>
+    	<xsl:variable name="csvCode" 	as="xs:string" 	select="unparsed-text(resolve-uri($csvFile))"/>
     	<xsl:variable name="rowList" 	as="element()+" select="ds:csvToXml($csvCode)"/>
     	<xsl:variable name="colCount" 	as="xs:integer" select="max(for $i in $rowList return count($i/*))"/>
     	

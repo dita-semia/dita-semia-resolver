@@ -11,6 +11,9 @@
 		<optional>
 			<attribute name="xslt-conref-source"/>
 		</optional>
+		<optional>
+			<attribute name="xslt-conref-start"/>
+		</optional>
 		<zeroOrMore>
 			<attribute>
 				<nsName ns="http://www.dita-semia.org/xslt-conref/custom-parameter"/>

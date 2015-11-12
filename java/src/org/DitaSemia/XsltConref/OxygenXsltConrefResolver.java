@@ -108,6 +108,7 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 		final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_CUSTOM_PARAMETER);
 		return (attributeName.equals(XsltConref.ATTR_URI)) ||
 				(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URI)) ||
+				(attributeName.equals(XsltConref.ATTR_START_TEMPLATE)) ||
 				(attributeName.startsWith(customParameterPrefix + ":"));
 	}
 

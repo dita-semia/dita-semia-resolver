@@ -6,13 +6,15 @@
     exclude-result-prefixes	= "#all"
 	expand-text				= "yes">
 	
+	<xsl:param name="cppFile" as="xs:string"/>
+	
 	<xsl:include href="../../xsl/class.xsl"/>
 	
 	<xsl:output method="xml" indent="yes"/>
 	
-    <xsl:template match="/">
+	<xsl:template name="ImportCpp">
     	
-    	<xsl:variable name="cppCode" as="xs:string" select="unparsed-text(resolve-uri('EnumTest.cpp'))"/>
+    	<xsl:variable name="cppCode" as="xs:string" select="unparsed-text(resolve-uri($cppFile))"/>
     	
     	<xsl:processing-instruction name="xml-model">href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"</xsl:processing-instruction>
     	
