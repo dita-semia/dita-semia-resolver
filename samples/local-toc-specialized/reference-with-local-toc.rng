@@ -14,11 +14,8 @@
 			</optional>
 			<optional>
 				<attribute name="class" a:defaultValue="+ topic/ul dita-semia/local-toc "/>
-			
 			</optional>
-			<!-- TODO: use urn instead - schematron validation needs to be adapter -->
-			<!--<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:local-toc-specialized.xsl"/>-->
-			<attribute name="xslt-conref" a:defaultValue="local-toc-specialized.xsl"/>
+			<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:local-toc-specialized.xsl"/>
 		</element>
 	</define>
 	

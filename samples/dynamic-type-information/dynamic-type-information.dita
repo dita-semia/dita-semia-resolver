@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="reference-with-type-info.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="reference-with-type-info.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t">
+  <title>Dynamic Type Information</title>
+	<refbody>
+		<section id="js1_qbx_zt">
+			<title>Interface Definition</title>
+			<table frame="all" rowsep="1" colsep="1" id="icc_vbx_zt">
+				<tgroup cols="2">
+					<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+					<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+					<thead>
+						<row>
+							<entry>Element</entry>
+							<entry>Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<p><codeph>TypeOfPerson</codeph></p>
+							</entry>
+							<entry>
+								<p>Type of the customer.</p>
+								<type-info/>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<p><codeph>Name</codeph></p>
+							</entry>
+							<entry>
+								<p>Name of the customer.</p>
+								<type-info id="m54_q2x_zt"/>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<p><codeph>Gender</codeph></p>
+							</entry>
+							<entry>
+								<p>Gender of the customer.</p>
+								<type-info xslt-conref="urn:dita-semia:xslt-conref:xsl:dynamic-type-information.xsl"
+									id="zrw_q2x_zt"/>
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<p><codeph>UnknownField</codeph></p>
+							</entry>
+							<entry>
+								<p>Some additional information.</p>
+								<type-info id="r32_r2x_zt"/>
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>
+	</refbody>
+	<reference id="global-field-definitions">
+		<title>Global Field Definitions</title>
+		<refbody>
+			<table frame="all" rowsep="1" colsep="1">
+				<tgroup cols="2">
+					<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+					<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+					<thead>
+						<row>
+							<entry>Field</entry>
+							<entry>Type</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<p><codeph>Gender</codeph></p>
+							</entry>
+							<entry>
+								<p>Enumeration:</p>
+								<ul id="ixt_jbx_zt">
+									<li id="jxt_jbx_zt">1 – Male</li>
+									<li id="olb_kbx_zt">2 – Female</li>
+								</ul>
+							</entry>
+						</row>
+						<row>
+							<entry><codeph>Name</codeph></entry>
+							<entry>String, length: 1 to 20</entry>
+						</row>
+						<row>
+							<entry>
+								<p><codeph>TypeOfPerson</codeph></p>
+							</entry>
+							<entry>
+								<p>Enumeration:</p>
+								<ul id="qpt_lbx_zt">
+									<li id="rpt_lbx_zt">1 – Natural person</li>
+									<li id="okd_rbx_zt">2 – Organization</li>
+								</ul>
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</refbody>
+	</reference>
+</reference>

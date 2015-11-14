@@ -12,31 +12,33 @@
 	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
 	
     <xsl:template match="/">
-
+    	
+    	<xsl:processing-instruction name="xml-model">href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"</xsl:processing-instruction>
+    	
     	<xsl:variable name="xsltConref" as="element()" select="saxon:evaluate($xPathToXsltConref)"/>
     	<xsl:variable name="baseTopic"	as="element()?" select="($xsltConref/ancestor::*[contains(@class, $C_TOPIC)])[last()]"/>
 
-        <local-toc class="+ topic/ul dita-semia/local-toc ">
+        <ul>
         	<xsl:for-each select="$baseTopic/*[contains(@class, $C_TOPIC)]">
-                <li class="{$CP_LI}">
-                	<title class="{$CP_TITLE}">
+                <li>
+                	<title>
                     	<xsl:value-of select="title"/>
                     </title>
                     <xsl:if test="exists(shortdesc)">
-                    	<p class="{$CP_P}">
+                    	<p>
                     		<xsl:copy-of select="shortdesc/node()"/>
                     	</p>
                     </xsl:if>
                     <xsl:if test="exists(@id)">
-                    	<p class="{$CP_P}">
+                    	<p>
                     		<xsl:text>(Details: </xsl:text>
-                    		<xref href="#{@id}" format="dita" class="{$CP_XREF}"/>
+                    		<xref href="#{@id}" format="dita"/>
                     		<xsl:text>)</xsl:text>
                     	</p>
                     </xsl:if>
                 </li>
             </xsl:for-each>
-        </local-toc>
+        </ul>
     	
     </xsl:template>
 </xsl:stylesheet>

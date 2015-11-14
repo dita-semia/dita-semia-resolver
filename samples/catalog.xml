@@ -6,5 +6,6 @@
 	<nextCatalog catalog="local-toc-parameterized/catalog.xml"/>
 	<nextCatalog catalog="section-overview/catalog.xml"/>
 	<nextCatalog catalog="schematron-test/catalog.xml"/>
+	<nextCatalog catalog="dynamic-type-information/catalog.xml"/>
 	
 </catalog>

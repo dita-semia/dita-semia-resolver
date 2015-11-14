@@ -21,7 +21,9 @@
 	
 	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
 	
-    <xsl:template match="/" as="element()">
+	<xsl:template match="/">
+		
+		<xsl:processing-instruction name="xml-model">href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"</xsl:processing-instruction>
     	
     	<xsl:variable name="xsltConref" as="element()" 	select="saxon:evaluate($xPathToXsltConref)"/>
     	<xsl:variable name="baseTopic"	as="element()?" select="($xsltConref/ancestor::*[contains(@class, $C_TOPIC)])[last()]"/>
@@ -29,7 +31,7 @@
     	
 		<xsl:choose>
 			<xsl:when test="count($childList) >= number($minCount)">
-				<local-toc class="+ topic/ul dita-semia/local-toc ">
+				<section>
 					
 					<!-- section title -->
 					<xsl:if test="string($sectionTitle) != ''">
@@ -82,7 +84,7 @@
 							</li>
 						</xsl:for-each>
 					</ul>
-				</local-toc>
+				</section>
 			</xsl:when>
 			<xsl:otherwise>
 				<no-content>(Overview is hidden since less then {$minCount} child topics are present.)</no-content>

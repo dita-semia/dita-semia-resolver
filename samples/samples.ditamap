@@ -12,6 +12,8 @@
 	<chapter href="import-excel-xml-to-table/import-excel-xml-to-table.dita"/>
 	<chapter href="import-cpp-enum/import-cpp-enum.dita"/>
 	<chapter href="import-tdm-entity/import-tdm-entity.dita"/>
+	<chapter href="dynamic-type-information/dynamic-type-information.dita"/>
 	<chapter href="svg-simple-test/svg-simple-test.dita"/>
+	<chapter href="sequence-diagram/sequence-diagram.dita"/>
 	<chapter href="adding-default-attr/adding-default-attr.dita"/>
 </bookmap>

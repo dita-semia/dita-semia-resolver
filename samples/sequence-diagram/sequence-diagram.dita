@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t">
+  <title>Sequence Diagram</title>
+  <refbody>
+		<section>
+			<p>Calling component: <codeph>CallingComponent</codeph></p>
+			<p>List of function calls with format "&lt;component>.&lt;function>":</p>
+			<sl>
+				<sli><codeph>Component1.Function1.1</codeph></sli>
+				<sli><codeph>Component2.Function2.1</codeph></sli>
+				<sli><codeph>Component1.Function1.2</codeph></sli>
+				<sli><codeph>Component3.Function3.1</codeph></sli>
+			</sl>
+			<fig xslt-conref="sequence-diagram.xsl"/>
+		</section>
+	</refbody>
+</reference>
