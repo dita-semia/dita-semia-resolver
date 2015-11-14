@@ -17,10 +17,13 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import ro.sync.ecss.dita.DITAAccess;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.ReferenceResolverException;
 import ro.sync.ecss.extensions.api.ValidatingReferenceResolverException;
+import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
+import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.dita.conref.DITAConRefResolver;
 
@@ -115,13 +118,51 @@ public class OxygenXsltConrefResolver extends DITAConRefResolver
 	@Override
 	public void checkTarget(AuthorNode node, AuthorDocument targetDocument) throws ValidatingReferenceResolverException
 	{
-		if ((XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) &&
-			(targetDocument.getRootElement().getDisplayName().equals(XsltConref.NAME_NO_CONTENT))) {
-			// no-content is always valid as result element
+		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
+			checkXsltConrefTarget(node, targetDocument);	
 		} else {
 			super.checkTarget(node, targetDocument);
 		}
 	}
+	
+	public static void checkXsltConrefTarget(AuthorNode node, AuthorDocument targetDocument) throws ValidatingReferenceResolverException {
+		
+		if (targetDocument.getRootElement().getDisplayName().equals(XsltConref.NAME_NO_CONTENT)) {
+			// <no-content> is always valid as result element
+			return;
+		}
+		
+		String errorMessage = null;
+	    
+	    final AuthorElement targetElement = targetDocument.getRootElement();
+	    if (targetElement != null) {
+	        final AttrValue targetClass = targetElement.getAttribute("class");
+	        if (targetClass == null) {
+	        	errorMessage = "The target does not have a class attribute";
+	        } else {
+	        	if (node.getType() == AuthorNode.NODE_TYPE_ELEMENT) {
+	        		final AttrValue sourceClass = ((AuthorElement)node).getAttribute("class");
+	        		if (sourceClass != null) {
+	                    final boolean isGeneralization = DITAAccess.isGeneralizationOf(targetClass.getValue(), sourceClass.getValue());
+	                    if (!isGeneralization) {
+	                    	errorMessage = 
+                    			"The target element '" + targetElement.getName() +"' " +
+                    			"with class value '" + targetClass.getValue() +"' " +
+                    			"is not a generalization of source element '" + node.getName() +"' " + 
+                    			"with class value '" + sourceClass.getValue() + "'";
+	                    }
+	        		} else {
+	        			errorMessage = "The source does not have a class attribute";
+	        		}
+	        	} else {
+	        		errorMessage = "The XSLT-Conref source is not an element";
+	        	}
+	        }
+	    }
+	    if (errorMessage != null) {
+	      throw new ValidatingReferenceResolverException("XSLT-Conref was not expanded:\n" + errorMessage);
+	    }
+    }
 	
 	@Override
 	public SAXSource resolveReference(AuthorNode node, String systemID, AuthorAccess authorAccess, EntityResolver entityResolver) throws ReferenceResolverException

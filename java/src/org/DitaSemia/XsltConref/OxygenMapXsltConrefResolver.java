@@ -99,9 +99,8 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 	@Override
 	public void checkTarget(AuthorNode node, AuthorDocument targetDocument) throws ValidatingReferenceResolverException
 	{
-		if ((XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) &&
-			(targetDocument.getRootElement().getDisplayName().equals(XsltConref.NAME_NO_CONTENT))) {
-			// no-content is always valid as result element
+		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
+			OxygenXsltConrefResolver.checkXsltConrefTarget(node, targetDocument);
 		} else {
 			super.checkTarget(node, targetDocument);
 		}
