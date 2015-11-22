@@ -4,8 +4,11 @@
 <reference id="topic_t4s_vvs_4t">
 	<title>Import XML File into Codeblock</title>
 	<refbody>
-		<section>The xml code will be serilized in such a way that each line has not more than 50
-			characters to be rendered properly in PDF. If required, the text content will be
-			indented.<codeblock xslt-conref="import-xml-to-codeblock.xsl" xslt-conref-source="Data.xml"/></section>
+		<section>
+			<p>The xml code will be serialized in such a way that each line has not more than 50
+				characters to be rendered properly in PDF. If required, the text content will be
+				indented.</p>
+			<codeblock xslt-conref="import-xml-to-codeblock.xsl" xslt-conref-source="Data.xml"/>
+		</section>
 	</refbody>
 </reference>

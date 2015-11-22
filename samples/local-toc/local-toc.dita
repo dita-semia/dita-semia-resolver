@@ -4,9 +4,12 @@
 <reference id="topic_t4s_vvs_4t">
   <title>Local Table of Contents</title>
   <refbody>
-  	<section>This reference contains:<ul xslt-conref="local-toc.xsl">
-			<li/>
-			</ul></section>
+  	<section>
+			<p>This reference contains:</p>
+			<ul xslt-conref="local-toc.xsl">
+				<li/>
+			</ul>
+		</section>
 	</refbody>
 	<reference id="zt3_52l_tt">
 		<title>1st Reference Topic</title>
