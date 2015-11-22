@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_ew3_qdf_c5">
+  <title>Conversion to Standard DITA</title>
+  <body>
+    <p>The concept is not compatible with the standard and there appears to be no way to make it
+			compatible since the standard DITA does not provide any functioanlity to create content
+			dynamically. This means that any project using XSLT-Conref can't be processed with tools
+			not explicitly supporting XSLT-Conref.</p>
+		<p>To overcome this gap there is an XSL transformation "xslt-conref-to-conref.xsl" that
+			converts the input (a single topic or a ditamap):</p>
+		<ul id="l4n_c2f_c5">
+			<li id="m4n_c2f_c5">
+				<p>All files are duplicated with an attached suffix "-RESOLVED" right before the
+					file extension.</p>
+				<p>(To make sure all relative links still remain valid it does not copy the result
+					files to a seperate directory. This would surely be more convenient but would
+					make the implementation much more complicated.)</p>
+			</li>
+			<li id="adn_l2f_c5">
+				<p>All XSLT-Conref elements of a file are resolved and stored in a new file using
+					the original filename with the attached suffix "-CONREF" right before the file
+					extension. This file contains a single topic with all resolved topic elements as
+					child topics and all other resolved elements within the body. This file might
+					not be valid according to the schema but the attribute defaults are already
+					expanded sp at least DITA-OT can handle them.</p>
+			</li>
+			<li id="wlz_32f_c5">
+				<p>All XSLT-Conref elements are replaced by a single conref element. To ensure that
+					the conref can be resolved the element name and class attribute is taken from
+					the resolved XSLT-Conref. The conref refers to the conref file.</p>
+			</li>
+		</ul>
+		<p>After converting the samples.ditamap it could be published to PDF using DITA-OT. An
+			exception are the embedded SVG graphics which DITA-OT currently can't handle.</p>
+  </body>
+</topic>

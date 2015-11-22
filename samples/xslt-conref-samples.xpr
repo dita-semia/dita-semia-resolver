@@ -732,6 +732,7 @@
     </meta>
     <projectTree name="xslt-conref-samples.xpr">
         <folder path="../config/"/>
+        <folder path="../doc/"/>
         <folder path="../framework/"/>
         <folder path="."/>
         <folder path="../schema/"/>
