@@ -1,48 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<reference id="topic_t4s_vvs_4t">
+<reference id="topic_t4s_vvs_4t" xmlns:xcr="http://www.dita-semia.org/xslt-conref">
   <title>Local Table of Contents</title>
   <refbody>
-  	<section>
-			<p>This reference contains:</p>
-			<ul xslt-conref="local-toc.xsl">
-				<li/>
-			</ul>
-		</section>
+  	<section>This reference contains:<ul xcr:xsl="local-toc.xsl">
+			<li/>
+			</ul></section>
 	</refbody>
 	<reference id="zt3_52l_tt">
 		<title>1st Reference Topic</title>
 		<shortdesc>This reference contains some information.</shortdesc>
-		<refbody>
-			<section>
-				<p conref="#xhl_1fl_tt/br4_xz5_5t" id="xc5_s22_vt"/>
-			</section>
-			<section>
-				<p id="cvh_xz5_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-					nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-					voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
-					ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-					invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-					et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-					takimata sanctus est Lorem ipsum dolor sit amet.</p>
-			</section>
-		</refbody>
 	</reference>
 	<reference id="xhl_1fl_tt">
 		<title>2nd Reference Topic</title>
 		<shortdesc>This reference contains even more information.</shortdesc>
+	</reference>
+	<reference id="wpz_qfx_25">
+		<title>Description</title>
 		<refbody>
 			<section>
-				<p id="br4_xz5_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-					nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-					voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
-					ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-					invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-					et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-					takimata sanctus est Lorem ipsum dolor sit amet.</p>
+				<p id="ijq_rfx_25">The use-case is that you have some reference topic with
+					potentially several child topics. The idea is to provide an overview of all
+					child topics within the body as itemized list and display the short descriptions
+					together with a link to all entries.</p>
+				<p id="wlv_zfx_25">This implementation does no use any use-case specific specialization but
+					simply adds the <codeph>xcr:xsl</codeph> attribute to a <codeph>ul</codeph>
+					element and have a local XSLT script creating the required content.</p>
 			</section>
 		</refbody>
 	</reference>

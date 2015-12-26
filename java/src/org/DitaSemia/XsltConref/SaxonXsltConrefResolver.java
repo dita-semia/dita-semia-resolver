@@ -88,7 +88,7 @@ public class SaxonXsltConrefResolver extends ExtensionInstruction {
     	{
     		final Item select = arguments[SELECT].head();
 
-    		//logger.info("resolve: " + select);
+//    		logger.info("resolve: " + select);
     		
     		if (select instanceof NodeInfo) 
     		{
@@ -101,7 +101,6 @@ public class SaxonXsltConrefResolver extends ExtensionInstruction {
     				try
     				{
             			final String resolvedString = xsltConref.resolve().serialize();
-            			//logger.info("resolvedString: " + resolvedString);
             			
             			final DocumentInfo 	resultDoc	= context.getConfiguration().buildDocument(new StreamSource(new StringReader(resolvedString)));
             			

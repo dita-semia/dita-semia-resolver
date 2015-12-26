@@ -6,6 +6,8 @@
     exclude-result-prefixes	= "#all"
 	expand-text				= "yes">
 	
+	<xsl:param name="maxWidth" as="xs:integer" select="60"/>
+	
 	<xsl:output method="xml" indent="no"/>
 	
 	<xsl:include href="xml-serialize.xsl"/>
@@ -15,7 +17,7 @@
     	<xsl:processing-instruction name="xml-model">href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"</xsl:processing-instruction>
     	
         <codeblock>
-        	<xsl:value-of select="ds:xmlSerialize(*, '    ', 50)"/>
+        	<xsl:value-of select="ds:xmlSerialize(*, '    ', $maxWidth)"/>
         </codeblock>
     	
     </xsl:template>

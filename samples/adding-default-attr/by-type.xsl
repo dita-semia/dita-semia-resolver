@@ -19,10 +19,10 @@
 	
     <xsl:template match="/">
     	<section xsl:type="section.type">
-    		<title>By using the xsl:type attribute</title>
-    		<p>You need to import an xsd schema and add @xsl:type="xxx" to your root element.</p>
+    		<title>By using the <codeph>xsl:type</codeph> attribute</title>
+    		<p>You need to import an XSD schema and add <codeph>@xsl:type="xxx"</codeph> to your root element.</p>
     		<p>A great advantage is that you get some degree of validation during writing the script.</p>
-    		<p>But finding the origin of a validation error in a more complex script can be extremly annoying.</p>
+    		<p>But finding the origin of a validation error in a more complex script can be extremely annoying.</p>
         </section>
     </xsl:template>
 

@@ -1,34 +1,35 @@
 
 @namespace oxy "http://www.oxygenxml.com/extensions/author";
+@namespace xcr "http://www.dita-semia.org/xslt-conref";
 
 /* Hides the required content that is just needed for display on 
  xslt-conref for topic, ol/li, ul/li, table */
-*[class~="topic/topic"][xslt-conref]:not([conaction]) > *[class~="topic/topic"],
-*[class~="topic/table"][xslt-conref]:not([conaction]) > *[class~="topic/table"],
-*[class~="topic/ol"][xslt-conref]:not([conaction]) > *[class~="topic/ol"],
-*[class~="topic/ul"][xslt-conref]:not([conaction]) > *[class~="topic/ul"],
-*[class~="topic/dl"][xslt-conref]:not([conaction]) > *[class~="topic/dl"],
-*[class~="topic/prodinfo"][xslt-conref]:not([conaction]) > *[class~="topic/prodinfo"],
-*[class~="topic/ph"][xslt-conref]:not([conaction]) > *[class~="topic/ph"],
-*[class~="topic/dlentry"][xslt-conref]:not([conaction]) > *[class~="topic/dlentry"]
+*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *[class~="topic/topic"],
+*[class~="topic/table"][xcr|xsl]:not([conaction]) > *[class~="topic/table"],
+*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *[class~="topic/ol"],
+*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *[class~="topic/ul"],
+*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *[class~="topic/dl"],
+*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
+*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *[class~="topic/ph"],
+*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *[class~="topic/dlentry"]
 {
     display : inherit;
 }
 
-*[class~="topic/simpletable"][xslt-conref]:not([conaction]) > *[class~="topic/simpletable"]
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *[class~="topic/simpletable"]
 {
     display : table;
 }
 
-*[class~="topic/table"][xslt-conref]:not([conaction]) > *,    
-*[class~="topic/simpletable"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/ol"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/ul"][xslt-conref]:not([conaction]) > *, 
-*[class~="topic/topic"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/dl"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/prodinfo"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/ph"][xslt-conref]:not([conaction]) > *,
-*[class~="topic/dlentry"][xslt-conref]:not([conaction]) > *
+*[class~="topic/table"][xcr|xsl]:not([conaction]) > *,    
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *, 
+*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *
 {
     display : none;
 }
@@ -36,27 +37,27 @@
 /* avoid double border on conref reference table */
 *[class~="topic/simpletable"][conref]:not([conaction]),
 *[class~="topic/simpletable"][conkeyref]:not([conaction]),
-*[class~="topic/simpletable"][xslt-conref]:not([conaction]),
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]),
 *[class~="topic/tgroup"][conref]:not([conaction]),
 *[class~="topic/tgroup"][conkeyref]:not([conaction]),
-*[class~="topic/tgroup"][xslt-conref]:not([conaction]) {
+*[class~="topic/tgroup"][xcr|xsl]:not([conaction]) {
 	border: none;
 }
 
 /* Remove static text, no margins */
-*[xslt-conref]:not([conaction]):before {
+*[xcr|xsl]:not([conaction]):before {
     content:	"";
     display:	inline;
     margin:		0px;
 }
 
 
-*[class~="topic/table"][xslt-conref]:not([conaction])
-*[class~="topic/simpletable"][xslt-conref]:not([conaction]){
+*[class~="topic/table"][xcr|xsl]:not([conaction])
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]){
     display : block;
 }
 
-*[class~="topic/row"][xslt-conref] {
+*[class~="topic/row"][xcr|xsl] {
   	content: "" !important;
 }
 
@@ -98,8 +99,8 @@
 			showIcon, 					true,
 			enableInReadOnlyContext, 	true);
 
-*[xslt-conref] > oxy|error:before,
-*[xslt-conref] > oxy|reference:before {
+*[xcr|xsl] > oxy|error:before,
+*[xcr|xsl] > oxy|reference:before {
     background-color: rgb(240, 240, 240) !important;
 	display: -oxy-morph !important;
   	content: 
@@ -108,8 +109,8 @@
   		!important;
 }
 
-*[xslt-conref][xslt-conref-source] > oxy|error:before,
-*[xslt-conref][xslt-conref-source] > oxy|reference:before {
+*[xcr|xsl][xcr|source] > oxy|error:before,
+*[xcr|xsl][xcr|source] > oxy|reference:before {
   	content: 
   		@OpenXsltConrefScriptButton
   		@OpenXsltConrefSourceButton
@@ -117,19 +118,19 @@
   		!important; 
 }
 
-*[xslt-conref] > oxy|error:before,
-*[xslt-conref][xslt-conref-source] > oxy|error:before{
+*[xcr|xsl] > oxy|error:before,
+*[xcr|xsl][xcr|source] > oxy|error:before{
 	-oxy-append-content: "[" !important;
 }
 
 /* support the no-content result element */
-*[xslt-conref] no-content {
+*[xcr|xsl] no-content {
 	/* Mark content to be invisible in output */
 	font-size: 	0.8em;
 	color:		#999999;
 }
 
-/* support the block result element */
-*[class~="dita-semia/block"] {
+/* make topic/div work with oxygen 17.0 (before DITA 1.3 support) as well */
+*[class~="topic/div"] {
     display: block;
 }

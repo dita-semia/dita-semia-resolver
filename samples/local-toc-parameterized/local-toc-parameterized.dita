@@ -9,18 +9,6 @@
 	<reference id="zt3_52l_tt">
 		<title>Reference Topic 1</title>
 		<shortdesc>This reference contains some information.</shortdesc>
-		<refbody>
-			<section>
-				<p id="cvh_xz5_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-					nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-					voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
-					ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-					invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-					et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-					takimata sanctus est Lorem ipsum dolor sit amet.</p>
-			</section>
-		</refbody>
 	</reference>
 	<reference id="xhl_1fl_tt">
 		<title>Reference Topic 2</title>
@@ -32,19 +20,6 @@
 		<reference id="kl5_mgv_5t">
 			<title>Child Reference Topic 2.1</title>
 			<shortdesc>This child reference contains some information.</shortdesc>
-			<refbody>
-				<section>
-					<p id="ll5_mgv_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-						diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-						sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-						Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-						nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-						diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-						clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet.</p>
-				</section>
-			</refbody>
 		</reference>
 		<reference id="ml5_mgv_5t">
 			<title>Child Reference Topic 2.2</title>
@@ -55,20 +30,35 @@
 			<reference id="dnl_1vc_vt">
 				<title>Grandchild Reference Topic 2.2.1</title>
 				<shortdesc>This child reference contains some information.</shortdesc>
-				<refbody>
-					<section>
-						<p id="enl_1vc_vt">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-							sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-							aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-							dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
-							est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-							sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-							dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
-							justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-							takimata sanctus est Lorem ipsum dolor sit amet.</p>
-					</section>
-				</refbody>
 			</reference>
 		</reference>
+	</reference>
+	<reference id="z31_mhx_25">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="i3t_3gx_25">This sample is a further extension of the sample <xref
+					href="../local-toc-specialized/local-toc-specialized.dita#topic_t4s_vvs_4t"
+					/>:</p>
+				<ol id="ozh_lgx_25">
+					<li>
+						<p id="p2r_vgx_25">The schema defines custom parameters as attributes for the
+							<codeph>loca-toc</codeph> element that allows the author individually
+							modify the appearance of the generated overview.</p>
+					</li>
+					<li>
+						<p id="fxy_vgx_25">The XSLT script has been improved in such a way that it
+							detects when an overview is not reasonable to be displayed. This is the
+							case, when there are less then two child topics present. Thus, in the
+							case of none or only a single child reference only a note for the author
+							will be displayed so that he doesn't wonder why there is no content
+							generated. The text won't be published.</p>
+						<p id="jds_g3x_25">This feature is especially useful when the overview
+							should be generated for any reference (of a specific type) and, thus,
+							needs to be defined as mandatory element by the schema.</p>
+					</li>
+				</ol>
+			</section>
+		</refbody>
 	</reference>
 </reference>

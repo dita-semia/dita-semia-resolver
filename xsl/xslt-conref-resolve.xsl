@@ -7,23 +7,24 @@
 	xmlns:xcrsr	= "http://www.dita-semia.org/xslt-conref/saxon-resolver"
 	xmlns:xcrcp	= "http://www.dita-semia.org/xslt-conref/custom-parameter"
 	expand-text					= "yes"
-	exclude-result-prefixes		= "#all"
+	exclude-result-prefixes		= "xs"
 	extension-element-prefixes	= "xcrsr">
 
     <xsl:mode name="#default" on-no-match="shallow-copy"/>
     
-    <xsl:template match="*[@xslt-conref]">
+    <xsl:template match="*[@xcr:xsl]">
     	
     	<xsl:try>
 	    	<xsl:variable name="Resolved" as="element()">
 	    		<xcrsr:resolve select="."/>
 	    	</xsl:variable>
+    		<xsl:message select="$Resolved"></xsl:message>
 	    	
 	    	<xsl:if test="name($Resolved) != 'no-content'">
 		    	<xsl:copy>
 		    		
 		    		<!-- keep all attributes not related to xslt-conref -->
-		    		<xsl:copy-of select="@* except (@xslt-conref, @xslt-conref-source, @xcr:*, @xcrcp:*)"/>
+		    		<xsl:copy-of select="@* except (@xcr:*, @xcrcp:*)"/>
 		    		
 		    		<!-- copy all attributes from resolved element that don't exist in the original element and are not in the xc-namespace -->
 		    		<xsl:variable name="ExistingAttrNameList" as="xs:string*" select="for $i in @* return name($i)"/>

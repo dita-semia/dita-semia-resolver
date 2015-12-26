@@ -2,7 +2,8 @@
 <?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
 	
 	<include href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng"/>
 
@@ -15,9 +16,7 @@
 			<optional>
 				<attribute name="class" a:defaultValue="+ topic/sl dita-semia/section-overview "/>
 			</optional>
-			<!-- TODO: use urn instead - schematron validation needs to be adapted -->
-			<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:section-overview.xsl"/>
-			<!--<attribute name="xslt-conref" a:defaultValue="section-overview.xsl"/>-->
+			<attribute name="xcr:xsl" a:defaultValue="urn:dita-semia:xslt-conref:xsl:section-overview.xsl"/>
 		</element>
 	</define>
 	

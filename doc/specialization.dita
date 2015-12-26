@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-ng:dita:rng:reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="wkl_2th_g5">
+	<title>Specialization</title>
+	<refbody>
+		<section>
+			<p>With semantic specialization you can increase the power of XSLT-Conrefs in the following
+				ways:</p>
+			<ul id="iwm_kxh_g5">
+				<li>
+					<p id="aj4_kxh_g5"><xref href="#wkl_2th_g5/x1v_rxh_g5" format="dita"/></p>
+				</li>
+				<li>
+					<p id="bvw_sxh_g5"><xref href="#wkl_2th_g5/hbz_rxh_g5" format="dita"/></p>
+				</li>
+			</ul>
+		</section>
+		<section id="x1v_rxh_g5"><title>Evaluating DITA Content</title>When using standard DITA
+			content as input source for your XSLT script you will probably have difficulties
+			interpreting it to reliably create some useful overviews from it. By using fine-granular
+			semantic specialization you can give more easily give domain specific meaning to the
+			content.</section>
+		<section id="hbz_rxh_g5"><title>Creating Specialized XSLT-Conref Elements</title>Since the
+			complete interface of XSLT-Conref is consists of attributes you can provide default
+			values all aspects by the schema to hide the complexity of content reuse from the
+			author. For instance, you can define mandatory XSLT-Conref elements by the schema in
+			such a way that the author doesn't have to manually insert any XSLT-Conref element or
+			edit any related attribute and still see the result of it.</section>
+	</refbody>
+</reference>

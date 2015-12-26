@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:map.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map>
+ <title>XSLT-Conref</title>
+	<topicref href="basic-concept.dita"/>
+	<mapref href="spec.ditamap"></mapref>
+	<mapref href="../samples/samples.ditamap"></mapref>
+</map>

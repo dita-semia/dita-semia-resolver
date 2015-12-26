@@ -8,6 +8,7 @@ package org.DitaSemia.XsltConref;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -15,12 +16,14 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXSource;
 
 import net.sf.saxon.s9api.DocumentBuilder;
+import net.sf.saxon.s9api.ItemType;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
@@ -35,12 +38,13 @@ public class XsltConref
 	//@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(XsltConref.class.getName());
 	
-	public static final String 	ATTR_URI 					= "xslt-conref";
-	public static final String 	ATTR_XML_SOURCE_URI			= "xslt-conref-source";
-	public static final String 	ATTR_START_TEMPLATE			= "xslt-conref-start";
+	public static final String 	ATTR_URI 					= "xsl";
+	public static final String 	ATTR_XML_SOURCE_URI			= "source";
+	public static final String 	ATTR_START_TEMPLATE			= "start-template";
 	public static final String 	PARAM_XPATH_TO_XSLT_CONREF	= "xPathToXsltConref";
 	public static final String 	NAME_NO_CONTENT				= "no-content";
 	public static final String 	NAMESPACE_CUSTOM_PARAMETER	= "http://www.dita-semia.org/xslt-conref/custom-parameter";
+	public static final String 	NAMESPACE_BASE				= "http://www.dita-semia.org/xslt-conref";
 	
 	
 	private final NodeWrapper 	node;
@@ -61,18 +65,19 @@ public class XsltConref
 	public static boolean isXsltConref(NodeWrapper node) {
 		boolean isXsltConref = ((node != null) && 
 								(node.isElement()) && 
-								(node.getAttribute(XsltConref.ATTR_URI) != null) &&
-								(!node.getAttribute(XsltConref.ATTR_URI).isEmpty()));
+								(node.getAttribute(XsltConref.ATTR_URI, NAMESPACE_BASE) != null) &&
+								(!node.getAttribute(XsltConref.ATTR_URI, NAMESPACE_BASE).isEmpty()));
 		return isXsltConref;
 	}
 	
 	
 	public NodeWrapper resolve() throws XPathException {
-	
-		final URL 				scriptUrl 		= getScriptUrl();
-		final XsltTransformer 	xsltTransformer = XslTransformerCache.getInstance().getTransformer(scriptUrl, node.getUriResolver());
-//		logger.info("xsltTransformer: " + xsltTransformer);
+		logger.info("resolve()");
 		final Processor 		processor 		= new Processor(XslTransformerCache.getInstance().getConfiguration());
+		final URL 				scriptUrl 		= getScriptUrl();
+		final XsltExecutable 	xsltExecutable 	= XslTransformerCache.getInstance().getExecutable(scriptUrl, node.getUriResolver());
+		final XsltTransformer 	xsltTransformer = xsltExecutable.load();
+		logger.info("xsltTransformer: " + xsltTransformer);
 		
 		if (getStartTemplate() != null) {
 			try {
@@ -108,13 +113,13 @@ public class XsltConref
 				final XdmNode 			context = builder.build(xmlSource);
 				xsltTransformer.setInitialContextNode(context);
 			} catch (SaxonApiException e) {
-				throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI) + "'): " + e.getMessage());
+				throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_BASE) + "'): " + e.getMessage());
 			}
 		}
 
 		setCustomParameters(xsltTransformer);
 
-		//logger.info("scriptUrl: " + scriptUrl);
+		logger.info("scriptUrl: " + scriptUrl);
 		try {
 			final XdmDestination destination = new XdmDestination();
 			xsltTransformer.setDestination(destination);
@@ -129,9 +134,9 @@ public class XsltConref
 	public URL getScriptUrl() {
 		final URIResolver uriResolver = node.getUriResolver();
 		try {
-			return new URL(uriResolver.resolve(node.getAttribute(ATTR_URI), node.getBaseUri().toExternalForm()).getSystemId());
+			return new URL(uriResolver.resolve(node.getAttribute(ATTR_URI, NAMESPACE_BASE), node.getBaseUri().toExternalForm()).getSystemId());
 		} catch (TransformerException | MalformedURLException e) {
-			logger.error(e);
+			logger.error(e, e);
 		}
 		return null;
 	}
@@ -143,7 +148,7 @@ public class XsltConref
 	
 	
 	public Source getXmlSource() {
-		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URI);
+		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_BASE);
 		if ((attrValue != null) && (!attrValue.isEmpty())) {
 			final URIResolver uriResolver = node.getUriResolver();
 			try {
@@ -170,23 +175,81 @@ public class XsltConref
 	
 
 	public String getStartTemplate() {
-		return node.getAttribute(ATTR_START_TEMPLATE);
+		return node.getAttribute(ATTR_START_TEMPLATE, NAMESPACE_BASE);
 	}
 	
 	
-	private void setCustomParameters(XsltTransformer xsltTransformer) {
+	private void setCustomParameters(XsltTransformer xsltTransformer) throws XPathException {
+		logger.info("setCustomParameters()");
+		final URL 				scriptUrl 		= getScriptUrl();
+		final XsltExecutable 	xsltExecutable 	= XslTransformerCache.getInstance().getExecutable(scriptUrl, node.getUriResolver());
 		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_CUSTOM_PARAMETER);
 		for (String attrName : attrNameList) {
-			//logger.info("attribute: " + attrName);
-			final String paramName 	= attrName.replaceAll("(^[^\\{\\}]*:)|(^\\{.*\\})", "");
-			final String paramValue	= node.getAttribute(attrName);
-			//logger.info("set custom parameter: " + paramName + " = '" + paramValue + "'");
+			logger.info("attribute: " + attrName);
+			final QName 	paramName 	= new QName(attrName.replaceAll("(^[^\\{\\}]*:)|(^\\{.*\\})", ""));
+			final String 	paramValue	= node.getAttribute(attrName, NAMESPACE_CUSTOM_PARAMETER);
+			logger.info("set custom parameter: " + paramName + " = '" + paramValue + "'");
 			if (paramValue != null) {
-				xsltTransformer.setParameter(new QName(paramName), new XdmAtomicValue(paramValue));
+				if (xsltExecutable.getGlobalParameters().containsKey(paramName)) {
+					try {
+						xsltTransformer.setParameter(paramName, new XdmAtomicValue(resolveValueTemplates(paramValue), ItemType.UNTYPED_ATOMIC));
+						logger.info("parameters set. ");
+					} catch (SaxonApiException e) {
+						logger.error(e, e);
+					}
+				} else {
+					logger.error("Parameter '" + paramName + "' not defined in script.");
+				}
 			}
 		}
 	}
 	
+	private String resolveValueTemplates(String value) throws XPathException {
+//		logger.info("resolveValueTemplates()");
+		StringTokenizer 	stringTok 	= new StringTokenizer(value, "{}", true);
+		StringBuilder 		sb 			= new StringBuilder();
+		String 			nextToken;
+		while (stringTok.hasMoreTokens()) {
+			nextToken = stringTok.nextToken();
+			if (nextToken.equals("}"))
+			{
+				sb.append(nextToken);
+				if (stringTok.hasMoreTokens()) {
+					nextToken = stringTok.nextToken();
+					if (!nextToken.equals("}")) {
+						throw new XPathException("Invalid character in parameter ('" + nextToken + "'), '}' expected after '" + sb.toString() + "'.");
+					}
+				} else {
+					throw new XPathException("Character missing in parameter. '}' expected afer '" + value + "'.");
+				}
+			} else if (nextToken.equals("{")) {
+				if (stringTok.hasMoreTokens()) {
+					nextToken = stringTok.nextToken();
+					if (nextToken.equals("{")) {
+						sb.append(nextToken);
+					} else if (!nextToken.equals("}")){
+						sb.append(node.getStringByXPath(nextToken));
+						if (stringTok.hasMoreTokens()) {
+							nextToken = stringTok.nextToken();
+							if(!nextToken.equals("}")) {
+								throw new XPathException("Invalid character in parameter ('" + nextToken + "'), '}' expected after '" + sb.toString() + "'.");
+							} 
+						} else {
+							throw new XPathException("Character missing in parameter. '}' expected after '" + value + "'.");
+						}
+					} else {
+						throw new XPathException("Invalid character in parameter ('" + nextToken + "'), missing XPath Expression after '" + sb.toString() + "'.");
+					}
+				} else {
+					throw new XPathException("Character missing in parameter. '{' or XPath expression expected afer '" + value + "'.");
+				}
+			} else {
+				sb.append(nextToken);
+			}
+		} 
+		logger.info(sb.toString());
+		return sb.toString();
+	}
 	
 	private static String createXPathToElement(NodeWrapper node) {
 		final URL baseUri = node.getBaseUri();

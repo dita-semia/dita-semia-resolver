@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<reference xmlns:xcp="http://www.dita-semia.org/xslt-conref/custom-parameter" id="topic_t4s_vvs_4t">
+<reference id="topic_t4s_vvs_4t" 
+	xmlns:xcrcp = "http://www.dita-semia.org/xslt-conref/custom-parameter"
+	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
 	<title>Import Toad Data Modeler Entity</title>
-	<reference id="gxc_z2r_vt" xslt-conref="import-tdm-entity.xsl" xslt-conref-source="datamodel.txp"
-		xcp:entityName="MASTER_TABLE"> <title/> </reference>
-	<reference xslt-conref="import-tdm-entity.xsl" xslt-conref-source="datamodel.txp" id="xxl_jfr_vt"
-		xcp:entityName="NOT_EXISTING"> <title/> </reference>
+	<reference id="gxc_z2r_vt" xcr:xsl="import-tdm-entity.xsl" xcr:source="datamodel.txp"
+		xcrcp:entityName="MASTER_TABLE"> <title/> </reference>
+	<reference id="xxl_jfr_vt" xcr:xsl="import-tdm-entity.xsl" xcr:source="datamodel.txp" 
+		xcrcp:entityName="NOT_EXISTING"> <title/> </reference>
+	<reference id="isn_wql_f5">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="md1_zql_f5">The use-case is that the database has been modeled with an
+					external tool – in this case Toad Data Modeler – and the description of a
+					specific entity needs to be included into a DITA document to have only a single
+					document for the complete functional specification.</p>
+				<p id="sdn_frl_f5">This is solved with XSLT-Conref by passing the data model as XML
+					source and specifying the name of the entity as custom parameter.</p>
+				<p id="j32_3rl_f5">When the specified entity name was not found in the file an
+					author hint will be generated.</p>
+			</section>
+		</refbody>
+	</reference>
 </reference>

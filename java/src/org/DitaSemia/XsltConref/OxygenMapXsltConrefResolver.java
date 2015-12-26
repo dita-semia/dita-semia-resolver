@@ -5,6 +5,8 @@
 
 package org.DitaSemia.XsltConref;
 
+import java.net.URL;
+
 import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.JavaBase.AuthorNodeWrapper;
@@ -62,7 +64,12 @@ public class OxygenMapXsltConrefResolver extends DITAMapRefResolver
 		String referenceUniqueID = null;
 		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, null));
 		if (xsltConref != null) {
-			referenceUniqueID = xsltConref.getScriptUrl().toString();
+			URL scriptUrl = xsltConref.getScriptUrl();
+			if (scriptUrl != null) {
+				referenceUniqueID = xsltConref.getScriptUrl().toString();
+			} else {
+				referenceUniqueID = super.getReferenceUniqueID(node);
+			}
 		} else {
 			referenceUniqueID = super.getReferenceUniqueID(node);
 		}

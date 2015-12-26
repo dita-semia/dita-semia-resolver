@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="urn:dita-ng:dita:rng:bookmap.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<bookmap>
-    <booktitle>
-        <mainbooktitle>XSLT-Conref Samples Collection</mainbooktitle>
-    </booktitle>
-	<chapter href="section-overview/section-overview.dita"/>
-	<chapter href="local-toc/local-toc.dita"/>
-	<chapter href="local-toc-specialized/local-toc-specialized.dita"/>
-	<chapter href="local-toc-parameterized/local-toc-parameterized.dita"/>
-	<chapter href="import-xml-to-codeblock/import-xml-to-codeblock.dita"/>
-	<chapter href="import-csv-to-table/import-csv-to-table.dita"/>
-	<chapter href="import-excel-xml-to-table/import-excel-xml-to-table.dita"/>
-	<chapter href="import-cpp-enum/import-cpp-enum.dita"/>
-	<chapter href="import-tdm-entity/import-tdm-entity.dita"/>
-	<chapter href="dynamic-type-information/dynamic-type-information.dita"/>
-	<chapter href="svg-simple-test/svg-simple-test.dita"/>
-	<chapter href="sequence-diagram/sequence-diagram.dita"/>
-	<chapter href="adding-default-attr/adding-default-attr.dita"/>
-</bookmap>
+<?xml-model href="urn:dita-ng:dita:rng:map.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map>
+	<title>XSLT-Conref Samples Collection</title>
+	<topicref href="introduction.dita"/>
+	<topicref href="section-overview/section-overview.dita"/>
+	<topicref href="local-toc/local-toc.dita"/>
+	<topicref href="local-toc-specialized/local-toc-specialized.dita"/>
+	<topicref href="local-toc-parameterized/local-toc-parameterized.dita"/>
+	<topicref href="import-xml-to-codeblock/import-xml-to-codeblock.dita"/>
+	<topicref href="import-csv-to-table/import-csv-to-table.dita"/>
+	<topicref href="import-excel-xml-to-table/import-excel-xml-to-table.dita"/>
+	<topicref href="import-cpp-enum/import-cpp-enum.dita"/>
+	<topicref href="import-tdm-entity/import-tdm-entity.dita"/>
+	<topicref href="dynamic-type-information/dynamic-type-information.dita"/>
+	<topicref href="svg-simple-test/svg-simple-test.dita"/>
+	<topicref href="sequence-diagram/sequence-diagram.dita"/>
+	<topicref href="adding-default-attr/adding-default-attr.dita"/>
+</map>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<reference id="topic_t4s_vvs_4t">
+<reference id="topic_t4s_vvs_4t" xmlns:xcr="http://www.dita-semia.org/xslt-conref">
   <title>Sequence Diagram</title>
   <refbody>
 		<section>
@@ -13,7 +13,40 @@
 				<sli><codeph>Component1.Function1.2</codeph></sli>
 				<sli><codeph>Component3.Function3.1</codeph></sli>
 			</sl>
-			<fig xslt-conref="sequence-diagram.xsl"/>
+			<fig xcr:xsl="sequence-diagram.xsl"/>
 		</section>
 	</refbody>
+	<reference id="pk5_sfh_g5">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="tpj_tfh_g5">This sample demonstrates how to generate sequence diagrams from
+					DITA content. In this particular case the data for the diagram comes from the
+					same section where the XSLT-Conref is placed in:</p>
+				<ul id="xfz_yfh_g5">
+					<li>
+						<p id="kw1_zfh_g5">The first <codeph>codeph</codeph> element within the
+							first <codeph>p</codeph> element is taken as calling component name.</p>
+					</li>
+					<li>All <codeph>codeph</codeph> elements within the first <codeph>sl</codeph>
+						element are taken as function calls with the format
+						"&lt;component-name>.&lt;function-name>".</li>
+				</ul>
+				<p id="yvh_1hh_g5">There are two more realistic use-cases for generating sequence
+					diagrams:</p>
+				<ol id="mrl_1hh_g5">
+					<li>
+						<p id="s44_1hh_g5">The data comes from semantically specialized DITA
+							content. For instance, the workflow of a component contains the
+							functions calls with specialized elements.</p>
+					</li>
+					<li>
+						<p id="ojz_2hh_g5">There is a dedicated section to specify the required data
+							only for generating the sequence diagram. The data is only visible in
+							Oxygen and will be hidden in the output.</p>
+					</li>
+				</ol>
+			</section>
+		</refbody>
+	</reference>
 </reference>

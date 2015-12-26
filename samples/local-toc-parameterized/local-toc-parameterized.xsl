@@ -10,7 +10,7 @@
 	<xsl:output method="xml" indent="yes"/>
 	
 	<xsl:param name="xPathToXsltConref" as="xs:string" 		select="'/*[1]'"/>
-	<xsl:param name="minCount" 			as="xs:string?"		select="'1'"/>
+	<xsl:param name="minCount" 			as="xs:integer?"	select="1"/>
 	<xsl:param name="sectionTitle" 		as="xs:string?"/>
 	<xsl:param name="introduction" 		as="xs:string?"/>
 	<xsl:param name="useLiTitle" 		as="xs:string?"/>
@@ -76,9 +76,9 @@
 								<!-- xref -->
 								<xsl:if test="not($addXref = 'no') and exists(@id)">
 									<p class="{$CP_P}">
-										<xsl:value-of select="$xrefPrefix"/>
+										<!--<xsl:value-of select="$xrefPrefix"/>-->
 										<xref href="#{@id}" format="dita" class="{$CP_XREF}"/>
-										<xsl:value-of select="$xrefSuffix"/>
+										<!--<xsl:value-of select="$xrefSuffix"/>-->
 									</p>
 								</xsl:if>
 							</li>

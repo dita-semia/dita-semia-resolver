@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_t4s_vvs_4t" 
+		xmlns:xcrcp = "http://www.dita-semia.org/xslt-conref/custom-parameter"
+		xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
+  <title>XPath Parameter Test</title>
+  <body>
+		<p>XPath expressions in the custom parameters are resolved. The XPath expressions have to be in
+			curly brackets.</p>
+	  	<section><title>Invalid XPath in Parameter</title><p>This parameter has a single curly bracket
+				after the XPath expression. ('String {name()}}')</p><p xcr:xsl="script.xsl"
+				xcrcp:string="String {name()}}"/><p>This parameter has a single curly bracket
+				within. ('String }{name()}')</p><p xcr:xsl="script.xsl"
+				xcrcp:string="String }{name()}"/>No XPath expression between brackets. ('String {}')<p
+				xcr:xsl="script.xsl" xcrcp:string="String {}"/></section>
+	  	<section>
+	  		<title>No XPath in Parameter</title>
+	  		<p>No XPath expression. ('String {noXPath}')</p>
+	  		<p xcr:xsl="script.xsl" xcrcp:string="String {noXPath}"/>
+	  		<p>This parameter has double curly brackets around the XPath expression, so it's not
+	  			resolved. ('String {{name()}}')</p>
+	  		<p xcr:xsl="script.xsl" xcrcp:string="String {{name()}}"/>
+	  	</section>
+  		<section>
+			<title>Valid XPath in Parameter</title>
+			<p>This parameter has a valid XPath expression. ('String {name()}')</p>
+			<p id="c3p_bh4_5t" xcr:xsl="script.xsl" xcrcp:string="String {name()}"/>
+		</section>
+	</body>
+</topic>

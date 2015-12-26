@@ -9,10 +9,10 @@
     <xsl:template match="/">
 
     	<section xsl:validation="strict">
-    		<title>By using the xsl:validation attribute</title>
-    		<p>You need to import an xsd schema and add <codeph>@xsl:validation="strict"</codeph> to your root element.</p>
+    		<title>By using the <codeph>xsl:validation</codeph> attribute</title>
+    		<p>You need to import an XSD schema and add <codeph>@xsl:validation="strict"</codeph> to your root element.</p>
     		<p>A great advantage is that you get some degree of validation during writing the script.
-    			But finding the origin of a validation error in a more complex script can be extremly annoying.
+    			But finding the origin of a validation error in a more complex script can be extremely annoying.
     		</p>
         </section>
     	

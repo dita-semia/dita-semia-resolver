@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-ng:dita:rng:reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="wkl_2th_g5">
+	<title>Attributes Overview</title>
+	<refbody>
+		<section>
+			<p>This list contains all supported attributes:</p>
+			<ul id="ijj_3vh_g5">
+				<li>
+					<p id="wrl_3vh_g5"><b><codeph>@xcr:xsl</codeph></b></p>
+					<p id="bdl_jvh_g5">An URI to the XSLT script. The existence of this attribute
+						marks an element as being an XSLT-Conref.</p>
+				</li>
+				<li>
+					<p id="yrk_mvh_g5"><b><codeph>xcr:source</codeph></b></p>
+					<p id="zrk_mvh_g5">An URI to the XML source. If not specified, the file of the
+						XSLT-Conref will be used as input.</p>
+					<p id="hw5_wwh_g5">(See <xref href="xml-source.dita#wkl_2th_g5"/> for
+						details.)</p>
+				</li>
+				<li>
+					<p id="etm_mvh_g5"><b><codeph>@xcr:start</codeph></b></p>
+					<p id="ftm_mvh_g5">The name of a template to be executed on start. If specified,
+						no context item will be set.</p>
+					<p id="c5y_wvh_g5">(See <xref href="start-template.dita#wkl_2th_g5"/> for
+						details.)</p>
+				</li>
+				<li>
+					<p id="ncn_mvh_g5"><b><codeph>@xcr:key</codeph></b></p>
+					<p id="ocn_mvh_g5"><i>Not supported yet!</i></p>
+					<p id="lnl_bwh_g5">Selects a specific entry from a map of resolved elements that
+						is returned and cached from a single transformation.</p>
+				</li>
+				<li>
+					<p id="gln_mvh_g5"><b><codeph>@xcr:copy</codeph></b></p>
+					<p id="q1x_1wh_g5"><i>Not supported yet!</i></p>
+					<p id="y1r_bwh_g5">Instead of just referencing some transformation result with
+						this attribute the resolved content can be copied into the document to
+						preserve a specific state.</p>
+				</li>
+				<li><p id="dz4_mvh_g5"><b><codeph>@xcr:phase</codeph></b></p><i>Not supported
+					yet!</i><p id="ez4_mvh_g5">Specifies in which phase of processing this
+					XSLT-Conref element should be resolved. This depends on if the resolved content
+					will define keys or if for resolving the defined keys need to be known.</p></li>
+				<li>
+					<p id="yfj_ywh_g5"><b><codeph>@xcrcp:*</codeph> (Custom Parameters)</b></p>
+					<p id="zfj_ywh_g5">All attributes within this namespace will be passes as
+						parameters to the XSLT script.</p>
+					<p id="kqw_bxh_g5">(See <xref href="custom-parameters.dita#wkl_2th_g5"/> for
+						details.)</p>
+				</li>
+			</ul>
+			<p id="ily_qvh_g5">The namespace prefixes need have the following URI:</p>
+			<ul id="rnp_rvh_g5">
+				<li>
+					<p id="cfr_rvh_g5"><codeph>xcr</codeph>:
+						"http://www.dita-semia.org/xslt-conref"</p>
+				</li>
+				<li>
+					<p id="vvh_tvh_g5"><codeph>xcrcp</codeph>:
+						"http://www.dita-semia.org/xslt-conref/custom-parameter"</p>
+				</li>
+			</ul>
+		</section>
+	</refbody>
+</reference>

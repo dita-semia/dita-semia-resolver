@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-ng:dita:rng:topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_vcz_lzw_25">
+  <title>Introduction</title>
+  <body>
+    <p>The purpose of these samples is to demonstrate the various use-cases XSLT-Conref can be used
+			for. Each sample ends with a section "Description" where the idea behind this specific
+			sample is shortly explained.</p>
+  </body>
+</topic>

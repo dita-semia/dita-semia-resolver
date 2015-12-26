@@ -12,18 +12,6 @@
 	<reference id="zt3_52l_tt">
 		<title>Reference Topic 1</title>
 		<shortdesc>This reference contains some information.</shortdesc>
-		<refbody>
-			<section>
-				<p id="cvh_xz5_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-					nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-					voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
-					ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-					invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-					et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-					takimata sanctus est Lorem ipsum dolor sit amet.</p>
-			</section>
-		</refbody>
 	</reference>
 	<reference id="xhl_1fl_tt">
 		<title>Reference Topic 2</title>
@@ -37,36 +25,32 @@
 		<reference id="kl5_mgv_5t">
 			<title>Child Reference Topic 2.1</title>
 			<shortdesc>This child reference contains some information.</shortdesc>
-			<refbody>
-				<section>
-					<p id="ll5_mgv_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-						diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-						sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-						Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-						nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-						diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-						clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet.</p>
-				</section>
-			</refbody>
 		</reference>
 		<reference id="ml5_mgv_5t">
 			<title>Child Reference Topic 2.2</title>
 			<shortdesc>This child reference contains even more information.</shortdesc>
-			<refbody>
-				<section>
-					<p id="nl5_mgv_5t">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-						diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-						sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-						Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-						nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-						diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-						clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-						amet.</p>
-				</section>
-			</refbody>
 		</reference>
+	</reference>
+	<reference id="d5c_3gx_25">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="i3t_3gx_25">This sample extends the sample <xref
+					href="../local-toc/local-toc.dita#topic_t4s_vvs_4t"/> in two ways:</p>
+				<ol id="ozh_lgx_25">
+					<li>
+						<p id="p2r_vgx_25">The schema defines a specialized element <codeph>loca-toc</codeph> that the
+							author can use without having to set any attributes. To make this
+							element reliably working the XSLT script is specified with a URN.</p>
+					</li>
+					<li>
+						<p id="fxy_vgx_25">The XSLT script has been made context sensitive. Instead of simply listing
+							the reference topics on first level it first identifies the
+							<codeph>local-toc</codeph> element currently to be resolved and then
+							identifiers the child topic of the specific topic.</p>
+					</li>
+				</ol>
+			</section>
+		</refbody>
 	</reference>
 </reference>

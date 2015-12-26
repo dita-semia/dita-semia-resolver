@@ -2,17 +2,18 @@
 <?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
 	
 	<define name="conref-atts" combine="interleave">
 		<optional>
-			<attribute name="xslt-conref"/>
+			<attribute name="xcr:xsl"/>
 		</optional>
 		<optional>
-			<attribute name="xslt-conref-source"/>
+			<attribute name="xcr:source"/>
 		</optional>
 		<optional>
-			<attribute name="xslt-conref-start"/>
+			<attribute name="xcr:start-template"/>
 		</optional>
 		<zeroOrMore>
 			<attribute>

@@ -19,4 +19,17 @@
 			<p>[...]</p>
 		</section>
 	</body>
+	<topic id="wpl_vtw_25">
+		<title>Description</title>
+		<body>
+			<p id="dn4_wtw_25">This sample is to demonstrate the potential simplicity of an XSLT
+				script to be used within XSLT-Conref.</p>
+			<p id="r55_fww_25">The task is to generate an itemized list of cross references for all sections
+				with a title and <codeph>id</codeph> attribute.</p>
+			<p id="vfm_nww_25">Within the schema there is a specialized element
+				<codeph>section-overview</codeph> being defined with the URN of the XSLT script set
+				as default value. Thus, the author has to do nothing beside inserting the element in
+				the body.</p>
+		</body>
+	</topic>
 </topic>

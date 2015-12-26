@@ -85,35 +85,33 @@
 		<xsl:variable name="graphicsHeight"		as="xs:double"	select="$COMPONENT_HEIGHT + (2 * $ACTION_SPACE_Y) + ($callCount * ($CALL_SPACE_Y + $CALL_HEIGHT)) + $CALL_SPACE_Y"/>
 		
 		<fig>
-			<foreign>
-				<xsl:call-template name="SvgRoot">
-					<xsl:with-param name="widthInMm"	select="$graphicsWidth"/>
-					<xsl:with-param name="heightInMm"	select="$graphicsHeight"/>
-					<xsl:with-param name="content">
-						
-						<xsl:call-template name="Definitions"/>
-						
-						<xsl:call-template name="DrawComponents">
-							<xsl:with-param name="componentList" 	select="$componentList"/>
-							<xsl:with-param name="componentSpace"	select="$componentSpace"/>
-							<xsl:with-param name="graphicsHeight"	select="$graphicsHeight"/>
-						</xsl:call-template>
-						
-						<xsl:call-template name="DrawCallingAction">
-							<xsl:with-param name="yOffset"			select="$COMPONENT_HEIGHT"/>
-							<xsl:with-param name="graphicsHeight"	select="$graphicsHeight"/>
-						</xsl:call-template>
-						
-						<xsl:call-template name="DrawCalls">
-							<xsl:with-param name="callList" 		select="$callList"/>
-							<xsl:with-param name="componentList" 	select="$componentList"/>
-							<xsl:with-param name="componentSpace"	select="$componentSpace"/>
-							<xsl:with-param name="yOffset"			select="$COMPONENT_HEIGHT + $ACTION_SPACE_Y + $CALL_SPACE_Y"/>
-						</xsl:call-template>
-						
-					</xsl:with-param>
-				</xsl:call-template>
-			</foreign>
+			<xsl:call-template name="SvgRoot">
+				<xsl:with-param name="widthInMm"	select="$graphicsWidth"/>
+				<xsl:with-param name="heightInMm"	select="$graphicsHeight"/>
+				<xsl:with-param name="content">
+					
+					<xsl:call-template name="Definitions"/>
+					
+					<xsl:call-template name="DrawComponents">
+						<xsl:with-param name="componentList" 	select="$componentList"/>
+						<xsl:with-param name="componentSpace"	select="$componentSpace"/>
+						<xsl:with-param name="graphicsHeight"	select="$graphicsHeight"/>
+					</xsl:call-template>
+					
+					<xsl:call-template name="DrawCallingAction">
+						<xsl:with-param name="yOffset"			select="$COMPONENT_HEIGHT"/>
+						<xsl:with-param name="graphicsHeight"	select="$graphicsHeight"/>
+					</xsl:call-template>
+					
+					<xsl:call-template name="DrawCalls">
+						<xsl:with-param name="callList" 		select="$callList"/>
+						<xsl:with-param name="componentList" 	select="$componentList"/>
+						<xsl:with-param name="componentSpace"	select="$componentSpace"/>
+						<xsl:with-param name="yOffset"			select="$COMPONENT_HEIGHT + $ACTION_SPACE_Y + $CALL_SPACE_Y"/>
+					</xsl:call-template>
+					
+				</xsl:with-param>
+			</xsl:call-template>
 		</fig>
 		
 	</xsl:template>

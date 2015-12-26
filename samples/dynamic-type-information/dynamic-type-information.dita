@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="reference-with-type-info.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="reference-with-type-info.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<reference id="topic_t4s_vvs_4t">
+<reference id="topic_t4s_vvs_4t" xmlns:xcr="http://www.dita-semia.org/xslt-conref">
   <title>Dynamic Type Information</title>
 	<refbody>
 		<section id="js1_qbx_zt">
@@ -39,11 +39,7 @@
 							<entry>
 								<p><codeph>Gender</codeph></p>
 							</entry>
-							<entry>
-								<p>Gender of the customer.</p>
-								<type-info xslt-conref="urn:dita-semia:xslt-conref:xsl:dynamic-type-information.xsl"
-									id="zrw_q2x_zt"/>
-							</entry>
+							<entry><p>Gender of the customer.</p><type-info/></entry>
 						</row>
 						<row>
 							<entry>
@@ -52,6 +48,13 @@
 							<entry>
 								<p>Some additional information.</p>
 								<type-info id="r32_r2x_zt"/>
+							</entry>
+						</row>
+						<row>
+							<entry><codeph>InvalidField</codeph></entry>
+							<entry>
+								<p id="zlv_2zw_25">Even more information.</p>
+								<type-info/>
 							</entry>
 						</row>
 					</tbody>
@@ -87,7 +90,9 @@
 						</row>
 						<row>
 							<entry><codeph>Name</codeph></entry>
-							<entry>String, length: 1 to 20</entry>
+							<entry>
+								<p id="rdw_pyw_25">String, length: 1 to 20</p>
+							</entry>
 						</row>
 						<row>
 							<entry>
@@ -101,9 +106,35 @@
 								</ul>
 							</entry>
 						</row>
+						<row>
+							<entry><codeph>InvalidField</codeph></entry>
+							<entry>Text without p element</entry>
+						</row>
 					</tbody>
 				</tgroup>
 			</table>
+		</refbody>
+	</reference>
+	<reference id="gfv_h2x_25">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="sgx_v2x_25">The scenario is that you have some global definitions of fields with their
+					type information at one place and an interface description in another place.
+					Since the interface description contains fields that are globally defined it is
+					desirable for the reader as well as for the author to have the corresponding
+					type information being displayed automatically. Thus, a specialized element
+					<codeph>type-info</codeph> is being defined that will be resolved as an
+					XSLT-Conref.</p>
+				<p id="bvp_v2x_25">The XSLT Script needs to find the definition of the filed and return the type
+					information. Additionally it adds the prefix "Type: " to the content. But only
+					if the first node is a <codeph>p</codeph> element.</p>
+				<p id="czk_z2x_25">While this scenario is  real use-case it also discovers a problem
+					with generic DITA elements being interpreted on a domain-specific level. That
+					is, how to reliably identify the right elements and what to do when the content
+					is structured differently from what was expected. Using fine-granular semantic
+					specialization would solve both problems.</p>
+			</section>
 		</refbody>
 	</reference>
 </reference>

@@ -27,9 +27,13 @@
         		<xsl:variable name="colList" as="element()*" select="*"/>
         		<xsl:element name="{if (position() = 1) then 'sthead' else 'strow'}">
         			<xsl:for-each select="1 to $colCount">
-        				<xsl:variable name="colIndex" as="xs:integer" select="."/>
+        				<xsl:variable name="colIndex" 	as="xs:integer"	select="."/>
+        				<xsl:variable name="content" 	as="xs:string?" select="$colList[$colIndex]"/>
         				<stentry>
-        					<xsl:value-of select="$colList[$colIndex]"/>
+        					<xsl:if test="contains($content, '&#x0A;')">
+        						<xsl:attribute name="xml:space" select="'preserve'"/>
+        					</xsl:if>
+        					<xsl:value-of select="$content"/>
         				</stentry>
         			</xsl:for-each>
         		</xsl:element>

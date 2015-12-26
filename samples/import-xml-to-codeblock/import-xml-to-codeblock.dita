@@ -1,14 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<reference id="topic_t4s_vvs_4t">
-	<title>Import XML File into Codeblock</title>
+<reference id="topic_t4s_vvs_4t" xmlns:xcr="http://www.dita-semia.org/xslt-conref" xmlns:xcrcp="http://www.dita-semia.org/xslt-conref/custom-parameter">
+	<title>Import XML File into <codeph>codeblock</codeph></title>
 	<refbody>
-		<section>
-			<p>The xml code will be serialized in such a way that each line has not more than 50
-				characters to be rendered properly in PDF. If required, the text content will be
-				indented.</p>
-			<codeblock xslt-conref="import-xml-to-codeblock.xsl" xslt-conref-source="Data.xml"/>
-		</section>
+		<section><codeblock xcr:xsl="import-xml-to-codeblock.xsl" xcr:source="Data.xml" xcrcp:maxWidth="45"/><codeblock>123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6</codeblock>This
+			second <codeph>codeblock</codeph> is just to provide some column numbering for the
+			previous <codeph>codeblock</codeph> element.</section>
 	</refbody>
+	<reference id="agm_w4x_25">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="xm2_x4x_25">The use-case is that a dedicated XML editor (e.g. Oxygen in text mode) is
+					much more comfortable for writing XML code than writing quoted XML in a
+					<codeph>codeblock</codeph> element in author mode. Additionally you might have
+					some special requirements for the indention.</p>
+				<p id="mvr_cpx_25">The idea is now to write the XML code in an ordinary XML file –
+					optionally even with an assigned schema for validation – and import he code as
+					XSLT-Conref by passing the XML file as source. The XSLT script can easily
+					provide some customized indention. For instance, as in this case, it make sure
+					that the lines are not longer than some user defined value to be rendered
+					properly in PDF as well. The maximal line length can be set as custom
+					parameter.</p>
+				<p id="mkz_jpx_25">In this particular sample the maximal line length is limited to 45
+					characters. When a line with opening tag, text and closing tag would be too long
+					the text will be put in a separate line.</p>
+				<p id="p3f_xrx_25">Some things you should note:</p>
+				<ul id="gbz_xrx_25">
+					<li>
+						<p id="y3b_hqx_25">In this case there is no specialized element defining the
+							specific custom parameter <codeph>maxWidth</codeph> as attribute. While
+							the schema allows any attributes within the specific namespace for
+							XSLT-Conref custom parameters you can't add them in the attributes view
+							but have to switch to text mode. Once the attribute is added you can
+							edit it in the attributes view.</p>
+					</li>
+					<li>
+						<p id="ag1_zrx_25">The original indention of the source XML has no influence
+							on the generated one. The resulting indention will completely generated
+							by the XSLT script.</p>
+					</li>
+					<li>
+						<p id="ssq_3sx_25">White spaces before and after textual content will be
+							ignored. (That's how our real software treats the text content as
+							well.)</p>
+					</li>
+					<li>
+						<p id="ysd_gsx_25">The script is quite simple with quite some limitations
+							(still it was sufficient for our real use-cases):</p>
+						<ul id="a4j_gsx_25">
+							<li>
+								<p id="o34_gsx_25">Attributes are serialized but not indented to
+									prevent longer lines.</p>
+							</li>
+							<li>
+								<p id="qzp_lsx_25">If the text content is too long to fit into one
+									line it won't be split into multiple lines.</p>
+							</li>
+							<li>
+								<p id="gyd_xtx_25">If an XML tag is too long to fit into the line it
+									won't be split (not possible with XML).</p>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+		</refbody>
+	</reference>
 </reference>

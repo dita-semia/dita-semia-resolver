@@ -2,7 +2,8 @@
 <?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
 	
 	<include href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng"/>
 
@@ -54,12 +55,14 @@
 		<element name="type-info">
 			<a:documentation>Display type information for referenced field.</a:documentation>
 			<optional>
-				<attribute name="class" a:defaultValue="+ dita-semia/block dita-semia/type-info "/>
+				<attribute name="class" a:defaultValue="+ topic/div dita-semia/type-info "/>
 			</optional>
 			<optional>
 				<attribute name="id"/>
 			</optional>
-			<attribute name="xslt-conref" a:defaultValue="urn:dita-semia:xslt-conref:xsl:dynamic-type-information.xsl"/>
+			<optional>
+				<attribute name="xcr:xsl" a:defaultValue="urn:dita-semia:xslt-conref:xsl:dynamic-type-information.xsl"/>
+			</optional>
 		</element>
 	</define>
 	
