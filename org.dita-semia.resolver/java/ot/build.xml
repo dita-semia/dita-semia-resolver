@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JAR Builder" default="jar" basedir=".">
+
+	<property name="archivename" 			value="DitaSemiaOt"/>
+	<property name="src.dir" 				value="src"/>
+	<property name="ditaot.lib.dir" 		value="${DITAOT}/lib"/>
+
+	<path id="classpath">
+		<fileset dir="../base" 				includes="DitaSemiaBase.jar"/>
+		<fileset dir="../base/lib" 			includes="log4j.jar"/>
+		<fileset dir="../base/lib" 			includes="saxonHE-9.6.0.7.jar"/>
+		<fileset dir="${ditaot.lib.dir}" 	includes="commons-io-2.4.jar"/>
+		<fileset dir="${ditaot.lib.dir}" 	includes="xml-resolver-1.2.jar"/>
+		<fileset dir="${ditaot.lib.dir}" 	includes="dost.jar"/>
+	</path>
+			
+	<target name="clean">
+		<delete dir="bin"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src" target="1.8" source="1.8" destdir="bin" classpathref="classpath" debug="true" debuglevel="lines,source" includeantruntime="no"/>
+	</target>
+
+	<target name="jar" description="Kreieren eines JAR Archives Project Builder)" depends="clean, compile">
+
+		<delete file="${archivename}.jar"/>
+		<delete file="MANIFEST.MF"/>
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="PST"/>
+			<attribute name="Class-Path" value=". ${archivename}"/>
+		</manifest>
+
+		<jar jarfile="${archivename}.jar" manifest="MANIFEST.MF">
+			<fileset dir="bin"  		includes="**/*.class"/>
+			<fileset dir="../base/bin"  includes="**/*.class"/>
+			<fileset dir="../base/src"	includes="cfg/*"/>
+			<fileset dir="${src.dir}"	includes="xsl/*"/>
+		</jar>
+
+	</target>
+</project>

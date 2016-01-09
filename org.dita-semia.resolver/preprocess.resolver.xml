@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<target name="dita-semia.preprocess.resolver">
+		<pipeline message="Resolving DITA-SEMIA (xslt-conref)." taskname="dita-semia" tempdir="${dita.temp.dir}">
+			<module class="org.DitaSemia.Ot.DitaSemiaOtResolver"/>
+		</pipeline>
+    </target>
+	
+</project>
+

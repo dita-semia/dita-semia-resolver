@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_nzm_qxr_tt" xmlns:xcr="http://www.dita-semia.org/xslt-conref">
+	<title>Adding Default Attributes</title>
+	<refbody>
+		<section xcr:xsl="explicitly.xsl"/>
+		<!--<section xcr:xsl="by-validation.xsl"/> not supported bySaxon HE -->
+		<!--<section xcr:xsl="by-type.xsl"/> not supported by Saxon HE -->
+		<!--<section xcr:xsl="by-xsd-schema.xsl"/> not working with DITA-OT, yet -->
+		<section xcr:xsl="by-rng-schema.xsl"/>
+	</refbody>
+	<reference id="zqv_xhh_g5">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="k2p_yhh_g5">When resolving an XSLT-Conref it is required that the default attributes –
+					especially the <codeph>class</codeph> attribute – are expanded. This sample
+					demonstrates the different ways how this can be accomplished.</p>
+			</section>
+		</refbody>
+	</reference>
+</reference>

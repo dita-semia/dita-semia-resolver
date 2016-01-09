@@ -1,0 +1,136 @@
+
+@namespace oxy "http://www.oxygenxml.com/extensions/author";
+@namespace xcr "http://www.dita-semia.org/xslt-conref";
+
+/* Hides the required content that is just needed for display on 
+ xslt-conref for topic, ol/li, ul/li, table */
+*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *[class~="topic/topic"],
+*[class~="topic/table"][xcr|xsl]:not([conaction]) > *[class~="topic/table"],
+*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *[class~="topic/ol"],
+*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *[class~="topic/ul"],
+*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *[class~="topic/dl"],
+*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
+*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *[class~="topic/ph"],
+*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *[class~="topic/dlentry"]
+{
+    display : inherit;
+}
+
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *[class~="topic/simpletable"]
+{
+    display : table;
+}
+
+*[class~="topic/table"][xcr|xsl]:not([conaction]) > *,    
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *, 
+*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *,
+*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *
+{
+    display : none;
+}
+
+/* avoid double border on conref reference table */
+*[class~="topic/simpletable"][conref]:not([conaction]),
+*[class~="topic/simpletable"][conkeyref]:not([conaction]),
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]),
+*[class~="topic/tgroup"][conref]:not([conaction]),
+*[class~="topic/tgroup"][conkeyref]:not([conaction]),
+*[class~="topic/tgroup"][xcr|xsl]:not([conaction]) {
+	border: none;
+}
+
+/* Remove static text, no margins */
+*[xcr|xsl]:not([conaction]):before {
+    content:	"";
+    display:	inline;
+    margin:		0px;
+}
+
+
+*[class~="topic/table"][xcr|xsl]:not([conaction])
+*[class~="topic/simpletable"][xcr|xsl]:not([conaction]){
+    display : block;
+}
+
+*[class~="topic/row"][xcr|xsl] {
+  	content: "" !important;
+}
+
+
+/* Modify Header before xslt-conref  */
+
+@OpenXsltConrefScriptButton: 
+		oxy_button(
+			action, oxy_action(
+		            name, 			'Open Script', 
+		            description, 	'Open XSLT-Conref XSL Script file', 
+		            icon, 			url('../img/openScript.png'), 
+		            operation, 		'org.DitaSemia.Oxygen.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'script'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+			
+@OpenXsltConrefSourceButton: 
+		oxy_button(
+  			action, oxy_action(
+		            name, 			'Open Source', 
+		            description, 	'Open XSLT-Conref XML Source file', 
+		            icon, 			url('../img/openSource.png'), 
+		            operation, 		'org.DitaSemia.Oxygen.XsltConref.OpenXsltConrefFile'
+		            arg-filetype,	'source'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+
+@XsltConrefRefreshButton: 
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Refresh', 
+		            description, 	'Refresh the XSLT-Conref', 
+		            icon, 			url('../img/refreshReference.png'), 
+		            operation, 		'org.DitaSemia.Oxygen.XsltConref.RefreshXsltConref'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
+
+*[xcr|xsl] > oxy|error:before,
+*[xcr|xsl] > oxy|reference:before {
+    background-color: rgb(240, 240, 240) !important;
+	display: -oxy-morph !important;
+  	content: 
+  		@OpenXsltConrefScriptButton
+  		@XsltConrefRefreshButton
+  		!important;
+}
+
+*[xcr|xsl][xcr|source] > oxy|error:before,
+*[xcr|xsl][xcr|source] > oxy|reference:before {
+  	content: 
+  		@OpenXsltConrefScriptButton
+  		@OpenXsltConrefSourceButton
+  		@XsltConrefRefreshButton
+  		!important; 
+}
+
+*[xcr|xsl] > oxy|error:before,
+*[xcr|xsl][xcr|source] > oxy|error:before{
+	-oxy-append-content: "[" !important;
+}
+
+/* support the no-content result element */
+*[xcr|xsl] no-content {
+	/* Mark content to be invisible in output */
+	font-size: 	0.8em;
+	color:		#999999;
+}
+
+/* make topic/div work with oxygen 17.0 (before DITA 1.3 support) as well */
+*[class~="topic/div"] {
+    display: block;
+}

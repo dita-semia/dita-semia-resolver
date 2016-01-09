@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:oasis:names:tc:dita:rng:map.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map>
+	<title>DITA-Semia</title>
+	<topicref href="base/oxygen-integration.dita"/>
+	<topicref href="base/dita-ot-integration.dita"/>
+	<topichead navtitle="XSLT-Conref">
+		<mapref href="xslt-conref/xslt-conref.ditamap"/>
+	</topichead>
+	<topichead navtitle="Samples">
+		<mapref href="../samples/samples.ditamap"/>
+	</topichead>
+</map>

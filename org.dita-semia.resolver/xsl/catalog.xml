@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+	<uri name="urn:dita-semia:xslt-conref:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
+	<uri name="urn:dita-semia:xslt-conref:xsl:class.xsl" 				uri="class.xsl"/>
+	<uri name="urn:dita-semia:xslt-conref:xsl:csv-to-xml.xsl" 			uri="csv-to-xml.xsl"/>
+	<uri name="urn:dita-semia:xslt-conref:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
+	
+	<system systemId="urn:dita-semia:xslt-conref:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
+	<system systemId="urn:dita-semia:xslt-conref:xsl:class.xsl" 				uri="class.xsl"/>
+	<system systemId="urn:dita-semia:xslt-conref:xsl:csv-to-xml.xsl" 			uri="csv-to-xml"/>
+	<system systemId="urn:dita-semia:xslt-conref:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
+	
+</catalog>

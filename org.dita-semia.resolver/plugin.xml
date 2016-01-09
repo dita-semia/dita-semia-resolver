@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="org.dita-semia.resolver">
+	<feature extension="dita.specialization.catalog.relative" 	file="catalog.xml"/>
+	<feature extension="dita.conductor.target.relative" 		file="integrator.xml"/>
+	<feature extension="depend.preprocess.conrefpush.pre"		value="dita-semia.preprocess.resolver" />
+</plugin>

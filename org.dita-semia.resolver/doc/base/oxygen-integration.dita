@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:oasis:names:tc:dita:rng:reference.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:oasis:names:tc:dita:rng:reference.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="wkl_2th_g5">
+	<title>Oxygen Integration</title>
+	<refbody>
+		<section id="qgy_jqq_n5">
+			<p>DITA-SEMIA comes with two Oxygen frameworks: one for topics and one for maps. To make these
+				available you simply have to add the
+					<codeph>dita-ot/plugin/or.dita-semia.resolver</codeph> folder to the custom
+				locations for frameworks. These frameworks are extensions of Oxygen's standard DITA
+				frameworks.</p>
+			<p>To integrate DITA-SEMIA into your own custom framework you have to do the following
+				steps:</p>
+			<ul id="kr5_tqq_n5">
+				<li id="lr5_tqq_n5">
+					<p>Add the jar library to the classpath:
+							<codeph>dita-ot/plugins/org.dita-semia.resolver/java/oxygen/DitaSemiaOxygen.jar</codeph></p>
+				</li>
+				<li>
+					<p>Set the "Extension-Bundle": <codeph>org.DitaSemia.Oxygen.DitaSemiaExtensionBundle</codeph>
+						or <codeph>org.DitaSemia.Oxygen.DitaSemiaMapExtensionBundle</codeph></p>
+				</li>
+				<li>
+					<p>Add the css files:</p>
+					<ul>
+						<li><codeph>dita-ot/plugins/org.dita-semia.resolver/oxygen-framework/css/xslt-conref.less</codeph></li>
+					</ul>
+				</li>
+				<li id="p14_qsr_n5">
+					<p>Add the library
+							<codeph>dita-ot/plugins/org.dita-semia.resolver/java/ot/DitaSemiaOt.jar</codeph>
+						to <i>all</i> DITA-OT transformation scenarios.</p>
+				</li>
+				<li id="ffg_pmv_n5">
+					<p>Add
+							<codeph>dita-ot/plugins/org.dita-semia.resolver/schema/xslt-conref/xslt-conref.sch</codeph>
+						to the validation scenario.</p>
+				</li>
+			</ul>
+		</section>
+	</refbody>
+</reference>

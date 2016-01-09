@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_t4s_vvs_4t" 
+		xmlns:xcrcp = "http://www.dita-semia.org/xslt-conref/custom-parameter"
+		xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
+  <title>Schematron Test</title>
+  <body>
+		<section id="rpw_kw4_p5">
+			<title>Invalid Script URI</title>
+			<p>The value of the parameter xcr:xsl does not represent an exisiting file.</p>
+			<p id="cxz_ng4_5t" xcr:xsl="invalid script"/>
+		</section>
+		<section>
+			<title>Invalid Script</title>
+			<p>The value of the parameter xcr:xsl is not a valid XSL script, but the file
+				exists.</p>
+			<p id="sw4_zg4_5t" xcr:xsl="invalid-script.xsl"/>
+		</section>
+		<section id="fk3_mw4_p5">
+			<title>Invalid XML Source URI</title>
+			<p>The value of the parameter xcr:source does not represent an exisiting file.</p>
+			<p xcr:xsl="valid-script.xsl" id="n3l_rfr_vt" xcr:source="invalid source"/>
+		</section>
+		<section id="gk3_mw4_p5">
+			<title>Invalid XML Source</title>
+			<p>The value of the parameter xcr:source is not a valid XML file, but it exists.</p>
+			<p xcr:xsl="valid-script.xsl" xcr:source="invalid-xml.xml" id="obh_dbm_yt"/>
+		</section>
+		<section id="hk3_mw4_p5">
+			<title>Runtime Error</title>
+			<p>The given XSL script causes a runtime error. (xsl:variable element has a select
+				attribute, but the sequence constructor is not empty.) This error is not reported by Schematron.</p>
+			<p xcr:xsl="runtime-error.xsl"/>
+		</section>
+		<section id="ik3_mw4_p5">
+			<title>Invalid Script with Undefined Parameters</title>
+			<p>The value of the parameter xcr:xsl is not a valid XSL script, therefore the undefined
+				parameter and other parameters are neglected.</p>
+			<p xcr:xsl="invalid-script.xsl" xcrcp:string="Value" xcrcp:integer="99"
+				xcrcp:undefined="xxx"/>
+		</section>
+		<section id="jk3_mw4_p5">
+			<title>Valid Script with Undefined Parameters</title>
+			<p>The parameter 'xcr:undefined' is not defined. Other parameters are not neglected.</p>
+			<p xcr:xsl="valid-script-parameterized.xsl" xcrcp:string="Value" xcrcp:integer="99"
+				xcrcp:undefined="xxx"/>
+		</section>
+		<section id="kk3_mw4_p5">
+			<title>Valid Script</title>
+			<p>The value of 'xcr:xsl' represents a valid XSL script.</p>
+			<p id="c3p_bh4_5t" xcr:xsl="valid-script.xsl"/>
+		</section>
+		<section id="lk3_mw4_p5">
+			<title>Valid Script with URN</title>
+			<p>Another valid script, but with URN.
+				('urn:dita-semia:test:xslt-conref:valid-script.xsl')</p>
+			<p id="htn_stl_yt" xcr:xsl="urn:dita-semia:test:xslt-conref:valid-script.xsl"/>
+		</section>
+		<section id="mk3_mw4_p5">
+			<title>Valid XML Source with URN</title>
+			<p>The value of 'xcr:source' represents a valid XML file with URN
+				('urn:dita-semia:test:xslt-conref:data.xml').</p>
+			<p id="owr_stl_yt" xcr:xsl="valid-script.xsl"
+				xcr:source="urn:dita-semia:test:xslt-conref:data.xml"/>
+		</section>
+		<section id="nk3_mw4_p5">
+			<title>Valid Script with Parameters of Different Type</title>
+			<p>The element has valid custom parameters of different type. </p>
+			<p xcr:xsl="valid-script-parameterized.xsl" xcrcp:string="Value" xcrcp:integer="99"/>
+		</section>
+	</body>
+</topic>

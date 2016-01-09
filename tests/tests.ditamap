@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="urn:dita-ng:dita:rng:bookmap.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<bookmap>
-    <booktitle>
-        <mainbooktitle>XSLT-Conref Tests Collection</mainbooktitle>
-    </booktitle>
-    <chapter href="schematron-test/schematron-test.dita"/>
-    <chapter href="xpath-parameter/xpath-parameter-test.dita"/>
-</bookmap>

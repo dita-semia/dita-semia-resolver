@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+	<group><!-- System ID (URL) catalog entries -->
+		
+		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref-attr.mod.rng" 	uri="xslt-conref-attr.mod.rng"/>
+		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" 	uri="xslt-conref-reference.rng"/>
+		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" 		uri="xslt-conref-topic.rng"/>
+		
+		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref.sch" 			uri="xslt-conref.sch"/>
+		
+	</group>
+	
+	
+	<group><!-- Public ID (URN) catalog entries -->
+	
+		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref-attr.mod.rng" 	uri="xslt-conref-attr.mod.rng"/>
+		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng" uri="xslt-conref-reference.rng"/>
+		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" 	uri="xslt-conref-topic.rng"/>
+		
+		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref.sch" 			uri="xslt-conref.sch"/>
+		
+	</group>
+	
+</catalog>
