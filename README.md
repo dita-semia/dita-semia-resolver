@@ -6,42 +6,14 @@ The basic idea of XSLT-Conref is to combine the conref concept of DITA with an X
 
 
 ## Syntax (short version)
-Just add an xslt-conref attribute to your element and put an URL to the xslt script in it. The rott element of the result needs to have the same name as the element containing the xslt-conref attribute. You can use absolute and reletive URLs as well as URNs previously registered with catalogs.
-
+Just add an xcr:xsl attribute (namespace http://www.dita-semia.org/xslt-conref) to your element and put an URL to the xslt script in it. The root element of the result needs to have the same or a base class class  as the element containing the xcr:xsl attribute. You can use absolute and reletive URLs as well as URNs previously registered with catalogs.
 
 ## Installation in oXygen
-To make oXygen resolve your xslt-conrefs you have to configure a reference resolver. This requires you to download the repository dita-semia/JavaBase as well. The easiest way to get started is by downloading the file DitaSemiaXsltConref.zip from the latest [release](https://github.com/dita-semia/XsltConref/releases).
+To make oXygen resolve your xslt-conrefs you have to configure a reference resolver. The easiest way is to use the frameworks that comes with this plugin: dita-semia and dita-semia-map. They are located in the folder org.dita-semia.resolver\oxygen-framework. To let oxygen find these you have to add the folder org.dita-semia.resolver to the custom locations.
 
-### Using the provided custom framework
-The repository includes a framework with hhis reference resolver already configured in the framework folder. To make oXygen use this you have to add the XsltConref folder to the "Locations Preferences" and restart oXygen afterwards.
-Now you should find the new document types "DITA with XSLT-Conref support" and "DITA MAP with XSLT-Conref support" and be able to run the samples.
-
-### Adapting your own custom framework
-First you have to add the files DitaSemiaJavaBase.jar and DitaSemiaXsltConref.jar to the class path of your extension. Then you can explicitly set the class OxygenXsltConrefResolver as reference resolver.
-If you have already a custom reference resolver configured you will have to merge the sources...
-
-
-## Installation in DITA-OT
-Not done yet.
-
-
-## Samples
-The samples are located in a dedicated samples folder. There is an oXygen project as well which additionally provides a transformation scenario that resolves the xslt-conrefs on xml level and returns the result. Furthermore there's a DITA map containing all existing samples. Displaying it with resolved topics is the fasted way to get an overview of all the capabilities.
-
-### adding-default-attr
-This folder contains a single sample with multiple xslt-conrefs demonstrating the different ways you can use to generate the required default attributes (esp. @class):
-- explicitly.xsl: Just add them explicitly when creating an element.
-- by-validation.xsl: Using a schema-aware transformer and importing your schema you can use @xsl:validate. (This only works when your schema is in xsd format.)
-- by-type.xsl: Using a schema-aware transformer and importing your schema you can use @xsl:type. (This only works when your schema is in xsd format.)
-- by-xsd-schema.xsl: You can use @xsi:noNamespaceSchemaLocation in your root element. The attributes will be generated when reparsing your result.
-- by-rng-schema.xsl: You can use <?xml-model href="..." ...?> in your result document. The attributes will be generated when reparsing your result.
-
-### local-toc
-This sample consists of a reference topic containing child reference topics. The xslt-conref generates an overview of the child topics as unordered list with their titles, their short descriptions and a cross reference.
-
+More information can be found in the (preliminary) documentation dita-semia.pdf of the [lastes release](https://github.com/dita-semia/XsltConref/releases/latest).
 
 ## Compiling
-To compile it with eclipse you have to set the variable OXYGENXML locating the oXyen installation folder (e.g. "C:/Program Files/Oxygen XML Editor"). This needs to be done twice:
+To compile it with eclipse you have to set the variables OXYGENXML(locating the oXyen installation folder, e.g. "C:/Program Files/Oxygen XML Editor") and DITAOT (locating your dita-of folder, e.g. "C:/Development/dita-ot"). This needs to be done twice:
 - Ecplipse Path variable: Window -> Preferences -> Java -> Build Path -> Classpath Variables
 - For the Ant Builder: Window -> Preferences -> Ant -> Runtime -> Properties
-Additionally you need an Eclipse Path variable DITA_SEMIA with the root folder of your sources, containing the folder JavaBase.
