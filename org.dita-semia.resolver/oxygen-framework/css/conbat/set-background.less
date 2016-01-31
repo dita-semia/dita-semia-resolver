@@ -1,0 +1,13 @@
+
+*[cba|prefix]:before(@{conbat-inline-index}),
+*[cba|code-prefix]:before(@{conbat-inline-index}),
+*[cba|prefix]:before(@{conbat-paragraph-index}),
+*[cba|content],
+*[cba|default-content]:empty:after(@{conbat-default-content-index}),
+*[cba|default-content]:empty:after(@{conbat-default-content-marker-index}),
+*[cba|suffix]:after(@{conbat-inline-index}),
+*[cba|code-suffix]:after(@{conbat-inline-index}),
+*[cba|suffix]:after(@{conbat-paragraph-index}),
+*[cba|title]:before(@{conbat-title-index})	{
+    background-color	: @conbat-background;
+}

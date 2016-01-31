@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:cba	= "http://www.dita-semia.org/conbat">
+	
+	
+	<div>
+		<define name="software-component">
+			<ref name="software-component.element"/>
+		</define>
+		
+		<define name="software-component.element">
+			<element name="software-component">
+				<ref name="software-component.attlist"/>
+				<ref name="software-component.content"/>
+			</element>
+		</define>
+		
+		<define name="software-component.attlist">
+			<ref name="software-component.attributes"/>
+			<ref name="arch-atts"/>
+			<ref name="domains-att"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/topic dita-semia-conbat-samples-d/software-component "/>
+			</optional>
+		</define>
+		
+		<define name="software-component.attributes">
+			<attribute name="id">
+				<!--<data type="ID"/>-->
+			</attribute>
+			<ref name="conref-atts"/>
+			<ref name="select-atts"/>
+			<ref name="localization-atts"/>
+			<optional>
+				<attribute name="outputclass"/>
+			</optional>
+		</define>
+		
+		<define name="software-component.content">
+			<ref name="sc-title"/>
+			<ref name="sc-body"/>
+			<zeroOrMore>
+				<ref name="topic-info-types"/>
+			</zeroOrMore>
+		</define>
+	</div>
+	
+	<div>
+		<define name="sc-title">
+			<ref name="sc-title.element"/>
+		</define>
+		
+		<define name="sc-title.element">
+			<element name="sc-title">
+				<ref name="sc-title.attlist"/>
+				<ref name="title.content"/>
+			</element>
+		</define>
+		
+		<define name="sc-title.attlist">
+			<ref name="title.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/title dita-semia-conbat-samples-d/sc-title "/>
+			</optional>
+			<optional>
+				<attribute name="cba:prefix" a:defaultValue="Software Component: "/>
+			</optional>
+		</define>
+	</div>
+	
+	<div>
+		<define name="sc-body">
+			<ref name="sc-body.element"/>
+		</define>
+		
+		<define name="sc-body.element">
+			<element name="sc-body">
+				<ref name="sc-body.attlist"/>
+				<ref name="sc-body.content"/>
+			</element>
+		</define>
+		
+		<define name="sc-body.attlist">
+			<ref name="title.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/body dita-semia-conbat-samples-d/sc-body "/>
+			</optional>
+		</define>
+		
+		<define name="sc-body.content">
+			<zeroOrMore>
+				<choice>
+					<ref name="body.cnt"/>
+					<ref name="bodydiv"/>
+					<ref name="example"/>
+					<ref name="section"/>
+					<ref name="sc-flowchart"/>
+				</choice>
+			</zeroOrMore>
+		</define>
+	</div>
+	
+	<div>
+		<define name="sc-flowchart">
+			<ref name="sc-flowchart.element"/>
+		</define>
+		
+		<define name="sc-flowchart.element">
+			<element name="sc-flowchart">
+				<ref name="sc-flowchart.attlist"/>
+				<ref name="sc-flowchart.content"/>
+			</element>
+		</define>
+		
+		<define name="sc-flowchart.attlist">
+			<ref name="title.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/fig dita-semia-conbat-samples-d/sc-flowchart "/>
+			</optional>
+		</define>
+		
+		<define name="sc-flowchart.content">
+			<ref name="sc-fc-title"/>
+			<optional>
+				<ref name="desc"/>
+			</optional>
+			<zeroOrMore>
+				<choice>
+					<ref name="figgroup"/>
+					<ref name="fig.cnt"/>
+				</choice>
+			</zeroOrMore>
+		</define>
+	</div>
+	
+	<div>
+		<define name="sc-fc-title">
+			<ref name="sc-fc-title.element"/>
+		</define>
+		
+		<define name="sc-fc-title.element">
+			<element name="sc-fc-title">
+				<ref name="sc-fc-title.attlist"/>
+				<ref name="title.content"/>
+			</element>
+		</define>
+		
+		<define name="sc-fc-title.attlist">
+			<ref name="title.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/title dita-semia-conbat-samples-d/sc-title "/>
+			</optional>
+			<optional>
+				<attribute name="cba:content" a:defaultValue="Flowchart of Software Component {ancestor::software-component/sc-title}"/>
+			</optional>
+		</define>
+	</div>
+
+	<include href="urn:oasis:names:tc:dita:rng:topic.rng">
+		
+		<define name="domains-att">
+			<optional>
+				<attribute name="domains"
+					a:defaultValue="(topic abbrev-d)
+					(topic equation-d)
+					(topic hazard-d)
+					(topic hi-d)
+					(topic indexing-d)
+					(topic markup-d xml-d)
+					(topic markup-d)
+					(topic mathml-d)
+					(topic pr-d)
+					(topic relmgmt-d)
+					(topic svg-d)
+					(topic sw-d)
+					(topic ui-d)
+					(topic ut-d)
+					(topic dita-semia-samples-d)
+					a(props deliveryTarget)"
+				/>
+			</optional>
+		</define>
+			
+		<define name="topic-info-types">
+			<choice>
+				<ref name="topic.element"/>
+				<ref name="software-component.element"/>
+			</choice>
+		</define>
+		
+	</include>
+
+
+</grammar>

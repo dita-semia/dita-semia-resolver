@@ -87,7 +87,7 @@
 										<field name="value">
 											<cssFile>
 												<field name="href">
-													<String>${framework}/css/xslt-conref.less</String>
+													<String>${framework}/css/dita-semia.less</String>
 												</field>
 												<field name="title">
 													<String></String>
@@ -469,6 +469,23 @@
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>validationScenarios/[0]/pairs</String>
+										</field>
+										<field name="index">
+											<Integer>3</Integer>
+										</field>
+										<field name="value">
+											<null/>
+										</field>
+										<field name="patchHandling">
+											<String>removeIndex</String>
 										</field>
 										<field name="anchor">
 											<null/>
@@ -3698,10 +3715,10 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>add_edit_content_reference</String>
 										</field>
 										<field name="name">
-											<String>${i18n(add_edit_content_reference)}</String>
+											<String>${i18n(edit_content_reference)}</String>
 										</field>
 										<field name="description">
-											<String>${i18n(add_edit_content_reference_description)}</String>
+											<String>${i18n(edit_content_reference_description)}</String>
 										</field>
 										<field name="largeIconPath">
 											<String></String>
@@ -3719,7 +3736,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<actionMode-array>
 												<actionMode>
 													<field name="xpathCondition">
-														<String></String>
+														<String>ancestor-or-self::*[@conref] | ancestor-or-self::*[@conkeyref] | oxy:current-selected-element()[ancestor-or-self::*][@conref] | oxy:current-selected-element()[ancestor-or-self::*][@conkeyref]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap/>

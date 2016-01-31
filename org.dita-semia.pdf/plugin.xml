@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="dita-ot/plugin.rnc" type="application/relax-ng-compact-syntax"?>
 <plugin id="org.dita-semia.pdf">
 
 	<require plugin="org.dita.pdf2"/>
 	<feature extension="dita.conductor.transtype.check" value="dita-semia-pdf"/>
 	<feature extension="dita.transtype.print" 			value="dita-semia-pdf"/>
 	<feature extension="dita.conductor.target.relative" file="integrator.xml"/>
+	<feature extension="dita.conductor.pdf2.param" 		file="insert-parameters.xml"/>
+
+	<transtype name="dita-semia-pdf" extends="pdf2" desc="DITA-SEMIA PDF">
+		<param name="highlight.conbat.bk-col" 		type="string"	desc="Background color to be used for highlighting content generated from attributes."/>
+		<param name="highlight.xslt-conref.bk-col" 	type="string"	desc="Background color to be used for highlighting resolved XSLT-Conrefs"/>
+	</transtype>
 
 </plugin>

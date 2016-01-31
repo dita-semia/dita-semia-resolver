@@ -6,14 +6,20 @@
 package org.DitaSemia.Oxygen;
 
 import org.DitaSemia.Base.XsltConref.XsltConref;
-import org.DitaSemia.Oxygen.XsltConref.DitaSemiaReferenceResolver;
 
 import ro.sync.ecss.extensions.api.AuthorReferenceResolver;
+import ro.sync.ecss.extensions.api.StylesFilter;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.dita.DITAExtensionsBundle;
 
 public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 
+	@Override
+	public String getDescription() {
+		return "DITA-SEMIA extension bundle";
+	}
+	
+	
 	@Override
 	public boolean isContentReference(AuthorNode node) {
 		boolean isContentReference = false;
@@ -25,9 +31,16 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 		return isContentReference;
 	}
 	
+	
 	@Override
 	public AuthorReferenceResolver createAuthorReferenceResolver() {
 		return new DitaSemiaReferenceResolver();
 	}
+	
+	
+	/*@Override
+	public StylesFilter createAuthorStylesFilter() {
+		return new DitaSemiaStylesFilter();
+	}*/
 
 }

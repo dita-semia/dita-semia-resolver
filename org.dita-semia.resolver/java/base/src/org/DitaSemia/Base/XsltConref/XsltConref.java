@@ -8,8 +8,6 @@ package org.DitaSemia.Base.XsltConref;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.StringTokenizer;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
@@ -31,6 +29,7 @@ import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
+import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
@@ -276,7 +275,7 @@ public class XsltConref {
 			if (paramValue != null) {
 				if (xsltExecutable.getGlobalParameters().containsKey(paramName)) {
 					try {
-						xsltTransformer.setParameter(paramName, new XdmAtomicValue(resolveValueTemplates(paramValue), ItemType.UNTYPED_ATOMIC));
+						xsltTransformer.setParameter(paramName, new XdmAtomicValue(EmbeddedXPathResolver.resolve(paramValue, node), ItemType.UNTYPED_ATOMIC));
 						//logger.info("parameters set. ");
 					} catch (SaxonApiException e) {
 						logger.error(e, e);
@@ -286,53 +285,6 @@ public class XsltConref {
 				}
 			}
 		}
-	}
-	
-	private String resolveValueTemplates(String value) throws XPathException {
-		//logger.info("resolveValueTemplates()");
-		StringTokenizer 	stringTok 	= new StringTokenizer(value, "{}", true);
-		StringBuilder 		sb 			= new StringBuilder();
-		String 			nextToken;
-		while (stringTok.hasMoreTokens()) {
-			nextToken = stringTok.nextToken();
-			if (nextToken.equals("}"))
-			{
-				sb.append(nextToken);
-				if (stringTok.hasMoreTokens()) {
-					nextToken = stringTok.nextToken();
-					if (!nextToken.equals("}")) {
-						throw new XPathException("Invalid character in parameter ('" + nextToken + "'), '}' expected after '" + sb.toString() + "'.");
-					}
-				} else {
-					throw new XPathException("Character missing in parameter. '}' expected afer '" + value + "'.");
-				}
-			} else if (nextToken.equals("{")) {
-				if (stringTok.hasMoreTokens()) {
-					nextToken = stringTok.nextToken();
-					if (nextToken.equals("{")) {
-						sb.append(nextToken);
-					} else if (!nextToken.equals("}")){
-						sb.append(node.evaluateXPathToString(nextToken));
-						if (stringTok.hasMoreTokens()) {
-							nextToken = stringTok.nextToken();
-							if(!nextToken.equals("}")) {
-								throw new XPathException("Invalid character in parameter ('" + nextToken + "'), '}' expected after '" + sb.toString() + "'.");
-							} 
-						} else {
-							throw new XPathException("Character missing in parameter. '}' expected after '" + value + "'.");
-						}
-					} else {
-						throw new XPathException("Invalid character in parameter ('" + nextToken + "'), missing XPath Expression after '" + sb.toString() + "'.");
-					}
-				} else {
-					throw new XPathException("Character missing in parameter. '{' or XPath expression expected afer '" + value + "'.");
-				}
-			} else {
-				sb.append(nextToken);
-			}
-		} 
-		//logger.info(sb.toString());
-		return sb.toString();
 	}
 	
 	private static String createXPathToElement(NodeWrapper node) {

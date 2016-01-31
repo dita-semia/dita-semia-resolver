@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:cba	= "http://www.dita-semia.org/conbat">
+	
+	
+	<div>
+		<define name="datatype">
+			<ref name="datatype.element"/>
+		</define>
+		
+		<define name="datatype.element">
+			<element name="datatype">
+				<ref name="datatype.attlist"/>
+				<ref name="p.content"/>
+			</element>
+		</define>
+		
+		<define name="datatype.attlist">
+			<ref name="p.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/p dita-semia-conbat-samples-d/datatype "/>
+			</optional>
+			<optional>
+				<attribute name="cba:prefix" a:defaultValue="Datatype: "/>
+			</optional>
+		</define>
+	</div>
+	
+	
+	<div>
+		<define name="default-value">
+			<ref name="default-value.element"/>
+		</define>
+		
+		<define name="default-value.element">
+			<element name="default-value">
+				<ref name="default-value.attlist"/>
+				<ref name="p.content"/>
+			</element>
+		</define>
+		
+		<define name="default-value.attlist">
+			<ref name="p.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/p dita-semia-conbat-samples-d/default-value "/>
+			</optional>
+			<optional>
+				<attribute name="cba:prefix" a:defaultValue="Default value: "/>
+			</optional>
+		</define>
+	</div>
+	
+	
+	<div>
+		<define name="enum-values">
+			<ref name="enum-values.element"/>
+		</define>
+		
+		<define name="enum-values.element">
+			<element name="enum-values">
+				<ref name="enum-values.attlist"/>
+				<ref name="sl.content"/>
+			</element>
+		</define>
+		
+		<define name="enum-values.attlist">
+			<ref name="sl.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/sl dita-semia-conbat-samples-d/enum-values "/>
+			</optional>
+			<optional>
+				<attribute name="cba:prefix" a:defaultValue="Enumeration values: "/>
+			</optional>
+		</define>
+	</div>
+
+
+	<include href="urn:oasis:names:tc:dita:rng:topic.rng">
+		
+		<define name="domains-att">
+			<optional>
+				<attribute name="domains"
+					a:defaultValue="(topic abbrev-d)
+					(topic equation-d)
+					(topic hazard-d)
+					(topic hi-d)
+					(topic indexing-d)
+					(topic markup-d xml-d)
+					(topic markup-d)
+					(topic mathml-d)
+					(topic pr-d)
+					(topic relmgmt-d)
+					(topic svg-d)
+					(topic sw-d)
+					(topic ui-d)
+					(topic ut-d)
+					(topic dita-semia-samples-d)
+					a(props deliveryTarget)"
+				/>
+			</optional>
+		</define>
+		
+		<define name="pd.content" combine="choice">
+			<zeroOrMore>
+				<choice>
+					<ref name="defn.cnt"/>
+					<ref name="datatype"/>
+					<ref name="default-value"/>
+					<ref name="enum-values"/>
+				</choice>
+			</zeroOrMore>
+		</define>	
+	</include>
+
+	
+
+	
+
+</grammar>

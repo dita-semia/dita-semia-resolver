@@ -1,0 +1,39 @@
+
+/* rules for generated titles */
+
+
+*[class~="topic/section"][cba|title]:before(@{conbat-title-index}) {
+	display	: block;
+    content	: oxy_label(text, attr("cba|title"));
+    .section-title-style();
+}
+
+
+*[class~="topic/li"][cba|title]:before(@{conbat-title-index}) {
+	display	: block;
+    content	: oxy_label(text, attr("cba|title"));
+    .li-title-style();
+}
+
+
+*[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+	display	: block;
+    content	: oxy_label(text, attr("cba|title"));
+    .topic-title-style();
+}
+
+* *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+    .topic-title-lvl2-style();
+}
+
+* * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+    .topic-title-lvl3-style();
+}
+
+* * * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+    .topic-title-lvl4-style();
+}
+
+* * * * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+    .topic-title-lvl5-style();
+}

@@ -7,7 +7,7 @@
 	
 	<xsl:param name="cppFile" as="xs:string"/>
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:output method="xml" indent="yes"/>
 	

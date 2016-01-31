@@ -53,7 +53,7 @@
 										<field name="value">
 											<cssFile>
 												<field name="href">
-													<String>${framework}/css/xslt-conref.less</String>
+													<String>${framework}/css/dita-semia.less</String>
 												</field>
 												<field name="title">
 													<String></String>

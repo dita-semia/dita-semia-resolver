@@ -18,7 +18,7 @@
 	<xsl:param name="xrefPrefix" 		as="xs:string?"/>
 	<xsl:param name="xrefSuffix" 		as="xs:string?"/>
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:template match="/">
 <xsl:message select="/"></xsl:message>

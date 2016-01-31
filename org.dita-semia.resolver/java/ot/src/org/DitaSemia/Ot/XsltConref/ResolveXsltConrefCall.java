@@ -45,8 +45,8 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 				throw new XPathException("Supplied parameter '" + argument + "' is no compatible node.");
 			}
 			final NodeInfo 			node 		= (NodeInfo)argument;
-			final SaxonNodeWrapper	nodeWrapper	= new SaxonNodeWrapper(node, otResolver.getXsltConrefXPathCache());
-			final XsltConref 		xsltConref 	= XsltConref.fromNode(nodeWrapper, otResolver.getXsltConrefTransformerCache(), otResolver.getXsltConrefXPathCache());
+			final SaxonNodeWrapper	nodeWrapper	= new SaxonNodeWrapper(node, otResolver.getXPathCache());
+			final XsltConref 		xsltConref 	= XsltConref.fromNode(nodeWrapper, otResolver.getXsltConrefTransformerCache(), otResolver.getXPathCache());
 			//logger.info("xsltConref: " + xsltConref);
 			if (xsltConref == null) {
 				throw new XPathException("Supplied node '" + node.getLocalPart() + "' is no xslt-conref element.");
@@ -102,7 +102,7 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 		
 		// check for missing class attribute
 		try {
-			final XPathExecutable 	xPath	= otResolver.getXsltConrefXPathCache().getXPathExecutable(MISSING_CLASS_XPATH);
+			final XPathExecutable 	xPath	= otResolver.getXPathCache().getXPathExecutable(MISSING_CLASS_XPATH);
 			final XPathSelector		sel		= xPath.load();
 			sel.setContextItem(new XdmNode(resolvedElement));
 			final XdmItem item = sel.evaluateSingle();

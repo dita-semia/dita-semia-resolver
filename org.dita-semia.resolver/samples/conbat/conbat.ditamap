@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:oasis:names:tc:dita:rng:map.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<map>
+	<title>Conbat Samples Collection</title>
+	<topicref href="introduction.dita"/>
+	<topicref href="default-example-title/default-example-title.dita"/>
+	<topicref href="default-xpath-example-title/default-xpath-example-title.dita"/>
+	<topicref href="parameter-properties/parameter-properties.dita"/>
+</map>

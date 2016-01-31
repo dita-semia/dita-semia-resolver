@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="parameter-properties.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="parameter-properties.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="parameter-properties.css"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="topic_t4s_vvs_4t">
+	<title>Parameter Properties</title>
+	<body>
+		<parml>
+			<plentry>
+				<pt>Gender</pt>
+				<pd>
+					<datatype>Enumeration</datatype>
+					<enum-values>
+						<sli>Male</sli>
+						<sli>Female</sli>
+					</enum-values>
+					<default-value>Female</default-value>
+				</pd>
+			</plentry>
+			<plentry>
+				<pt>NumberOfChildren</pt>
+				<pd>
+					<datatype>Integer</datatype>
+					<default-value>2</default-value>
+				</pd>
+			</plentry>
+		</parml>
+	</body>
+	<topic id="wpl_vtw_25">
+		<title>Description</title>
+		<body>
+			<p>Within the parameter description some specialized elements are allowed, each with a
+				prefix text.</p>
+		</body>
+	</topic>
+</topic>

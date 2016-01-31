@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="software-component.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="software-component.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="software-component.css"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="topic_t4s_vvs_4t">
+	<title>Software Component</title>
+	<software-component id="ipb_lpl_v5">
+		<sc-title>DoSomething</sc-title>
+		<sc-body>
+			<p>Text...</p>
+			<sc-flowchart>
+				<sc-fc-title/>
+				<desc>Graphic...</desc>
+			</sc-flowchart>
+		</sc-body>
+	</software-component>
+	<topic id="wpl_vtw_25">
+		<title>Description</title>
+		<body>
+			<p>Specialized <codeph>software-component</codeph> element with a specialized content:</p>
+			<ul id="a13_yql_v5">
+				<li id="b13_yql_v5">
+					<p>A specialized title with the prefix "Software Component"</p>
+				</li>
+				<li id="or3_zql_v5">
+					<p>A specialized <codeph>sc-flowchart</codeph> element (derived from
+							<codeph>fig</codeph>) with a fixed title using the title of the software
+						component.</p>
+				</li>
+			</ul>
+		</body>
+	</topic>
+</topic>

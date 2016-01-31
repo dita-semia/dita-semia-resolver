@@ -1,0 +1,34 @@
+
+	
+/* The prefix and suffix is generated as single paragraph. */
+
+*[class~="topic/ul"][cba|prefix]:before(@{conbat-paragraph-index}),
+*[class~="topic/ol"][cba|prefix]:before(@{conbat-paragraph-index})
+{
+	display			: block;
+	content			: oxy_label(text, attr("cba|prefix"));
+	margin-top		: @conbat-paragraph-margin-top;
+	margin-bottom	: @conbat-paragraph-margin-bottom;
+}
+
+*[class~="topic/ul"][cba|suffix]:after(@{conbat-paragraph-index}),
+*[class~="topic/ol"][cba|suffix]:after(@{conbat-paragraph-index}) {
+	display			: block;
+	content			: oxy_label(text, attr("cba|suffix"));
+	margin-top		: @conbat-paragraph-margin-top;
+	margin-bottom	: @conbat-paragraph-margin-bottom;
+}
+
+
+/* for simple list item don't set margins */
+
+
+*[class~="topic/sl"][cba|prefix]:before(@{conbat-paragraph-index}) {
+	display			: block;
+	content			: oxy_label(text, attr("cba|prefix"));
+}
+
+*[class~="topic/sl"][cba|suffix]:after(@{conbat-paragraph-index}) {
+	display			: block;
+	content			: oxy_label(text, attr("cba|suffix"));
+}

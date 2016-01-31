@@ -4,7 +4,7 @@
     xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:variable name="ATTR_P" as="attribute()">
 		<xsl:attribute name="class" select="$CP_P"/>

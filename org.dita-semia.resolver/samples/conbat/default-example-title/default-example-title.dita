@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="default-example-title.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="default-example-title.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="default-example-title.css"?>
+<topic id="topic_t4s_vvs_4t">
+  <title>Default Title for Examples</title>
+	<topic id="g4s_gkf_v5">
+		<title>Using Defaults</title>
+		<body>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+		</body>
+	</topic>
+	<topic id="qlq_hkf_v5">
+		<title>Overwriting Defaults</title>
+		<body>
+			<example>
+				<example-title>Special Example #1</example-title>
+				<p>Text...</p>
+			</example>
+			<example>
+				<example-title>Special Example #2</example-title>
+				<p>Text...</p>
+			</example>
+		</body>
+	</topic>
+	<topic id="wpl_vtw_25">
+		<title>Description</title>
+		<body>
+			<p>The <codeph>title</codeph> element within <codeph>example</codeph> has a default
+				content set to "Example". In author mode the text "(default)" will be displayed as a
+				hint that this content can be overwritten. When the author enters any content the
+				default content will disappear.</p>
+		</body>
+	</topic>
+</topic>

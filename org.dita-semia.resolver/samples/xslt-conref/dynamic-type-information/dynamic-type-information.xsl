@@ -9,7 +9,7 @@
 
 	<xsl:param name="xcr:current" as="element()"/>
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 
 	<xsl:variable name="FIELD_DEF_REFERENCE_ID" as="xs:string" select="'global-field-definitions'"/>
 

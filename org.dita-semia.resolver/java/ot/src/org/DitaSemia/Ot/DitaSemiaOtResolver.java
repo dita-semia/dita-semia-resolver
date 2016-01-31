@@ -12,6 +12,7 @@ import javax.xml.transform.sax.SAXSource;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Ot.Conbat.ResolveEmbeddedXPathDef;
 import org.DitaSemia.Ot.XsltConref.ResolveXsltConrefDef;
 import org.dita.dost.exception.DITAOTException;
 import org.dita.dost.log.DITAOTLogger;
@@ -46,7 +47,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 
 	protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
 
-	protected static final String NEEDS_RESOLVER_XPATH 	= "exists(//@xcr:xsl)";
+	protected static final String NEEDS_RESOLVER_XPATH 	= "exists(//@xcr:xsl | //@cba:*)";
 	protected static final String BASE_URI_XPATH 		= "/*/@xtrf";
 	
 	
@@ -76,8 +77,9 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 	protected XPathExecutable 		baseUriXPath				= null;
 	
 	protected XslTransformerCache	xsltConrefTransformerCache	= null;
-	protected XPathCache			xsltConrefXPathCache		= null;
 	protected XMLReader				xsltConrefXmlReader			= null;
+
+	protected XPathCache			xPathCache					= null;
 	
 	protected URL					currentBaseUri				= null;
 
@@ -93,7 +95,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 		xsltConrefConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
 		
 		xsltConrefTransformerCache	= new XslTransformerCache(xsltConrefConfiguration);
-		xsltConrefXPathCache		= new XPathCache(xsltConrefConfiguration);
+		xPathCache					= new XPathCache(xsltConrefConfiguration);
 		try {
 			xsltConrefXmlReader		= XMLUtils.getXMLReader();
 		} catch (SAXException e) {
@@ -116,12 +118,14 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 
 		resolverConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
 		resolverConfiguration.registerExtensionFunction(new ResolveXsltConrefDef(this));
+		resolverConfiguration.registerExtensionFunction(new ResolveEmbeddedXPathDef(this));
 
 		resolverProcessor 		= new Processor(resolverConfiguration);
 		resolverDocBuilder 		= resolverProcessor.newDocumentBuilder();
 		
 		final XPathCompiler xPathCompiler 	= resolverProcessor.newXPathCompiler();
 		xPathCompiler.declareNamespace(XsltConref.NAMESPACE_PREFIX, XsltConref.NAMESPACE_URI);
+		xPathCompiler.declareNamespace(ResolveEmbeddedXPathDef.NAMESPACE_PREFIX, ResolveEmbeddedXPathDef.NAMESPACE_URI);
 		try {
 			needsResolveXPath	= xPathCompiler.compile(NEEDS_RESOLVER_XPATH);
 			baseUriXPath		= xPathCompiler.compile(BASE_URI_XPATH);
@@ -229,8 +233,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 		return xsltConrefXmlReader;
 	}
 
-	public XPathCache getXsltConrefXPathCache() {
-		return xsltConrefXPathCache;
+	public XPathCache getXPathCache() {
+		return xPathCache;
 	}
 
 

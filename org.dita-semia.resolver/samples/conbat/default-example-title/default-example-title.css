@@ -1,0 +1,4 @@
+*[class~="topic/example"]:has(example-title):before {
+	display: none;
+    content: "";
+}

@@ -1,0 +1,88 @@
+
+/* general */
+@conbat-background						: rgb(240, 240, 240);
+@conbat-inline-index					: 1;	/* used in :begin(n) and :after(n) for generated inline content */
+@conbat-paragraph-index					: 1;	/* used in :begin(n) and :after(n) for generated paragraph content */
+@conbat-default-content-index			: 1;	/* used in :after(n) for generated default content */
+@conbat-default-content-marker-index	: 2;	/* used in :after(n) for default content marker */
+@conbat-title-index						: 5;	/* used in :begin(n) for generated titles */
+@conbat-header-index					: 6;	/* used in :begin(n) for generated table header - needs to be greater than @conbat-inline-index */
+@body-font-family						: Serif;
+@code-font-size							: 0.9em;
+@code-invert-font-size					: 1.11em;	/* used to undo the font size change for code */
+
+/* paragraph */
+@conbat-paragraph-margin-top	: 0.5em;
+@conbat-paragraph-margin-bottom	: 0.5em;
+
+/* table */
+@table-border-width				: 1px;
+@table-border-color				: black;
+@table-header-background		: rgb(221, 238, 255);
+@table-header-font-weight		: bold;
+@table-header-padding-top		: 1px;
+@table-header-padding-bottom	: 1px;
+@table-header-padding-left		: 5px;
+@table-header-padding-right		: 5px;
+
+/* author-only text */
+.author-only-text-style() {
+	font-family		: inherit;
+	font-weight		: normal;
+	font-style		: italic;
+	color			: rgb(144, 144, 144);
+	font-size		: 0.8em;
+}
+
+/* section title */
+.section-title-style() {
+	font-family		: inherit;
+	font-weight		: bold;
+	font-style		: inherit;
+	color			: inherit;
+	margin-top		: 6pt;
+	margin-bottom	: 2pt;
+}
+
+/* li title */
+.li-title-style() {
+	font-family		: inherit;
+	font-weight		: bold;
+	font-style		: inherit;
+	color			: inherit;
+	margin-top		: 6pt;
+	margin-bottom	: 2pt;
+}
+
+/* topic title */
+.topic-title-style() {
+	font-family			: inherit;
+    font-weight			: bold;
+	font-style			: inherit;
+	color				: inherit;
+	font-size			: 1.8em;
+	margin-top			: 0.3em ;
+	margin-right		: 0 ;
+	margin-left			: 0 ;
+	margin-bottom 		: 0.3em ;
+	border-bottom-width : 1px ;
+	border-bottom-style : solid ;
+	border-bottom-color : rgb(0, 34, 68) ;
+}
+
+.topic-title-lvl2-style() {
+	font-size			: 1.6em;
+}
+
+.topic-title-lvl3-style() {
+    font-size			: 1.4em;
+    border-bottom		: none;
+}
+
+.topic-title-lvl4-style() {
+	font-size			: 1.2em;
+}
+
+.topic-title-lvl5-style() {
+	font-size			: 1em;
+}

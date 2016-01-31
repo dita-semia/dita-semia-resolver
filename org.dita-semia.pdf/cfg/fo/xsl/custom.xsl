@@ -7,5 +7,6 @@
 	<xsl:include href="embedded-svg.xsl"/>
 	
 	<xsl:include href="highlight-xsltconref.xsl"/>
+	<xsl:include href="highlight-conbat.xsl"/>
 	
 </xsl:stylesheet>

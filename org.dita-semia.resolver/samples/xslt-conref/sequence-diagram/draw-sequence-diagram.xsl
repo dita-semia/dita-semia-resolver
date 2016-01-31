@@ -10,8 +10,8 @@
 	exclude-result-prefixes="#all">
 	
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:svg-utility.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:svg-utility.xsl"/>
 	
 	<xsl:variable name="GRAPHICS_MIN_WIDTH"						as="xs:double"	select="160"/>
 	<xsl:variable name="FONT_FAMILY_DEFAULT"					as="xs:string"	select="'Calibri'"/>

@@ -1,0 +1,4 @@
+*[class~="topic/sli"] {
+	list-style-type : disc;
+	margin-left		: 16px; 
+}

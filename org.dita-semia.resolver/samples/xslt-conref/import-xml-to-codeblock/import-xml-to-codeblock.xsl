@@ -9,7 +9,7 @@
 	
 	<xsl:output method="xml" indent="no"/>
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:include href="xml-serialize.xsl"/>
 	

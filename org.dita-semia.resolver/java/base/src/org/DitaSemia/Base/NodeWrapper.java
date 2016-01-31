@@ -24,7 +24,7 @@ import net.sf.saxon.trans.XPathException;
  * @version 0.0.2beta
  */
 
-public interface NodeWrapper 
+public interface NodeWrapper
 {
 	/**
 	 * Returns the absolute base URL of the Node or null if there is none.

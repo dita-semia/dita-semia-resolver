@@ -20,6 +20,7 @@ import net.sf.saxon.pattern.NodeTest;
 import net.sf.saxon.query.QueryResult;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathSelector;
+import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.AxisIterator;
@@ -166,7 +167,12 @@ public class SaxonNodeWrapper implements NodeWrapper
 				XPathSelector selector = xPathCache.getXPathExecutable(xPath).load();
 				//logger.info("XPathSelector: " + selector);
 				selector.setContextItem(new XdmNode(saxonNode));
-				resolvedXPath = selector.evaluateSingle().getStringValue();
+				final XdmItem resolvedItem = selector.evaluateSingle();
+				if (resolvedItem != null) {
+					resolvedXPath = selector.evaluateSingle().getStringValue();	
+				} else {
+					resolvedXPath = "";
+				}
 				//logger.info("resolvedXPath: " + resolvedXPath);
 			} catch (SaxonApiException e) {
 				throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");

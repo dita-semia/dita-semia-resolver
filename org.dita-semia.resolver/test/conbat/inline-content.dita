@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+  <title>Inline Content</title>
+  <body>
+		<p>The content is displayed right in front of or behind the actual content.</p>
+		<section>
+			<title>Paragraph</title>
+			<ul id="evs_51m_zt">
+				<li>
+					<p>Show attribute prefix in front of explicit content:</p>
+					<p cba:prefix="attribute prefix ">explicit content</p>
+				</li>
+				<li>
+					<p>Show attribute prefix and placeholder when no explicit content is
+						present:</p>
+					<p cba:prefix="attribute prefix "/>
+				</li>
+				<li>
+					<p>Show attribute suffix behind explicit content:</p>
+					<p cba:suffix=" attribute suffix">explicit content</p>
+				</li>
+				<li>
+					<p>Show attribute suffix and placeholder when no explicit content is
+						present:</p>
+					<p cba:suffix=" attribute suffix"/>
+				</li>
+				<li>
+					<p>Show attribute content:</p>
+					<p cba:content="attribute content"/>
+				</li>
+				<li>
+					<p>Explicit content hides default content:</p>
+					<p cba:default-content="attribute default content">explicit content</p>
+				</li>
+				<li>
+					<p>Without explicit content the attribute default content is shown (after the
+						cursor):</p>
+					<p cba:default-content="attribute default content"/>
+				</li>
+			</ul>
+		</section>
+		<section>
+			<title>Phrase</title>
+			<ul id="jrk_y2p_zt">
+				<li>
+					<p>Show attribute prefix in front of explicit content:</p>
+					<p><ph cba:prefix="attribute prefix ">explicit content</ph></p>
+				</li>
+				<li>
+					<p>Show attribute prefix and placeholder when no explicit content is
+						present:</p>
+					<p><ph cba:prefix="attribute prefix "/></p>
+				</li>
+				<li>
+					<p>Show attribute suffix behind explicit content:</p>
+					<p><ph cba:suffix=" attribute suffix">explicit content</ph></p>
+				</li>
+				<li>
+					<p>Show attribute suffix and placeholder when no explicit content is
+						present:</p>
+					<p><ph cba:suffix=" attribute suffix"/></p>
+				</li>
+				<li>
+					<p>Show attribute content:</p>
+					<p><ph cba:content="attribute content"/></p>
+				</li>
+				<li>
+					<p>Explicit content hides default content:</p>
+					<p><ph cba:default-content="attribute default content">explicit content</ph></p>
+				</li>
+				<li>
+					<p>Without explicit content the attribute default content is shown (after the
+						cursor):</p>
+					<p><ph cba:default-content="attribute default content"/></p>
+				</li>
+			</ul>
+		</section>
+		<section id="vk1_hhr_zt">
+			<title>Code Phrase</title>
+			<ul id="wk1_hhr_zt">
+				<li id="xk1_hhr_zt">
+					<p>Show attribute code prefix in front of explicit content with codeph style:</p>
+					<p><codeph cba:code-prefix="attribute prefix ">explicit content</codeph></p>
+				</li>
+				<li id="yk1_hhr_zt">
+					<p>Show attribute code prefix and placeholder when no explicit content is present:</p>
+					<p><codeph cba:code-prefix="attribute prefix "/></p>
+				</li>
+				<li id="vrg_whr_zt">
+					<p>Show ordinary attribute prefix in front of explicit content without codeph
+						style:</p>
+					<p><codeph cba:prefix="attribute prefix ">explicit content</codeph></p>
+				</li>
+				<li id="zk1_hhr_zt">
+					<p>Show attribute code suffix behind explicit content with codeph style:</p>
+					<p><codeph cba:code-suffix=" attribute suffix">explicit content</codeph></p>
+				</li>
+				<li id="al1_hhr_zt">
+					<p>Show attribute code suffix and placeholder when no explicit content is present:</p>
+					<p><codeph cba:code-suffix=" attribute suffix"/></p>
+				</li>
+				<li id="mx1_zhr_zt">
+					<p>Show ordinary attribute code suffix behind explicit content without codeph
+						style:</p>
+					<p><codeph cba:suffix=" attribute suffix">explicit content</codeph></p>
+				</li>
+				<li id="bl1_hhr_zt">
+					<p>Show attribute content:</p>
+					<p><codeph cba:content="attribute content"/></p>
+				</li>
+				<li id="cl1_hhr_zt">
+					<p>Explicit content hides default content:</p>
+					<p><codeph cba:default-content="attribute default content">explicit content</codeph></p>
+				</li>
+				<li id="dl1_hhr_zt">
+					<p>Without explicit content the attribute default content is shown (after the
+						cursor):</p>
+					<p><codeph cba:default-content="attribute default content"/></p>
+				</li>
+			</ul>
+		</section>
+		<section>
+			<title>Simple List Item</title>
+			<ul id="ey4_5hp_zt">
+				<li>
+					<p>Show attribute prefix in front of explicit content:</p>
+					<sl><sli cba:prefix="attribute prefix ">explicit content</sli></sl>
+				</li>
+				<li>
+					<p>Show attribute prefix and placeholder when no explicit content is
+						present:</p>
+					<sl><sli cba:prefix="attribute prefix "/></sl>
+				</li>
+				<li>
+					<p>Show attribute suffix behind explicit content:</p>
+					<sl><sli cba:suffix=" attribute suffix">explicit content</sli></sl>
+				</li>
+				<li>
+					<p>Show attribute suffix and placeholder when no explicit content is
+						present:</p>
+					<sl><sli cba:suffix=" attribute suffix"/></sl>
+				</li>
+				<li>
+					<p>Show attribute content:</p>
+					<sl><sli cba:content="attribute content"/></sl>
+				</li>
+				<li>
+					<p>Explicit content hides default content:</p>
+					<sl><sli cba:default-content="attribute default content">explicit content</sli></sl>
+				</li>
+				<li>
+					<p>Without explicit content the attribute default content is shown (after the
+						cursor):</p>
+					<sl><sli cba:default-content="attribute default content"/></sl>
+				</li>
+			</ul>
+		</section>
+		<section>
+			<title>Simple Table Entry</title>
+			<simpletable frame="all" relcolwidth="1.0* 1.0*" id="simpletable_kyz_d3p_zt">
+				<sthead>
+					<stentry>entry with attribute</stentry>
+					<stentry>description</stentry>
+				</sthead>
+				<strow>
+					<stentry cba:prefix="attribute prefix ">explicit content</stentry>
+					<stentry>Show attribute prefix in front of explicit content</stentry>
+				</strow>
+				<strow>
+					<stentry cba:prefix="attribute prefix "/>
+					<stentry>Oxygen does not support placeholders in stentry</stentry>
+				</strow>
+				<strow>
+					<stentry cba:suffix=" attribute suffix">explicit content</stentry>
+					<stentry>Show attribute suffix behind explicit content</stentry>
+				</strow>
+				<strow>
+					<stentry cba:suffix=" attribute suffix"/>
+					<stentry>Oxygen does not support placeholders in stentry</stentry>
+				</strow>
+				<strow>
+					<stentry cba:content="attribute content"/>
+					<stentry>Show attribute content</stentry>
+				</strow>
+				<strow>
+					<stentry>explicit content</stentry>
+					<stentry>Explicit content hides default content</stentry>
+				</strow>
+				<strow>
+					<stentry cba:default-content="attribute default content"/>
+					<stentry>Without explicit content the attribute default content is shown (after
+						the cursor)</stentry>
+				</strow>
+			</simpletable>
+		</section>
+	</body>
+	<topic id="hpz_fsp_zt">
+		<title>Title</title>
+		<body>
+			<section id="gnz_gsp_zt">
+				<title cba:prefix="attribute prefix "/>
+				<p>Show attribute prefix in front of explicit content.</p>
+			</section>
+			<section id="vkv_hsp_zt">
+				<title cba:prefix="attribute prefix ">explicit content</title>
+				<p>Show attribute prefix and placeholder when no explicit content is present.</p>
+			</section>
+			<section id="trx_hsp_zt">
+				<title cba:suffix=" attribute suffix"/>
+				<p>Show attribute suffix behind explicit content.</p>
+			</section>
+			<section id="bmy_hsp_zt">
+				<title cba:suffix=" attribute suffix">explicit content</title>
+				<p>Show attribute suffix and placeholder when no explicit content is present.</p>
+			</section>
+			<section id="ztz_hsp_zt">
+				<title cba:content="attribute content"/>
+				<p>Show attribute content. Note that a title with constant content can be generated more
+					comfortably by using the title attribute on the element that should have the
+					title.</p>
+			</section>
+			<section id="kd1_3sp_zt">
+				<title cba:default-content="attribute default content">explicit content</title>
+				<p>Explicit content hides default content.</p>
+			</section>
+			<section id="in1_3sp_zt">
+				<title cba:default-content="attribute default content"/>
+				<p>Without explicit content the attribute default content is shown (after the cursor).</p>
+			</section>
+		</body>
+	</topic>
+</topic>

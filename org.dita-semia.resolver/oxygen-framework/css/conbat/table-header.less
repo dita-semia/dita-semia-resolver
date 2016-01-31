@@ -1,0 +1,81 @@
+
+/* rules for table related elements */
+
+
+.table-header() {
+	font-weight:        @table-header-font-weight;
+	background-color:   @table-header-background;
+	padding-top:        @table-header-padding-top;
+	padding-bottom:     @table-header-padding-bottom;
+	padding-left:       @table-header-padding-left;
+	padding-right:      @table-header-padding-right;
+}
+
+.table-header-undo-padding() {
+    margin-top:     -(@table-header-padding-top + @table-border-width);
+    margin-left:    -@table-header-padding-left;
+    margin-right:   -(@table-header-padding-right + @table-border-width);
+}
+
+
+@table-border:			@table-border-width solid @table-border-color;
+
+
+/*********************************************************/
+/* header for tgroup by attribute */
+
+*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:before(@{conbat-header-index}) {
+    display	: block;
+    
+    /* Get text from header attribute of tgroup element */
+    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/tgroup ')]/@cba:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
+    
+    /* Same settings as the real table header */
+    .table-header;
+
+    /* draw a line to seperate header from row */
+    border-bottom:      @table-border;
+    
+    /* Undo the padding of the entry to avoid a white gap */
+    .table-header-undo-padding;
+}
+
+/* The first entry requires a margin decreased by the border width */
+*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:first-child:before(@{conbat-header-index}) {
+    margin-left	: -(@table-header-padding-left + @table-border-width);
+}
+
+/* Ensure the entry still has a reasoable row and the cursor is displayed as vertical line */
+*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:empty {
+    content	: " ";   
+}
+
+
+/*********************************************************/
+/* header for simpletable by attribute */
+
+*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:before(@{conbat-header-index}) {
+    display	: block;
+    
+    /* Get text from header attribute of tgroup element */
+    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/simpletable ')]/@cba:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
+    
+    /* Same settings as the real table header */
+    .table-header;
+    
+    /* draw a line to seperate header from row */
+    border-bottom	: @table-border;
+    
+    /* Undo the padding of the entry to avoid a white gap */
+    .table-header-undo-padding;
+}
+
+/* The first entry requires a margin decreased by one */
+*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:first-child:before(@{conbat-header-index}) {
+    margin-left	: -(@table-header-padding-left + @table-border-width);
+}
+
+/* ensure the entry still has a reasoable row and the cursor is displayed as vertical line */
+*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:empty {
+    content	: " ";   
+}

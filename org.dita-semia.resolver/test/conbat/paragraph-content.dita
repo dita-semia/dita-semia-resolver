@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+	<title>Paragraph content</title>
+	<body>
+		<p>The prefix and suffix is generated as single paragraph.</p>
+		<section>
+			<title>Unordered List</title>
+			<ul cba:prefix="Attribute prefix." cba:suffix="Attribute suffix." id="cng_plp_zt">
+				<li>
+					<p>1st list item</p>
+				</li>
+				<li>
+					<p>2nd list item</p>
+				</li>
+			</ul>
+		</section>
+		<section>
+			<title>Ordered List</title>
+			<ol cba:prefix="Attribute prefix." cba:suffix="Attribute suffix."  id="arp_qlp_zt">
+				<li>
+					<p>1st list item</p>
+				</li>
+				<li>
+					<p>2nd list item</p>
+				</li>
+			</ol>
+		</section>
+		<section>
+			<title>Simple List</title>
+			<sl cba:prefix="Attribute prefix." cba:suffix="Attribute suffix." id="m3d_rlp_zt">
+				<sli>1st list item</sli>
+				<sli>2nd list item</sli>
+			</sl>
+		</section>
+	</body>
+</topic>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="default-xpath-example-title.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="default-xpath-example-title.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="default-xpath-example-title.css"?>
+<topic id="topic_t4s_vvs_4t">
+  <title>Default XPath-Title for Examples</title>
+	<topic id="g4s_gkf_v5">
+		<title>Using Defaults for Single Example</title>
+		<body>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+		</body>
+	</topic>
+	<topic id="hhy_ykh_v5">
+		<title>Using Defaults for Multiple Examples</title>
+		<body>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+			<example>
+				<example-title/>
+				<p>Text...</p>
+			</example>
+		</body>
+	</topic>
+	<topic id="qlq_hkf_v5">
+		<title>Overwriting Defaults</title>
+		<body>
+			<example>
+				<example-title>Special Example #1</example-title>
+				<p>Text...</p>
+			</example>
+			<example>
+				<example-title>Special Example #2</example-title>
+				<p>Text...</p>
+			</example>
+		</body>
+	</topic>
+	<topic id="wpl_vtw_25">
+		<title>Description</title>
+		<body>
+			<p>This sample extends <xref
+					href="../default-example-title/default-example-title.dita#topic_t4s_vvs_4t"/>.
+				It uses an embedded XPath expression within the default content: When there is only
+				a single <codeph>example</codeph> element within the current body the title
+				"Example" will be used. When there are multiple <codeph>example</codeph> elements
+				the number will be added.</p>
+		</body>
+	</topic>
+</topic>

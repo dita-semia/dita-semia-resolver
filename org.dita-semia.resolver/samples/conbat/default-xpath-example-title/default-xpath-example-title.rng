@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:cba	= "http://www.dita-semia.org/conbat">
+	
+	
+	<div>
+		<define name="example-title">
+			<ref name="example-title.element"/>
+		</define>
+		
+		<define name="example-title.element">
+			<element name="example-title">
+				<ref name="example-title.attlist"/>
+				<ref name="title.content"/>
+			</element>
+		</define>
+		
+		<define name="example-title.attlist">
+			<ref name="title.attributes"/>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/title dita-semia-conbat-samples-d/title "/>
+			</optional>
+			<optional>
+				<attribute name="cba:default-content" a:defaultValue="Example {if (count(parent::example/parent::*/example) le 1) then '' else concat(' #', count(parent::example/preceding-sibling::example) + 1)}"/>
+			</optional>
+		</define>
+	</div>
+	
+
+	<include href="urn:oasis:names:tc:dita:rng:topic.rng">
+		
+		<define name="domains-att">
+			<optional>
+				<attribute name="domains"
+					a:defaultValue="(topic abbrev-d)
+					(topic equation-d)
+					(topic hazard-d)
+					(topic hi-d)
+					(topic indexing-d)
+					(topic markup-d xml-d)
+					(topic markup-d)
+					(topic mathml-d)
+					(topic pr-d)
+					(topic relmgmt-d)
+					(topic svg-d)
+					(topic sw-d)
+					(topic ui-d)
+					(topic ut-d)
+					(topic dita-semia-samples-d)
+					a(props deliveryTarget)"
+				/>
+			</optional>
+		</define>
+
+			
+		<define name="example.content">
+			<ref name="example-title"/>
+			<zeroOrMore>
+				<ref name="example.cnt"/>
+			</zeroOrMore>
+		</define>
+		
+		<define name="example.cnt">
+			<choice>
+				<!--<text/>-->
+				<ref name="basic.block"/>
+				<ref name="basic.ph"/>
+				<ref name="data.elements.incl"/>
+				<ref name="foreign.unknown.incl"/>
+				<!--<ref name="title"/>-->
+				<ref name="txt.incl"/>
+			</choice>
+		</define>
+		
+	</include>
+
+	
+
+</grammar>

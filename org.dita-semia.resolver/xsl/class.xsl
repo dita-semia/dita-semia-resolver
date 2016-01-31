@@ -20,6 +20,7 @@
 	<xsl:variable name="C_XREF"				as="xs:string"> topic/xref </xsl:variable>
 	<xsl:variable name="C_DIV"				as="xs:string"> topic/div </xsl:variable>
 	<xsl:variable name="C_FOREIGN"			as="xs:string"> topic/foreign </xsl:variable>
+	<xsl:variable name="C_PH"				as="xs:string"> topic/ph </xsl:variable>
 	
 	<xsl:variable name="C_UL"				as="xs:string"> topic/ul </xsl:variable>
 	<xsl:variable name="C_OL"				as="xs:string"> topic/ol </xsl:variable>
@@ -68,6 +69,7 @@
 	<xsl:variable name="CP_XREF"			as="xs:string"	select="concat('-', $C_XREF)"/>
 	<xsl:variable name="CP_DIV"				as="xs:string"	select="concat('-', $C_DIV)"/>
 	<xsl:variable name="CP_FOREIGN"			as="xs:string"	select="concat('-', $C_FOREIGN)"/>
+	<xsl:variable name="CP_PH"				as="xs:string"	select="concat('-', $C_PH)"/>
 	
 	<xsl:variable name="CP_UL"				as="xs:string"	select="concat('-', $C_UL)"/>
 	<xsl:variable name="CP_OL"				as="xs:string"	select="concat('-', $C_OL)"/>

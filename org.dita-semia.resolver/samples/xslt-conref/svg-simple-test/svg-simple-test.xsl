@@ -17,7 +17,7 @@
 	<xsl:variable name="BACKROUND_GRADIENT_ID"	as="xs:string"	select="'BackgroundGradient'"/>
 	
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
     <xsl:template match="/">
 

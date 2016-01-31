@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic xmlns:cba = "http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+	<!--<title>Testing Embedded XPath</title>-->
+	<body>
+		<!--<section id="vtc_lxv_r5">
+			<title>Paragraph Content</title>
+			<sl cba:prefix="Attribute prefix of {name()}-element." cba:suffix="Attribute suffix of {name()}-element." id="m3d_rlp_zt">
+				<sli>1st list item</sli>
+				<sli>2nd list item</sli>
+			</sl>
+		</section>-->
+		<section id="swf_xyv_r5">
+			<title>Inline Content</title>
+			<p cba:prefix="[prefix within '{ancestor::section/title}' section]"
+				cba:suffix="[suffix within '{ancestor::section/title}' section]">Explicit
+				content</p>
+		</section>
+	</body>
+</topic>

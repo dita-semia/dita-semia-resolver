@@ -6,7 +6,7 @@
 	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref"
     exclude-result-prefixes	= "#all">
 	
-	<xsl:include href="urn:dita-semia:xslt-conref:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:output method="xml" indent="yes"/>
 	

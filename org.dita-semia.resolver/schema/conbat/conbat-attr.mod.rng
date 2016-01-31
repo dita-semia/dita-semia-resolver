@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:cba	= "http://www.dita-semia.org/conbat"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	
+	<!-- ********************************************************************* -->
+	
+	<!-- all supported attributes -->
+	<define name="conbat-title">
+		<optional>
+			<attribute name="cba:title"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-prefix">
+		<optional>
+			<attribute name="cba:prefix"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-suffix">
+		<optional>
+			<attribute name="cba:suffix"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-content">
+		<optional>
+			<attribute name="cba:content"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-default-content">
+		<optional>
+			<attribute name="cba:default-content"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-header">
+		<optional>
+			<attribute name="cba:header"/>
+		</optional>
+	</define>
+	<define name="conbat-code-prefix">
+		<optional>
+			<attribute name="cba:code-prefix"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-code-suffix">
+		<optional>
+			<attribute name="cba:code-suffix"/>
+		</optional>
+	</define>
+	
+
+	<!-- attlist to be resolved as inline content -->
+	<define name="conbat-inline.attlist">
+		<ref name="conbat-prefix"/>
+		<ref name="conbat-suffix"/>
+		<ref name="conbat-content"/>
+		<ref name="conbat-default-content"/>
+	</define>
+	
+	
+	<!-- attlist to be resolved as paragraph content -->
+	<define name="conbat-paragraph.attlist">
+		<ref name="conbat-prefix"/>
+		<ref name="conbat-suffix"/>
+	</define>
+	
+	
+	<!-- ********************************************************************* -->
+	<!-- elements with generated titles -->
+	
+	<!-- section  -->
+	<define name="section.attlist" combine="interleave">
+		<ref name="conbat-title"/>
+	</define>
+	
+	<!-- li  -->
+	<define name="li.attlist" combine="interleave">
+		<ref name="conbat-title"/>
+	</define>
+	
+	<!-- topic -->
+	<define name="topic.attlist" combine="interleave">
+		<ref name="conbat-title"/>
+	</define>
+	
+	<!-- make title element optional -->
+	<define name="topic.content" combine="choice">
+		<optional>
+			<ref name="title"/>
+		</optional>
+		<optional>
+			<ref name="titlealts"/>
+		</optional>
+		<optional>
+			<choice>
+				<ref name="shortdesc"/>
+				<ref name="abstract"/>
+			</choice>
+		</optional>
+		<optional>
+			<ref name="prolog"/>
+		</optional>
+		<optional>
+			<ref name="body"/>
+		</optional>
+		<optional>
+			<ref name="related-links"/>
+		</optional>
+		<zeroOrMore>
+			<ref name="topic-info-types"/>
+		</zeroOrMore>
+	</define>
+	
+	
+	<!-- ********************************************************************* -->
+	<!-- elements with generated inline content -->
+	
+	<!-- p -->
+	<define name="p.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+	</define>
+	
+	<!-- ph -->
+	<define name="ph.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+	</define>
+	
+	<!-- codeph -->
+	<define name="codeph.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+		<ref name="conbat-code-prefix"/>
+		<ref name="conbat-code-suffix"/>
+	</define>
+	
+	<!-- sli -->
+	<define name="sli.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+	</define>
+	
+	<!-- stentry -->
+	<define name="stentry.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+	</define>
+	
+	<!-- title -->
+	<define name="title.attlist" combine="interleave">
+		<ref name="conbat-inline.attlist"/>
+	</define>
+	
+	
+	<!-- ********************************************************************* -->
+	<!-- elements with generated paragraph content -->
+	
+	<!-- ul -->
+	<define name="ul.attlist" combine="interleave">
+		<ref name="conbat-paragraph.attlist"/>
+	</define>
+	
+	<!-- ol -->
+	<define name="ol.attlist" combine="interleave">
+		<ref name="conbat-paragraph.attlist"/>
+	</define>	
+	
+	<!-- sl -->
+	<define name="sl.attlist" combine="interleave">
+		<ref name="conbat-paragraph.attlist"/>
+	</define>
+	
+	
+	<!-- ********************************************************************* -->
+	<!-- elements with generated paragrah content -->
+	
+	
+	<!-- ********************************************************************* -->
+	<!-- elements with generated headers -->
+	
+	<!-- table -->
+	<define name="tgroup.attlist" combine="interleave">
+		<ref name="conbat-header"/>
+	</define>
+
+
+	<!-- simpletable -->
+	<define name="simpletable.attlist" combine="interleave">
+		<ref name="conbat-header"/>
+	</define>
+
+
+</grammar>
