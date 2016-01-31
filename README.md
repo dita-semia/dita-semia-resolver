@@ -1,10 +1,10 @@
 #DITA-SEMIA
-This is the core reposiory of the DITA-SEMIA project supporting different features that are too closely related to split them into different repositories:
+This is the core repository of the DITA-SEMIA project supporting different features that are too closely related to split them into different repositories:
 
-- *XsltConref* (XSLT Content Reference)
+- **XsltConref** (XSLT Content Reference)
 
 	The basic idea of XSLT-Conref is to combine the conref concept of DITA with an XSL transformation. This way you can not only reuse DITA content but any data that is sufficiently structured to evaluate it with xslt. Ths result needs to be DITA content to be embedded into your DITA document. This works for graphics as well since oXygen and XSL-FO both support SVG pretty well.
-- *Conbat*  (Content by Attributes)
+- **Conbat**  (Content by Attributes)
 
 	The idea is to generate content defined in the schema by setting some specific attribute default values. this way you don't have to add specific CSS and XSLT code to properly display specialized elements.
 
