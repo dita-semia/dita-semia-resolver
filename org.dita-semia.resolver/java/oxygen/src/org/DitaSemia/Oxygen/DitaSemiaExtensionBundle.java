@@ -8,7 +8,7 @@ package org.DitaSemia.Oxygen;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 
 import ro.sync.ecss.extensions.api.AuthorReferenceResolver;
-import ro.sync.ecss.extensions.api.StylesFilter;
+import ro.sync.ecss.extensions.api.link.LinkTextResolver;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.dita.DITAExtensionsBundle;
 
@@ -35,6 +35,11 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 	@Override
 	public AuthorReferenceResolver createAuthorReferenceResolver() {
 		return new DitaSemiaReferenceResolver();
+	}
+	
+	@Override
+	public LinkTextResolver createLinkTextResolver() {
+		return new DitaSemiaLinkTextResolver();
 	}
 	
 	

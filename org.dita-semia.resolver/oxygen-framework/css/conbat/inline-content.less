@@ -7,7 +7,7 @@
 *[class~="topic/sli"][cba|prefix]:before(@{conbat-inline-index}),
 *[class~="topic/stentry"][cba|prefix]:before(@{conbat-inline-index}),
 *[class~="topic/title"][cba|prefix]:before(@{conbat-inline-index}) {
-	content	: oxy_label(text, attr("cba|prefix"));
+	content	: attr("cba|prefix");
 }
 
 *[class~="pr-d/codeph"][cba|prefix]:before(@{conbat-inline-index}) {
@@ -18,7 +18,7 @@
 }
 
 *[class~="pr-d/codeph"][cba|code-prefix]:before(@{conbat-inline-index}) {
-	content	: oxy_label(text, attr("cba|code-prefix"));
+	content	: attr("cba|code-prefix");
 }
 
 /* suffix */
@@ -27,7 +27,7 @@
 *[class~="topic/sli"][cba|suffix]:after(@{conbat-inline-index}),
 *[class~="topic/stentry"][cba|suffix]:after(@{conbat-inline-index}),
 *[class~="topic/title"][cba|suffix]:after(@{conbat-inline-index}) {
-	content	: oxy_label(text, attr("cba|suffix"));
+	content	: attr("cba|suffix");
 }
 
 *[class~="pr-d/codeph"][cba|suffix]:after(@{conbat-inline-index}) {
@@ -38,7 +38,7 @@
 }
 
 *[class~="pr-d/codeph"][cba|code-suffix]:after(@{conbat-inline-index}) {
-	content	: oxy_label(text, attr("cba|code-suffix"));
+	content	: attr("cba|code-suffix");
 }
 
 /* content */
@@ -47,7 +47,7 @@
 *[class~="topic/sli"][cba|content],
 *[class~="topic/stentry"][cba|content],
 *[class~="topic/title"][cba|content] {
-	content	: oxy_label(text, attr("cba|content"));
+	content	: oxy_link-text();
 }
 
 /* default-content */
@@ -57,5 +57,5 @@
 *[class~="topic/stentry"][cba|default-content]:empty:after(@{conbat-default-content-index}),
 *[class~="topic/title"][cba|default-content]:empty:after(@{conbat-default-content-index}) {
 	/* have the cursor in front of the content to suggest the author that he can overwrite it */
-	content	: oxy_label(text, attr("cba|default-content"));
+	content	: oxy_link-text();
 }

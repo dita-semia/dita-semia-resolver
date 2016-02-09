@@ -2,7 +2,7 @@
 <?xml-model href="default-xpath-example-title.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="default-xpath-example-title.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <?xml-stylesheet type="text/css" href="default-xpath-example-title.css"?>
-<topic id="topic_t4s_vvs_4t">
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="topic_t4s_vvs_4t">
   <title>Default XPath-Title for Examples</title>
 	<topic id="g4s_gkf_v5">
 		<title>Using Defaults for Single Example</title>
@@ -28,6 +28,7 @@
 				<example-title/>
 				<p>Text...</p>
 			</example>
+			<p> </p>
 		</body>
 	</topic>
 	<topic id="qlq_hkf_v5">

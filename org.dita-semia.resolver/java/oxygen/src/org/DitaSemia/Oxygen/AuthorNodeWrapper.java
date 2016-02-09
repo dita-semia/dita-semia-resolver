@@ -16,6 +16,7 @@ import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.NodeWrapper;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
@@ -147,14 +148,18 @@ public class AuthorNodeWrapper implements NodeWrapper
 
 	@Override
 	public String evaluateXPathToString(String xPath) throws XPathException {
-//		logger.info("getStringByXPath() AuthorNode");
+		//logger.info("getStringByXPath() AuthorNode");
 		if (authorAccess == null) {
 			throw new XPathException("AuthorNodeWrapper: Can't evaluate XPath ('" + xPath + "') without AuthorAccess.");
 		} else {
 			try {
 				Object[] Ergebnis = authorAccess.getDocumentController().evaluateXPath(xPath/*Resolved*/, authorNode, false, false, false, false);
 				if (Ergebnis.length == 1) {
-					return (String)Ergebnis[0];
+					if (Ergebnis[0] instanceof Node) {
+						return ((Node)Ergebnis[0]).getTextContent();
+					} else {
+						return (String)Ergebnis[0];
+					}
 				} else {
 					throw new XPathException("XPath expression ('" + xPath + "') doesn't return a single item.");
 				}
