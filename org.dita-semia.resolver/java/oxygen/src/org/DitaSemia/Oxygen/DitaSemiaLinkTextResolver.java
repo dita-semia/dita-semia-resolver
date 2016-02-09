@@ -19,9 +19,9 @@ public class DitaSemiaLinkTextResolver extends DitaLinkTextResolver {
 
 	@Override
 	public String resolveReference(AuthorNode node) throws InvalidLinkException {
-		final String resolved = ConbatContentResolver.resolveContent(node, authorAccess);
+		String resolved = ConbatContentResolver.resolveContent(node, authorAccess);
 		if (resolved == null) {
-			super.resolveReference(node);
+			resolved = super.resolveReference(node);
 		}
 		return resolved;
 	}
