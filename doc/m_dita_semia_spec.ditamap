@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>DITA-SEMIA specification</title>
+ <topicref href="c_introduction.dita">
+  <topicref href="c_about_dita_semia.dita"/>
+  <topicref href="c_audience.dita"/>
+ </topicref>
+ <topicref href="c_functionality_architecture.dita">
+  <topicref href="c_base_architecture.dita"/>
+  <topicref href="c_interact_dita_ot.dita"/>
+  <topicref href="c_functions_oxygen.dita"/>
+  <topicref href="c_class_attributes_xslt_conref.dita"/>
+ </topicref>
+ <topicref href="r_features.dita">
+  <topicref href="r_xslt_conref.dita"/>
+  <topicref href="r_conbat.dita"/>
+ </topicref>
+ <topicref href="t_integr_dita_semia.dita">
+  <topicref href="t_integr_dita_ot.dita"/>
+  <topicref href="t_integr_oxygen_framework.dita"/>
+  <topicref href="t_integr_separate_framework.dita"/>
+ </topicref>
+ <topicref href="c_use_case_samples.dita">
+  <topicref href="c_xslt_conref_use_cases.dita"/>
+  <topicref href="c_conbat_use_cases.dita"/>
+ </topicref>
+ <topicref href="c_appendix.dita"/>
+</map>
