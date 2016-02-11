@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_integr_oxy_framew">
+    <title>Integrating the DITA-SEMIA oXygen framework</title>
+    <shortdesc/><taskbody>
+        <prereq>
+            <ul id="ul_vs1_hwm_y5">
+                <li>
+                    <p>You have integrated DITA-SEMIA in DITA-OT (see <xref
+                            href="t_integr_dita_ot.dita#t_integr_dita_ot"/>).</p>
+                </li>
+            </ul>
+        </prereq>
+    <context id="qgy_jqq_n5">
+        <p>DITA-SEMIA comes with two Oxygen frameworks: one for topics and one for maps. These
+                frameworks are extensions of Oxygen's standard DITA frameworks. To make these
+                available you have to add the
+                    <codeph>dita-ot/plugin/org.dita-semia.resolver</codeph> folder to the custom
+                locations for frameworks:</p>
+    </context>
+        <steps id="steps_evg_mkn_y5">
+            <step>
+                <cmd>In oXygen editor, open <menucascade>
+                        <uicontrol>Options</uicontrol>
+                        <uicontrol>Preferences</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>In the menu on the left, double-click <uicontrol>Document Type
+                        Association</uicontrol> and then click
+                    <uicontrol>Locations</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>Under <uicontrol>Additional frameworks directories</uicontrol>, click on
+                        <uicontrol>Add</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>Browse to the directory ...</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

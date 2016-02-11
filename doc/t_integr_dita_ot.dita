@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_integr_dita_ot">
+    <title>Integrating DITA-SEMIA in DITA-OT</title>
+    <shortdesc/>
+    <taskbody>
+        <prereq>
+            <ul id="ul_u4h_5ym_y5">
+                <li>
+                    <p>You have downloaded the folder <codeph>dita-semia-master.zip</codeph> to your
+                        disk.</p>
+                </li>
+            </ul>
+        </prereq>
+        <context id="qgy_jqq_n5"/>
+        <steps id="steps_tcq_kzn_y5">
+            <step>
+                <cmd>Unzip the folder <codeph>dita-semia-master.zip</codeph>.</cmd>
+            </step>
+            <step>
+                <cmd>Copy the plugins <codeph>dita-semia-master\org.dita-semia.resolver</codeph> and
+                        <codeph>dita-semia-master\org.dita-semia.pdf</codeph> into the DITA-OT
+                    plugins subdirectory <codeph>Oxygen XML Editor
+                        17\frameworks\dita\DITA-OT\plugins</codeph>.</cmd>
+            </step>
+            <step>
+                <cmd>Integrate the plugins in DITA-OT by executing the procedure described on <xref
+                        href="http://www.dita-ot.org/dev/dev_ref/plugins-installing.html"
+                        format="html" scope="external"/>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

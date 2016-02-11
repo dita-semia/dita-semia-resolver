@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="t_integr_sep_framew">
+    <title>Integrating DITA-SEMIA in a separate frameworks folder</title>
+    <shortdesc/>
+    <taskbody>
+        <prereq>
+            <ul id="ul_c14_bwm_y5">
+                <li>
+                    <p>You have integrated DITA-SEMIA in DITA-OT (see <xref
+                            href="t_integr_dita_ot.dita#t_integr_dita_ot"/>).</p>
+                </li>
+                <li>
+                    <p/>
+                </li>
+            </ul>
+        </prereq>
+        <context>
+            <p>To integrate DITA-SEMIA into your own custom framework you have to do the following
+                steps:</p>
+        </context>
+        <steps id="steps_cv5_4bn_y5">
+            <step>
+                <cmd>Add the jar library to the classpath:
+                        <codeph>dita-ot/plugins/org.dita-semia.resolver/java/oxygen/DitaSemiaOxygen.jar</codeph></cmd>
+            </step>
+            <step>
+                <cmd>Set the "Extension-Bundle":
+                        <codeph>org.DitaSemia.Oxygen.DitaSemiaExtensionBundle</codeph> or
+                        <codeph>org.DitaSemia.Oxygen.DitaSemiaMapExtensionBundle</codeph></cmd>
+            </step>
+            <step>
+                <cmd>Add the css files
+                        <codeph>dita-ot/plugins/org.dita-semia.resolver/oxygen-framework/css/xslt-conref.less</codeph></cmd>
+            </step>
+            <step>
+                <cmd>Add the library
+                        <codeph>dita-ot/plugins/org.dita-semia.resolver/java/ot/DitaSemiaOt.jar</codeph>
+                    to <i>all</i> DITA-OT transformation scenarios.</cmd>
+            </step>
+            <step>
+                <cmd>Add
+                        <codeph>dita-ot/plugins/org.dita-semia.resolver/schema/xslt-conref/xslt-conref.sch</codeph>
+                    to the validation scenario.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>
