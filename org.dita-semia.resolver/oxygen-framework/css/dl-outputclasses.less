@@ -1,0 +1,84 @@
+
+
+/********************************************/
+/* outputclass: bullet-list-titles 			*/
+*[class~='topic/dl'][outputclass='bullet-list-titles'] {
+	list-style: disc;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-titles'] > *[class~='topic/dlentry'] {
+	display : list-item;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-titles'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	margin-left	: 0ex;
+}
+
+
+
+/********************************************/
+/* outputclass: bullet-list-dashes 			*/
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] {
+	list-style		: disc;
+	margin-top		: 0;
+	margin-bottom	: 0;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] > *[class~='topic/dlentry'] {
+	display		: list-item;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display		: inline;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] > *[class~='topic/dlentry'] > *[class~='topic/dt']:after {
+	content		: " – ";
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	display		: inline;
+	margin-left	: 0ex;
+}
+
+
+
+
+/********************************************/
+/* outputclass: table 						*/
+
+*[class~='topic/dl'][outputclass='table'] {
+	display				: table;
+    width				: 95%;
+    margin				: 1.5ex 0.5ex;
+    border-color		: black;
+    border-top-style	: double;
+    border-bottom-style	: double;
+    border-width		: 4px;
+    padding				: 0px;
+}
+
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry'] {
+	display				: table-row;
+}
+
+
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display				: table-cell;
+    padding				: 1px 10px;
+}
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dt'] {
+    border-color		: black;
+    border-top-style	: solid;
+    border-width		: 1px;
+}
+
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	width		: 25%;
+}
+
+*[class~='topic/dl'][outputclass='table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	width		: 75%;
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+  <title>Definition List</title>
+  <body>
+		<p>Predefined definition terms with different output classes.</p>
+		<section>
+			<title>Standard Layout</title>
+			<p>Outputclass: &lt;empty></p>
+			<dl>
+				<dd cba:dt="Term 1">Description of 1st term.</dd>
+				<dd cba:dt="Term 2">Description of 2nd term.</dd>
+				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+			</dl>
+			<p>Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl>
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Bullet List With Titles</title>
+			<p>Outputclass: <codeph>bullet-list-titles</codeph></p>
+			<dl outputclass="bullet-list-titles">
+				<dd cba:dt="Term 1">Description of 1st term.</dd>
+				<dd cba:dt="Term 2">Description of 2nd term.</dd>
+				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+			</dl>
+			<p>Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="bullet-list-titles">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="vk1_hhr_zt">
+			<title>Bullet List With Dashes</title>
+			<p>Outputclass: <codeph>bullet-list-dashes</codeph></p>
+			<dl outputclass="bullet-list-dashes">
+				<dd cba:dt="Term 1">Description of 1st term.</dd>
+				<dd cba:dt="Term 2">Description of 2nd term.</dd>
+				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+			</dl>
+			<p>Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="bullet-list-dashes">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Table</title>
+			<p>Outputclass: <codeph>table</codeph></p>
+			<dl outputclass="cba-table">
+				<dd cba:dt="Term 1">Description of 1st term.</dd>
+				<dd cba:dt="Term 2">Description of 2nd term.</dd>
+				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+			</dl>
+			<p>Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="table">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

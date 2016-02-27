@@ -7,6 +7,7 @@
 @conbat-default-content-marker-index	: 2;	/* used in :after(n) for default content marker */
 @conbat-title-index						: 5;	/* used in :begin(n) for generated titles */
 @conbat-header-index					: 6;	/* used in :begin(n) for generated table header - needs to be greater than @conbat-inline-index */
+@conbat-dt-index						: 4;	/* used in :begin(n) for generated dts */
 @body-font-family						: Serif;
 @code-font-size							: 0.9em;
 @code-invert-font-size					: 1.11em;	/* used to undo the font size change for code */
@@ -24,6 +25,9 @@
 @table-header-padding-bottom	: 1px;
 @table-header-padding-left		: 5px;
 @table-header-padding-right		: 5px;
+
+/* dl */
+@dd-default-margin-left			: 4ex;
 
 /* author-only text */
 .author-only-text-style() {
@@ -85,4 +89,12 @@
 
 .topic-title-lvl5-style() {
 	font-size			: 1em;
+}
+
+/* dt default style */
+.dt-default-style() {
+	font-family			: inherit;
+    font-weight			: bold;
+	font-style			: inherit;
+	color				: inherit;
 }

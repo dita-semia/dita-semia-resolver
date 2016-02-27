@@ -7,6 +7,7 @@
 	<topicref href="inline-content.dita"/>
 	<topicref href="paragraph-content.dita"/>
 	<topicref href="table-header.dita"/>
+	<topicref href="definition-list.dita"/>
 	<topicref href="xref-test.dita"/>
 	<topicref href="embedded-xpath.dita"/>
 </map>
