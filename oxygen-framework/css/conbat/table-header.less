@@ -24,7 +24,7 @@
 /*********************************************************/
 /* header for tgroup by attribute */
 
-*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:before(@{conbat-header-index}) {
+*[class~='topic/tgroup'][*|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:before(@{conbat-header-index}) {
     display	: block;
     
     /* Get text from header attribute of tgroup element */
@@ -41,12 +41,12 @@
 }
 
 /* The first entry requires a margin decreased by the border width */
-*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:first-child:before(@{conbat-header-index}) {
+*[class~='topic/tgroup'][*|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:first-child:before(@{conbat-header-index}) {
     margin-left	: -(@table-header-padding-left + @table-border-width);
 }
 
 /* Ensure the entry still has a reasoable row and the cursor is displayed as vertical line */
-*[class~='topic/tgroup'][cba|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:empty {
+*[class~='topic/tgroup'][*|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:empty {
     content	: " ";   
 }
 
@@ -54,7 +54,7 @@
 /*********************************************************/
 /* header for simpletable by attribute */
 
-*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:before(@{conbat-header-index}) {
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:before(@{conbat-header-index}) {
     display	: block;
     
     /* Get text from header attribute of tgroup element */
@@ -71,11 +71,11 @@
 }
 
 /* The first entry requires a margin decreased by one */
-*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:first-child:before(@{conbat-header-index}) {
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:first-child:before(@{conbat-header-index}) {
     margin-left	: -(@table-header-padding-left + @table-border-width);
 }
 
 /* ensure the entry still has a reasoable row and the cursor is displayed as vertical line */
-*[class~='topic/simpletable'][cba|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:empty {
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:empty {
     content	: " ";   
 }

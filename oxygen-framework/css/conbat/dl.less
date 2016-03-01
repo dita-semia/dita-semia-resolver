@@ -6,9 +6,9 @@
 /********************************************/
 /* outputclass: default 						*/
 
-*[class~="topic/dl"] > *[class~="topic/dd"][cba|dt]:before(@{conbat-dt-index}) {
+*[class~="topic/dl"] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
 	display		: block;
-    content		: attr("cba|dt");
+    content		: attr("*|dt");
     margin-left	: -@dd-default-margin-left;
     .dt-default-style();
 }
@@ -18,7 +18,7 @@
 /********************************************/
 /* outputclass: bullet-list-titles 			*/
 
-*[class~="topic/dl"][outputclass='bullet-list-titles'] > *[class~="topic/dd"][cba|dt]:before(@{conbat-dt-index}) {
+*[class~="topic/dl"][outputclass='bullet-list-titles'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
     margin-left	: 0;
 }
 
@@ -32,10 +32,10 @@
 /********************************************/
 /* outputclass: bullet-list-dashes 			*/
 
-*[class~="topic/dl"][outputclass='bullet-list-dashes'] > *[class~="topic/dd"][cba|dt]:before(@{conbat-dt-index}) {
+*[class~="topic/dl"][outputclass='bullet-list-dashes'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
 	display		: inline;
     margin-left	: 0;
-    content		: attr("cba|dt") " – ";
+    content		: attr("*|dt") " – ";
 }
 
 *[class~='topic/dl'][outputclass='bullet-list-dashes'] > *[class~='topic/dd'] {
@@ -58,9 +58,9 @@
     padding				: 0px;
 }
 
-*[class~="topic/dl"][outputclass='cba-table'] > *[class~="topic/dd"][cba|dt]:before(@{conbat-dt-index}) {
+*[class~="topic/dl"][outputclass='cba-table'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
 	display		: inline;
-	content		: oxy_label(text, attr("cba|dt"), width, 28%);
+	content		: oxy_label(text, attr("*|dt"), width, 28%);
 	margin-left	: 0;
 }
 

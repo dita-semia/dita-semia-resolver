@@ -2,38 +2,38 @@
 /* rules for generated titles */
 
 
-*[class~="topic/section"][cba|title]:before(@{conbat-title-index}) {
+*[class~="topic/section"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("cba|title"));
+    content	: oxy_label(text, attr("*|title"));
     .section-title-style();
 }
 
 
-*[class~="topic/li"][cba|title]:before(@{conbat-title-index}) {
+*[class~="topic/li"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("cba|title"));
+    content	: oxy_label(text, attr("*|title"));
     .li-title-style();
 }
 
 
-*[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+*[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("cba|title"));
+    content	: oxy_label(text, attr("*|title"));
     .topic-title-style();
 }
 
-* *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+* *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
     .topic-title-lvl2-style();
 }
 
-* * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+* * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
     .topic-title-lvl3-style();
 }
 
-* * * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+* * * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
     .topic-title-lvl4-style();
 }
 
-* * * * *[class~="topic/topic"][cba|title]:before(@{conbat-title-index}) {
+* * * * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
     .topic-title-lvl5-style();
 }

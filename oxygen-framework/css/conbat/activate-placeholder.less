@@ -1,14 +1,14 @@
 
 /* avoid the placeholder being hidden due to prefix or suffix content */
-*[cba|prefix],
-*[cba|suffix],
-*[cba|code-prefix],
-*[cba|code-suffix] {
+*[*|prefix],
+*[*|suffix],
+*[*|code-prefix],
+*[*|code-suffix] {
     -oxy-show-placeholder	: always;
 }
 
 /* don't show placeholder when content or default-content is set */
-*[cba|content],
-*[cba|default-content] {
+*[*|content],
+*[*|default-content] {
     -oxy-show-placeholder	: inherit !important;
 }

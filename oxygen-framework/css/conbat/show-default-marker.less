@@ -1,10 +1,10 @@
 
 /* default-content */
-*[class~="topic/p"][cba|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/ph"][cba|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/sli"][cba|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/stentry"][cba|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/title"][cba|default-content]:empty:after(@{conbat-default-content-marker-index}) {
+*[class~="topic/p"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/ph"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/sli"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/stentry"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/title"][*|default-content]:empty:after(@{conbat-default-content-marker-index}) {
 	content: " (default)";
 	.author-only-text-style()
 }
