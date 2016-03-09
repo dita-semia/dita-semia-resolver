@@ -3,10 +3,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/DitaSemiaBase"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dita-ot"/>
 	<classpathentry kind="var" path="DITA_OT/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="/DitaSemiaBase/lib/log4j.jar"/>
 	<classpathentry kind="lib" path="/DitaSemiaBase/lib/saxonHE-9.6.0.7.jar"/>
 	<classpathentry kind="var" path="DITA_OT/lib/xml-resolver-1.2.jar"/>
+	<classpathentry kind="var" path="DITAOT/lib/dost.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
