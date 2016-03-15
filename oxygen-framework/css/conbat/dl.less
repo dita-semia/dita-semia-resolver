@@ -45,7 +45,7 @@
 
 
 /********************************************/
-/* outputclass: table			 			*/
+/* outputclass: cba-table			 			*/
 
 *[class~='topic/dl'][outputclass='cba-table'] {
 	display				: block;
@@ -70,9 +70,18 @@
     margin-left	: 0;
     /*margin-top	: -1.35em;*/
 }
+
 *[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd']:not(:first-child) {
     border-color		: black;
     border-top-style	: solid;
     border-width		: 1px;
+}
+
+*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd'] > *[class~='topic/sli'] {
+	margin-left	: 30%;
+}
+
+*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd'] > *[class~='topic/sli']:first-child {
+	margin-top	: -1.35em;
 }
 
