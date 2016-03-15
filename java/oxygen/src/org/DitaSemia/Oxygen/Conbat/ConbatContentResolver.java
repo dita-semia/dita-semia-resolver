@@ -30,12 +30,12 @@ public class ConbatContentResolver {
 		NodeWrapper node = new AuthorNodeWrapper(authorNode, authorAccess);
 		if (node.isElement()) {
 			try {
-				final String content = node.getAttribute(ATTR_CONTENT, NAMESPACE_URI);
+				final String content = node.getAttribute(ATTR_CONTENT, null/*NAMESPACE_URI*/);
 				logger.info("content: " + content);
 				if (content != null) {
 					resolvedContent = EmbeddedXPathResolver.resolve(content, node);
 				} else if (((AuthorParentNode)authorNode).getContentNodes().isEmpty()) {
-					final String defaultContent = node.getAttribute(ATTR_DEFAULT_CONTENT, 	NAMESPACE_URI);
+					final String defaultContent = node.getAttribute(ATTR_DEFAULT_CONTENT, null/*NAMESPACE_URI*/);
 					logger.info("defaultContent: " + defaultContent);
 					if (defaultContent != null) {
 						resolvedContent = EmbeddedXPathResolver.resolve(defaultContent, node);
