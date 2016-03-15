@@ -54,6 +54,12 @@
 		</optional>
 	</define>
 	
+	<define name="conbat-dt">
+		<optional>
+			<attribute name="cba:dt"/>
+		</optional>
+	</define>
+	
 
 	<!-- attlist to be resolved as inline content -->
 	<define name="conbat-inline.attlist">
@@ -190,6 +196,21 @@
 	<define name="simpletable.attlist" combine="interleave">
 		<ref name="conbat-header"/>
 	</define>
-
+	
+	<!-- ********************************************************************* -->
+	<!-- definition list -->
+	
+	<!-- dd -->
+	<define name="dd.attlist" combine="interleave">
+		<ref name="conbat-dt"/>
+	</define>
+	
+	<!-- allow dd elements as alternative to dlentry elements in dl -->
+	<define name="dl.content" combine="choice">
+		<oneOrMore>
+			<ref name="dd"/>
+		</oneOrMore>
+	</define>
+	
 
 </grammar>

@@ -1,2 +1,6 @@
 **/out/
 **/temp/
+**/MANIFEST.MF
+java/base/bin/
+java/ot/bin/
+java/oxygen/bin/
