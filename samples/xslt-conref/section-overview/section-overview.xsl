@@ -5,7 +5,7 @@
     	<section-overview class="+ topic/sl dita-semia/section-overview ">
         	<xsl:for-each select="*/*/section[@id][title]">
                 <sli class="- topic/sli ">
-                	<xref href="#{/*/@id}/{@id}" format="dita" class="- topic/xref "/>
+                	<xref href="#{/*/@id}/{@id}" format="dita" class="- topic/xref "><xsl:value-of select="title"/></xref>
                 </sli>
             </xsl:for-each>
         </section-overview>
