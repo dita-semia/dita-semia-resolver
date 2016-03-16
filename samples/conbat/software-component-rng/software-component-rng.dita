@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="software-component.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<?xml-model href="software-component.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<?xml-stylesheet type="text/css" href="software-component.css"?>
-<topic xmlns:cba="http://www.dita-semia.org/conbat" id="topic_t4s_vvs_4t">
-	<title>Software Component</title>
+<?xml-model href="software-component-rng.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="software-component-rng.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic id="topic_t4s_vvs_4t">
+	<title>Software Component (RNG)</title>
 	<software-component id="ipb_lpl_v5">
 		<sc-title>DoSomething</sc-title>
 		<sc-body>
