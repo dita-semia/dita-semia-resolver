@@ -72,9 +72,9 @@
 								<!-- xref -->
 								<xsl:if test="not($addXref = 'no') and exists(@id)">
 									<p class="{$CP_P}">
-										<!--<xsl:value-of select="$xrefPrefix"/>-->
+										<xsl:value-of select="$xrefPrefix"/>
 										<xref href="#{@id}" format="dita" class="{$CP_XREF}"/>
-										<!--<xsl:value-of select="$xrefSuffix"/>-->
+										<xsl:value-of select="$xrefSuffix"/>
 									</p>
 								</xsl:if>
 							</li>
@@ -83,7 +83,7 @@
 				</section>
 			</xsl:when>
 			<xsl:otherwise>
-				<no-content>(Overview is hidden since less then <xsl:value-of select="$minCount"/> child topics are present.)</no-content>
+				<no-content>(Overview is hidden since less than <xsl:value-of select="$minCount"/> child topics are present.)</no-content>
 			</xsl:otherwise>
 		</xsl:choose>
     	
