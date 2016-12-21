@@ -27,6 +27,7 @@ public class XPathCache {
 		
 		processor 	= new Processor(configuration);
 		compiler 	= processor.newXPathCompiler();
+		compiler.setSchemaAware(configuration.getDefaultXsltCompilerInfo().isSchemaAware());
 	}
 	
 	
@@ -49,6 +50,14 @@ public class XPathCache {
 	
 	public void declareNamespace(String prefix, String uri) {
 		compiler.declareNamespace(prefix, uri);
+	}
+	
+	public boolean isCompatible(Configuration config) {
+		if (this.configuration.isCompatible(config)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

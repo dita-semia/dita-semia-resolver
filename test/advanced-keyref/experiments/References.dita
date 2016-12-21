@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="demo_ref">
+  <title>Demo-Ref</title>
+  <body>
+		<sl>
+			<sli><xref keyref="Komponente:CX123">CX123</xref></sli>
+			<sli><xref keyref="Parameter:CX123.Test-Parameter-1">Test-Parameter-1</xref></sli>
+			<sli><xref keyref="Parameter:CX123.Test-Parameter-1">Test-Component.Test-Parameter-1</xref></sli>
+		</sl>
+	</body>
+</topic>

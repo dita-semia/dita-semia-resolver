@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:ikd		= "http://www.dita-semia.org/implicit-keydef"
+	targetNamespace	= "http://www.dita-semia.org/implicit-keydef">
+	
+	
+	<xs:attribute name="key-type" 	type="xs:string"/>
+	<xs:attribute name="root" 		type="xs:string"/>
+	<xs:attribute name="key" 		type="xs:string"/>
+	<xs:attribute name="namespace" 	type="xs:string"/>
+	<xs:attribute name="name" 		type="xs:string"/>
+	<xs:attribute name="desc" 		type="xs:string"/>
+	
+	<xs:attributeGroup name="ikd-atts">
+		<xs:attribute ref="ikd:key-type"/>
+		<xs:attribute ref="ikd:root"/>
+		<xs:attribute ref="ikd:key"/>
+		<xs:attribute ref="ikd:namespace"/>
+		<xs:attribute ref="ikd:name"/>
+		<xs:attribute ref="ikd:desc"/>
+	</xs:attributeGroup>
+	
+</xs:schema>

@@ -2,32 +2,32 @@
 
 /* Hides the required content that is just needed for display on 
  xslt-conref for topic, ol/li, ul/li, table */
-*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *[class~="topic/topic"],
-*[class~="topic/table"][xcr|xsl]:not([conaction]) > *[class~="topic/table"],
-*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *[class~="topic/ol"],
-*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *[class~="topic/ul"],
-*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *[class~="topic/dl"],
-*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
-*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *[class~="topic/ph"],
-*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *[class~="topic/dlentry"]
+*[class~="topic/topic"][*|xsl]:not([conaction]) > *[class~="topic/topic"],
+*[class~="topic/table"][*|xsl]:not([conaction]) > *[class~="topic/table"],
+*[class~="topic/ol"][*|xsl]:not([conaction]) > *[class~="topic/ol"],
+*[class~="topic/ul"][*|xsl]:not([conaction]) > *[class~="topic/ul"],
+*[class~="topic/dl"][*|xsl]:not([conaction]) > *[class~="topic/dl"],
+*[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
+*[class~="topic/ph"][*|xsl]:not([conaction]) > *[class~="topic/ph"],
+*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *[class~="topic/dlentry"]
 {
     display : inherit;
 }
 
-*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *[class~="topic/simpletable"]
+*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *[class~="topic/simpletable"]
 {
     display : table;
 }
 
-*[class~="topic/table"][xcr|xsl]:not([conaction]) > *,    
-*[class~="topic/simpletable"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/ol"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/ul"][xcr|xsl]:not([conaction]) > *, 
-*[class~="topic/topic"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/dl"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/prodinfo"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/ph"][xcr|xsl]:not([conaction]) > *,
-*[class~="topic/dlentry"][xcr|xsl]:not([conaction]) > *
+*[class~="topic/table"][*|xsl]:not([conaction]) > *,    
+*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *,
+*[class~="topic/ol"][*|xsl]:not([conaction]) > *,
+*[class~="topic/ul"][*|xsl]:not([conaction]) > *, 
+*[class~="topic/topic"][*|xsl]:not([conaction]) > *,
+*[class~="topic/dl"][*|xsl]:not([conaction]) > *,
+*[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *,
+*[class~="topic/ph"][*|xsl]:not([conaction]) > *,
+*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *
 {
     display : none;
 }
@@ -35,27 +35,27 @@
 /* avoid double border on conref reference table */
 *[class~="topic/simpletable"][conref]:not([conaction]),
 *[class~="topic/simpletable"][conkeyref]:not([conaction]),
-*[class~="topic/simpletable"][xcr|xsl]:not([conaction]),
+*[class~="topic/simpletable"][*|xsl]:not([conaction]),
 *[class~="topic/tgroup"][conref]:not([conaction]),
 *[class~="topic/tgroup"][conkeyref]:not([conaction]),
-*[class~="topic/tgroup"][xcr|xsl]:not([conaction]) {
+*[class~="topic/tgroup"][*|xsl]:not([conaction]) {
 	border: none;
 }
 
 /* Remove static text, no margins */
-*[xcr|xsl]:not([conaction]):before {
+*[*|xsl]:not([conaction]):before {
     content:	"";
     display:	inline;
     margin:		0px;
 }
 
 
-*[class~="topic/table"][xcr|xsl]:not([conaction])
-*[class~="topic/simpletable"][xcr|xsl]:not([conaction]){
+*[class~="topic/table"][*|xsl]:not([conaction])
+*[class~="topic/simpletable"][*|xsl]:not([conaction]){
     display : block;
 }
 
-*[class~="topic/row"][xcr|xsl] {
+*[class~="topic/row"][*|xsl] {
   	content: "" !important;
 }
 
@@ -97,8 +97,8 @@
 			showIcon, 					true,
 			enableInReadOnlyContext, 	true);
 
-*[xcr|xsl] > oxy|error:before,
-*[xcr|xsl] > oxy|reference:before {
+*[*|xsl] > oxy|error:before,
+*[*|xsl] > oxy|reference:before {
     background-color: rgb(240, 240, 240) !important;
 	display: -oxy-morph !important;
   	content: 
@@ -107,8 +107,8 @@
   		!important;
 }
 
-*[xcr|xsl][xcr|source] > oxy|error:before,
-*[xcr|xsl][xcr|source] > oxy|reference:before {
+*[*|xsl][*|source] > oxy|error:before,
+*[*|xsl][*|source] > oxy|reference:before {
   	content: 
   		@OpenXsltConrefScriptButton
   		@OpenXsltConrefSourceButton
@@ -116,14 +116,22 @@
   		!important; 
 }
 
-*[xcr|xsl] > oxy|error:before,
-*[xcr|xsl][xcr|source] > oxy|error:before{
+*[*|xsl] > oxy|error:before,
+*[*|xsl][*|source] > oxy|error:before{
 	-oxy-append-content: "[" !important;
 }
 
 /* support the no-content result element */
-*[xcr|xsl] no-content {
+*[*|xsl] no-content {
 	/* Mark content to be invisible in output */
+	font-size: 	0.8em;
+	color:		#999999;
+}
+
+/* support the temp-context element */
+*[*|xsl] temp-context {
+	/* Mark content to be invisible in output */
+	content: 	"<Refresh required>";
 	font-size: 	0.8em;
 	color:		#999999;
 }

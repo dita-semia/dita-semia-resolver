@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="q4v_whz_qw">
+  <title>Component <codeph>CX123</codeph> – Test-Komponente-1</title>
+  <body>
+		<section>
+			<title>Parameters</title>
+			<parml>
+				<plentry>
+					<pt id="zvx_whz_qw">Test-Parameter-1</pt>
+					<pd>Text...</pd>
+				</plentry>
+			</parml>
+		</section>
+	</body>
+</topic>

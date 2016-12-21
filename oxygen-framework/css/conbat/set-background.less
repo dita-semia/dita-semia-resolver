@@ -9,6 +9,9 @@
 *[*|code-suffix]:after(@{conbat-inline-index}),
 *[*|suffix]:after(@{conbat-paragraph-index}),
 *[*|title]:before(@{conbat-title-index}),
-*[*|dt]:before(@{conbat-dt-index}){
+*[*|dt]:before(@{conbat-dt-index}),
+*[*|popup-edit]:after(@{conbat-edit-brace1-index}),
+*[*|popup-edit]:after(@{conbat-edit-brace2-index}),
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:before(@{conbat-header-index}) {
     background-color	: @conbat-background;
 }

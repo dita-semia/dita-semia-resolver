@@ -1,17 +1,34 @@
 package org.DitaSemia.Ot;
 
 import static org.apache.commons.io.FileUtils.*;
+import static org.dita.dost.util.URLUtils.*;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
+import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.DocumentCacheInitializer;
+import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
+import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
+import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
+import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyDefLocationDef;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyRefDisplaySuffixDef;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyTypeDefDef;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetReferencedKeyDefDef;
 import org.DitaSemia.Ot.Conbat.ResolveEmbeddedXPathDef;
 import org.DitaSemia.Ot.XsltConref.ResolveXsltConrefDef;
 import org.dita.dost.exception.DITAOTException;
@@ -20,7 +37,7 @@ import org.dita.dost.module.AbstractPipelineModuleImpl;
 import org.dita.dost.pipeline.AbstractPipelineInput;
 import org.dita.dost.pipeline.AbstractPipelineOutput;
 import org.dita.dost.util.CatalogUtils;
-import org.dita.dost.util.Job;
+import org.dita.dost.util.Job.FileInfo.Filter;
 import org.dita.dost.util.XMLUtils;
 import org.dita.dost.util.Job.FileInfo;
 import org.xml.sax.InputSource;
@@ -28,6 +45,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import net.sf.saxon.Configuration;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.SaxonApiException;
@@ -40,35 +58,20 @@ import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.ObjectValue;
 
-public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
-
+public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements DocumentCacheProvider, DocumentCacheInitializer {
+	
 	protected static final String FILE_EXTENSION_TEMP	= ".dita-semia.temp";
+	
+	public static final String ANT_INVOKER_PARAM_XSL 					= "xsl";
+	public static final String ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI	= "key-type-def-list-uri";
 
-	protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
+	//protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
+	//protected static final String XSLT_FILE_URL 		= "plugin:org.dita-semia.resolver:java/ot/src/xsl/resolve.xsl";
 
-	protected static final String NEEDS_RESOLVER_XPATH 	= "exists(//@xcr:xsl | //@cba:*)";
+	protected static final String NEEDS_RESOLVER_XPATH 	= "exists(//@xcr:xsl | //@cba:* | //@akr:ref | //@ikd:key-type)";
 	protected static final String BASE_URI_XPATH 		= "/*/@xtrf";
-	
-	
-	// <TEMP>
-	// required until DITA-OT 2.3 (#2177 Mark AbstractPipelineModuleImpl members as protected...)  
-	
-	protected DITAOTLogger logger;
-    protected Job job;
-
-    @Override
-    public void setLogger(final DITAOTLogger logger) {
-        this.logger = logger;
-    }
-    
-    @Override
-    public void setJob(final Job job) {
-        this.job = job;
-    }
-    // </TEMP>
-    
-    
 
 	protected Processor 			resolverProcessor			= null;
 	protected XsltExecutable 		resolverExecutable			= null;
@@ -79,19 +82,17 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 	protected XslTransformerCache	xsltConrefTransformerCache	= null;
 	protected XMLReader				xsltConrefXmlReader			= null;
 
+	protected DocumentCache			documentCache				= null;
 	protected XPathCache			xPathCache					= null;
 	
-	protected URL					currentBaseUri				= null;
+	protected URL					currentBaseUrl				= null;
+	
+	protected File					keyTypeDefListFile			= null;	
 
-	protected void init() throws DITAOTException {
+	protected void init(AbstractPipelineInput input) throws DITAOTException {
 
 		// xslt-conref
-		Configuration xsltConrefConfiguration;
-		try {
-			xsltConrefConfiguration = XsltConref.createConfiguration();
-		} catch (XPathException e) {
-			throw new DITAOTException(e.getMessage(), e);
-		}
+		final Configuration xsltConrefConfiguration = XsltConref.createConfiguration(this);
 		xsltConrefConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
 		
 		xsltConrefTransformerCache	= new XslTransformerCache(xsltConrefConfiguration);
@@ -105,45 +106,66 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 		xsltConrefXmlReader.setEntityResolver(CatalogUtils.getCatalogResolver());
 		
 		// general resolver
-		Configuration resolverConfiguration;
-		try {
-			resolverConfiguration = XsltConref.loadBaseConfiguration();
-		} catch (XPathException e) {
-			throw new DITAOTException(e.getMessage(), e);
-		}
-		
+		final Configuration resolverConfiguration = XsltConref.createConfiguration(this);
+		resolverConfiguration.setErrorListener(new Log4jErrorListener(Logger.getLogger("OT-Resolver")));
+
 		// ensure that both configurations are compatible
 		resolverConfiguration.setNamePool(xsltConrefConfiguration.getNamePool());
 		resolverConfiguration.setDocumentNumberAllocator(xsltConrefConfiguration.getDocumentNumberAllocator());
 
 		resolverConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
+
 		resolverConfiguration.registerExtensionFunction(new ResolveXsltConrefDef(this));
 		resolverConfiguration.registerExtensionFunction(new ResolveEmbeddedXPathDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetReferencedKeyDefDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetKeyDefLocationDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetKeyTypeDefDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetKeyRefDisplaySuffixDef(this));
 
 		resolverProcessor 		= new Processor(resolverConfiguration);
 		resolverDocBuilder 		= resolverProcessor.newDocumentBuilder();
 		
 		final XPathCompiler xPathCompiler 	= resolverProcessor.newXPathCompiler();
-		xPathCompiler.declareNamespace(XsltConref.NAMESPACE_PREFIX, XsltConref.NAMESPACE_URI);
-		xPathCompiler.declareNamespace(ResolveEmbeddedXPathDef.NAMESPACE_PREFIX, ResolveEmbeddedXPathDef.NAMESPACE_URI);
+		xPathCompiler.declareNamespace(XsltConref.NAMESPACE_PREFIX, 				XsltConref.NAMESPACE_URI);
+		xPathCompiler.declareNamespace(ResolveEmbeddedXPathDef.NAMESPACE_PREFIX, 	ResolveEmbeddedXPathDef.NAMESPACE_URI);
+		xPathCompiler.declareNamespace(KeyRef.NAMESPACE_PREFIX, 					KeyRef.NAMESPACE_URI);
+		xPathCompiler.declareNamespace(KeyDef.NAMESPACE_PREFIX, 					KeyDef.NAMESPACE_URI);
 		try {
 			needsResolveXPath	= xPathCompiler.compile(NEEDS_RESOLVER_XPATH);
 			baseUriXPath		= xPathCompiler.compile(BASE_URI_XPATH);
 		} catch (SaxonApiException e) {
 			throw new DITAOTException(e.getMessage(), e);
 		}
+		
+		keyTypeDefListFile	= toFile(input.getAttribute(ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI));
+		
+		try {
+			final String	inputUrl	= job.getInputMap().toString();
+			final URL		tempDirUrl	= job.tempDir.toURI().toURL();
+			final URL		rootUrl		= new URL(tempDirUrl, inputUrl);
+			//logger.info("Build documentCache for file: " + rootUrl);
+			documentCache = new DocumentCache(rootUrl, this, resolverConfiguration);
+			documentCache.fillCache();
+			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
+		} catch (MalformedURLException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 	
 
 	@Override
 	public AbstractPipelineOutput execute(AbstractPipelineInput input) throws DITAOTException {
-		
-		init();
 
-		final Collection<FileInfo> fis = job.getFileInfo();
+		init(input);
+		
+		final Collection<FileInfo> fis = job.getFileInfo(new Filter<FileInfo>() {
+			@Override
+			public boolean accept(FileInfo fi) {
+				return fi.format.equals("dita");
+			}});
+
 		for (final FileInfo fi: fis) {
 			final File file = new File(job.tempDir, fi.file.getPath());
-			logger.info("Processing " + file.getAbsolutePath());
 
 			final XdmNode sourceNode;
 			try {
@@ -157,10 +179,10 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 				selector.setContextItem(sourceNode);
 
 				if (selector.effectiveBooleanValue()) {
-					logger.debug("  resolving...");
-					resolve(sourceNode, file);
+					logger.info("Processing " + file.getAbsolutePath());
+					resolve(sourceNode, file, input);
 				} else {
-					logger.debug("  Contains no XSLT-conref -> skipped!");
+					logger.info("Skipping " + file.getAbsolutePath());
 				}
 			} catch (SaxonApiException e) {
 				throw new DITAOTException(e.getMessage(), e);
@@ -171,24 +193,26 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 	}
 	
 
-	protected void resolve(XdmNode sourceNode, File inputFile) throws DITAOTException {
+	protected void resolve(XdmNode sourceNode, File inputFile, AbstractPipelineInput input) throws DITAOTException {
 		
 		if (resolverExecutable == null) {
 			// initialize at first call (avoid compilation when not required)
-			final XsltCompiler 	compiler 		= resolverProcessor.newXsltCompiler();
-			final URL 			resoveXslUrl 	= getClass().getResource(XSLT_FILE_URL);
-			final SAXSource		xslSource		= new SAXSource(new InputSource(resoveXslUrl.toExternalForm())); 
+			final XsltCompiler 	compiler 	= resolverProcessor.newXsltCompiler();
+			final File			xslFile		= toFile(input.getAttribute(ANT_INVOKER_PARAM_XSL));
 			try {
+				final Source xslSource	= CatalogUtils.getCatalogResolver().resolve(xslFile.toURI().toString(), "");
 				resolverExecutable = compiler.compile(xslSource);
+			} catch (TransformerException e) {
+				throw new DITAOTException("Failed to lead resolver stylesheet: " + e.getMessage());
 			} catch (SaxonApiException e) {
-				throw new DITAOTException("Failed to compile resolver stylesheet: " + e.getMessage(), e);
+				throw new DITAOTException("Failed to compile resolver stylesheet: " + e.getMessage());
 			}
 		}
 		
 		final XPathSelector baseUriSelector = baseUriXPath.load();
 		try {
 			baseUriSelector.setContextItem(sourceNode);
-			currentBaseUri = new URL(baseUriSelector.evaluateSingle().getStringValue());
+			currentBaseUrl = new URL(baseUriSelector.evaluateSingle().getStringValue());
 		} catch (SaxonApiException e) {
 			throw new DITAOTException("Failed to determine base URI of file '" + inputFile.getName() + "': " + e.getMessage(), e);
 		} catch (MalformedURLException e) {
@@ -211,7 +235,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 			throw new DITAOTException("Failed to resolve file '" + inputFile + "': " + e.getMessage(), e);
 		}
 		
-		currentBaseUri = null;
+		currentBaseUrl = null;
 
 		// move/copy temporary file to input file
 		try {
@@ -242,13 +266,42 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl {
 		return xsltConrefTransformerCache;
 	}
 	
-	public URL getCurrentBaseUri() {
-		return currentBaseUri;
+	public URL getCurrentBaseUrl() {
+		return currentBaseUrl;
 	}
 
 
 	public DITAOTLogger getOtLogger() {
 		return logger;
+	}
+	
+	public DocumentCache getDocumentCache() {
+		return documentCache;
+	}
+
+	public static KeyDefInterface getKeyDefFromItem(Item item) throws XPathException {
+		if ((!(item instanceof ObjectValue<?>)) || (!(((ObjectValue<?>)item).getObject() instanceof KeyDefInterface))) {
+			throw new XPathException("Supplied item  needs to be an instance of " + KeyDefInterface.class.getTypeName() + ".");
+		}
+		return (KeyDefInterface)(((ObjectValue<?>)item).getObject());
+	}
+
+
+	@Override
+	public DocumentCache getDocumentCache(URL url) {
+		return documentCache;
+	}
+
+
+	@Override
+	public void initDocumentCache(DocumentCache documentCache) {
+		if (keyTypeDefListFile != null) {
+			try {
+				documentCache.parseKeyTypeDefFile(keyTypeDefListFile.toURI().toURL());
+			} catch (MalformedURLException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 	}
 
 }

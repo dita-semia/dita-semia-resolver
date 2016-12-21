@@ -2,7 +2,8 @@
 /* rules for generated titles */
 
 
-*[class~="topic/section"][*|title]:before(@{conbat-title-index}) {
+*[class~="topic/section"][*|title]:before(@{conbat-title-index}),
+*[class~="topic/dl"][*|title]:before(@{conbat-title-index}){
 	display	: block;
     content	: oxy_label(text, attr("*|title"));
     .section-title-style();

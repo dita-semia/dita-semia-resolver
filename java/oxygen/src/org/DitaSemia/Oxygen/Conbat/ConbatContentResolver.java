@@ -22,27 +22,29 @@ public class ConbatContentResolver {
 	public static final String 	ATTR_DEFAULT_CONTENT		= "default-content";
 
 	public static String resolveContent(AuthorNode authorNode, AuthorAccess authorAccess) {
-		logger.info("getDisplayName: " + authorNode.getDisplayName());
-		logger.info("getName: " + authorNode.getName());
-		logger.info("getType: " + authorNode.getType());
-		logger.info("getParentName: " + authorNode.getParent().getName());
+		//logger.info("getDisplayName: " + authorNode.getDisplayName());
+		//logger.info("getName: " + authorNode.getName());
+		//logger.info("getType: " + authorNode.getType());
+		/*if (authorNode.getParent() != null) {
+			logger.info("getParentName: " + authorNode.getParent().getName());
+		}*/
 		String resolvedContent = null;
 		NodeWrapper node = new AuthorNodeWrapper(authorNode, authorAccess);
 		if (node.isElement()) {
 			try {
-				final String content = node.getAttribute(ATTR_CONTENT, null/*NAMESPACE_URI*/);
-				logger.info("content: " + content);
+				final String content = node.getAttribute(ATTR_CONTENT, NAMESPACE_URI);
+				//logger.info("content: " + content);
 				if (content != null) {
 					resolvedContent = EmbeddedXPathResolver.resolve(content, node);
 				} else if (((AuthorParentNode)authorNode).getContentNodes().isEmpty()) {
-					final String defaultContent = node.getAttribute(ATTR_DEFAULT_CONTENT, null/*NAMESPACE_URI*/);
-					logger.info("defaultContent: " + defaultContent);
+					final String defaultContent = node.getAttribute(ATTR_DEFAULT_CONTENT, NAMESPACE_URI);
+					//logger.info("defaultContent: " + defaultContent);
 					if (defaultContent != null) {
 						resolvedContent = EmbeddedXPathResolver.resolve(defaultContent, node);
 					}
 				}
 			} catch(XPathException e) {
-				logger.error(e, e);
+				logger.error(e.getMessage());
 				resolvedContent = ERR_TEXT;
 			}
 		}

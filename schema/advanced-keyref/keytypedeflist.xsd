@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	
+	<xs:element name="KeyTypeDefList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="KeyTypeDef" type="KeyTypeDefType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="KeyTypeDefType">
+		<xs:sequence>
+			<xs:element name="KeyTypeDef" type="KeyTypeDefType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" 			type="xs:NCName" 	use="required"/>
+		<xs:attribute name="isCodeFont" 	type="xs:boolean"/>
+		<xs:attribute name="isItalicFont" 	type="xs:boolean"/>
+		<xs:attribute name="prefix" 		type="xs:string"/>
+		<xs:attribute name="suffix" 		type="xs:string"/>
+		<xs:attribute name="selectPriority" type="xs:int"/>
+	</xs:complexType>
+	
+</xs:schema>

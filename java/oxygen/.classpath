@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DitaSemiaBase"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/saxon9ee.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/oxygen.jar"/>
-	<classpathentry kind="var" path="OXYGENXML/frameworks/dita/dita.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/log4j.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DitaSemiaBase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

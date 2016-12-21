@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<serialized version="17.1" xml:space="preserve">
+<serialized version="18.0" xml:space="preserve">
 	<serializableOrderedMap>
 		<entry>
 			<String>document.types</String>
@@ -34,41 +34,7 @@
 											<Integer>5</Integer>
 										</field>
 										<field name="value">
-											<String>file:/C:/Entwicklung/dita-ot-merged/lib/commons-io-2.4.jar</String>
-										</field>
-										<field name="patchHandling">
-											<String>addIndex</String>
-										</field>
-										<field name="anchor">
-											<null/>
-										</field>
-									</poPatch>
-									<poPatch>
-										<field name="fieldPath">
-											<String>classpath</String>
-										</field>
-										<field name="index">
-											<Integer>6</Integer>
-										</field>
-										<field name="value">
-											<String>file:/C:/Entwicklung/dita-ot-merged/lib/xml-resolver-1.2.jar</String>
-										</field>
-										<field name="patchHandling">
-											<String>addIndex</String>
-										</field>
-										<field name="anchor">
-											<null/>
-										</field>
-									</poPatch>
-									<poPatch>
-										<field name="fieldPath">
-											<String>classpath</String>
-										</field>
-										<field name="index">
-											<Integer>7</Integer>
-										</field>
-										<field name="value">
-											<String>${frameworks}/java/oxygen/DitaSemiaOxygen.jar</String>
+											<String>${frameworks}/java/oxygen-extension-bundle/DitaSemiaOxygenExtensionBundle.jar</String>
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>
@@ -96,6 +62,84 @@
 													<Boolean>false</Boolean>
 												</field>
 											</cssFile>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>authorExtensionDescriptor/actionDescriptors</String>
+										</field>
+										<field name="index">
+											<Integer>72</Integer>
+										</field>
+										<field name="value">
+											<action>
+												<field name="id">
+													<String>Refresh Cache</String>
+												</field>
+												<field name="name">
+													<String>Refresh Cache</String>
+												</field>
+												<field name="description">
+													<String>Cache aktualisieren</String>
+												</field>
+												<field name="largeIconPath">
+													<String>${framework}/img/RefreshCache16.gif</String>
+												</field>
+												<field name="smallIconPath">
+													<String>${framework}/img/RefreshCache16.gif</String>
+												</field>
+												<field name="accessKey">
+													<String></String>
+												</field>
+												<field name="accelerator">
+													<null/>
+												</field>
+												<field name="actionModes">
+													<actionMode-array>
+														<actionMode>
+															<field name="xpathCondition">
+																<String></String>
+															</field>
+															<field name="argValues">
+																<serializableOrderedMap/>
+															</field>
+															<field name="operationID">
+																<String>org.DitaSemia.Oxygen.AuthorOperations.RefreshCache</String>
+															</field>
+														</actionMode>
+													</actionMode-array>
+												</field>
+												<field name="enabledInReadOnlyContext">
+													<Boolean>false</Boolean>
+												</field>
+											</action>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>authorExtensionDescriptor/toolbarDescriptor/toolbarEntriesDescriptorList</String>
+										</field>
+										<field name="index">
+											<Integer>27</Integer>
+										</field>
+										<field name="value">
+											<toolbarItem>
+												<field name="actionID">
+													<String>Refresh Cache</String>
+												</field>
+											</toolbarItem>
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>
@@ -174,6 +218,23 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>scenarios/[0]/extensionURLs</String>
+										</field>
+										<field name="index">
+											<Integer>1</Integer>
+										</field>
+										<field name="value">
+											<String>${oxygenHome}/lib/DitaSemiaBase.jar</String>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>scenarios/[1]/ditaParams</String>
 										</field>
 										<field name="index">
@@ -198,6 +259,23 @@
 										</field>
 										<field name="value">
 											<String>${frameworks}/java/ot/DitaSemiaOt.jar</String>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>scenarios/[1]/extensionURLs</String>
+										</field>
+										<field name="index">
+											<Integer>1</Integer>
+										</field>
+										<field name="value">
+											<String>${oxygenHome}/lib/DitaSemiaBase.jar</String>
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>
@@ -253,12 +331,15 @@
 													</ditavalFilters>
 												</field>
 												<field name="addOxygenJars">
-													<Boolean>true</Boolean>
+													<Boolean>false</Boolean>
 												</field>
 												<field name="skinCssFile">
 													<null/>
 												</field>
 												<field name="lastCustomSkinCssPath">
+													<null/>
+												</field>
+												<field name="webhelpResponsiveTemplate">
 													<null/>
 												</field>
 												<field name="additionalAntArgs">
@@ -294,6 +375,35 @@
 																	<String>no</String>
 																	<null/>
 																</String-array>
+															</field>
+															<field name="possibleValuesDescriptions">
+																<String-array>
+																	<String></String>
+																	<String></String>
+																</String-array>
+															</field>
+														</ditaParameter>
+														<ditaParameter>
+															<field name="name">
+																<String>dita-semia.resolver.activate</String>
+															</field>
+															<field name="description">
+																<String></String>
+															</field>
+															<field name="value">
+																<String>true</String>
+															</field>
+															<field name="defaultValue">
+																<null/>
+															</field>
+															<field name="type">
+																<Integer>5</Integer>
+															</field>
+															<field name="possibleValues">
+																<null/>
+															</field>
+															<field name="possibleValuesDescriptions">
+																<null/>
 															</field>
 														</ditaParameter>
 													</list>
@@ -402,7 +512,45 @@
 												</field>
 												<field name="extensionURLs">
 													<String-array>
+														<String>${dita.dir.url}/plugins/org.dita-semia.resolver/lib/schemaAttrDefaults.jar</String>
+														<String>${dita.dir.url}/lib/commons-io*.jar</String>
+														<String>${oxygenHome}/classes/</String>
+														<String>${oxygenHome}/lib/oxygen*.jar</String>
+														<String>${oxygenHome}/lib/resolver.jar</String>
+														<String>${oxygenHome}/lib/oxygen-token-markers.jar</String>
+														<String>${oxygenHome}/lib/org.eclipse.wst.xml.xpath2.processor_*.jar</String>
+														<String>${oxygenHome}/lib/xml-apis.jar</String>
+														<String>${oxygenHome}/lib/xercesImpl.jar</String>
+														<String>${oxygenHome}/lib/commons-io*.jar</String>
+														<String>${oxygenHome}/lib/commons-logging*.jar</String>
+														<String>${oxygenHome}/lib/log4j.jar</String>
+														<String>${dita.dir.url}/lib/commons-codec*.jar</String>
+														<String>${oxygenHome}/lib/jing.jar</String>
+														<String>${oxygenHome}/lib/saxon9ee.jar</String>
+														<String>${oxygenHome}/lib/saxon.jar</String>
+														<String>${oxygenHome}/lib/xmlgraphics-commons*.jar</String>
+														<String>${oxygenHome}/lib/fop.jar</String>
+														<String>${oxygenHome}/lib/batik-all*.jar</String>
+														<String>${oxygenHome}/lib/js.jar</String>
+														<String>${oxygenHome}/lib/poi*.jar</String>
+														<String>${oxygenHome}/lib/nekohtml.jar</String>
+														<String>${oxygenHome}/lib/xml-apis-ext.jar</String>
+														<String>${oxygenHome}/lib/avalon-framework*.jar</String>
+														<String>${oxygenHome}/lib/jeuclid-core.jar</String>
+														<String>${oxygenHome}/lib/jeuclid-fop.jar</String>
+														<String>${oxygenHome}/lib/jai_tiff.jar</String>
+														<String>${oxygenHome}/lib/jh.jar</String>
+														<String>${dita.dir.url}/lib/jsearch.jar</String>
+														<String>${oxygenHome}/lib/lucene*.jar</String>
+														<String>${dita.dir.url}/plugins/com.oxygenxml.webhelp/lib/*.jar</String>
+														<String>${dita.dir.url}/plugins/com.oxygenxml.highlight/lib/*.jar</String>
+														<String>${dita.dir.url}</String>
+														<String>${dita.dir.url}/lib/dost-patches.jar</String>
+														<String>${dita.dir.url}/lib/</String>
+														<String>${dita.dir.url}/lib/dost.jar</String>
+														<String>${dita.dir.url}/plugins/com.elovirta.dita.markdown/*.jar</String>
 														<String>${frameworks}/java/ot/DitaSemiaOt.jar</String>
+														<String>${oxygenHome}/lib/DitaSemiaBase.jar</String>
 													</String-array>
 												</field>
 											</ditaScenario>
@@ -479,6 +627,126 @@
 											<String>validationScenarios/[0]/pairs</String>
 										</field>
 										<field name="index">
+											<Integer>6</Integer>
+										</field>
+										<field name="value">
+											<validationUnit>
+												<field name="validationType">
+													<validationUnitType>
+														<field name="validationInputType">
+															<String>text/xml</String>
+														</field>
+													</validationUnitType>
+												</field>
+												<field name="url">
+													<String>${currentFileURL}</String>
+												</field>
+												<field name="validationEngine">
+													<validationEngine>
+														<field name="engineType">
+															<String>&lt;Default engine></String>
+														</field>
+														<field name="allowsAutomaticValidation">
+															<Boolean>true</Boolean>
+														</field>
+													</validationEngine>
+												</field>
+												<field name="allowAutomaticValidation">
+													<Boolean>true</Boolean>
+												</field>
+												<field name="extensions">
+													<null/>
+												</field>
+												<field name="validationSchema">
+													<validationUnitSchema>
+														<field name="dtdSchemaPublicID">
+															<null/>
+														</field>
+														<field name="schematronPhase">
+															<null/>
+														</field>
+														<field name="type">
+															<Integer>7</Integer>
+														</field>
+														<field name="uri">
+															<String>${frameworks}/schema/advanced-keyref/keyref.sch</String>
+														</field>
+													</validationUnitSchema>
+												</field>
+											</validationUnit>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>validationScenarios/[0]/pairs</String>
+										</field>
+										<field name="index">
+											<Integer>7</Integer>
+										</field>
+										<field name="value">
+											<validationUnit>
+												<field name="validationType">
+													<validationUnitType>
+														<field name="validationInputType">
+															<String>text/xml</String>
+														</field>
+													</validationUnitType>
+												</field>
+												<field name="url">
+													<String>${currentFileURL}</String>
+												</field>
+												<field name="validationEngine">
+													<validationEngine>
+														<field name="engineType">
+															<String>&lt;Default engine></String>
+														</field>
+														<field name="allowsAutomaticValidation">
+															<Boolean>true</Boolean>
+														</field>
+													</validationEngine>
+												</field>
+												<field name="allowAutomaticValidation">
+													<Boolean>true</Boolean>
+												</field>
+												<field name="extensions">
+													<null/>
+												</field>
+												<field name="validationSchema">
+													<validationUnitSchema>
+														<field name="dtdSchemaPublicID">
+															<null/>
+														</field>
+														<field name="schematronPhase">
+															<null/>
+														</field>
+														<field name="type">
+															<Integer>7</Integer>
+														</field>
+														<field name="uri">
+															<String>${frameworks}/schema/advanced-keyref/keydef.sch</String>
+														</field>
+													</validationUnitSchema>
+												</field>
+											</validationUnit>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>validationScenarios/[0]/pairs</String>
+										</field>
+										<field name="index">
 											<Integer>3</Integer>
 										</field>
 										<field name="value">
@@ -499,7 +767,7 @@
 											<Integer>-1</Integer>
 										</field>
 										<field name="value">
-											<String>org.DitaSemia.Oxygen.DitaSemiaExtensionBundle</String>
+											<String>org.DitaSemia.Oxygen.ExtensionBundle.DitaSemiaExtensionBundle</String>
 										</field>
 										<field name="patchHandling">
 											<String>set</String>
@@ -985,7 +1253,7 @@
 											<actionMode-array>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::*[contains(@class," task/substep ")]</String>
+														<String>ancestor-or-self::*[contains(@class," task/substep ") or contains(@class," topic/ul ") or contains(@class," topic/ol ")][1][contains(@class," task/substep ")]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap>
@@ -1025,7 +1293,7 @@
 												</actionMode>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::*[contains(@class," task/step ")]</String>
+														<String>ancestor-or-self::*[contains(@class," task/step ") or contains(@class," topic/ul ") or contains(@class," topic/ol ")][1][contains(@class," task/step ")]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap>
@@ -1327,7 +1595,7 @@
 												</actionMode>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::*[contains(@class," topic/li ")]</String>
+														<String>ancestor-or-self::*[contains(@class," topic/li ") or contains(@class," topic/ul ") or contains(@class," topic/ul ")][1][contains(@class," topic/li ")]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap>
@@ -1557,7 +1825,7 @@
 											<String>/images/Section24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/Section16.gif</String>
+											<String>/images/Section16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -1674,7 +1942,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/TableRow24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/TableRow16.gif</String>
+											<String>/images/TableRow16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -1800,7 +2068,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/TableCell24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/TableCell16.gif</String>
+											<String>/images/TableCell16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -1983,7 +2251,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/InsertConcept24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/InsertConcept16.gif</String>
+											<String>/images/InsertConcept16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2093,7 +2361,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/InsertTask24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/InsertTask16.gif</String>
+											<String>/images/InsertTask16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2203,7 +2471,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/InsertTopic24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/InsertTopic16.gif</String>
+											<String>/images/InsertTopic16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2313,7 +2581,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/InsertRef24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/InsertRef16.gif</String>
+											<String>/images/InsertRef16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2740,7 +3008,7 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>/images/TableColumn24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/TableColumn16.gif</String>
+											<String>/images/TableColumn16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2792,16 +3060,16 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>delete.table.column</String>
 										</field>
 										<field name="name">
-											<String>${i18n(delete.table.column)}</String>
+											<String>${i18n(delete.table.columns)}</String>
 										</field>
 										<field name="description">
-											<String>${i18n(delete.table.column_description)}</String>
+											<String>${i18n(delete.table.columns_description)}</String>
 										</field>
 										<field name="largeIconPath">
 											<String>/images/DeleteColumn24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/DeleteColumn16.gif</String>
+											<String>/images/DeleteColumn16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -2813,7 +3081,8 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<actionMode-array>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::node()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ") or contains(@class," topic/row ")]][1][self::*[contains(@class," topic/entry ") or contains(@class," topic/row ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]]</String>
+														<String>ancestor-or-self::node()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ") or contains(@class," topic/row ")]][1][self::*[contains(@class," topic/entry ") or contains(@class," topic/row ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]]  or 
+oxy:current-selected-element()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ") or contains(@class," topic/row ")]][1][self::*[contains(@class," topic/entry ") or contains(@class," topic/row ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap/>
@@ -2824,7 +3093,8 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 												</actionMode>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::node()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ")]][1][self::*[contains(@class," topic/stentry ") or contains(@class," topic/strow ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]]</String>
+														<String>ancestor-or-self::node()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ")]][1][self::*[contains(@class," topic/stentry ") or contains(@class," topic/strow ") or contains(@class," topic/sthead ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]] or
+oxy:current-selected-element()[self::*[contains(@class," topic/tbody ") or contains(@class," topic/thead ") or contains(@class," topic/entry ") or contains(@class," topic/sthead ") or contains(@class," topic/strow ") or contains(@class," topic/stentry ")]][1][self::*[contains(@class," topic/stentry ") or contains(@class," topic/strow ") or contains(@class," topic/sthead ")][not(ancestor-or-self::*[contains(@class, " task/choicetable ")])]]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap/>
@@ -2844,16 +3114,16 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<String>delete.table.row</String>
 										</field>
 										<field name="name">
-											<String>${i18n(delete.table.row)}</String>
+											<String>${i18n(delete.table.rows)}</String>
 										</field>
 										<field name="description">
-											<String>${i18n(delete.table.row_description)}</String>
+											<String>${i18n(delete.table.rows_description)}</String>
 										</field>
 										<field name="largeIconPath">
 											<String>/images/DeleteRow24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/DeleteRow16.gif</String>
+											<String>/images/DeleteRow16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -3946,13 +4216,13 @@ oxy:allows-child-element("*", "class", " topic/simpletable ")</String>
 											<actionMode-array>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>self::object</String>
+														<String>self::object[@data] or self::object[param[@name='src'][@value]]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap>
 															<entry>
 																<String>resourcePath</String>
-																<String>@data</String>
+																<String>@data | param[@name='src']/@value</String>
 															</entry>
 														</serializableOrderedMap>
 													</field>
@@ -4392,7 +4662,7 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ")
 											<String></String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/Expanded16.gif</String>
+											<String>/images/Expanded16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -4442,7 +4712,7 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ")
 											<String></String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/Collapsed16.gif</String>
+											<String>/images/Collapsed16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -4492,7 +4762,7 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ")
 											<String>/images/TableRowAbove24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/TableRowAbove16.gif</String>
+											<String>/images/TableRowAbove16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -4618,7 +4888,7 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ")
 											<String>/images/TableColumnBefore24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/TableColumnBefore16.gif</String>
+											<String>/images/TableColumnBefore16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -5183,6 +5453,233 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 											<Boolean>false</Boolean>
 										</field>
 									</action>
+									<action>
+										<field name="id">
+											<String>table.join</String>
+										</field>
+										<field name="name">
+											<String>${i18n(table.join)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(table.join_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String>/images/TableJoin24.png</String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/TableJoin16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>ancestor-or-self::*[contains(@class," topic/table ")]</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap/>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.dita.topic.table.cals.JoinOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>false</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>table.split</String>
+										</field>
+										<field name="name">
+											<String>${i18n(table.split)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(table.split_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String>/images/TableSplitCell24.png</String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/TableSplitCell16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>oxy:current-selected-element()[self::*[contains(@class," topic/entry ") or 
+contains(@class," topic/stentry ")]][1][self::*[contains(@class," topic/entry ")]] or
+ancestor-or-self::node()[self::*[contains(@class," topic/entry ") or 
+contains(@class," topic/stentry ")]][1][self::*[contains(@class," topic/entry ")]]</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap/>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.dita.topic.table.cals.SplitOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>false</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>edit.image.map</String>
+										</field>
+										<field name="name">
+											<String>${i18n(Image_map_editor)}...</String>
+										</field>
+										<field name="description">
+											<String>${i18n(edit_image_map_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String></String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>ancestor-or-self::*[contains(@class," ut-d/imagemap ")] or oxy:current-selected-element()[contains(@class," ut-d/imagemap ")] or
+self::image[empty(parent::imagemap)] or oxy:current-selected-element()[self::image][empty(parent::imagemap)]</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap/>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.dita.EditImageMapOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>false</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>imagemap.collapse.area</String>
+										</field>
+										<field name="name">
+											<String>${i18n(imagemap.toggle.area)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(imagemap.toggle.area_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/Expanded16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>1</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap>
+															<entry>
+																<String>elementLocation</String>
+																<String>..</String>
+															</entry>
+															<entry>
+																<String>name</String>
+																<String>-oxy-visible-imagemap-area</String>
+															</entry>
+														</serializableOrderedMap>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.commons.operations.RemovePseudoClassOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>true</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>imagemap.expand.area</String>
+										</field>
+										<field name="name">
+											<String>${i18n(imagemap.toggle.area)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(imagemap.toggle.area_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/Collapsed16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>1</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap>
+															<entry>
+																<String>elementLocation</String>
+																<String>..</String>
+															</entry>
+															<entry>
+																<String>name</String>
+																<String>-oxy-visible-imagemap-area</String>
+															</entry>
+														</serializableOrderedMap>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.commons.operations.SetPseudoClassOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>true</Boolean>
+										</field>
+									</action>
 								</action-array>
 							</field>
 							<field name="menubarDescriptor">
@@ -5271,6 +5768,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -5326,6 +5826,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -5355,6 +5858,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 															</field>
 														</menuItem>
 													</menuEntry-array>
+												</field>
+												<field name="context">
+													<null/>
 												</field>
 											</menu>
 											<menu>
@@ -5402,6 +5908,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														<menuSeparator/>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -5432,6 +5941,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -5448,11 +5960,6 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														<menuItem>
 															<field name="actionID">
 																<String>insert.table</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>show.table.properties</String>
 															</field>
 														</menuItem>
 														<menuSeparator/>
@@ -5506,41 +6013,24 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														<menuSeparator/>
 														<menuItem>
 															<field name="actionID">
-																<String>table.join.row.cells</String>
+																<String>table.join</String>
 															</field>
 														</menuItem>
 														<menuItem>
 															<field name="actionID">
-																<String>table.join.cell.above</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.join.cell.below</String>
+																<String>table.split</String>
 															</field>
 														</menuItem>
 														<menuSeparator/>
 														<menuItem>
 															<field name="actionID">
-																<String>table.split.left</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.right</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.above</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.below</String>
+																<String>show.table.properties</String>
 															</field>
 														</menuItem>
 													</menuEntry-array>
+												</field>
+												<field name="context">
+													<null/>
 												</field>
 											</menu>
 											<menuSeparator/>
@@ -5562,6 +6052,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 											</menuItem>
 										</menuEntry-array>
 									</field>
+									<field name="context">
+										<null/>
+									</field>
 								</menu>
 							</field>
 							<field name="popupMenuDescriptor">
@@ -5577,6 +6070,11 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 									</field>
 									<field name="menuEntriesDescriptorList">
 										<menuEntry-array>
+											<menuItem>
+												<field name="actionID">
+													<String>edit.image.map</String>
+												</field>
+											</menuItem>
 											<menu>
 												<field name="label">
 													<String>${i18n(paste.special)}</String>
@@ -5612,6 +6110,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menuSeparator/>
 											<menu>
@@ -5628,16 +6129,6 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 													<menuEntry-array>
 														<menuItem>
 															<field name="actionID">
-																<String>insert.table.row.above</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>insert.table.row.below</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
 																<String>insert.table.rows.custom</String>
 															</field>
 														</menuItem>
@@ -5647,16 +6138,6 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 															</field>
 														</menuItem>
 														<menuSeparator/>
-														<menuItem>
-															<field name="actionID">
-																<String>insert.table.column.before</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>insert.table.column.after</String>
-															</field>
-														</menuItem>
 														<menuItem>
 															<field name="actionID">
 																<String>insert.table.columns.custom</String>
@@ -5670,44 +6151,12 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														<menuSeparator/>
 														<menuItem>
 															<field name="actionID">
-																<String>insert.table.entry</String>
-															</field>
-														</menuItem>
-														<menuSeparator/>
-														<menuItem>
-															<field name="actionID">
-																<String>table.join.row.cells</String>
+																<String>table.join</String>
 															</field>
 														</menuItem>
 														<menuItem>
 															<field name="actionID">
-																<String>table.join.cell.above</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.join.cell.below</String>
-															</field>
-														</menuItem>
-														<menuSeparator/>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.left</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.right</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.above</String>
-															</field>
-														</menuItem>
-														<menuItem>
-															<field name="actionID">
-																<String>table.split.below</String>
+																<String>table.split</String>
 															</field>
 														</menuItem>
 														<menuSeparator/>
@@ -5723,6 +6172,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 															</field>
 														</menuItem>
 													</menuEntry-array>
+												</field>
+												<field name="context">
+													<String>table</String>
 												</field>
 											</menu>
 											<menu>
@@ -5785,6 +6237,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -5830,6 +6285,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 															</field>
 														</menuItem>
 													</menuEntry-array>
+												</field>
+												<field name="context">
+													<null/>
 												</field>
 											</menu>
 											<menuItem>
@@ -5894,6 +6352,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menuItem>
 												<field name="actionID">
@@ -5925,9 +6386,15 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menuSeparator/>
 										</menuEntry-array>
+									</field>
+									<field name="context">
+										<null/>
 									</field>
 								</menu>
 							</field>
@@ -6028,7 +6495,7 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 													<String>/images/Section24.png</String>
 												</field>
 												<field name="smallIconPath">
-													<String>/images/Section16.gif</String>
+													<String>/images/Section16.png</String>
 												</field>
 												<field name="toolbarEntriesDescriptorList">
 													<toolbarEntry-array>
@@ -6106,12 +6573,12 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 											</toolbarItem>
 											<toolbarItem>
 												<field name="actionID">
-													<String>insert.table.column.after</String>
+													<String>delete.table.row</String>
 												</field>
 											</toolbarItem>
 											<toolbarItem>
 												<field name="actionID">
-													<String>insert.table.entry</String>
+													<String>insert.table.column.after</String>
 												</field>
 											</toolbarItem>
 											<toolbarItem>
@@ -6119,70 +6586,23 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 													<String>delete.table.column</String>
 												</field>
 											</toolbarItem>
-											<toolbarItem>
-												<field name="actionID">
-													<String>delete.table.row</String>
-												</field>
-											</toolbarItem>
+											<toolbarSeparator/>
 											<toolbarItem>
 												<field name="actionID">
 													<String>show.table.properties</String>
 												</field>
 											</toolbarItem>
-											<toolbar>
-												<field name="id">
-													<String>${i18n(table.join.split)}</String>
+											<toolbarSeparator/>
+											<toolbarItem>
+												<field name="actionID">
+													<String>table.join</String>
 												</field>
-												<field name="type">
-													<Integer>3</Integer>
+											</toolbarItem>
+											<toolbarItem>
+												<field name="actionID">
+													<String>table.split</String>
 												</field>
-												<field name="largeIconPath">
-													<String>/images/TableJoinSplit24.png</String>
-												</field>
-												<field name="smallIconPath">
-													<String>/images/TableJoinSplit16.gif</String>
-												</field>
-												<field name="toolbarEntriesDescriptorList">
-													<toolbarEntry-array>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.join.row.cells</String>
-															</field>
-														</toolbarItem>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.join.cell.above</String>
-															</field>
-														</toolbarItem>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.join.cell.below</String>
-															</field>
-														</toolbarItem>
-														<toolbarSeparator/>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.split.left</String>
-															</field>
-														</toolbarItem>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.split.right</String>
-															</field>
-														</toolbarItem>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.split.above</String>
-															</field>
-														</toolbarItem>
-														<toolbarItem>
-															<field name="actionID">
-																<String>table.split.below</String>
-															</field>
-														</toolbarItem>
-													</toolbarEntry-array>
-												</field>
-											</toolbar>
+											</toolbarItem>
 										</toolbarEntry-array>
 									</field>
 								</toolbar>
@@ -6334,16 +6754,28 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 							<field name="tableSupportClassName">
 								<null/>
 							</field>
+							<field name="tableCellSeparatorSupportClassName">
+								<null/>
+							</field>
 							<field name="tableColWidthSupportClassName">
 								<null/>
 							</field>
 							<field name="customReferencesResolver">
 								<null/>
 							</field>
+							<field name="editPropertiesHandler">
+								<null/>
+							</field>
 							<field name="authorExtensionStateListener">
 								<null/>
 							</field>
 							<field name="attributesRecognizer">
+								<null/>
+							</field>
+							<field name="authorActionEventHandler">
+								<null/>
+							</field>
+							<field name="authorImageDecorator">
 								<null/>
 							</field>
 						</authorExtension>
@@ -6354,12 +6786,11 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 							<String>${frameworkDir}/templates/topic</String>
 							<String>${frameworkDir}/templates/topic-xsd</String>
 							<String>${frameworkDir}/templates/plugin</String>
-							<String>${configured.ditaot.dir}/plugins/org.dita-ng.doctypes/oxygen_templates/topic-rng</String>
+							<String>${configured.ditaot.dir}/org.dita-ng.doctypes_oxygen_templates/topic-rng</String>
 							<String>${configured.ditaot.dir}/plugins/net.sourceforge.dita4publishers.doctypes/oxygen_templates/topic (Dita 4 Publishers)</String>
-							<String>${configured.ditaot.dir}/plugins/org.oasis-open.dita.dita13.doctypes/oxygen_templates/DITA 1.3 (experimental)</String>
-							<String>${configured.ditaot.dir}/oxygen_templates/DITA 1.3 (experimental)</String>
+							<String>${configured.ditaot.dir}/plugins/org.oasis-open.dita.v1_3/oxygen_templates/DITA 1.3/topic-rng</String>
 							<String>${configured.ditaot.dir}/plugins/mathml/oxygen_templates/MathML</String>
-							<String>${configured.ditaot.dir}/plugins/org.oasis.lwdita/oxygen_templates/LW (Lightweight) DITA</String>
+							<String>${configured.ditaot.dir}/plugins/org.oasis.lwdita/oxygen_templates/LW (Lightweight) DITA/topic</String>
 						</String-array>
 					</field>
 					<field name="xmlCatalogs">
@@ -6894,6 +7325,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -6924,6 +7358,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 											<field name="possibleValues">
 												<null/>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -6946,6 +7383,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 													<null/>
 													<String>true</String>
 												</String-array>
+											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
 											</field>
 										</ditaParameter>
 									</list>
@@ -7103,6 +7543,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -7131,6 +7574,9 @@ ancestor-or-self::node()[self::*[contains(@class," topic/simpletable ") or conta
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>

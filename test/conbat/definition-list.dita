@@ -53,6 +53,30 @@
 				</dlentry>
 			</dl>
 		</section>
+		<section id="bjp_j3x_gy">
+			<title>Numbered List With Titles</title>
+			<p id="cjp_j3x_gy">Outputclass: <codeph>numbered-list-titles</codeph></p>
+			<dl outputclass="numbered-list-titles">
+				<dd cba:dt="Term 1">Description of 1st term.</dd>
+				<dd cba:dt="Term 2">Description of 2nd term.</dd>
+				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+			</dl>
+			<p id="djp_j3x_gy">Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="numbered-list-titles">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
 		<section id="vk1_hhr_zt">
 			<title>Bullet List With Dashes</title>
 			<p>Outputclass: <codeph>bullet-list-dashes</codeph></p>
@@ -78,9 +102,10 @@
 			</dl>
 		</section>
 		<section>
-			<title>Table</title>
+			<title>Table <draft-comment author="Patrik Stellmann">(not implemented
+				yet)</draft-comment></title>
 			<p>Outputclass: <codeph>table</codeph></p>
-			<dl outputclass="cba-table">
+			<dl outputclass="table">
 				<dd cba:dt="Term 1">Description of 1st term.</dd>
 				<dd cba:dt="Term 2">Description of 2nd term.</dd>
 				<dd cba:dt="Term 3">Description of 3rd term.</dd>
@@ -98,6 +123,78 @@
 				<dlentry>
 					<dt>Term 3</dt>
 					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="p4p_2ht_1y">
+			<title>Header Table</title>
+			<p id="q4p_2ht_1y">Outputclass: <codeph>header-table</codeph></p>
+			<dl outputclass="header-table">
+				<dd cba:dt="Term 1">
+					<p id="qw1_qqc_2y">Description of 1st term.</p>
+				</dd>
+				<dd cba:dt="Term 2">
+					<p id="l1x_cjx_gy">Description of 2nd term.</p>
+				</dd>
+				<dd cba:dt="Term 3">
+					<p id="u3g_2jx_gy">Description of 3rd term.</p>
+				</dd>
+			</dl>
+			<p id="r4p_2ht_1y">Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="header-table">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>
+						<p id="ecs_pqc_2y">Description of 1st term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p id="cjc_trc_2y">Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>
+						<p id="mcg_trc_2y">Description of 3rd term.</p>
+					</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="zxk_zm2_hy">
+			<title>Parameter Table</title>
+			<p id="ayk_zm2_hy">Outputclass: <codeph>parameter-table</codeph></p>
+			<dl outputclass="parameter-table">
+				<dd cba:dt="Term 1">
+					<p id="byk_zm2_hy">Description of 1st term.</p>
+				</dd>
+				<dd cba:dt="Term 2">
+					<p id="cyk_zm2_hy">Description of 2nd term.</p>
+				</dd>
+				<dd cba:dt="Term 3">
+					<p id="dyk_zm2_hy">Description of 3rd term.</p>
+				</dd>
+			</dl>
+			<p id="eyk_zm2_hy">Reference <codeph>dl</codeph> element without Conbat:</p>
+			<dl outputclass="parameter-table">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>
+						<p id="fyk_zm2_hy">Description of 1st term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p id="gyk_zm2_hy">Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>
+						<p id="hyk_zm2_hy">Description of 3rd term.</p>
+					</dd>
 				</dlentry>
 			</dl>
 		</section>

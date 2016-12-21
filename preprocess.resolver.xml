@@ -2,10 +2,21 @@
 <project>
 
 	<target name="dita-semia.preprocess.resolver">
-		<pipeline message="Resolving DITA-SEMIA (xslt-conref)." taskname="dita-semia" tempdir="${dita.temp.dir}">
-			<module class="org.DitaSemia.Ot.DitaSemiaOtResolver"/>
-		</pipeline>
+		<if>
+			<istrue value="${dita-semia.resolver.activate}"/>
+			<then>
+				<pipeline message="Resolving DITA-SEMIA (xslt-conref)." taskname="dita-semia" tempdir="${dita.temp.dir}">
+					<module class="org.DitaSemia.Ot.DitaSemiaOtResolver">
+						<param name="xsl" 					value="${dita.plugin.org.dita-semia.resolver.dir}/xsl/ot/resolve.xsl"/>
+						<param name="key-type-def-list-uri" value="${dita-semia.resolver.key-type-def-list-uri}" if="dita-semia.resolver.key-type-def-list-uri"/>
+					</module>
+				</pipeline>
+			</then>
+			<else>
+				<echo message="skipped (needs to be activated by parameter dita-semia.resolver.activate)"/>
+			</else>
+		</if>
     </target>
-	
+
 </project>
 

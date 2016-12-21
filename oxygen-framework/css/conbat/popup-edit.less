@@ -1,0 +1,31 @@
+
+/* rules for popup-edit of attributes */
+
+*[*|popup-edit]:after(@{conbat-edit-index}) {
+	content: oxy_popup(
+			edit,			oxy_concat('@', attr('*|popup-edit')),
+			selectionMode,	single,
+			fontInherit,	true,
+			color,			inherit);
+}
+
+
+*[*|o-class~="cba-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
+	content: " (";
+}
+
+*[*|o-class~="cba-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+	content: ")";
+}
+
+*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-brace1-index}),
+*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-index}),
+*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+	/* undo the font changes for codeph */
+	font-family	: @body-font-family;
+	font-size	: (1em /@code-font-size-scale);
+}
+
+*[*|popup-edit='#text'] {
+	visibility: -oxy-collapse-text;
+}

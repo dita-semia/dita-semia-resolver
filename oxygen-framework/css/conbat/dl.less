@@ -1,10 +1,17 @@
 
-/* rules for generated dt elements */
+/* missing ul container element within dd */
+*[class~="topic/dd"] > *[class~="topic/li"] {
+	margin-left: 1.5em;
+}
 
+/********************************************/
+/********************************************/
+/********************************************/
+/* rules for generated dt elements 			*/
 
 
 /********************************************/
-/* outputclass: default 						*/
+/* outputclass: default 					*/
 
 *[class~="topic/dl"] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
 	display		: block;
@@ -25,7 +32,23 @@
 *[class~="topic/dl"][outputclass='bullet-list-titles'] > *[class~="topic/dd"] {
 	display		: list-item;
 	list-style	: disc;
-	margin-left	: 0;
+	margin-left	: 1.5em;
+}
+
+
+
+/********************************************/
+/* outputclass: numbered-list-titles 			*/
+
+*[class~="topic/dl"][outputclass='numbered-list-titles'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
+    margin-left	: 0;
+}
+
+*[class~="topic/dl"][outputclass='numbered-list-titles'] > *[class~="topic/dd"] {
+	display			: list-item;
+	list-style-type	: decimal;
+	margin-left		: 1.5em;
+	/* NOTE: It is not possible to make the label bold with pure css as this would also apply to the text content. */
 }
 
 
@@ -45,43 +68,91 @@
 
 
 /********************************************/
-/* outputclass: cba-table			 			*/
+/* outputclass: header-table			 			*/
 
-*[class~='topic/dl'][outputclass='cba-table'] {
+/* special behavior for the case that there is a dd as direct child of dl, without dlentry */
+
+*[class~="topic/dl"][outputclass='header-table']:has(*[class~="topic/dd"]) {
+	display	: block;
+	width	: 100%;
+	padding	: 0; 
+}
+
+*[class~="topic/dl"][outputclass='header-table'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
 	display				: block;
-    width				: 95%;
-    margin				: 1.5ex 0.5ex;
-    border-color		: black;
-    border-top-style	: double;
-    border-bottom-style	: double;
-    border-width		: 4px;
-    padding				: 0px;
+	content				: attr("*|dt");
+	margin-left			: -@dd-header-table-indent;
+	margin-bottom		: -1.35em;
+	padding-left		: 10px;
+	width				: @dd-header-table-indent - 20px;		
 }
 
-*[class~="topic/dl"][outputclass='cba-table'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
-	display		: inline;
-	content		: oxy_label(text, attr("*|dt"), width, 28%);
-	margin-left	: 0;
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dd'] {
+	display					: block;
+	padding-left			: @dd-header-table-indent;
+    padding-top				: 1px;
+    padding-right			: 10px;
+    padding-top				: 1px;
+    margin-left				: 0;
+    -oxy-show-placeholder 	: always;
+    border-top-style		: solid;
+    border-top-width		: 1px;
 }
 
-*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd'] {
-	display		: table-cell;
-    padding		: 1px 10px;
-    margin-left	: 0;
-    /*margin-top	: -1.35em;*/
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dd']:first-child {
+	border-top	: none;
 }
 
-*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd']:not(:first-child) {
-    border-color		: black;
-    border-top-style	: solid;
-    border-width		: 1px;
+
+*[class~="topic/dl"][outputclass='header-table'] > *[class~="topic/dd"][outputclass~='code'][*|dt]:before(@{conbat-dt-index}) {
+	/* undo the font changes for code */
+	font-family		: @body-font-family;
+	font-size		: (1em / @code-font-size-scale);
+	margin-bottom	: (-1.35em * @code-font-size-scale * @code-font-size-scale);
 }
 
-*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd'] > *[class~='topic/sli'] {
-	margin-left	: 30%;
+
+/********************************************/
+/* outputclass: parameter-table			 			*/
+
+/* special behavior for the case that there is a dd as direct child of dl, without dlentry */
+
+*[class~="topic/dl"][outputclass='parameter-table']:has(*[class~="topic/dd"]) {
+	display	: block;
+	width	: 100%;
+	padding	: 0; 
 }
 
-*[class~='topic/dl'][outputclass='cba-table'] > *[class~='topic/dd'] > *[class~='topic/sli']:first-child {
-	margin-top	: -1.35em;
+*[class~="topic/dl"][outputclass='parameter-table'] > *[class~="topic/dd"][*|dt]:before(@{conbat-dt-index}) {
+	display				: block;
+	content				: attr("*|dt");
+	margin-left			: -@dd-header-table-indent;
+	margin-bottom		: -1.35em;
+	padding-left		: 10px;
+	width				: @dd-header-table-indent - 20px;
+	font-weight			: normal;
 }
 
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dd'] {
+	display					: block;
+	padding-left			: @dd-header-table-indent;
+    padding-top				: 1px;
+    padding-right			: 10px;
+    padding-top				: 1px;
+    margin-left				: 0;
+    -oxy-show-placeholder 	: always;
+    border-top-style		: solid;
+    border-top-width		: 1px;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dd']:first-child {
+	border-top	: none;
+}
+
+
+*[class~="topic/dl"][outputclass='parameter-table'] > *[class~="topic/dd"][*|o-class~='code'][*|dt]:before(@{conbat-dt-index}) {
+	/* undo the font changes for code */
+	font-family		: @body-font-family;
+	font-size		: (1em / @code-font-size-scale);
+	margin-bottom	: (-1.35em * @code-font-size-scale * @code-font-size-scale);
+}

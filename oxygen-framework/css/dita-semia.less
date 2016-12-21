@@ -3,11 +3,19 @@
 @namespace xcr "http://www.dita-semia.org/xslt-conref";
 @namespace cba "http://www.dita-semia.org/conbat";
 
-/* configuration */
+
 @import "config.less";
 
-@import "dl-outputclasses.less";
+@import "outputclasses.less";
 
 @import "conbat.less";
 
 @import "xslt-conref.less";
+
+@import "advanced-keyref.less";
+
+@import "table.less";
+
+*:root {
+	font-family: @body-font-family;
+}

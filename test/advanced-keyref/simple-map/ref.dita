@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>References <key-xref outputclass="key" akr:ref="Test:name/space/ParentKey2/ChildKey2"
+			akr:namespace="'name'">ChildKey2</key-xref></title>
+	<body>
+		<p><key-xref outputclass="key-name-braced" akr:ref="Test:Key">Key</key-xref>
+		</p>
+	</body>
+</topic>

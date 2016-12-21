@@ -21,6 +21,7 @@
 	<xsl:variable name="C_DIV"				as="xs:string"> topic/div </xsl:variable>
 	<xsl:variable name="C_FOREIGN"			as="xs:string"> topic/foreign </xsl:variable>
 	<xsl:variable name="C_PH"				as="xs:string"> topic/ph </xsl:variable>
+	<xsl:variable name="C_I"				as="xs:string"> hi-d/i </xsl:variable>
 	
 	<xsl:variable name="C_UL"				as="xs:string"> topic/ul </xsl:variable>
 	<xsl:variable name="C_OL"				as="xs:string"> topic/ol </xsl:variable>
@@ -52,6 +53,8 @@
 	
 	<xsl:variable name="C_SVG_CONTAINER"	as="xs:string"> svg-d/svg-container </xsl:variable>
 	
+	<xsl:variable name="C_KEY_XREF"			as="xs:string"> akr-d/key-xref </xsl:variable>
+	
 	
 	<!-- classpaths to be used for creating elements with class="{$CP_xxx}" -->
 	
@@ -70,6 +73,7 @@
 	<xsl:variable name="CP_DIV"				as="xs:string"	select="concat('-', $C_DIV)"/>
 	<xsl:variable name="CP_FOREIGN"			as="xs:string"	select="concat('-', $C_FOREIGN)"/>
 	<xsl:variable name="CP_PH"				as="xs:string"	select="concat('-', $C_PH)"/>
+	<xsl:variable name="CP_I"				as="xs:string"	select="concat('+ topic/ph', $C_I)"/>
 	
 	<xsl:variable name="CP_UL"				as="xs:string"	select="concat('-', $C_UL)"/>
 	<xsl:variable name="CP_OL"				as="xs:string"	select="concat('-', $C_OL)"/>
@@ -100,5 +104,7 @@
 	<xsl:variable name="CP_CODEPH"			as="xs:string"	select="concat('+ topic/ph', 	$C_CODEPH)"/>
 	
 	<xsl:variable name="CP_SVG_CONTAINER"	as="xs:string" select="concat('+ topic/foreign', $C_SVG_CONTAINER)"/>
+	
+	<xsl:variable name="CP_KEY_XREF"		as="xs:string" select="concat('+ topic/ph', $C_KEY_XREF)"/>
 		
 </xsl:stylesheet>

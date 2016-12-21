@@ -10,6 +10,8 @@
 		
 		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref.sch" 			uri="xslt-conref.sch"/>
 		
+		<system systemId="urn:dita-semia:xslt-conref:schema:xslt-conref-attr.xsd" 		uri="xslt-conref-attr.xsd"/>
+		
 	</group>
 	
 	
@@ -20,6 +22,8 @@
 		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref-topic.rng" 	uri="xslt-conref-topic.rng"/>
 		
 		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref.sch" 			uri="xslt-conref.sch"/>
+		
+		<uri name="urn:dita-semia:xslt-conref:schema:xslt-conref-attr.xsd" 		uri="xslt-conref-attr.xsd"/>
 		
 	</group>
 	

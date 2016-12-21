@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<serialized version="17.1" xml:space="preserve">
+<serialized version="18.0" xml:space="preserve">
 	<serializableOrderedMap>
 		<entry>
 			<String>document.types</String>
@@ -34,7 +34,7 @@
 											<Integer>4</Integer>
 										</field>
 										<field name="value">
-											<String>${frameworks}/java/oxygen/DitaSemiaOxygen.jar</String>
+											<String>${frameworks}/java/oxygen-extension-bundle/DitaSemiaOxygenExtensionBundle.jar</String>
 										</field>
 										<field name="patchHandling">
 											<String>addIndex</String>
@@ -140,6 +140,40 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>scenarios/[4]/extensionURLs</String>
+										</field>
+										<field name="index">
+											<Integer>0</Integer>
+										</field>
+										<field name="value">
+											<String>${oxygenHome}/lib/DitaSemiaBase.jar</String>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
+											<String>scenarios/[4]/extensionURLs</String>
+										</field>
+										<field name="index">
+											<Integer>1</Integer>
+										</field>
+										<field name="value">
+											<String>${dita.dir.url}/plugins/org.dita-semia.resolver/java/ot/DitaSemiaOt.jar</String>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>scenarios</String>
 										</field>
 										<field name="index">
@@ -185,12 +219,15 @@
 													</ditavalFilters>
 												</field>
 												<field name="addOxygenJars">
-													<Boolean>true</Boolean>
+													<Boolean>false</Boolean>
 												</field>
 												<field name="skinCssFile">
 													<null/>
 												</field>
 												<field name="lastCustomSkinCssPath">
+													<null/>
+												</field>
+												<field name="webhelpResponsiveTemplate">
 													<null/>
 												</field>
 												<field name="additionalAntArgs">
@@ -226,6 +263,35 @@
 																	<String>no</String>
 																	<null/>
 																</String-array>
+															</field>
+															<field name="possibleValuesDescriptions">
+																<String-array>
+																	<String></String>
+																	<String></String>
+																</String-array>
+															</field>
+														</ditaParameter>
+														<ditaParameter>
+															<field name="name">
+																<String>dita-semia.resolver.activate</String>
+															</field>
+															<field name="description">
+																<String></String>
+															</field>
+															<field name="value">
+																<String>true</String>
+															</field>
+															<field name="defaultValue">
+																<null/>
+															</field>
+															<field name="type">
+																<Integer>5</Integer>
+															</field>
+															<field name="possibleValues">
+																<null/>
+															</field>
+															<field name="possibleValuesDescriptions">
+																<null/>
 															</field>
 														</ditaParameter>
 													</list>
@@ -334,7 +400,45 @@
 												</field>
 												<field name="extensionURLs">
 													<String-array>
-														<String>${frameworks}/java/ot/DitaSemiaOt.jar</String>
+														<String>${dita.dir.url}/plugins/org.dita-semia.resolver/lib/schemaAttrDefaults.jar</String>
+														<String>${dita.dir.url}/lib/commons-io*.jar</String>
+														<String>${oxygenHome}/classes/</String>
+														<String>${oxygenHome}/lib/oxygen*.jar</String>
+														<String>${oxygenHome}/lib/resolver.jar</String>
+														<String>${oxygenHome}/lib/oxygen-token-markers.jar</String>
+														<String>${oxygenHome}/lib/org.eclipse.wst.xml.xpath2.processor_*.jar</String>
+														<String>${oxygenHome}/lib/xml-apis.jar</String>
+														<String>${oxygenHome}/lib/xercesImpl.jar</String>
+														<String>${oxygenHome}/lib/commons-io*.jar</String>
+														<String>${oxygenHome}/lib/commons-logging*.jar</String>
+														<String>${oxygenHome}/lib/log4j.jar</String>
+														<String>${dita.dir.url}/lib/commons-codec*.jar</String>
+														<String>${oxygenHome}/lib/jing.jar</String>
+														<String>${oxygenHome}/lib/saxon9ee.jar</String>
+														<String>${oxygenHome}/lib/saxon.jar</String>
+														<String>${oxygenHome}/lib/xmlgraphics-commons*.jar</String>
+														<String>${oxygenHome}/lib/fop.jar</String>
+														<String>${oxygenHome}/lib/batik-all*.jar</String>
+														<String>${oxygenHome}/lib/js.jar</String>
+														<String>${oxygenHome}/lib/poi*.jar</String>
+														<String>${oxygenHome}/lib/nekohtml.jar</String>
+														<String>${oxygenHome}/lib/xml-apis-ext.jar</String>
+														<String>${oxygenHome}/lib/avalon-framework*.jar</String>
+														<String>${oxygenHome}/lib/jeuclid-core.jar</String>
+														<String>${oxygenHome}/lib/jeuclid-fop.jar</String>
+														<String>${oxygenHome}/lib/jai_tiff.jar</String>
+														<String>${oxygenHome}/lib/jh.jar</String>
+														<String>${dita.dir.url}/lib/jsearch.jar</String>
+														<String>${oxygenHome}/lib/lucene*.jar</String>
+														<String>${dita.dir.url}/plugins/com.oxygenxml.webhelp/lib/*.jar</String>
+														<String>${dita.dir.url}/plugins/com.oxygenxml.highlight/lib/*.jar</String>
+														<String>${dita.dir.url}</String>
+														<String>${dita.dir.url}/lib/dost-patches.jar</String>
+														<String>${dita.dir.url}/lib/</String>
+														<String>${dita.dir.url}/lib/dost.jar</String>
+														<String>${dita.dir.url}/plugins/com.elovirta.dita.markdown/*.jar</String>
+														<String>${dita.dir.url}/plugins/org.dita-semia.resolver/java/base/DitaSemiaBase.jar</String>
+														<String>${dita.dir.url}/plugins/org.dita-semia.resolver/java/ot/DitaSemiaOt.jar</String>
 													</String-array>
 												</field>
 											</ditaScenario>
@@ -354,7 +458,7 @@
 											<Integer>-1</Integer>
 										</field>
 										<field name="value">
-											<String>org.DitaSemia.Oxygen.DitaSemiaMapExtensionBundle</String>
+											<String>org.DitaSemia.Oxygen.ExtensionBundle.DitaSemiaMapExtensionBundle</String>
 										</field>
 										<field name="patchHandling">
 											<String>set</String>
@@ -608,7 +712,7 @@
 											<String>/images/RelTable24.png</String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/RelTable16.gif</String>
+											<String>/images/RelTable16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -767,10 +871,10 @@
 											<String>delete.table.column</String>
 										</field>
 										<field name="name">
-											<String>${i18n(delete.table.column2)}</String>
+											<String>${i18n(delete.table.columns2)}</String>
 										</field>
 										<field name="description">
-											<String>${i18n(delete.table.column_description2)}</String>
+											<String>${i18n(delete.table.columns_description2)}</String>
 										</field>
 										<field name="largeIconPath">
 											<String>/images/RelDeleteColumn24.png</String>
@@ -788,7 +892,8 @@
 											<actionMode-array>
 												<actionMode>
 													<field name="xpathCondition">
-														<String>ancestor-or-self::node()[self::*[contains(@class," map/relrow ") or contains(@class," map/relcell ") or contains(@class," map/relheader ") or contains(@class," map/relcolspec ")]][1][self::*[contains(@class," map/relcell ") or contains(@class," map/relrow ") or contains(@class," map/relcolspec ")]]</String>
+														<String>ancestor-or-self::node()[self::*[contains(@class," map/relrow ") or contains(@class," map/relcell ") or contains(@class," map/relheader ") or contains(@class," map/relcolspec ")]][1][self::*[contains(@class," map/relcell ") or contains(@class," map/relrow ") or contains(@class," map/relcolspec ") or contains(@class," map/relheader ")]]
+or oxy:current-selected-element()[self::*[contains(@class," map/relrow ") or contains(@class," map/relcell ") or contains(@class," map/relheader ") or contains(@class," map/relcolspec ")]][1][self::*[contains(@class," map/relcell ") or contains(@class," map/relrow ") or contains(@class," map/relcolspec ") or contains(@class," map/relheader ")]]</String>
 													</field>
 													<field name="argValues">
 														<serializableOrderedMap/>
@@ -808,10 +913,10 @@
 											<String>delete.table.row</String>
 										</field>
 										<field name="name">
-											<String>${i18n(delete.table.row2)}</String>
+											<String>${i18n(delete.table.rows2)}</String>
 										</field>
 										<field name="description">
-											<String>${i18n(delete.table.row_description2)}</String>
+											<String>${i18n(delete.table.rows_description2)}</String>
 										</field>
 										<field name="largeIconPath">
 											<String>/images/RelDeleteRow24.png</String>
@@ -1306,7 +1411,7 @@ self::*[contains(@class," map/reltable ")]][1]
 											<String></String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/Collapsed16.gif</String>
+											<String>/images/Collapsed16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -1352,7 +1457,7 @@ self::*[contains(@class," map/reltable ")]][1]
 											<String></String>
 										</field>
 										<field name="smallIconPath">
-											<String>/images/Expanded16.gif</String>
+											<String>/images/Expanded16.png</String>
 										</field>
 										<field name="accessKey">
 											<String></String>
@@ -1475,6 +1580,147 @@ self::*[contains(@class," map/reltable ")]][1]
 											<Boolean>false</Boolean>
 										</field>
 									</action>
+									<action>
+										<field name="id">
+											<String>edit.properties.provider</String>
+										</field>
+										<field name="name">
+											<String>${i18n(edit.properties)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(edit.properties_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/EditProperties16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>(empty(oxy:selected-elements()) and self::*[contains(@class," map/topicref ")]) or (oxy:selected-elements() and empty(oxy:selected-elements()[not(contains(@class," map/topicref "))]))</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap/>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.dita.map.EditPropertiesOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>false</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>imagemap.collapse.area</String>
+										</field>
+										<field name="name">
+											<String>${i18n(imagemap.toggle.area)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(imagemap.toggle.area_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/Expanded16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>1</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap>
+															<entry>
+																<String>elementLocation</String>
+																<String>..</String>
+															</entry>
+															<entry>
+																<String>name</String>
+																<String>-oxy-visible-imagemap-area</String>
+															</entry>
+														</serializableOrderedMap>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.commons.operations.RemovePseudoClassOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>true</Boolean>
+										</field>
+									</action>
+									<action>
+										<field name="id">
+											<String>imagemap.expand.area</String>
+										</field>
+										<field name="name">
+											<String>${i18n(imagemap.toggle.area)}</String>
+										</field>
+										<field name="description">
+											<String>${i18n(imagemap.toggle.area_description)}</String>
+										</field>
+										<field name="largeIconPath">
+											<String></String>
+										</field>
+										<field name="smallIconPath">
+											<String>/images/Collapsed16.png</String>
+										</field>
+										<field name="accessKey">
+											<String></String>
+										</field>
+										<field name="accelerator">
+											<null/>
+										</field>
+										<field name="actionModes">
+											<actionMode-array>
+												<actionMode>
+													<field name="xpathCondition">
+														<String>1</String>
+													</field>
+													<field name="argValues">
+														<serializableOrderedMap>
+															<entry>
+																<String>elementLocation</String>
+																<String>..</String>
+															</entry>
+															<entry>
+																<String>name</String>
+																<String>-oxy-visible-imagemap-area</String>
+															</entry>
+														</serializableOrderedMap>
+													</field>
+													<field name="operationID">
+														<String>ro.sync.ecss.extensions.commons.operations.SetPseudoClassOperation</String>
+													</field>
+												</actionMode>
+											</actionMode-array>
+										</field>
+										<field name="enabledInReadOnlyContext">
+											<Boolean>true</Boolean>
+										</field>
+									</action>
 								</action-array>
 							</field>
 							<field name="menubarDescriptor">
@@ -1529,6 +1775,9 @@ self::*[contains(@class," map/reltable ")]][1]
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -1538,7 +1787,7 @@ self::*[contains(@class," map/reltable ")]][1]
 													<String></String>
 												</field>
 												<field name="iconPath">
-													<String>/images/RelTable16.gif</String>
+													<String>/images/RelTable16.png</String>
 												</field>
 												<field name="menuEntriesDescriptorList">
 													<menuEntry-array>
@@ -1576,8 +1825,14 @@ self::*[contains(@class," map/reltable ")]][1]
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 										</menuEntry-array>
+									</field>
+									<field name="context">
+										<null/>
 									</field>
 								</menu>
 							</field>
@@ -1633,6 +1888,9 @@ self::*[contains(@class," map/reltable ")]][1]
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menu>
 												<field name="label">
@@ -1642,7 +1900,7 @@ self::*[contains(@class," map/reltable ")]][1]
 													<String></String>
 												</field>
 												<field name="iconPath">
-													<String>/images/RelTable16.gif</String>
+													<String>/images/RelTable16.png</String>
 												</field>
 												<field name="menuEntriesDescriptorList">
 													<menuEntry-array>
@@ -1680,6 +1938,9 @@ self::*[contains(@class," map/reltable ")]][1]
 														</menuItem>
 													</menuEntry-array>
 												</field>
+												<field name="context">
+													<null/>
+												</field>
 											</menu>
 											<menuSeparator/>
 											<menuItem>
@@ -1688,6 +1949,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												</field>
 											</menuItem>
 										</menuEntry-array>
+									</field>
+									<field name="context">
+										<null/>
 									</field>
 								</menu>
 							</field>
@@ -1810,10 +2074,16 @@ self::*[contains(@class," map/reltable ")]][1]
 							<field name="tableSupportClassName">
 								<null/>
 							</field>
+							<field name="tableCellSeparatorSupportClassName">
+								<null/>
+							</field>
 							<field name="tableColWidthSupportClassName">
 								<null/>
 							</field>
 							<field name="customReferencesResolver">
+								<null/>
+							</field>
+							<field name="editPropertiesHandler">
 								<null/>
 							</field>
 							<field name="authorExtensionStateListener">
@@ -1822,15 +2092,24 @@ self::*[contains(@class," map/reltable ")]][1]
 							<field name="attributesRecognizer">
 								<null/>
 							</field>
+							<field name="authorActionEventHandler">
+								<null/>
+							</field>
+							<field name="authorImageDecorator">
+								<null/>
+							</field>
 						</authorExtension>
 					</field>
 					<field name="templatesLocations">
 						<String-array>
 							<String>${frameworkDir}/templates/map</String>
 							<String>${frameworkDir}/templates/map-xsd</String>
+							<String>${configured.ditaot.dir}/org.dita-ng.doctypes_oxygen_templates/map-rng</String>
 							<String>${frameworkDir}/templates/d4p/map (Dita 4 Publishers)</String>
-							<String>${configured.ditaot.dir}/plugins/org.dita-ng.doctypes/oxygen_templates/map-rng</String>
+							<String>${configured.ditaot.dir}/plugins/org.oasis-open.dita.v1_3/oxygen_templates/DITA 1.3/map-rng</String>
+							<String>${configured.ditaot.dir}/plugins/org.oasis-open.dita.v1_3/oxygen_templates/DITA 1.3/map</String>
 							<String>${configured.ditaot.dir}/plugins/net.sourceforge.dita4publishers.doctypes/oxygen_templates/map (Dita 4 Publishers)</String>
+							<String>${configured.ditaot.dir}/plugins/org.oasis.lwdita/oxygen_templates/LW (Lightweight) DITA/map</String>
 						</String-array>
 					</field>
 					<field name="xmlCatalogs">
@@ -2051,6 +2330,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -2081,6 +2363,9 @@ self::*[contains(@class," map/reltable ")]][1]
 											<field name="possibleValues">
 												<null/>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -2103,6 +2388,9 @@ self::*[contains(@class," map/reltable ")]][1]
 													<null/>
 													<String>true</String>
 												</String-array>
+											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
 											</field>
 										</ditaParameter>
 									</list>
@@ -2260,6 +2548,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -2389,6 +2680,415 @@ self::*[contains(@class," map/reltable ")]][1]
 									<String>${cfd}</String>
 								</field>
 								<field name="outputDir">
+									<String>${cfd}/out/webhelp-responsive</String>
+								</field>
+								<field name="tempDir">
+									<String>${cfd}/temp/webhelp-responsive</String>
+								</field>
+								<field name="transtype">
+									<String>webhelp-responsive</String>
+								</field>
+								<field name="filters">
+									<ditavalFilters>
+										<field name="useDitavalFilePath">
+											<Boolean>false</Boolean>
+										</field>
+										<field name="useAppliedConditionSet">
+											<Boolean>true</Boolean>
+										</field>
+										<field name="appliedConditionSet">
+											<null/>
+										</field>
+										<field name="ditavalFilePath">
+											<String></String>
+										</field>
+										<field name="simpleFiltersList">
+											<list/>
+										</field>
+									</ditavalFilters>
+								</field>
+								<field name="addOxygenJars">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="skinCssFile">
+									<null/>
+								</field>
+								<field name="lastCustomSkinCssPath">
+									<null/>
+								</field>
+								<field name="webhelpResponsiveTemplate">
+									<webhelpTemplate>
+										<field name="templateName">
+											<String>bootstrap</String>
+										</field>
+										<field name="variantName">
+											<String>tiles</String>
+										</field>
+										<field name="skinName">
+											<String>oxygen</String>
+										</field>
+										<field name="customSkinPath">
+											<null/>
+										</field>
+									</webhelpTemplate>
+								</field>
+								<field name="additionalAntArgs">
+									<String></String>
+								</field>
+								<field name="buildTarget">
+									<String></String>
+								</field>
+								<field name="buildFilePath">
+									<String></String>
+								</field>
+								<field name="ditaParams">
+									<list/>
+								</field>
+								<field name="jvmArgs">
+									<String>-Xmx384m</String>
+								</field>
+								<field name="useCustomJavaHome">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="customJavaHomeDir">
+									<String></String>
+								</field>
+								<field name="useCustomANTHome">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="customANTHomeDir">
+									<String></String>
+								</field>
+								<field name="workingDir">
+									<null/>
+								</field>
+								<field name="showConsoleAlways">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="advancedOptionsMap">
+									<null/>
+								</field>
+								<field name="name">
+									<String>DITA Map WebHelp Responsive</String>
+								</field>
+								<field name="baseURL">
+									<null/>
+								</field>
+								<field name="footerURL">
+									<null/>
+								</field>
+								<field name="fOPMethod">
+									<null/>
+								</field>
+								<field name="fOProcessorName">
+									<null/>
+								</field>
+								<field name="headerURL">
+									<null/>
+								</field>
+								<field name="inputXSLURL">
+									<null/>
+								</field>
+								<field name="inputXMLURL">
+									<null/>
+								</field>
+								<field name="defaultScenario">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="isFOPPerforming">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="type">
+									<String>DITAMAP</String>
+								</field>
+								<field name="saveAs">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="openInBrowser">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="outputFile">
+									<null/>
+								</field>
+								<field name="outputResource">
+									<null/>
+								</field>
+								<field name="openOtherLocationInBrowser">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="locationToOpenInBrowserURL">
+									<String></String>
+								</field>
+								<field name="openInEditor">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInHTMLPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInXMLPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInSVGPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInResultSetPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="useXSLTInput">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="xsltParams">
+									<list/>
+								</field>
+								<field name="cascadingStylesheets">
+									<String-array/>
+								</field>
+								<field name="xslTransformer">
+									<String>DITA-OT</String>
+								</field>
+								<field name="extensionURLs">
+									<String-array/>
+								</field>
+							</ditaScenario>
+							<ditaScenario>
+								<field name="useXEP">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="useAntennaHouse">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="baseDir">
+									<String>${cfd}</String>
+								</field>
+								<field name="outputDir">
+									<String>${cfd}/out/webhelp-responsive</String>
+								</field>
+								<field name="tempDir">
+									<String>${cfd}/temp/webhelp-responsive</String>
+								</field>
+								<field name="transtype">
+									<String>webhelp-responsive</String>
+								</field>
+								<field name="filters">
+									<ditavalFilters>
+										<field name="useDitavalFilePath">
+											<Boolean>false</Boolean>
+										</field>
+										<field name="useAppliedConditionSet">
+											<Boolean>true</Boolean>
+										</field>
+										<field name="appliedConditionSet">
+											<null/>
+										</field>
+										<field name="ditavalFilePath">
+											<String></String>
+										</field>
+										<field name="simpleFiltersList">
+											<list/>
+										</field>
+									</ditavalFilters>
+								</field>
+								<field name="addOxygenJars">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="skinCssFile">
+									<String>${configured.ditaot.dir}/plugins/com.oxygenxml.webhelp/predefined-skins/dita/oxygen/skin.css</String>
+								</field>
+								<field name="lastCustomSkinCssPath">
+									<null/>
+								</field>
+								<field name="webhelpResponsiveTemplate">
+									<webhelpTemplate>
+										<field name="templateName">
+											<String>bootstrap</String>
+										</field>
+										<field name="variantName">
+											<String>tiles</String>
+										</field>
+										<field name="skinName">
+											<String>oxygen</String>
+										</field>
+										<field name="customSkinPath">
+											<null/>
+										</field>
+									</webhelpTemplate>
+								</field>
+								<field name="additionalAntArgs">
+									<String></String>
+								</field>
+								<field name="buildTarget">
+									<String></String>
+								</field>
+								<field name="buildFilePath">
+									<String></String>
+								</field>
+								<field name="ditaParams">
+									<list>
+										<ditaParameter>
+											<field name="name">
+												<String>webhelp.product.id</String>
+											</field>
+											<field name="description">
+												<String>Specifies an identifier of the current documentation project. This is needed when multiple WebHelp systems are deployed on the same server. For example, "mobile-phone-user-guide" or "hvac-installation-guide"</String>
+											</field>
+											<field name="value">
+												<String>${ask('Please enter the documentation product ID:', string, 'oxy-webhelp')}</String>
+											</field>
+											<field name="defaultValue">
+												<null/>
+											</field>
+											<field name="type">
+												<Integer>5</Integer>
+											</field>
+											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
+										</ditaParameter>
+										<ditaParameter>
+											<field name="name">
+												<String>webhelp.product.version</String>
+											</field>
+											<field name="description">
+												<String>Specifies the documentation version number (for example, 1.0, 2.5, etc.). New user comments are bound to this version. Multiple documentation versions can be deployed on the same server.</String>
+											</field>
+											<field name="value">
+												<String>${ask('Please enter the documentation version number:', string, '1.0')}</String>
+											</field>
+											<field name="defaultValue">
+												<null/>
+											</field>
+											<field name="type">
+												<Integer>5</Integer>
+											</field>
+											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
+										</ditaParameter>
+									</list>
+								</field>
+								<field name="jvmArgs">
+									<String>-Xmx384m</String>
+								</field>
+								<field name="useCustomJavaHome">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="customJavaHomeDir">
+									<String></String>
+								</field>
+								<field name="useCustomANTHome">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="customANTHomeDir">
+									<String></String>
+								</field>
+								<field name="workingDir">
+									<null/>
+								</field>
+								<field name="showConsoleAlways">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="advancedOptionsMap">
+									<null/>
+								</field>
+								<field name="name">
+									<String>DITA Map WebHelp Responsive with Feedback</String>
+								</field>
+								<field name="baseURL">
+									<null/>
+								</field>
+								<field name="footerURL">
+									<null/>
+								</field>
+								<field name="fOPMethod">
+									<null/>
+								</field>
+								<field name="fOProcessorName">
+									<null/>
+								</field>
+								<field name="headerURL">
+									<null/>
+								</field>
+								<field name="inputXSLURL">
+									<null/>
+								</field>
+								<field name="inputXMLURL">
+									<null/>
+								</field>
+								<field name="defaultScenario">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="isFOPPerforming">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="type">
+									<String>DITAMAP</String>
+								</field>
+								<field name="saveAs">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="openInBrowser">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="outputFile">
+									<null/>
+								</field>
+								<field name="outputResource">
+									<null/>
+								</field>
+								<field name="openOtherLocationInBrowser">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="locationToOpenInBrowserURL">
+									<String>${cfd}/out/webhelp-responsive/oxygen-webhelp/feedback/resources/installation.html</String>
+								</field>
+								<field name="openInEditor">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInHTMLPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInXMLPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInSVGPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="showInResultSetPane">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="useXSLTInput">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="xsltParams">
+									<list/>
+								</field>
+								<field name="cascadingStylesheets">
+									<String-array/>
+								</field>
+								<field name="xslTransformer">
+									<String>DITA-OT</String>
+								</field>
+								<field name="extensionURLs">
+									<String-array/>
+								</field>
+							</ditaScenario>
+							<ditaScenario>
+								<field name="useXEP">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="useAntennaHouse">
+									<Boolean>false</Boolean>
+								</field>
+								<field name="baseDir">
+									<String>${cfd}</String>
+								</field>
+								<field name="outputDir">
 									<String>${cfd}/out/webhelp</String>
 								</field>
 								<field name="tempDir">
@@ -2425,6 +3125,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -2454,70 +3157,16 @@ self::*[contains(@class," map/reltable ")]][1]
 											</field>
 											<field name="possibleValues">
 												<String-array>
-													<null/>
 													<String>yes</String>
 													<String>no</String>
+													<null/>
 												</String-array>
 											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>dita.dir</String>
-											</field>
-											<field name="description">
-												<null/>
-											</field>
-											<field name="value">
-												<String>${configured.ditaot.dir}</String>
-											</field>
-											<field name="defaultValue">
-												<null/>
-											</field>
-											<field name="type">
-												<Integer>3</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
-											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>webhelp.logo.image</String>
-											</field>
-											<field name="description">
-												<String>The file path of a small image with the company logo that will be added to the title in the header area.</String>
-											</field>
-											<field name="value">
-												<null/>
-											</field>
-											<field name="defaultValue">
-												<String></String>
-											</field>
-											<field name="type">
-												<Integer>2</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
-											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>webhelp.logo.image.target.url</String>
-											</field>
-											<field name="description">
-												<String>The URL that will be opened when the logo image set with the webhelp.logo.image parameter is clicked in the Webhelp page.</String>
-											</field>
-											<field name="value">
-												<null/>
-											</field>
-											<field name="defaultValue">
-												<String></String>
-											</field>
-											<field name="type">
-												<Integer>2</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
+											<field name="possibleValuesDescriptions">
+												<String-array>
+													<String></String>
+													<String></String>
+												</String-array>
 											</field>
 										</ditaParameter>
 									</list>
@@ -2547,7 +3196,7 @@ self::*[contains(@class," map/reltable ")]][1]
 									<null/>
 								</field>
 								<field name="name">
-									<String>DITA Map WebHelp</String>
+									<String>DITA Map WebHelp Classic</String>
 								</field>
 								<field name="baseURL">
 									<null/>
@@ -2670,9 +3319,12 @@ self::*[contains(@class," map/reltable ")]][1]
 									<Boolean>true</Boolean>
 								</field>
 								<field name="skinCssFile">
-									<null/>
+									<String>${configured.ditaot.dir}/plugins/com.oxygenxml.webhelp/predefined-skins/dita/oxygen/skin.css</String>
 								</field>
 								<field name="lastCustomSkinCssPath">
+									<null/>
+								</field>
+								<field name="webhelpResponsiveTemplate">
 									<null/>
 								</field>
 								<field name="additionalAntArgs">
@@ -2704,30 +3356,16 @@ self::*[contains(@class," map/reltable ")]][1]
 											</field>
 											<field name="possibleValues">
 												<String-array>
-													<null/>
 													<String>yes</String>
 													<String>no</String>
+													<null/>
 												</String-array>
 											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>dita.dir</String>
-											</field>
-											<field name="description">
-												<null/>
-											</field>
-											<field name="value">
-												<String>${configured.ditaot.dir}</String>
-											</field>
-											<field name="defaultValue">
-												<null/>
-											</field>
-											<field name="type">
-												<Integer>3</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
+											<field name="possibleValuesDescriptions">
+												<String-array>
+													<String></String>
+													<String></String>
+												</String-array>
 											</field>
 										</ditaParameter>
 									</list>
@@ -2757,7 +3395,7 @@ self::*[contains(@class," map/reltable ")]][1]
 									<null/>
 								</field>
 								<field name="name">
-									<String>DITA Map WebHelp - Mobile</String>
+									<String>DITA Map WebHelp Classic Mobile</String>
 								</field>
 								<field name="baseURL">
 									<null/>
@@ -2885,6 +3523,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -2914,70 +3555,16 @@ self::*[contains(@class," map/reltable ")]][1]
 											</field>
 											<field name="possibleValues">
 												<String-array>
-													<null/>
 													<String>yes</String>
 													<String>no</String>
+													<null/>
 												</String-array>
 											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>dita.dir</String>
-											</field>
-											<field name="description">
-												<null/>
-											</field>
-											<field name="value">
-												<String>${configured.ditaot.dir}</String>
-											</field>
-											<field name="defaultValue">
-												<null/>
-											</field>
-											<field name="type">
-												<Integer>3</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
-											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>webhelp.logo.image</String>
-											</field>
-											<field name="description">
-												<String>The file path of a small image with the company logo that will be added to the title in the header area.</String>
-											</field>
-											<field name="value">
-												<null/>
-											</field>
-											<field name="defaultValue">
-												<String></String>
-											</field>
-											<field name="type">
-												<Integer>2</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
-											</field>
-										</ditaParameter>
-										<ditaParameter>
-											<field name="name">
-												<String>webhelp.logo.image.target.url</String>
-											</field>
-											<field name="description">
-												<String>The URL that will be opened when the logo image set with the webhelp.logo.image parameter is clicked in the Webhelp page.</String>
-											</field>
-											<field name="value">
-												<null/>
-											</field>
-											<field name="defaultValue">
-												<String></String>
-											</field>
-											<field name="type">
-												<Integer>2</Integer>
-											</field>
-											<field name="possibleValues">
-												<null/>
+											<field name="possibleValuesDescriptions">
+												<String-array>
+													<String></String>
+													<String></String>
+												</String-array>
 											</field>
 										</ditaParameter>
 									</list>
@@ -3007,7 +3594,7 @@ self::*[contains(@class," map/reltable ")]][1]
 									<null/>
 								</field>
 								<field name="name">
-									<String>DITA Map WebHelp with Feedback</String>
+									<String>DITA Map WebHelp Classic with Feedback</String>
 								</field>
 								<field name="baseURL">
 									<null/>
@@ -3055,7 +3642,7 @@ self::*[contains(@class," map/reltable ")]][1]
 									<Boolean>true</Boolean>
 								</field>
 								<field name="locationToOpenInBrowserURL">
-									<String>${cfd}/out/webhelp-feedback/oxygen-webhelp/resources/installation.html</String>
+									<String>${cfd}/out/webhelp-feedback/oxygen-webhelp/feedback/resources/installation.html</String>
 								</field>
 								<field name="openInEditor">
 									<Boolean>false</Boolean>
@@ -3135,6 +3722,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -3163,6 +3753,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -3321,6 +3914,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -3355,6 +3951,9 @@ self::*[contains(@class," map/reltable ")]][1]
 													<null/>
 												</String-array>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -3373,6 +3972,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>2</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -3401,6 +4003,9 @@ self::*[contains(@class," map/reltable ")]][1]
 													<null/>
 												</String-array>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -3419,6 +4024,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -3577,6 +4185,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -3605,6 +4216,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -3747,6 +4361,9 @@ self::*[contains(@class," map/reltable ")]][1]
 											<field name="possibleValues">
 												<null/>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</antParameter>
 									</list>
 								</field>
@@ -3854,8 +4471,7 @@ self::*[contains(@class," map/reltable ")]][1]
 								</field>
 								<field name="extensionURLs">
 									<String-array>
-										<String>${configured.ditaot.dir.url}/lib/commons-io.jar</String>
-										<String>${framework}/DITA-OT2.x/lib/commons-io-2.4.jar</String>
+										<String>${configured.ditaot.dir.url}/lib/commons-io*.jar</String>
 									</String-array>
 								</field>
 							</antScenario>
@@ -3994,6 +4610,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -4028,6 +4647,9 @@ self::*[contains(@class," map/reltable ")]][1]
 													<String>yes</String>
 												</String-array>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -4046,6 +4668,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -4204,6 +4829,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -4232,6 +4860,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -4390,6 +5021,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -4418,6 +5052,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -4576,6 +5213,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -4604,6 +5244,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>
@@ -4762,6 +5405,9 @@ self::*[contains(@class," map/reltable ")]][1]
 								<field name="lastCustomSkinCssPath">
 									<null/>
 								</field>
+								<field name="webhelpResponsiveTemplate">
+									<null/>
+								</field>
 								<field name="additionalAntArgs">
 									<String></String>
 								</field>
@@ -4792,6 +5438,9 @@ self::*[contains(@class," map/reltable ")]][1]
 											<field name="possibleValues">
 												<null/>
 											</field>
+											<field name="possibleValuesDescriptions">
+												<null/>
+											</field>
 										</ditaParameter>
 										<ditaParameter>
 											<field name="name">
@@ -4810,6 +5459,9 @@ self::*[contains(@class," map/reltable ")]][1]
 												<Integer>3</Integer>
 											</field>
 											<field name="possibleValues">
+												<null/>
+											</field>
+											<field name="possibleValuesDescriptions">
 												<null/>
 											</field>
 										</ditaParameter>

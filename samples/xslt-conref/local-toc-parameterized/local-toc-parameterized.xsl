@@ -21,7 +21,7 @@
 	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:template match="/">
-<xsl:message select="/"></xsl:message>
+
 		<xsl:variable name="baseTopic"	as="element()?" select="($xcr:current/ancestor::*[contains(@class, $C_TOPIC)])[last()]"/>
     	<xsl:variable name="childList"	as="element()*"	select="$baseTopic/*[contains(@class, $C_TOPIC)]"/>
     	

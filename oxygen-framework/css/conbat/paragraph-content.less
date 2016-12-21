@@ -3,11 +3,16 @@
 /* The prefix and suffix is generated as single paragraph. */
 
 *[class~="topic/ul"][*|prefix]:before(@{conbat-paragraph-index}),
-*[class~="topic/ol"][*|prefix]:before(@{conbat-paragraph-index})
-{
+*[class~="topic/ol"][*|prefix]:before(@{conbat-paragraph-index}) {
 	display			: block;
 	content			: oxy_label(text, attr("*|prefix"));
 	margin-top		: @conbat-paragraph-margin-top;
+}
+
+/* for codeblock not supported yet, since the text would be displayed within the frame */
+
+*[class~="topic/ul"]:not(*[compact="yes"])[*|prefix]:before(@{conbat-paragraph-index}),
+*[class~="topic/ol"]:not(*[compact="yes"])[*|prefix]:before(@{conbat-paragraph-index}) {
 	margin-bottom	: @conbat-paragraph-margin-bottom;
 }
 

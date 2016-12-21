@@ -8,6 +8,7 @@ package org.DitaSemia.Base.XsltConref;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
@@ -15,6 +16,7 @@ import javax.xml.transform.sax.SAXSource;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.ItemType;
 import net.sf.saxon.s9api.Processor;
@@ -25,18 +27,25 @@ import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
+import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.DocumentCacheProvider;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
+import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.NodeWrapper;
+import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefRootDef;
+import org.DitaSemia.Base.DocumentCaching.GetAncestorPathDef;
+import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
 import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
 
 public class XsltConref {
 	
@@ -44,47 +53,53 @@ public class XsltConref {
 	
 	public static final String 	ATTR_URI 					= "xsl";
 	public static final String 	ATTR_XML_SOURCE_URI			= "source";
+	public static final String 	ATTR_SOURCE_TYPE			= "source-type";
 	public static final String 	ATTR_START_TEMPLATE			= "start-template";
 	public static final String 	ATTR_REPARSE				= "reparse";
 	
 	public static final String	YES							= "yes";
 	
 	public static final String 	PARAM_CURRENT				= "current";
-	public static final String 	NAME_NO_CONTENT				= "no-content";
 	public static final String 	NAMESPACE_PARAMETER_URI		= "http://www.dita-semia.org/xslt-conref/custom-parameter";
 	public static final String 	NAMESPACE_URI				= "http://www.dita-semia.org/xslt-conref";
 	public static final String 	NAMESPACE_PREFIX			= "xcr";
 
 	public static final String 	CONFIG_FILE_URL 			= "/cfg/xslt-conref-saxon-config.xml";
 
+	public static final String 	NAME_NO_CONTENT				= "no-content";
+
 	protected final NodeWrapper 			node;
 	protected final XslTransformerCache 	transformerCache;
 	protected final XPathCache 				xPathCache;
-	protected 		URL 					baseUri;				
+	protected 		URL 					baseUrl;				
 
 	
+	public static class Parameter {
+		
+		protected final QName 		name;
+		protected final Sequence 	value;
+		
+		public Parameter(QName name, Sequence value) {
+			this.name	= name;
+			this.value	= value;
+		}
+	}
+
 	public static XsltConref fromNode(NodeWrapper node, XslTransformerCache transformerCache, XPathCache xPathCache)	{
 		if (isXsltConref(node)) {
 			return new XsltConref(node, transformerCache, xPathCache);
 		}
 		return null;
 	}
-	
-	public static Configuration loadBaseConfiguration() throws XPathException {
-		Configuration 	configuration	= null;
-		URL				configFileUrl	= null;
-		try {
-			configFileUrl = XsltConref.class.getResource(CONFIG_FILE_URL);
-			configuration = Configuration.readConfiguration(new SAXSource(new InputSource(configFileUrl.toExternalForm())));
-		} catch (Exception e) {
-			throw new XPathException("failed to load saxon configuration file (" + CONFIG_FILE_URL + "): " + e.getMessage());
-		}
-		return configuration;
-	}
-	
-	public static Configuration createConfiguration() throws XPathException {
-		final Configuration 	configuration	= loadBaseConfiguration();
-		// TODO: register functions
+
+	public static Configuration createConfiguration(DocumentCacheProvider documentCacheProvider) {
+		final Configuration 	configuration	= SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
+		configuration.setErrorListener(new Log4jErrorListener(logger));
+
+		configuration.registerExtensionFunction(new GetChildTopicsDef(documentCacheProvider));
+		configuration.registerExtensionFunction(new GetAncestorPathDef(documentCacheProvider));
+		configuration.registerExtensionFunction(new GetKeyDefRootDef(documentCacheProvider));
+		
 		return configuration;
 	}
 	
@@ -102,18 +117,22 @@ public class XsltConref {
 		this.node 				= node;
 		this.transformerCache	= transformerCache;
 		this.xPathCache			= xPathCache;
-		this.baseUri			= node.getBaseUri();
+		this.baseUrl			= node.getBaseUrl();
 	}
 	
 	
-	public void setBaseUri(final URL baseUri) {
-		this.baseUri = baseUri;
+	public void setBaseUrl(final URL baseUrl) {
+		this.baseUrl = baseUrl;
 	}
 	
 	
-	public NodeInfo resolve() throws XPathException {
+	public NodeInfo resolve(List<Parameter> frameworkParameters) throws XPathException, TempContextException {
 		//logger.info("resolve()");
 		final URL 				scriptUrl 		= getScriptUrl();
+		String 					sourceType		= node.getAttribute(ATTR_SOURCE_TYPE, null);
+		if (sourceType == null) {
+			sourceType = "";
+		}
 		final XsltExecutable 	xsltExecutable 	= transformerCache.getExecutable(scriptUrl, node.getUriResolver());
 		final XsltTransformer 	xsltTransformer = xsltExecutable.load();
 		//logger.info("xsltTransformer: " + xsltTransformer);
@@ -126,7 +145,7 @@ public class XsltConref {
 				//TODO
 				throw new XPathException(e.getMessage());
 			}
-		} else {
+		} else if (sourceType.isEmpty() || sourceType.equals("xml")) {
 			Source 	xmlSource 	= getXmlSource();
 			if ((xmlSource == null) && (node instanceof SaxonNodeWrapper)) {
 				//logger.info("Source is root.");
@@ -139,22 +158,21 @@ public class XsltConref {
 				xsltTransformer.setParameter(new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT), new XdmNode(nodeInfo));
 				
 			} else {
-
-				boolean xmlSourceIsBaseUri	= false;
+				boolean xmlSourceIsBaseUrl	= false;
 				if (xmlSource == null) {
 					//logger.info("Source is base uri.");
 					
 					// 	use current base uri as input
-					final String baseUri = node.getBaseUri().toExternalForm();
+					final String baseUrl = node.getBaseUrl().toExternalForm();
 					try {
-						xmlSource 			= node.getUriResolver().resolve(baseUri, "");;
-						xmlSourceIsBaseUri 	= true;
+						xmlSource 			= node.getUriResolver().resolve(baseUrl, "");;
+						xmlSourceIsBaseUrl 	= true;
 					} catch (TransformerException e) {
-						throw new XPathException("Error resolving the source URL: '" + baseUri + "': " + e.getMessage());
+						throw new XPathException("Error resolving the source URL: '" + DocumentCache.decodeUrl(baseUrl) + "': " + e.getMessage());
 					}
 				} else if (!FileUtil.fileExists(xmlSource.getSystemId())) {
 					// dedicated error message for this scenario
-					throw new XPathException("Input source could not be found. (URL: '" + xmlSource.getSystemId() + "')");
+					throw new XPathException("Input source could not be found. (URL: '" + DocumentCache.decodeUrl(xmlSource.getSystemId()) + "')");
 				}
 				
 				// remove the provided xml reader to force saxon creating its own one using the configuration and, thus, expanding the attribute defaults
@@ -167,7 +185,7 @@ public class XsltConref {
 					final DocumentBuilder 	builder 	= processor.newDocumentBuilder();
 					final XdmNode 			context 	= builder.build(xmlSource);
 					
-					if (xmlSourceIsBaseUri) {
+					if (xmlSourceIsBaseUrl) {
 						// set "xcr:current"
 						final String 			xPathString	= createXPathToElement(node);
 						final XPathExecutable 	xPathExe 	= xPathCache.getXPathExecutable(xPathString);
@@ -182,12 +200,47 @@ public class XsltConref {
 					
 					xsltTransformer.setInitialContextNode(context);
 				} catch (SaxonApiException e) {
-					throw new XPathException("Error reading input source ('" + node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI) + "'): " + e.getMessage());
+					/* try to read input with standard configuration to print it */ 
+					final Processor 		processor 	= new Processor(new Configuration());
+					final DocumentBuilder 	builder 	= processor.newDocumentBuilder();
+					try {
+						final XdmNode node	= builder.build(xmlSource);
+						logger.error("Input: " + SaxonNodeWrapper.serializeNode(node.getUnderlyingNode()));
+					} catch (SaxonApiException e1) {
+						// keep original message
+					}
+					Throwable[] suppressed =  e.getSuppressed();
+					if (suppressed.length > 0) {
+						logger.error("Suppresses exceptions:");
+						for (int i = 0; i < suppressed.length; ++i) {
+							logger.error(" - " + suppressed[i].getMessage());
+						}
+					}
+					throw new XPathException("Error reading input source ('" + DocumentCache.decodeUrl(xmlSource.getSystemId()) + "'): " + e.getMessage());
 				}
 			}
+		} else if (sourceType.equals("text")) {
+			//TODO: text der source ungeparst übergeben
+			if (!FileUtil.fileExists(node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI))) {
+				// dedicated error message for this scenario
+				throw new XPathException("Input source could not be found. (URL: '" + ATTR_XML_SOURCE_URI + "')");
+			} else {
+				//NodeInfo from File? XdmNode?
+				// complete document as context node
+				
+			}
+		} else {
+			throw new XPathException("invalid value for source-type attribute ('" + sourceType + "')");
 		}
 
 		setCustomParameters(xsltTransformer);
+		
+		// set framework parameters
+		if (frameworkParameters != null) {
+			for (Parameter parameter : frameworkParameters) {
+				xsltTransformer.setParameter(parameter.name, XdmValue.wrap(parameter.value));	
+			}
+		}
 
 		//logger.info("scriptUrl: " + scriptUrl);
 		try {
@@ -202,42 +255,42 @@ public class XsltConref {
 			throw new XPathException("Runtime Error. " + e.getMessage());
 		} 
 	}
-
 	
-	public URL getScriptUrl() {
+	public URL getScriptUrl() throws XPathException {
 		final URIResolver uriResolver = node.getUriResolver();
 		try {
-			return new URL(uriResolver.resolve(node.getAttribute(ATTR_URI, NAMESPACE_URI), baseUri.toExternalForm()).getSystemId());
+			return new URL(uriResolver.resolve(node.getAttribute(ATTR_URI, NAMESPACE_URI), baseUrl.toExternalForm()).getSystemId());
 		} catch (TransformerException | MalformedURLException e) {
-			logger.error(e, e);
+			throw new XPathException(e.getMessage());
 		}
-		return null;
 	}
 	
-	
-	public String getScriptUrlAsString() {
-		final URL scriptUrl = getScriptUrl();
-		return (scriptUrl == null) ? null : scriptUrl.toExternalForm();
+	public String getUniqueId() {
+		URL scriptUrl = null;
+		try {
+			scriptUrl = getScriptUrl();
+		} catch (XPathException e) {
+			logger.error(e, e);
+		}
+		return (scriptUrl == null) ? node.getAttribute(ATTR_URI, NAMESPACE_URI) : scriptUrl.toExternalForm();
 	}
 
 	public String getScriptName() {
 		return node.getAttribute(ATTR_URI, NAMESPACE_URI);
 	}
 	
-	
 	public Source getXmlSource() {
 		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI);
 		if ((attrValue != null) && (!attrValue.isEmpty())) {
 			final URIResolver uriResolver = node.getUriResolver();
 			try {
-				return uriResolver.resolve(attrValue, baseUri.toExternalForm());
+				return uriResolver.resolve(attrValue, baseUrl.toExternalForm());
 			} catch (TransformerException e) {
 				logger.error(e, e);
 			}
 		}
 		return null;
 	}
-	
 	
 	public URL getXmlSourceUrl() {
 		final Source source = getXmlSource();
@@ -250,7 +303,6 @@ public class XsltConref {
 		}
 		return null;
 	}
-	
 
 	public String getStartTemplate() {
 		return node.getAttribute(ATTR_START_TEMPLATE, NAMESPACE_URI);
@@ -287,12 +339,16 @@ public class XsltConref {
 		}
 	}
 	
-	private static String createXPathToElement(NodeWrapper node) {
-		final URL baseUri = node.getBaseUri();
+	private static String createXPathToElement(NodeWrapper node) throws TempContextException {
+		final URL baseUrl = node.getBaseUrl();
 		String createXPathToElement = "";
 		
-		while ((node != null) && (node.getParent() != null) && (node.getParent().getBaseUri().equals(baseUri))) {
-			createXPathToElement = "/*[" + node.getChildIndexWithinParent() + "]" + createXPathToElement;
+		while ((node != null) && (node.getParent() != null) && (node.getParent().getBaseUrl().equals(baseUrl))) {
+			final int index = node.getChildElementIndexWithinParent();
+			if (index <= 0) {
+				throw new TempContextException();
+			}
+			createXPathToElement = "/*[" + index + "]" + createXPathToElement;
 			node = node.getParent();
 		}
 		

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+	<group><!-- System ID (URL) catalog entries -->
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:ikd-attr.xsd" 				uri="ikd-attr.xsd"/>
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd" 				uri="akr-attr.xsd"/>
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:advanced-keyref-domain.xsd" uri="advanced-keyref-domain.xsd"/>
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" 	uri="advanced-keyref-topic.xsd"/>
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 		uri="keytypedeflist.xsd"/>
+		
+	</group>
+	
+	
+	<group><!-- Public ID (URN) catalog entries -->
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:ikd-attr.xsd" 					uri="ikd-attr.xsd"/>
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd" 					uri="akr-attr.xsd"/>
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:advanced-keyref-domain.xsd" 	uri="advanced-keyref-domain.xsd"/>
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" 	uri="advanced-keyref-topic.xsd"/>
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 			uri="keytypedeflist.xsd"/>
+
+	</group>
+	
+</catalog>

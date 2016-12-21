@@ -6,7 +6,7 @@
 	
 	<xsl:import-schema>
 		<xs:schema>
-			<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd"/>
+			<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd:1.2"/>
 			<xs:complexType name="section.type">
 				<xs:complexContent>
 					<xs:extension base="section.class">

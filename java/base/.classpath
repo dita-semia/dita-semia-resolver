@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/saxonHE-9.6.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
+	<classpathentry kind="var" path="OXYGENXML/lib/saxon9ee.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

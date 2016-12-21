@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>Advanced KeyRef Topic</title>
+	<prolog>
+		<metadata>
+			<data value="KeyTypeDefList.xml" name="ikd:TypeDefUri"/>
+		</metadata>
+	</prolog>
+	<body>
+		<section id="rzx_tc1_by">
+			<title>Definitions</title>
+			<dl>
+				<dlentry id="ad4_nc1_by">
+					<dt ikd:key-type="Test1" ikd:name="dd" ikd:root="parent::dlentry">Key1</dt>
+					<dd>Name1</dd>
+				</dlentry>
+				<dlentry id="hnp_kl1_by">
+					<dt ikd:key-type="Test2" ikd:name="dd" ikd:root="parent::dlentry">Key2</dt>
+					<dd>Name2</dd>
+				</dlentry>
+				<dlentry>
+					<dt ikd:key-type="Test3" ikd:name="dd[1]" ikd:root="parent::dlentry"
+						><?SuppressWarnings ikd:missingId?>Key3</dt>
+					<dd>Name3</dd>
+					<dd>(no id attribute)</dd>
+				</dlentry>
+				<dlentry id="pzz_ggb_by">
+					<dt ikd:key-type="Test4" ikd:root="parent::dlentry">Key4</dt>
+					<dd>&lt;no name&gt;</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="vsc_vc1_by">
+			<title>References</title>
+			<dl outputclass="bullet-list-titles">
+				<dlentry>
+					<dt>outputclass "key"</dt>
+					<dd>
+						<ul id="i14_zc1_by" compact="yes">
+							<li id="j14_zc1_by"><key-xref outputclass="key" akr:ref="Test1:Key1"
+								>Key1</key-xref></li>
+							<li id="ctk_bd1_by"><key-xref outputclass="key" akr:ref="Test2:Key2"
+								>Key2</key-xref></li>
+							<li id="nvl_bd1_by"><key-xref outputclass="key" akr:ref="Test3:Key3"
+								>Key3</key-xref></li>
+							<li id="bsd_kgb_by"><key-xref outputclass="key-name-braced"
+								akr:ref="Test4:Key4">Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>outputclass "key-name-braced"</dt>
+					<dd>
+						<ul compact="yes" id="xnb_dd1_by">
+							<li id="ynb_dd1_by"><key-xref outputclass="key-name-braced"
+								akr:ref="Test1:Key1">Key1</key-xref></li>
+							<li id="znb_dd1_by"><key-xref outputclass="key-name-braced"
+								akr:ref="Test2:Key2">Key2</key-xref></li>
+							<li id="a4b_dd1_by"><key-xref outputclass="key-name-braced"
+								akr:ref="Test3:Key3">Key3</key-xref></li>
+							<li id="cny_lgb_by"><key-xref outputclass="key" akr:ref="Test4:Key4"
+								>Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>outputclass "key-name-dashed"</dt>
+					<dd>
+						<ul compact="yes" id="b4c_dd1_by">
+							<li id="c4c_dd1_by"><key-xref outputclass="key-name-dashed"
+								akr:ref="Test1:Key1">Key1</key-xref></li>
+							<li id="d4c_dd1_by"><key-xref outputclass="key-name-dashed"
+								akr:ref="Test2:Key2">Key2</key-xref></li>
+							<li id="e4c_dd1_by"><key-xref outputclass="key-name-dashed"
+								akr:ref="Test3:Key3">Key3</key-xref></li>
+							<li id="bkd_mgb_by"><key-xref outputclass="key-name-dashed"
+								akr:ref="Test4:Key4">Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>outputclass "name"</dt>
+					<dd>
+						<ul compact="yes" id="gxd_dd1_by">
+							<li id="hxd_dd1_by"><key-xref outputclass="name" akr:ref="Test1:Key1">Key1</key-xref></li>
+							<li id="ixd_dd1_by"><key-xref outputclass="name" akr:ref="Test2:Key2"
+								>Key2</key-xref></li>
+							<li id="jxd_dd1_by"><key-xref outputclass="name" akr:ref="Test3:Key3"
+								>Key3</key-xref></li>
+							<li id="ffj_mgb_by"><key-xref outputclass="name" akr:ref="Test4:Key4">Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

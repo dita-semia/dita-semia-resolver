@@ -6,6 +6,7 @@
 package org.DitaSemia.Oxygen.XsltConref;
 
 import java.net.URL;
+
 import org.apache.log4j.Logger;
 
 import net.sf.saxon.s9api.QName;
@@ -28,7 +29,7 @@ public class XsltConrefSchematronUtil {
 	 */
 	public static boolean isValidXsl(URL url) {
 		try {
-			return (XsltConrefResolver.getTransformerCache().getExecutable(url) != null);
+			return (XsltConrefResolver.getInstance().getTransformerCache().getExecutable(url) != null);
 		} catch (XPathException e) {
 			return false;
 		} catch (Exception e) {
@@ -46,7 +47,7 @@ public class XsltConrefSchematronUtil {
 	 */
 	public static boolean isXslParameterUndefined(URL scriptUrl, String paramName) {
 		//logger.info("isXslParameterUndefined(" + scriptUrl + ", " + paramName + ")");
-		final XsltExecutable 	xsltExecutable 	= XsltConrefResolver.getTransformerCache().getCachedExecutable(scriptUrl);
+		final XsltExecutable 	xsltExecutable 	= XsltConrefResolver.getInstance().getTransformerCache().getCachedExecutable(scriptUrl);
 		final QName 			paramQName 		= new QName(paramName);
 		//logger.info(xsltExecutable);
 		if ((xsltExecutable != null) && (!xsltExecutable.getGlobalParameters().containsKey(paramQName))) {

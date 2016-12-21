@@ -7,6 +7,7 @@
 	<path id="classpath">
 		<fileset dir="lib" 	includes="log4j.jar"/>
 		<fileset dir="lib" 	includes="saxonHE-9.6.0.7.jar"/>
+		<fileset dir="${OXYGENXML}/lib" 		includes="**/*.jar"/>
 	</path>
 			
 	<target name="clean">
@@ -31,6 +32,10 @@
 			<fileset dir="bin"  		includes="**/*.class"/>
 			<fileset dir="${src.dir}"	includes="cfg/*"/>
 		</jar>
+
+		<!-- Copy library to oxygen lib folder as well - won't work when oXygen is running. -->
+		<delete file="${OXYGENXML}/lib/${archivename}.jar"/>
+		<copy file="${archivename}.jar" todir="${OXYGENXML}/lib"/>
 
 	</target>
 </project>

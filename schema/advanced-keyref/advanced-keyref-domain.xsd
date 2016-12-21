@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema 
+	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
+	xmlns:akr	= "http://www.dita-semia.org/advanced-keyref"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<dita:domainsModule xmlns:dita="http://dita.oasis-open.org/architecture/2005/">(topic akr-d)</dita:domainsModule>
+		</xs:appinfo>
+		<xs:documentation> </xs:documentation>
+	</xs:annotation>
+	
+	<xs:import namespace="http://www.dita-semia.org/advanced-keyref" schemaLocation="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd"/>
+	
+	
+	<xs:group name="akr-d-ph">
+		<xs:choice>
+			<xs:element ref="key-xref"/>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:group name="key-xref">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="key-xref"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	
+	<xs:element name="key-xref">
+		<xs:annotation>
+			<xs:documentation>Key-based cross reference.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="key-xref.class">
+					<xs:attribute ref="class" default="+ topic/ph akr-d/key-xref "/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="key-xref.class" mixed="true">
+		<xs:sequence>
+			<xs:group ref="key-xref.content"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="key-xref.attributes"/>
+	</xs:complexType>
+	
+	<xs:group name="key-xref.content">
+		<xs:sequence>
+			<!-- by default no child elements allowed. -->
+		</xs:sequence>
+	</xs:group>
+
+	<xs:attributeGroup name="key-xref.attributes">
+		<xs:attribute name="outputclass" 	type="key-xref.outputclass" default="key-name-braced"/>
+		<xs:attributeGroup ref="akr:akr-atts"/>
+	</xs:attributeGroup>
+	
+	<xs:simpleType name="key-xref.outputclass">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="key"/>
+			<xs:enumeration value="key-name-braced"/>
+			<xs:enumeration value="key-name-dashed"/>
+			<xs:enumeration value="name"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+</xs:schema>

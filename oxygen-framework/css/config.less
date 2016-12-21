@@ -1,16 +1,32 @@
 
 /* general */
 @conbat-background						: rgb(240, 240, 240);
-@conbat-inline-index					: 1;	/* used in :begin(n) and :after(n) for generated inline content */
-@conbat-paragraph-index					: 1;	/* used in :begin(n) and :after(n) for generated paragraph content */
-@conbat-default-content-index			: 1;	/* used in :after(n) for generated default content */
-@conbat-default-content-marker-index	: 2;	/* used in :after(n) for default content marker */
-@conbat-title-index						: 5;	/* used in :begin(n) for generated titles */
-@conbat-header-index					: 6;	/* used in :begin(n) for generated table header - needs to be greater than @conbat-inline-index */
-@conbat-dt-index						: 4;	/* used in :begin(n) for generated dts */
-@body-font-family						: Serif;
-@code-font-size							: 0.9em;
-@code-invert-font-size					: 1.11em;	/* used to undo the font size change for code */
+@conbat-inline-index					: 14;	/* used in :begin(n) and :after(n) for generated inline content */
+@conbat-paragraph-index					: 10;	/* used in :begin(n) and :after(n) for generated paragraph content */
+@conbat-default-content-index			: 10;	/* used in :after(n) for generated default content */
+@conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
+@conbat-title-index						: 15;	/* used in :begin(n) for generated titles */
+@conbat-header-index					: 16;	/* used in :begin(n) for generated table header - needs to be greater than @conbat-inline-index */
+@conbat-dt-index						: 14;	/* used in :begin(n) for generated dts */
+@conbat-edit-brace1-index				: 1;	/* used in :after(n) for opening brace of attribute edits */
+@conbat-edit-index						: 2;	/* used in :after(n) for attribute edits */
+@conbat-edit-brace2-index				: 5;	/* used in :after(n) for closing brace of attribute edits */
+@csli-comma-index						: 14;	/* used in :begin(n) for generated commas in comma separated lists */
+@code-font-family						: "Courier New", Monospace;
+@body-font-family						: "Palatine Linotype", Serif;
+@topic-title-font-family				: "Franklin Gothic Medium", Arial;
+@topic-title-font-size					: 1.8em;
+@code-font-size-scale					: 0.9;
+@keydef-info-prefix-index				: 2;
+@keyref-link-prefix-index				: 2;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
+@keyref-type-prefix-index				: 1;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
+@keyref-type-suffix-index				: 1;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
+@keyref-edit-suffix-index				: 2;
+@keyref-name-suffix-index				: 3;
+@edit-only-font-size-scale				: 0.8;
+@edit-only-text-color					: rgb(140, 140, 140);
+
+@keyref-autotext-background-color		: @conbat-background;
 
 /* paragraph */
 @conbat-paragraph-margin-top	: 0.5em;
@@ -28,6 +44,9 @@
 
 /* dl */
 @dd-default-margin-left			: 4ex;
+@dl-tree-dd-offset				: 360pt;
+@dl-tree-dd-indent				: 24pt;
+@dd-header-table-indent			: 240px;	/* px required */
 
 /* author-only text */
 .author-only-text-style() {

@@ -13,6 +13,8 @@
 	<xs:attribute name="code-prefix" 		type="xs:string"/>
 	<xs:attribute name="code-suffix" 		type="xs:string"/>
 	<xs:attribute name="dt" 				type="xs:string"/>
+	<xs:attribute name="popup-edit" 		type="xs:string"/>
+	<xs:attribute name="o-class" 			type="xs:string"/>
+	<xs:attribute name="hide-empty" 		type="xs:boolean"/>	<!-- can be combined with default-content to display a hint in author mode -->
 
-	
 </xs:schema>

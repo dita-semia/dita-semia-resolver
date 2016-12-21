@@ -4,5 +4,6 @@
 
 	<nextCatalog catalog="xslt-conref/catalog.xml"/>
 	<nextCatalog catalog="conbat/catalog.xml"/>
+	<nextCatalog catalog="advanced-keyref/catalog.xml"/>
 	
 </catalog>

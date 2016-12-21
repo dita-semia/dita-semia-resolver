@@ -158,7 +158,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:message>ERROR: Unkown datatype with ID '<xsl:value-of select="$attribute/DataType/Id"/>' in file '<xsl:value-of select="base-uri($attribute)"/>'</xsl:message>
+				<xsl:message>ERROR: Unkown datentyp with ID '<xsl:value-of select="$attribute/DataType/Id"/>' in file '<xsl:value-of select="base-uri($attribute)"/>'</xsl:message>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>

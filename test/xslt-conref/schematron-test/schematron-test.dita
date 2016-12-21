@@ -9,7 +9,7 @@
 		<section id="rpw_kw4_p5">
 			<title>Invalid Script URI</title>
 			<p>The value of the parameter xcr:xsl does not represent an exisiting file.</p>
-			<p id="cxz_ng4_5t" xcr:xsl="invalid script"/>
+			<p id="cxz_ng4_5t" xcr:xsl="urn:invalid script"/>
 		</section>
 		<section>
 			<title>Invalid Script</title>

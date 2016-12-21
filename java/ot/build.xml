@@ -9,7 +9,7 @@
 		<fileset dir="../base" 				includes="DitaSemiaBase.jar"/>
 		<fileset dir="../base/lib" 			includes="log4j.jar"/>
 		<fileset dir="../base/lib" 			includes="saxonHE-9.6.0.7.jar"/>
-		<fileset dir="${ditaot.lib.dir}" 	includes="commons-io-2.4.jar"/>
+		<fileset dir="${ditaot.lib.dir}" 	includes="commons-io-2.5.jar"/>
 		<fileset dir="${ditaot.lib.dir}" 	includes="xml-resolver-1.2.jar"/>
 		<fileset dir="${ditaot.lib.dir}" 	includes="dost.jar"/>
 	</path>
@@ -36,7 +36,7 @@
 			<fileset dir="bin"  		includes="**/*.class"/>
 			<fileset dir="../base/bin"  includes="**/*.class"/>
 			<fileset dir="../base/src"	includes="cfg/*"/>
-			<fileset dir="${src.dir}"	includes="xsl/*"/>
+			<!--<fileset dir="${src.dir}"	includes="xsl/*"/>-->
 		</jar>
 
 	</target>

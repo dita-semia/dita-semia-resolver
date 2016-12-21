@@ -28,7 +28,7 @@
     display	: block;
     
     /* Get text from header attribute of tgroup element */
-    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/tgroup ')]/@cba:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
+    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/tgroup ')]/@*:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
     
     /* Same settings as the real table header */
     .table-header;
@@ -42,7 +42,7 @@
 
 /* The first entry requires a margin decreased by the border width */
 *[class~='topic/tgroup'][*|header] > *[class~='topic/tbody'] > *[class~='topic/row']:first-child *[class~='topic/entry']:first-child:before(@{conbat-header-index}) {
-    margin-left	: -(@table-header-padding-left + @table-border-width);
+    margin-left		: -(@table-header-padding-left + @table-border-width);
 }
 
 /* Ensure the entry still has a reasoable row and the cursor is displayed as vertical line */
@@ -58,7 +58,7 @@
     display	: block;
     
     /* Get text from header attribute of tgroup element */
-    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/simpletable ')]/@cba:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
+    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/simpletable ')]/@*:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
     
     /* Same settings as the real table header */
     .table-header;
@@ -70,9 +70,15 @@
     .table-header-undo-padding;
 }
 
+/* undo font changes for outputclass "code" */
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry'][*|o-class~='code']:before(@{conbat-header-index}) {
+	font-family	: @body-font-family;
+	font-size	: (1em / @code-font-size-scale);
+}
+
 /* The first entry requires a margin decreased by one */
 *[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry']:first-child:before(@{conbat-header-index}) {
-    margin-left	: -(@table-header-padding-left + @table-border-width);
+    margin-left		: -(@table-header-padding-left + @table-border-width);
 }
 
 /* ensure the entry still has a reasoable row and the cursor is displayed as vertical line */

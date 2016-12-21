@@ -1,0 +1,294 @@
+
+
+/********************************************/
+/* outputclass: bullet-list-titles 			*/
+*[class~='topic/dl'][outputclass='bullet-list-titles'] {
+	list-style	: disc;
+	margin-left : 0;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-titles'] *[class~='topic/dlentry'] {
+	display : list-item;
+	margin-left : 1.5em;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-titles'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-titles'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	margin-left	: 0ex;
+}
+
+
+
+/********************************************/
+/* outputclass: bullet-list-dashes 			*/
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] {
+	list-style		: disc;
+	margin-top		: 0;
+	margin-bottom	: 0;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] *[class~='topic/dlentry'] {
+	display		: list-item;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display		: inline;
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt']:after {
+	content		: " – ";
+}
+
+*[class~='topic/dl'][outputclass='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	display		: inline;
+	margin-left	: 0ex;
+}
+
+
+/********************************************/
+/* outputclass: numbered-list-titles 			*/
+*[class~='topic/dl'][outputclass='numbered-list-titles'] {
+	list-style-type : decimal;
+	margin-left 	: 0;
+}
+
+*[class~='topic/dl'][outputclass='numbered-list-titles'] *[class~='topic/dlentry'] {
+	display 	: list-item;
+	margin-left : 1.5em;
+	font-weight	: bold;	/* make the number bold */
+}
+
+*[class~='topic/dl'][outputclass='numbered-list-titles'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass='numbered-list-titles'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	margin-left	: 0ex;
+	font-weight	: normal;	/* undo changed for dlentry */
+}
+
+
+
+/********************************************/
+/* outputclass: header-table 						*/
+
+*[class~='topic/dl'][outputclass='header-table'] {
+	display				: table;
+    width				: 95%;
+    margin				: 1.5ex 0.5ex;
+    border-color		: black;
+    border-top-style	: double;
+    border-bottom-style	: double;
+    border-width		: 4px;
+    padding				: 0px;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry'] {
+	display				: table-row;
+}
+
+
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display				: table-cell;
+    padding				: 1px 10px;
+}
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dt'] {
+    border-color		: black;
+    border-top-style	: solid;
+    border-width		: 1px;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	width		: 25%;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	width		: 75%;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] *[class~='topic/dd'] > *:first-child,
+*[class~='topic/dl'][outputclass='header-table'] *[class~='topic/dd'] > *[class~="topic/div"]:first-child > *:first-child {
+	margin-top: 0;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] *[class~='topic/dd'] > *:last-child,
+*[class~='topic/dl'][outputclass='header-table'] *[class~='topic/dd'] > *[class~="topic/div"]:last-child > *:last-child {
+	margin-bottom: 0;
+}
+
+*[class~='topic/dl'][outputclass='header-table'] *[class~='topic/dd'] > *[class~="topic/sli"] {
+	margin-left: 1em;
+}
+
+
+
+/********************************************/
+/* outputclass: parameter-table 						*/
+
+*[class~='topic/dl'][outputclass='parameter-table'] {
+	display				: table;
+    width				: 95%;
+    margin				: 1.5ex 0.5ex 1.5ex 1.0ex;
+    border-color		: black;
+    border-style		: solid;
+    border-width		: 1px;
+    padding				: 0px;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] {
+	display				: table-row;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	font-weight			: normal;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display				: table-cell;
+    padding				: 1px 10px;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dd'],
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry']:not(:first-child) > *[class~='topic/dt'] {
+    border-color		: black;
+    border-top-style	: solid;
+    border-width		: 1px;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	width		: 25%;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	width		: 75%;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] *[class~='topic/dd'] > *:first-child,
+*[class~='topic/dl'][outputclass='parameter-table'] *[class~='topic/dd'] > *[class~="topic/div"]:first-child > *:first-child {
+	margin-top: 0;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] *[class~='topic/dd'] > *:last-child,
+*[class~='topic/dl'][outputclass='parameter-table'] *[class~='topic/dd'] > *[class~="topic/div"]:last-child > *:last-child {
+	margin-bottom: 0;
+}
+
+*[class~='topic/dl'][outputclass='parameter-table'] *[class~='topic/dd'] > *[class~="topic/sli"] {
+	margin-left: 1em;
+}
+
+
+
+/********************************************/
+/* outputclass: tree 						*/
+
+
+
+*[class~='topic/dl'][outputclass='tree'] {
+    display: block;
+    margin: 6pt;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] {
+    display: 				block;
+    border-color: 			#AAAAAA;
+    border-style:			solid none solid solid;
+    border-bottom-color: 	#FFFFFF;	/* Ausblenden der untere Linie über die Farbe, da anderenfalls auch die linke Linie nicht immer lang genug ist. */
+    border-width:			1pt;
+    padding-left: 			2pt;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"]:has(*[class~='topic/dlentry']) {
+    -oxy-foldable: 			true;
+	-oxy-not-foldable-child:dt;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dlentry"] {
+    margin-left: 12pt;
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] {
+	border-right-style: solid;		/* Einblenden der rechten Linie */
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"]:last-child {
+    border-bottom-color		: #AAAAAA;	/* Einblenden der letzten, abschließeden Linie */
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dt"] {
+    display: 		block;
+    font-weight : 	normal;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-top: -1.4em;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dt"] + *[class~="topic/dt"] + *[class~="topic/dd"] {
+	margin-top: -2.8em;
+	min-height: 2.8em;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *:first-child,
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:first-child > *:first-child,
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:first-child > *[class~="topic/div"]:first-child > *:first-child {
+	margin-top: 0;
+}
+
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *:last-child,
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:last-child > *:last-child,
+*[class~='topic/dl'][outputclass='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:last-child > *[class~="topic/div"]:last-child > *:last-child {
+	margin-bottom: 0;
+}
+
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+    display: block;
+	margin-left: @dl-tree-dd-offset;
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (1 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (2 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (3 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (4 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (5 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (6 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (7 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (8 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (9 * @dl-tree-dd-indent);
+}

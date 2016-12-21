@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema"
+	xmlns:xcr		= "http://www.dita-semia.org/xslt-conref"
+	targetNamespace	= "http://www.dita-semia.org/xslt-conref">
+	
+	
+	<xs:attribute name="xsl" 				type="xs:anyURI"/>	
+	<xs:attribute name="source"				type="xs:anyURI"/>
+	<xs:attribute name="start-template" 	type="xs:string"/>
+	<xs:attribute name="reparse">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="yes"/>
+				<xs:enumeration value="no"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	
+	<xs:attributeGroup name="xslt-conref-atts">
+		<xs:attribute ref="xcr:xsl"/>
+		<xs:attribute ref="xcr:source"/>
+		<xs:attribute ref="xcr:start-template"/>
+		<xs:attribute ref="xcr:reparse"/>
+	</xs:attributeGroup>
+	
+</xs:schema>

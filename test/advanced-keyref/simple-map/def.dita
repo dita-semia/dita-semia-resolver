@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>Definitions</title>
+	<body>
+		<dl>
+			<dlentry>
+				<dt id="yvg_hln_kx" ikd:key-type="Test"
+					ikd:name="string(if (ancestor::AvProfildatentyp) then ancestor::AvProfildatentyp/title/Name else ())"
+					>Key1</dt>
+				<dd>No additional properties</dd>
+			</dlentry>
+			<dlentry id="g5j_hln_kx">
+				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="'namespace'"
+					>Key2</dt>
+				<dd>Constant namespace "namespace"</dd>
+			</dlentry>
+			<dlentry id="tyk_hln_kx">
+				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('name','space')">Key3</dt>
+				<dd>Constant namespace "name/space"</dd>
+			</dlentry>
+			<dlentry id="obm_hln_kx">
+				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd"
+					ikd:namespace="tokenize(dd/codeph[1], '#')">Key4</dt>
+				<dd>dynamic namespace by xpath: <codeph>name#space</codeph></dd>
+			</dlentry>
+			<dlentry>
+				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd"
+					ikd:namespace="for $i in (1 to 3) return $i">KeyX</dt>
+				<dd>dynamic namespace by xpath: <codeph>name#space</codeph></dd>
+			</dlentry>
+			<dlentry id="hnp_kl1_by">
+				<dt ikd:key-type="Test" ikd:name="dd/dl/dlentry[dt='Name']/dd"
+					ikd:root="parent::dlentry"
+					ikd:desc="string(dd/dl/dlentry[dt='Description']/dd)"
+					ikd:namespace="dd/dl/dlentry[dt='Namespace']/dd">Complete</dt>
+				<dd>
+					<p id="rl2_mzh_by">Additional properties set.</p>
+					<dl outputclass="bullet-list-dashes">
+						<dlentry>
+							<dt>Name</dt>
+							<dd>Key-Name</dd>
+						</dlentry>
+						<dlentry>
+							<dt>Namespace</dt>
+							<dd>Key-Namespace</dd>
+						</dlentry>
+						<dlentry>
+							<dt>Description</dt>
+							<dd>Key-Description</dd>
+						</dlentry>
+					</dl>
+				</dd>
+			</dlentry>
+		</dl>
+		<section id="tqx_1lt_jx">
+			<title>Hierachy</title>
+			<dl>
+				<dlentry id="unc_hln_kx">
+					<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd[1]">ParentKey1</dt>
+					<dd>Key without namespace</dd>
+					<dd>
+						<p id="gvq_hlt_jx"><ph id="ldn_hln_kx" ikd:key-type="Test"
+							ikd:namespace="ikd:ancestor-path('Test')">ChildKey1</ph></p>
+					</dd>
+				</dlentry>
+				<dlentry id="qd4_hln_kx">
+					<dt ikd:key-type="Test" ikd:desc="dd[1]" ikd:root="parent::*" ikd:namespace="('name','space')"
+						>ParentKey2</dt>
+					<dd>Key with namespace<p id="nrd_dlt_jx"><ph id="x1l_lln_kx" ikd:key-type="Test"
+						ikd:namespace="ikd:ancestor-path('Test')">ChildKey2</ph></p></dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="mp1_wkn_1y">
+			<title>Types</title>
+			<dl>
+				<dlentry>
+					<dt ikd:key-type="Test" ikd:root="parent::*" ikd:name="'Test'">Key</dt>
+					<dd>Type &amp; Name: "Test"</dd>
+				</dlentry>
+				<dlentry>
+					<dt ikd:key-type="Test2" ikd:root="parent::*" ikd:name="'Test2'">Key</dt>
+					<dd>Type &amp; Name: "Test2"</dd>
+				</dlentry>
+				<dlentry>
+					<dt ikd:key-type="Test3" ikd:root="parent::*" ikd:name="'Test3'">Key</dt>
+					<dd>Type &amp; Name: "Test3"</dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

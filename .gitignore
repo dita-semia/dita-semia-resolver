@@ -4,3 +4,7 @@
 java/base/bin/
 java/ot/bin/
 java/oxygen/bin/
+java/AdvancedKeyrefDialogTest/
+java/base/.externalToolBuilders/
+java/oxygen/.externalToolBuilders/DitaSemiaOxygen build.xml [Builder].launch
+java/oxygen/.externalToolBuilders/

@@ -22,6 +22,7 @@ import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.AxisIterator;
 import net.sf.saxon.type.Type;
@@ -61,28 +62,22 @@ public class SaxonNodeWrapper implements NodeWrapper
 	}
 	
 	@Override
-	public URL getBaseUri() 
-	{
-		try
-		{
+	public URL getBaseUrl() {
+		try {
 			return new URL(saxonNode.getBaseURI());
-		}
-		catch (MalformedURLException e)
-		{
+		} catch (MalformedURLException e) {
 			return null;
 		}
 	}
 
 	@Override
-	public boolean isElement() 
-	{
+	public boolean isElement() {
 		return (saxonNode != null) && (saxonNode.getNodeKind() == Type.ELEMENT);
 	}
 
 	@Override
-	public String getAttribute(String localName, String namespaceUri) 
-	{
-		final String value = saxonNode.getAttributeValue(namespaceUri, localName); 
+	public String getAttribute(String localName, String namespaceUri) {
+		final String value = saxonNode.getAttributeValue((namespaceUri == null) ? "" : namespaceUri, localName); 
 		//logger.info("getAttribute('" + namespace + "', '" + attrName + "'): '" + value + "'");
 		return value;
 	}
@@ -106,7 +101,7 @@ public class SaxonNodeWrapper implements NodeWrapper
 	}
 	
 	@Override
-	public int getChildIndexWithinParent() {
+	public int getChildElementIndexWithinParent() {
 		final NodeInfo parent = saxonNode.getParent();
 		if (parent == null) {
 			return -1;
@@ -116,11 +111,13 @@ public class SaxonNodeWrapper implements NodeWrapper
 			NodeInfo sibling = null;
 			do {
 				sibling = iterator.next();
-				if (saxonNode.isSameNodeInfo(sibling)) {
-					//logger.info("getChildIndexWithinParent(" + saxonNode.getLocalPart() + "): " + index);
-					return index;
+				if (saxonNode.getNodeKind() == Type.ELEMENT) {
+					if (saxonNode.isSameNodeInfo(sibling)) {
+						//logger.info("getChildIndexWithinParent(" + saxonNode.getLocalPart() + "): " + index);
+						return index;
+					}
+					++index;
 				}
-				++index;
 			}
 			while (sibling != null);
 		}
@@ -158,26 +155,119 @@ public class SaxonNodeWrapper implements NodeWrapper
 
 	@Override
 	public String evaluateXPathToString(String xPath) throws XPathException {
-		//logger.info("getStringByXPath() SaxonNode");
+		final XdmItem resolvedItem = evaluateXPathToItem(xPath);
+		if (resolvedItem != null) {
+			return  resolvedItem.getStringValue();	
+		} else {
+			return "";
+		}
+	}
+
+	@Override
+	public NodeWrapper evaluateXPathToNode(String xPath) throws XPathException {
+		final XdmItem resolvedItem = evaluateXPathToItem(xPath);
+		if (resolvedItem != null) {
+			if (resolvedItem instanceof XdmNode) {
+				return new SaxonNodeWrapper(((XdmNode)resolvedItem).getUnderlyingNode(), xPathCache);	
+			} else {
+				throw new XPathException("XPath expression ('" + xPath + "') results in a not-node item.");		
+			}	
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List<String> evaluateXPathToStringList(String xPath) throws XPathException {
+		final XdmValue resolvedValue = evaluateXPathToValue(xPath);
+		if (resolvedValue != null) {
+			List<String> list = new LinkedList<>();
+			for (XdmItem item : resolvedValue) {
+				list.add(item.getStringValue());
+			}
+			return list;
+		} else {
+			return null;
+		}
+	}
+
+	private XdmItem evaluateXPathToItem(String xPath) throws XPathException {
+		try {
+			return getXPathSelector(xPath).evaluateSingle();	
+		} catch (SaxonApiException e) {
+			throw new XPathException("Failed to evaluate XPath expression: '" + xPath + "'): " + e.getMessage());
+		}
+	}
+
+	private XdmValue evaluateXPathToValue(String xPath) throws XPathException {
+		try {
+			return getXPathSelector(xPath).evaluate();	
+		} catch (SaxonApiException e) {
+			throw new XPathException("Failed to evaluate XPath expression: '" + xPath + "'): " + e.getMessage());
+		}
+	}
+	
+	private XPathSelector getXPathSelector(String xPath) throws XPathException, SaxonApiException {
 		if (xPathCache == null) {
 			throw new XPathException("SaxonNodeWrapper: Can't evaluate XPath ('" + xPath + "') without XPathCache.");
 		} else {
-			String resolvedXPath;
-			try {
-				XPathSelector selector = xPathCache.getXPathExecutable(xPath).load();
-				//logger.info("XPathSelector: " + selector);
-				selector.setContextItem(new XdmNode(saxonNode));
-				final XdmItem resolvedItem = selector.evaluateSingle();
-				if (resolvedItem != null) {
-					resolvedXPath = selector.evaluateSingle().getStringValue();	
-				} else {
-					resolvedXPath = "";
-				}
-				//logger.info("resolvedXPath: " + resolvedXPath);
-			} catch (SaxonApiException e) {
-				throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
-			}
-			return resolvedXPath;
+			XPathSelector selector = xPathCache.getXPathExecutable(xPath).load();
+			selector.setContextItem(new XdmNode(saxonNode));
+			return selector;
 		}
+	}
+
+
+	@Override
+	public NodeWrapper getRootNode() {
+		return new SaxonNodeWrapper(saxonNode.getDocumentRoot(), xPathCache);
+	}
+
+	@Override
+	public NodeWrapper getRootElement() {
+		final AxisIterator 	iterator 	= saxonNode.getDocumentRoot().iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT);
+		return new SaxonNodeWrapper(iterator.next(), xPathCache);
+	}
+
+
+	@Override
+	public boolean isText() {
+		return (saxonNode != null) && (saxonNode.getNodeKind() == Type.TEXT);
+	}
+
+
+	@Override
+	public String getTextContent() {
+		return saxonNode.getStringValue();
+	}
+
+
+	@Override
+	public List<NodeWrapper> getChildNodes() {
+		final AxisIterator 		iterator 	= saxonNode.iterateAxis(AxisInfo.CHILD);
+		final List<NodeWrapper>	list		= new LinkedList<>();
+		NodeInfo childNode = iterator.next();
+		while (childNode != null) {
+			list.add(new SaxonNodeWrapper(childNode, xPathCache));
+			childNode = iterator.next();
+		}
+		return list;
+	}
+
+
+	@Override
+	public String getName() {
+		return saxonNode.getLocalPart();
+	}
+
+
+	@Override
+	public boolean isSameNode(NodeWrapper node) {
+		return ((node instanceof SaxonNodeWrapper) && (saxonNode.isSameNodeInfo(((SaxonNodeWrapper)node).getSaxonNode())));
+	}
+
+
+	private NodeInfo getSaxonNode() {
+		return saxonNode;
 	}
 }

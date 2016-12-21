@@ -6,5 +6,6 @@
 	<nextCatalog catalog="xsl/catalog.xml"/>
 	<nextCatalog catalog="test/catalog.xml"/>
 	<nextCatalog catalog="samples/catalog.xml"/>
+	<nextCatalog catalog="oxygen-framework/catalog.xml"/>
 	
 </catalog>

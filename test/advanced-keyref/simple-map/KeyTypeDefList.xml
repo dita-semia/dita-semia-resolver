@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KeyTypeDefList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd">
+	<KeyTypeDef name="Test" isCodeFont="false" isItalicFont="true"/>
+	<KeyTypeDef name="Test2" isCodeFont="true" isItalicFont="false"/>
+	<KeyTypeDef name="Test3" isCodeFont="true" isItalicFont="false" prefix="&lt;" suffix="&gt;"/>
+	
+</KeyTypeDefList>

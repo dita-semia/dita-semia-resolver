@@ -6,20 +6,23 @@
 package org.DitaSemia.Oxygen;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.text.BadLocationException;
 import javax.xml.transform.URIResolver;
 
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.NodeWrapper;
+import org.DitaSemia.Base.XPathNotAvaliableException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
+import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
+import ro.sync.ecss.extensions.api.Content;
 import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
@@ -53,7 +56,7 @@ public class AuthorNodeWrapper implements NodeWrapper
 	}
 
 	@Override
-	public URL getBaseUri() 
+	public URL getBaseUrl() 
 	{
 		return authorNode.getXMLBaseURL();
 	}
@@ -70,7 +73,17 @@ public class AuthorNodeWrapper implements NodeWrapper
 		if (isElement()) 
 		{
 			if (namespaceUri != null) {
-				final AttrValue attrValue = ((AuthorElement)authorNode).getAttribute(authorNode.getNamespaceContext().getPrefixForNamespace(namespaceUri) + ":" + localName);
+				final 		String		namespacePrefix	= authorNode.getNamespaceContext().getPrefixForNamespace(namespaceUri);
+				/*final*/ 	AttrValue 	attrValue 		= ((AuthorElement)authorNode).getAttribute(namespacePrefix + ":" + localName);
+				
+				// <TEMP>
+				// oXygen doesn't handle default attribues within a namesapce from XSD correctly.
+				// Workaround: check for attribute without namespace as well.
+				if (attrValue == null) {
+					attrValue = ((AuthorElement)authorNode).getAttribute(localName);	
+				}
+				// </TEMP>
+				
 				return (attrValue == null) ? null : attrValue.getValue();
 			} else {
 				final AttrValue attrValue = ((AuthorElement)authorNode).getAttribute(localName);
@@ -114,7 +127,7 @@ public class AuthorNodeWrapper implements NodeWrapper
 	}
 
 	@Override
-	public int getChildIndexWithinParent() {
+	public int getChildElementIndexWithinParent() {
 		final AuthorNode parent = authorNode.getParent();
 		if (parent == null) {
 			return -1;
@@ -122,7 +135,17 @@ public class AuthorNodeWrapper implements NodeWrapper
 			return 1;
 		} else {
 			//logger.info("parent: " + parent.getDisplayName() + ", type: " + parent.getType() + ", baseUrl: " + parent.getXMLBaseURL());
-			return ((AuthorParentNode)parent).getContentNodes().indexOf(authorNode) + 1;
+			List<AuthorNode> childList = ((AuthorParentNode)parent).getContentNodes();
+			int index = 1;
+			for (AuthorNode child: childList) {
+				if (child.getType() == AuthorNode.NODE_TYPE_ELEMENT) {
+					if (child == authorNode) {
+						return index;
+					}
+					++index;
+				}
+			}
+			return -1;
 		}
 	}
 	
@@ -147,25 +170,205 @@ public class AuthorNodeWrapper implements NodeWrapper
 	}
 
 	@Override
-	public String evaluateXPathToString(String xPath) throws XPathException {
-		//logger.info("getStringByXPath() AuthorNode");
-		if (authorAccess == null) {
-			throw new XPathException("AuthorNodeWrapper: Can't evaluate XPath ('" + xPath + "') without AuthorAccess.");
-		} else {
-			try {
-				Object[] Ergebnis = authorAccess.getDocumentController().evaluateXPath(xPath/*Resolved*/, authorNode, false, false, false, false);
-				if (Ergebnis.length == 1) {
-					if (Ergebnis[0] instanceof Node) {
-						return ((Node)Ergebnis[0]).getTextContent();
-					} else {
-						return (String)Ergebnis[0];
-					}
+	public String evaluateXPathToString(String xPath) throws XPathException, XPathNotAvaliableException {
+		checkXPathAvailable();
+		
+		try {
+			Object[] result = authorAccess.getDocumentController().evaluateXPath(preprocessXPath(xPath), authorNode, false, false, false, false);
+			if (result.length == 0) {
+				return null;
+			} else if (result.length == 1) {
+				if (result[0] instanceof Node) {
+					return ((Node)result[0]).getTextContent();
 				} else {
-					throw new XPathException("XPath expression ('" + xPath + "') doesn't return a single item.");
+					return (String)result[0];
 				}
-			} catch (AuthorOperationException e){
-				throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
+			} else {
+				throw new XPathException("XPath expression ('" + xPath + "') doesn't return a single item.");
 			}
+		} catch (AuthorOperationException e){
+			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public NodeWrapper evaluateXPathToNode(String xPath) throws XPathException, XPathNotAvaliableException {
+
+		checkXPathAvailable();
+		
+		try {
+			AuthorNode[] result = authorAccess.getDocumentController().findNodesByXPath(preprocessXPath(xPath), authorNode, true, true, false, false);
+			if ((result.length > 0) && (result[0] instanceof AuthorElement)) {
+				return new AuthorNodeWrapper((AuthorNode)result[0], authorAccess);
+			} else {
+				/*logger.info("XXXXXXXXXXXXXXXXX " + xPath);
+				if (authorNode.getParent() != null) {
+					logger.info("parent: " + authorNode.getParent().getDisplayName());
+					if (authorNode.getParent().getParent() != null) {
+						logger.info("grandparent: " + authorNode.getParent().getParent().getDisplayName());
+					}
+				}*/
+				throw new XPathException("XPath expression ('" + xPath + "') doesn't result in a single element. (" + result.length + ")");
+			}
+		} catch (AuthorOperationException e) {
+			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
+		}
+		
+	}
+
+	@Override
+	public List<String> evaluateXPathToStringList(String xPath) throws XPathException, XPathNotAvaliableException {
+	
+		checkXPathAvailable();
+		
+		try {
+			Object[] result = authorAccess.getDocumentController().evaluateXPath(preprocessXPath(xPath), authorNode, false, false, false, false);
+			List<String> list = new LinkedList<>();
+			for (int i = 0; i < result.length; ++i) {
+				if (result[i] instanceof Node) {
+					list.add(((Node)result[i]).getTextContent());
+				} else {
+					list.add((String)result[i]);
+				}
+			}
+			//logger.info("list to string: " + list.toString());
+			//logger.info("array list to string: " + Arrays.toString(list.toArray()));
+			return list;
+		} catch (AuthorOperationException e){
+			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
+		}
+	}
+	
+
+	private String preprocessXPath(String xPath) throws XPathException, XPathNotAvaliableException {
+		return OxyXPathHandler.getInstance().preprocessXPath(xPath, this);
+	}
+
+	public NodeWrapper getRootNode() {
+		AuthorNode parent = authorNode;
+		while (parent.getParent() != null) {
+			parent = parent.getParent();
+		}
+		return new AuthorNodeWrapper(parent, authorAccess);
+	}
+
+	@Override
+	public NodeWrapper getRootElement() {
+		AuthorNode parent = authorNode;
+		while ((parent.getParent() != null) && (parent.getParent().getType() != AuthorNode.NODE_TYPE_DOCUMENT)) {
+			parent = parent.getParent();
+		}
+		return new AuthorNodeWrapper(parent, authorAccess);
+	}
+
+	@Override
+	public boolean isText() {
+		return false;
+	}
+
+	@Override
+	public String getTextContent() {
+		if (authorNode.getStartOffset() > 0) {
+			try {
+				return authorNode.getTextContent();
+			} catch (BadLocationException e) {
+				return "";
+			}
+		} else {
+			return "";
+		}
+	}
+
+	@Override
+	public List<NodeWrapper> getChildNodes() {
+
+		//logger.info("getChildNodes (" + authorNode.getDisplayName() + ")");
+		
+		List<NodeWrapper> childList = new LinkedList<NodeWrapper>();
+		if (isElement()) {
+			List<AuthorNode> nodeList = ((AuthorElement)authorNode).getContentNodes();
+			if (authorAccess != null) {
+				final AuthorDocumentController docController = authorAccess.getDocumentController();
+				int prevEndOffset = authorNode.getStartOffset();
+				for (AuthorNode child: nodeList) {
+					if (child.getStartOffset() > prevEndOffset + 1) {	
+						try {
+							final Content 	content = docController.createDocumentFragment(prevEndOffset + 1, child.getStartOffset() - 1).getContent();
+							final String	text	= content.getString(0,  content.getLength());
+							childList.add(new AuthorTextNodeWrapper(text));
+						} catch (BadLocationException e) {
+							logger.error(e, e);
+						}
+					}
+					childList.add(new AuthorNodeWrapper(child, authorAccess));
+					prevEndOffset = child.getEndOffset();
+				}
+				if (authorNode.getEndOffset() > prevEndOffset + 1) {
+					try {
+
+						final Content 	content = docController.createDocumentFragment(prevEndOffset + 1, authorNode.getEndOffset() - 1).getContent();
+						final String	text	= content.getString(0,  content.getLength());
+						childList.add(new AuthorTextNodeWrapper(text));
+					} catch (BadLocationException e) {
+						logger.error(e, e);
+					}
+				}
+			} else {
+				// Text-Knoten können nicht generiert werden.
+				for (AuthorNode child: nodeList) {
+					childList.add(new AuthorNodeWrapper(child, authorAccess));
+				}	
+			}
+		}
+		
+		return childList;
+	}
+
+	@Override
+	public String getName() {
+		return authorNode.getName();
+	}
+	
+	public void setAttribute(String attrName, String value) {
+		if (isElement()) {
+			if (value != null) {
+				((AuthorElement)authorNode).setAttribute(attrName, new AttrValue(value));
+			} else {
+				((AuthorElement)authorNode).removeAttribute(attrName);
+			}
+		}
+	}
+
+	public AuthorNode getAuthorNode() {
+		return authorNode;
+	}
+
+	@Override
+	public boolean isSameNode(NodeWrapper node) {
+		if (node instanceof AuthorNodeWrapper) {
+			final AuthorNode authorNode2 = ((AuthorNodeWrapper)node).getAuthorNode();
+			return (authorNode.getStartOffset() == authorNode2.getStartOffset()) &&
+					(authorNode.getXMLBaseURL().getPath().equals(authorNode2.getXMLBaseURL().getPath()));
+		} else {
+			return false;
+		}
+	}
+
+	private void checkXPathAvailable() throws XPathException, XPathNotAvaliableException {
+		if (authorAccess == null) {
+			throw new XPathException("AuthorNodeWrapper: Can't evaluate XPath without AuthorAccess.");
+		}
+		/*
+		 *  In  Oxygen author mode in some cases (right after changes) the node can't be used as context for evaluating an xpath expression.
+		 *  This can be noticed by checking if the xpath "." results in the node itself.
+		 */
+		try {
+			final AuthorNode[] results = authorAccess.getDocumentController().findNodesByXPath(".", authorNode, true, true, false, false);
+			if ((results.length != 1) || (results[0].getStartOffset() != authorNode.getStartOffset())) {
+				throw new XPathNotAvaliableException();
+			}
+		} catch (Exception e) {
+			throw new XPathNotAvaliableException();
 		}
 	}
 

@@ -36,16 +36,19 @@ public class RefreshXsltConref implements AuthorOperation {
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
 			
 			AuthorNode 	xsltConrefNode 	= nodeAtCaret;
-			XsltConref	xsltConref 	= XsltConrefResolver.xsltConrefFromNode(xsltConrefNode, authorAccess);
+			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess);
 			if (xsltConref == null) {
 				// check if the parent node is an XSLT-Conref
-				xsltConrefNode = nodeAtCaret.getParent();
-				XsltConrefResolver.xsltConrefFromNode(xsltConrefNode, authorAccess);
+				xsltConrefNode 	= nodeAtCaret.getParent();
+				xsltConref 		= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess);
 			}
-			
+
 			if (xsltConref != null) {
 				// ensure the script will be recompiled.
-				XsltConrefResolver.getTransformerCache().removeFromCache(xsltConref.getScriptUrl());
+				XsltConrefResolver.getInstance().getTransformerCache().removeFromCache(xsltConref.getScriptUrl());
+
+				// ensure the schema will be reloaded.
+				XsltConrefResolver.getInstance().getTransformerCache().getConfiguration().clearSchemaCache();
 			}
 			authorAccess.getDocumentController().refreshNodeReferences(xsltConrefNode);
 			

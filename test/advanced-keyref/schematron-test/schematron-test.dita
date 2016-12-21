@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd"
+	xml:lang="en">
+	<title>Advanced KeyRef Schematron Test</title>
+	<body>
+		<section id="rzx_tc1_by">
+			<title>Valid Definitions</title>
+			<dl outputclass="bullet-list-titles">
+				<dlentry id="ad4_nc1_by">
+					<dt ikd:key-type="Test" id="g4d_hzh_by">Minimal</dt>
+					<dd>
+						<p id="prj_mzh_by">No additional properties set at all.</p>
+					</dd>
+				</dlentry>
+				<dlentry id="hnp_kl1_by">
+					<dt ikd:key-type="Test" ikd:name="dd/dl/dlentry[dt='Name']/dd"
+						ikd:root="parent::dlentry"
+						ikd:desc="string(dd/dl/dlentry[dt='Description']/dd)"
+						ikd:namespace="dd/dl/dlentry[dt='Namespace']/dd">Complete</dt>
+					<dd>
+						<p id="rl2_mzh_by">Additional properties set.</p>
+						<dl outputclass="bullet-list-dashes">
+							<dlentry>
+								<dt>Name</dt>
+								<dd>Key-Name</dd>
+							</dlentry>
+							<dlentry>
+								<dt>Namespace</dt>
+								<dd>Key-Namespace</dd>
+							</dlentry>
+							<dlentry>
+								<dt>Description</dt>
+								<dd>Key-Description</dd>
+							</dlentry>
+						</dl>
+					</dd>
+				</dlentry>
+				<dlentry id="npl_mr3_by">
+					<dt id="rbd_kq3_by" ikd:key-type="Test" ikd:key="dd/dl/dlentry[dt='Key']/dd"
+						ikd:name="dd/dl/dlentry[dt='Name']/dd" ikd:root="parent::dlentry"
+						ikd:desc="string(dd/dl/dlentry[dt='Description']/dd)"
+						ikd:namespace="dd/dl/dlentry[dt='Namespace']/dd">SeperateKey</dt>
+					<dd>
+						<p id="bhj_2b3_by">The key is read by an xPath expression</p>
+						<dl outputclass="bullet-list-dashes">
+							<dlentry>
+								<dt>Key</dt>
+								<dd>Key-Key</dd>
+							</dlentry>
+							<dlentry>
+								<dt>Name</dt>
+								<dd>Key-Name</dd>
+							</dlentry>
+							<dlentry>
+								<dt>Namespace</dt>
+								<dd>Key-Namespace</dd>
+							</dlentry>
+							<dlentry>
+								<dt>Description</dt>
+								<dd>Key-Description</dd>
+							</dlentry>
+						</dl>
+					</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="j3g_1zh_by">
+			<title>Valid References</title>
+			<p id="k3g_1zh_by">
+				<ul id="nqv_1zh_by">
+					<li id="oqv_1zh_by"><key-xref outputclass="key" akr:ref="Test:Minimal">Minimal</key-xref></li>
+					<li id="vy2_4b3_by"><key-xref outputclass="key-name-braced"
+						akr:ref="Test:Key-Namespace/Complete">Complete</key-xref></li>
+					<li id="ugy_4b3_by"><key-xref outputclass="key-name-braced"
+						akr:ref="Test:Key-Namespace/Key-Key">Key-Key</key-xref></li>
+					<li id="fv5_js3_by"><key-xref outputclass="key" akr:ref="test:No-implicit-root-ID"
+							>No-implicit-root-ID</key-xref> (no active link)</li>
+					<li id="mlf_ls3_by"><key-xref outputclass="key" akr:ref="test:No-explicit-root-ID"
+							>No-explicit-root-ID</key-xref> (no active link)</li>
+				</ul>
+			</p>
+		</section>
+		<section id="xxd_bzh_by">
+			<title>Invalid Definitions</title>
+			<p id="yxd_bzh_by">
+				<dl>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:root="((">Invalid-root-xpath</dt>
+						<dd>Invalid xpath expression for root</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:key="((">Invalid-key-xpath</dt>
+						<dd>Invalid xpath expression for key</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:namespace="((">Invalid-namespace-xpath</dt>
+						<dd>Invalid xpath expression for namespace</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:name="((">Invalid-name-xpath</dt>
+						<dd>Invalid xpath expression for name</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:desc="((">Invalid-desc-xpath</dt>
+						<dd>Invalid xpath expression for desc</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" id="hbb_4r3_by">Invalid.Key</dt>
+						<dd>Key contains "."</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:namespace="('x', 'a.b', 'z')" id="k24_pr3_by"
+							>Invalid-namespace-value</dt>
+						<dd>Namespace contains an element with "."</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:root="not-existing">Missing-root</dt>
+						<dd>The xpath expression for root does not select anything</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" ikd:root="following-sibling::dd"
+							>Non-ancestor-root</dt>
+						<dd id="c5h_kr3_by">The root element is no ancestor of the key element</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="test">No-implicit-root-ID</dt>
+						<dd>The implicitly specified root element (the element itself) has no ID
+							attribute</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="test" ikd:root="parent::dlentry">No-explicit-root-ID</dt>
+						<dd>The explicitly specified root element has no ID attribute</dd>
+					</dlentry>
+					<dlentry>
+						<dt ikd:key-type="Test" id="kgy_1s3_by">Dublicated-key</dt>
+						<dt ikd:key-type="Test" id="jkc_bs3_by">Dublicated-key</dt>
+						<dd>Two identical keys.<draft-comment author="Patrik Stellmann"
+							>TODO...</draft-comment></dd>
+					</dlentry>
+				</dl>
+			</p>
+		</section>
+		<section id="o4p_bzh_by">
+			<title>Invalid references</title>
+			<p>
+				<dl>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced"
+								akr:ref="Test:Key-Namespace/Complete" akr:type="Test2"
+								>Complete</key-xref></dt>
+						<dd>Invalid type</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced"
+								akr:ref="Test:Key-Namespace/Complete" akr:namespace="(("
+								>Complete</key-xref></dt>
+						<dd>Invalid xpath expression for namespace</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								>CompleteX</key-xref></dt>
+						<dd>The text content does not match the referenced KeyDef</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced"
+								akr:ref="Test:Key-Namespace/CompleteX">CompleteX</key-xref></dt>
+						<dd>No matching KeyDef for ref</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								akr:namespace="'Key2-Namespace'">Complete</key-xref></dt>
+						<dd>Referenced namespace does not match namespace</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="name" akr:ref="Test:Minimal">Minimal</key-xref></dt>
+						<dd>No name to be displayed for outputclass 'name'</dd>
+					</dlentry>
+					<dlentry>
+						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								akr:path-len="3">Complete</key-xref></dt>
+						<dd>Text content does not match @path-len</dd>
+					</dlentry>
+				</dl>
+			</p>
+		</section>
+	</body>
+</topic>

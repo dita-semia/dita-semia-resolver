@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:cba		= "http://www.dita-semia.org/conbat"
+	elementFormDefault="qualified">
+	
+	
+	<xs:import namespace="http://www.dita-semia.org/conbat" schemaLocation="conbat-attr.xsd"/>
+
+	<xs:redefine schemaLocation="urn:oasis:names:tc:dita:xsd:commonElementMod.xsd:1.3">
+		<xs:attributeGroup name="title.attributes">
+			<xs:attributeGroup ref="title.attributes"/>
+			<xs:attribute ref="cba:prefix" fixed="Prefix: "/>
+		</xs:attributeGroup>
+	</xs:redefine>
+	
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd:1.3"/>
+	
+</xs:schema>

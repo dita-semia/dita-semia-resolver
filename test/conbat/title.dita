@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<topic xmlns:cba = "http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
 	<title>Titles</title>
 	<body>
 		<section cba:title="Attribute Title">

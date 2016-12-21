@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:cba		= "http://www.dita-semia.org/conbat"
+	elementFormDefault="qualified">
+	
+	
+	
+	
+	<xs:element name="fixed-title-topic">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="body">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="p">
+								<xs:complexType mixed="true">
+									<xs:attribute name="class" fixed="+ topic/p "/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="class" fixed="+ topic/body "/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id"/>
+			<xs:attribute name="class" fixed="+ topic/topic "/>
+			<xs:attribute name="domains" fixed=""/>
+		</xs:complexType>
+	</xs:element>
+
+	
+</xs:schema>

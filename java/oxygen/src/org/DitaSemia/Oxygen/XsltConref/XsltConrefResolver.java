@@ -6,19 +6,28 @@
 package org.DitaSemia.Oxygen.XsltConref;
 
 import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.transform.sax.SAXSource;
 
 import net.sf.saxon.Configuration;
-import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.Sequence;
+import net.sf.saxon.s9api.QName;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
+import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
+import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Base.XsltConref.XsltConref.Parameter;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
+import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.OxySaxonConfigurationFactory;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -31,63 +40,45 @@ import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocument;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.exml.workspace.api.util.XMLUtilAccess;
 
 public class XsltConrefResolver {
 	
 	private static final Logger logger = Logger.getLogger(XsltConrefResolver.class.getName());
+
+
+	private static XsltConrefResolver instance			= null;
 	
 
-	protected static XslTransformerCache	transformerCache	= null;
-	protected static XPathCache				xPathCache			= null;
-	protected static boolean				staticInitComplete	= false;
+	protected final Configuration 		configuration;
+	protected final XslTransformerCache	transformerCache;
+	protected final XPathCache			xPathCache;
+	protected final List<Parameter> 	frameworkParameters	= new LinkedList<>();
+	
 
-	protected static void initStatic() {
-		if (!staticInitComplete) {
+	public static final String	NAME_TEMP_CONTEXT 	= "temp-context";
 
-			staticInitComplete 	= true;
-			
-			try {
-				final Configuration configuration = XsltConref.createConfiguration();
-				
-				/*
-				 * To allow the error and output messages to be displayed within oxygen and to use the catalogs the configuration needs to contain the handlers.
-				 * To get these create a transformer through oXygen API can take the required handlers from its configuration. 
-				 */
-				final String 			dummyXsl 	= "<xsl:transform xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"/>";
-				final TransformerImpl 	temp 		= (TransformerImpl)PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess().createXSLTTransformer(
-						new SAXSource(new org.xml.sax.InputSource(new StringReader(dummyXsl))), 
-						null, 
-						XMLUtilAccess.TRANSFORMER_SAXON_HOME_EDITION,
-						false);
-				Configuration baseConfiguration = temp.getConfiguration();
-				
-				configuration.setErrorListener(baseConfiguration.getErrorListener());
-				configuration.setLogger(baseConfiguration.getLogger());
-				configuration.setModuleURIResolver(baseConfiguration.getModuleURIResolver());
-				configuration.setOutputURIResolver(baseConfiguration.getOutputURIResolver());
-				configuration.setStandardErrorOutput(baseConfiguration.getStandardErrorOutput());
-				configuration.setTraceListener(baseConfiguration.getTraceListener());
-				configuration.setURIResolver(baseConfiguration.getURIResolver());
-				configuration.setSourceResolver(baseConfiguration.getSourceResolver());
-				configuration.setSourceParserClass(baseConfiguration.getSourceParserClass());
 
-				configuration.getDefaultXsltCompilerInfo().setMessageReceiverClassName(baseConfiguration.getDefaultXsltCompilerInfo().getMessageReceiverClassName());
-				configuration.getDefaultXsltCompilerInfo().setOutputURIResolver(baseConfiguration.getDefaultXsltCompilerInfo().getOutputURIResolver());
-				configuration.getDefaultXsltCompilerInfo().setURIResolver(baseConfiguration.getDefaultXsltCompilerInfo().getURIResolver());
-
-				transformerCache	= new XslTransformerCache(configuration);
-				xPathCache			= new XPathCache(configuration);
-				
-			} catch (Exception e) {
-				logger.error(e, e);
-			}
+	public static XsltConrefResolver getInstance() {
+		if (instance == null) {
+			instance = new XsltConrefResolver();
 		}
+		return instance;
 	}
 	
-	public static XsltConref xsltConrefFromNode(AuthorNode node, AuthorAccess authorAccess) {
-		initStatic();
+	public XsltConrefResolver() {
+		configuration 		= XsltConref.createConfiguration(DocumentCacheHandler.getInstance());
+		OxySaxonConfigurationFactory.adaptConfiguration(configuration);
+		
+		
+		transformerCache	= new XslTransformerCache(this.configuration);
+		xPathCache			= new XPathCache(this.configuration);
+	}
+
+	public void addFrameworkParameter(QName name, Sequence value) {
+		frameworkParameters.add(new Parameter(name, value));
+	}
+	
+	public XsltConref xsltConrefFromNode(AuthorNode node, AuthorAccess authorAccess) {
 		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess), transformerCache, xPathCache);
 		return xsltConref;
 	}
@@ -103,8 +94,9 @@ public class XsltConrefResolver {
 	
 	public static void checkXsltConrefTarget(AuthorNode node, AuthorDocument targetDocument) throws ValidatingReferenceResolverException {
 		
-		if (targetDocument.getRootElement().getDisplayName().equals(XsltConref.NAME_NO_CONTENT)) {
-			// <no-content> is always valid as result element
+		final String rootName = targetDocument.getRootElement().getDisplayName(); 
+		if ((rootName.equals(XsltConref.NAME_NO_CONTENT)) || (rootName.equals(NAME_TEMP_CONTEXT))) {
+			// <no-content> and <temp-context> are always valid as result element
 			return;
 		}
 		
@@ -140,23 +132,33 @@ public class XsltConrefResolver {
 	    }
     }
 	
-	public static SAXSource resolveXsltConref(XsltConref xsltConref, AuthorAccess authorAccess) throws ReferenceResolverException {
+	public SAXSource resolveXsltConref(XsltConref xsltConref, AuthorAccess authorAccess) throws ReferenceResolverException {
 		String resolvedString;
 		try {
-			final NodeInfo resolvedNode = xsltConref.resolve();
+			final NodeInfo resolvedNode = xsltConref.resolve(frameworkParameters);
 			resolvedString = SaxonNodeWrapper.serializeNode(resolvedNode);
 		} catch (XPathException e) {
+			logger.error(e.getMessage(), e);
 			throw new ReferenceResolverException(e.getMessage(), true, true);
+		} catch (TempContextException e) {
+			resolvedString = "<" + NAME_TEMP_CONTEXT + "/>";
 		}
 		final XMLReader xmlReader = authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();
 		final SAXSource	saxSource = new SAXSource(xmlReader, new InputSource(new StringReader(resolvedString)));
-		//logger.info("resolvedString: " +  resolvedString);
 		
 		return saxSource;
 	}
 
-	public static XslTransformerCache getTransformerCache() {
-		initStatic();
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public XslTransformerCache getTransformerCache() {
 		return transformerCache;
 	}
+
+	public XPathCache getXPathCache() {
+		return xPathCache;
+	}
+
 }

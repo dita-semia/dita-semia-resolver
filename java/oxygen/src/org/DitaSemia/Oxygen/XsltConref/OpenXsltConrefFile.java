@@ -36,10 +36,10 @@ public class OpenXsltConrefFile implements AuthorOperation {
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
 			//logger.info("nodeAtCaret: " + nodeAtCaret.getDisplayName());
 			
-			XsltConref	xsltConref 	= XsltConrefResolver.xsltConrefFromNode(nodeAtCaret, authorAccess);
+			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret, authorAccess);
 			if (xsltConref == null) {
 				// check if the parent node is an XSLT-Conref
-				xsltConref 	= XsltConrefResolver.xsltConrefFromNode(nodeAtCaret.getParent(), authorAccess);
+				xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret.getParent(), authorAccess);
 				//logger.info("nodeAtCaret.getParent(): " + nodeAtCaret.getParent().getDisplayName());
 			}
 			if (xsltConref != null) {

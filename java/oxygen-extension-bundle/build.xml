@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JAR Builder" default="jar" basedir=".">
+
+	<property name="archivename" 			value="DitaSemiaOxygenExtensionBundle"/>
+	<property name="src.dir" 				value="src"/>
+	<property name="oxygen.lib.dir" 		value="${OXYGENXML}/lib"/>
+	<property name="oxygen.dita.lib.dir" 	value="${OXYGENXML}/frameworks/dita"/>
+
+	<path id="classpath">
+		<fileset dir="../base" 					includes="DitaSemiaBase.jar"/>
+		<fileset dir="../oxygen" 				includes="DitaSemiaOxygen.jar"/>
+		<fileset dir="${oxygen.lib.dir}" 		includes="**/*.jar"/>
+		<fileset dir="${oxygen.dita.lib.dir}" 	includes="dita.jar"/>
+	</path>
+
+	<target name="clean">
+		<delete dir="bin"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src" target="1.8" source="1.8" destdir="bin" classpathref="classpath" debug="true" debuglevel="lines,source" includeantruntime="no"/>
+	</target>
+
+	<target name="jar" description="Kreieren eines JAR Archives Project Builder)" depends="clean, compile">
+
+		<delete file="${archivename}.jar"/>
+		<delete file="MANIFEST.MF"/>
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="PST"/>
+			<attribute name="Class-Path" value=". ${archivename}"/>
+		</manifest>
+
+		<jar jarfile="${archivename}.jar" manifest="MANIFEST.MF">
+			<fileset dir="bin"  		includes="**/*.class"/>
+		</jar>
+
+	</target>
+</project>

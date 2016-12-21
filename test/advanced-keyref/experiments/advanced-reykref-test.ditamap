@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>DITA Topic Map</title>
+	<topicref href="Definitions.dita"/>
+	<topicref href="References.dita"/>
+	<keydef href="Definitions.dita#q4v_whz_qw" keys="Komponente:CX123"/>
+	<keydef href="Definitions.dita#zvx_whz_qw" keys="Parameter:CX123.Test-Parameter-1"/>
+</map>

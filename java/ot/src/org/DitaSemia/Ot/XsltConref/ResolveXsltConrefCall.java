@@ -53,9 +53,9 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 			}
 			
 			// set original URL as base URI to resolve relative URIs correctly
-			xsltConref.setBaseUri(otResolver.getCurrentBaseUri());
+			xsltConref.setBaseUrl(otResolver.getCurrentBaseUrl());
 			
-			final NodeInfo resolvedNode 	= xsltConref.resolve();
+			final NodeInfo resolvedNode 	= xsltConref.resolve(null);
 			final NodeInfo resolvedElement 	= resolvedNode.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next();
 	
 			//logger.info("resolved: " + SaxonNodeWrapper.serializeNode(resolvedElement));

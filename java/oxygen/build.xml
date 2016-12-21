@@ -4,12 +4,10 @@
 	<property name="archivename" 			value="DitaSemiaOxygen"/>
 	<property name="src.dir" 				value="src"/>
 	<property name="oxygen.lib.dir" 		value="${OXYGENXML}/lib"/>
-	<property name="oxygen.dita.lib.dir" 	value="${OXYGENXML}/frameworks/dita"/>
 
 	<path id="classpath">
 		<fileset dir="../base" 					includes="DitaSemiaBase.jar"/>
 		<fileset dir="${oxygen.lib.dir}" 		includes="**/*.jar"/>
-		<fileset dir="${oxygen.dita.lib.dir}" 	includes="dita.jar"/>
 	</path>
 
 	<target name="clean">
@@ -32,8 +30,6 @@
 
 		<jar jarfile="${archivename}.jar" manifest="MANIFEST.MF">
 			<fileset dir="bin"  		includes="**/*.class"/>
-			<fileset dir="../base/bin"  includes="**/*.class"/>
-			<fileset dir="../base/src"	includes="cfg/*"/>
 		</jar>
 
 		<!-- Copy library to oxygen lib folder as well - won't work when oXygen is running. -->

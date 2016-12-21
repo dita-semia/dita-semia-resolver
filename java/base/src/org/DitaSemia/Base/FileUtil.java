@@ -36,9 +36,9 @@ public class FileUtil {
 			try {
 				return new URL(node.getConfiguration().getURIResolver().resolve(uri, node.getBaseURI()).getSystemId());
 			} catch (MalformedURLException | TransformerException e) {
-				logger.error(e);
-				return null;
+				logger.error(e, e);
 			}
+			return null;
 		} else {
 			return null;
 		}
