@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.sf.saxon.trans.XPathException;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.XPathNotAvaliableException;
@@ -158,9 +159,9 @@ public class KeyDef implements KeyDefInterface {
 	@Override
 	public String getDefLocation() {
 		if (defAncestorTopicId == null) {
-			return DocumentCache.decodeUrl(defUrl) + "#" + getDefId();
+			return DitaUtil.decodeUrl(defUrl) + "#" + getDefId();
 		} else {
-			return DocumentCache.decodeUrl(defUrl) + "#" + defAncestorTopicId + "/" + getDefId();
+			return DitaUtil.decodeUrl(defUrl) + "#" + defAncestorTopicId + "/" + getDefId();
 		}
 	}
 	

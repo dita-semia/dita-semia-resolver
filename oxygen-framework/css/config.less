@@ -1,17 +1,17 @@
 
 /* general */
 @conbat-background						: rgb(240, 240, 240);
-@conbat-inline-index					: 14;	/* used in :begin(n) and :after(n) for generated inline content */
-@conbat-paragraph-index					: 10;	/* used in :begin(n) and :after(n) for generated paragraph content */
+@conbat-inline-index					: 14;	/* used in :before(n) and :after(n) for generated inline content */
+@conbat-paragraph-index					: 10;	/* used in :before(n) and :after(n) for generated paragraph content */
 @conbat-default-content-index			: 10;	/* used in :after(n) for generated default content */
 @conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
-@conbat-title-index						: 15;	/* used in :begin(n) for generated titles */
-@conbat-header-index					: 16;	/* used in :begin(n) for generated table header - needs to be greater than @conbat-inline-index */
-@conbat-dt-index						: 14;	/* used in :begin(n) for generated dts */
+@conbat-title-index						: 15;	/* used in :before(n) for generated titles */
+@conbat-header-index					: 16;	/* used in :before(n) for generated table header - needs to be greater than @conbat-inline-index */
+@conbat-dt-index						: 14;	/* used in :before(n) for generated dts */
 @conbat-edit-brace1-index				: 1;	/* used in :after(n) for opening brace of attribute edits */
 @conbat-edit-index						: 2;	/* used in :after(n) for attribute edits */
 @conbat-edit-brace2-index				: 5;	/* used in :after(n) for closing brace of attribute edits */
-@csli-comma-index						: 14;	/* used in :begin(n) for generated commas in comma separated lists */
+@csli-comma-index						: 14;	/* used in :before(n) for generated commas in comma separated lists */
 @code-font-family						: "Courier New", Monospace;
 @body-font-family						: "Palatine Linotype", Serif;
 @topic-title-font-family				: "Franklin Gothic Medium", Arial;
@@ -25,6 +25,7 @@
 @keyref-name-suffix-index				: 3;
 @edit-only-font-size-scale				: 0.8;
 @edit-only-text-color					: rgb(140, 140, 140);
+@topic-num-prefix-index					: 20;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.TopicNumStylesFilter */
 
 @keyref-autotext-background-color		: @conbat-background;
 

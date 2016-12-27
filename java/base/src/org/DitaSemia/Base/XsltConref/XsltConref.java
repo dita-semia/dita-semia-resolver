@@ -32,6 +32,7 @@ import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.DocumentCacheProvider;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
@@ -168,11 +169,11 @@ public class XsltConref {
 						xmlSource 			= node.getUriResolver().resolve(baseUrl, "");;
 						xmlSourceIsBaseUrl 	= true;
 					} catch (TransformerException e) {
-						throw new XPathException("Error resolving the source URL: '" + DocumentCache.decodeUrl(baseUrl) + "': " + e.getMessage());
+						throw new XPathException("Error resolving the source URL: '" + DitaUtil.decodeUrl(baseUrl) + "': " + e.getMessage());
 					}
 				} else if (!FileUtil.fileExists(xmlSource.getSystemId())) {
 					// dedicated error message for this scenario
-					throw new XPathException("Input source could not be found. (URL: '" + DocumentCache.decodeUrl(xmlSource.getSystemId()) + "')");
+					throw new XPathException("Input source could not be found. (URL: '" + DitaUtil.decodeUrl(xmlSource.getSystemId()) + "')");
 				}
 				
 				// remove the provided xml reader to force saxon creating its own one using the configuration and, thus, expanding the attribute defaults
@@ -216,7 +217,7 @@ public class XsltConref {
 							logger.error(" - " + suppressed[i].getMessage());
 						}
 					}
-					throw new XPathException("Error reading input source ('" + DocumentCache.decodeUrl(xmlSource.getSystemId()) + "'): " + e.getMessage());
+					throw new XPathException("Error reading input source ('" + DitaUtil.decodeUrl(xmlSource.getSystemId()) + "'): " + e.getMessage());
 				}
 			}
 		} else if (sourceType.equals("text")) {

@@ -1,38 +1,41 @@
 package org.DitaSemia.Base.DocumentCaching;
 
-import java.util.Collection;
-import java.util.LinkedList;
 
+import org.DitaSemia.Base.DitaUtil;
+import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.NodeWrapper;
 import org.apache.log4j.Logger;
 
-public class CachedTopicRef {
+public class CachedTopicRef extends CachedTopicRefContainer {
+	
+	public static final int TYPE_UNKNOWN		= -1;
+	public static final int TYPE_FRONTMATTER	= 0;
+	public static final int TYPE_CHAPTER		= 1;
+	public static final int TYPE_APPENDIX		= 2;
+	public static final int TYPE_BACKMATTER		= 3;
+	public static final int TYPE_TOPIC			= 4;
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(CachedTopicRef.class.getName());
 
-	protected final CachedFile 		containingFile;
-	protected final CachedFile 		referencedFile;
-	protected final CachedTopicRef 	parentTopicRef;
-	
-	protected final Collection<CachedTopicRef> childTopicRefs = new LinkedList<>();
+	protected final CachedFile 				containingFile;
+	protected final CachedFile 				referencedFile;
+	protected final CachedTopicRefContainer parentContainer;
+	protected final NodeWrapper 			node;
+	protected final int						type;
+	protected final int						position;
+	protected final String					localNum;
 
-	public CachedTopicRef(CachedFile containingFile, CachedFile referencedFile, CachedTopicRef parentTopicRef) {
-		this.containingFile	= containingFile;
-		this.referencedFile = referencedFile;
-		this.parentTopicRef	= parentTopicRef;
-		
-		if (parentTopicRef != null) {
-			parentTopicRef.addChildTopicRef(this);
-		} else {
-			containingFile.addRootTopicRef(this);
-		}
+	public CachedTopicRef(CachedFile containingFile, CachedFile referencedFile, CachedTopicRefContainer parentContainer, NodeWrapper node) {
+		this.containingFile		= containingFile;
+		this.referencedFile 	= referencedFile;
+		this.parentContainer	= parentContainer;
+		this.node				= node;
+		this.type				= getType(node.getAttribute(DitaUtil.ATTR_CLASS, null));
+		this.position			= parentContainer.addChildTopicRef(this);
+		this.localNum			= getLocalNum(type, position);
 	}
 	
-	private void addChildTopicRef(CachedTopicRef childTopicRef) {
-		//logger.info("addChildTopicRef : " + childTopicRef);
-		//logger.info("  parent: " + this);
-		childTopicRefs.add(childTopicRef);
-	}
-
 	public CachedFile getContainingFile() {
 		return containingFile;
 	}
@@ -40,32 +43,57 @@ public class CachedTopicRef {
 	public CachedFile getReferencedFile() {
 		return referencedFile;
 	}
-	
-	public CachedTopicRef getParentTopicRef() {
-		return parentTopicRef;
+
+	public CachedTopicRefContainer getParentContainer() {
+		return parentContainer;
 	}
 
-	public Collection<CachedFile> getChildTopics() {
-		//logger.info("  getChildTopics: " + toString());
-		return getChildTopics(childTopicRefs);
-	}
-	
-	public static Collection<CachedFile> getChildTopics(Collection<CachedTopicRef> topicRefs) {
-		final Collection<CachedFile> list = new LinkedList<>();
-		for (CachedTopicRef childTopicRef : topicRefs) {
-			final CachedFile refFile = childTopicRef.getReferencedFile();
-			if (refFile.isMap()) {
-				list.addAll(refFile.getRootTopics());
-			} else {
-				//logger.info("   - " + refFile.getDecodedUrl());
-				list.add(refFile);
-			}
-		}
-		return list;
+	public NodeWrapper getNode() {
+		return node;
 	}
 	
 	public String toString() {
-		return "CachedTopicRef - ref: " + referencedFile.getDecodedUrl() + ", containing: " + containingFile.decodedUrl;
+		return "CachedTopicRef - ref: " + ((referencedFile == null) ? "null" : referencedFile.getDecodedUrl()) + ", containing: " + containingFile.decodedUrl;
+	}
+	
+	public int getType() {
+		return type;
+	}
+	
+	public int getPosition() {
+		return position;
+	}
+	
+	public String getLocalNum() {
+		return localNum;
+	}
+
+	private static String getLocalNum(int type, int position) {
+		if ((type == TYPE_FRONTMATTER) || (type == TYPE_FRONTMATTER)) {
+			return null;	// no numbering!
+		} else if (type == TYPE_APPENDIX) {
+			return DitaUtil.numToLetter(position);
+		} else if ((type == TYPE_TOPIC) || (type == TYPE_CHAPTER)) {
+			return Integer.toString(position);
+		} else {
+			return null;
+		}
+	}
+	
+	private static int getType(String classAttr) {
+		if (classAttr.contains(DitaUtil.CLASS_FRONTMATTER)) {
+			return TYPE_FRONTMATTER;
+		} else if (classAttr.contains(DitaUtil.CLASS_CHAPTER)) {
+			return TYPE_CHAPTER;
+		} else if (classAttr.contains(DitaUtil.CLASS_APPENDIX)) {
+			return TYPE_APPENDIX;
+		} else if (classAttr.contains(DitaUtil.CLASS_BACKMATTER)) {
+			return TYPE_BACKMATTER;
+		} else if (classAttr.contains(DitaUtil.CLASS_TOPIC_REF)) {
+			return TYPE_TOPIC;
+		} else {
+			return TYPE_UNKNOWN;
+		}
 	}
 
 }

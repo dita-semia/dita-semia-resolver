@@ -12,6 +12,7 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
+import org.DitaSemia.Oxygen.DitaSemiaStylesFilter;
 import org.DitaSemia.Oxygen.DocumentCacheHandler;
 import org.apache.log4j.Logger;
 
@@ -28,13 +29,11 @@ import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;*/
 
-public class AdvancedKeyRefStylesFilter {
+public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(AdvancedKeyRefStylesFilter.class.getName());
 	
-	private final static String BEFORE			= "before";
-	private final static String AFTER			= "after";
 
 	private final static String	IMG_LINK		= "link.png";
 	private final static String IMG_LINK_VALID 	= "link_valid.png";
@@ -74,15 +73,6 @@ public class AdvancedKeyRefStylesFilter {
 
 	private static KeyRef getKeyRefFromNode(AuthorNode authorNode) {
 		return KeyRef.fromNode(new AuthorNodeWrapper(authorNode, null));
-	}
-	
-	private static DocumentCache getDocumentCache(AuthorNode authorNode) {
-		final URL baseUrl = authorNode.getXMLBaseURL();
-		if (baseUrl != null) {
-			return DocumentCacheHandler.getInstance().getDocumentCache(baseUrl);
-		} else {
-			return null;
-		}
 	}
 	
 	private static KeyTypeDef getKeyTypeDef(AuthorNode authorNode) {
@@ -173,30 +163,5 @@ public class AdvancedKeyRefStylesFilter {
 			return false;
 		}
 	}
-
-
-	private static void ChangeContentUri(Styles styles, String fromImage, String toImage) {
-		StaticContent[] content = (StaticContent[])styles.getProperty(Styles.KEY_MIXED_CONTENT);
-		if (content != null) {
-			for (int i = 0; i < content.length; ++i) {
-				if ((content[i].getType() == 1/*StaticContent.URI_CONTENT*/) && (((URIContent)content[i]).getHref().contains(fromImage))) {
-					URIContent uriContent = (URIContent)content[i];
-					content[i] = new URIContent(uriContent.getBase(), uriContent.getHref().replace(fromImage, toImage));
-				}
-			}
-		}
-	}
-
-	
-	/*private static AuthorAccess getAuthorAccess() {
-		WSEditor editorAccess = PluginWorkspaceProvider.getPluginWorkspace().getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
-	    if (editorAccess != null) {
-	      WSEditorPage currentPage = editorAccess.getCurrentPage();
-	      if (currentPage instanceof WSAuthorEditorPage) {
-	        return ((WSAuthorEditorPage) currentPage).getAuthorAccess();
-	      }
-	    }
-		return null;
-	}*/
 
 }

@@ -1,5 +1,6 @@
 package org.DitaSemia.Oxygen.ExtensionBundle;
 
+import org.DitaSemia.Oxygen.TopicNumStylesFilter;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter;
 //import org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter;
 
@@ -18,7 +19,7 @@ public class DitaSemiaStylesFilter implements StylesFilter {
 	public Styles filter(Styles styles, AuthorNode authorNode) {
 		boolean handled = AdvancedKeyRefStylesFilter.filter(styles, authorNode);
 		if (!handled) {
-			//ConbatStylesFilter.filter(styles, authorNode);
+			handled = TopicNumStylesFilter.filter(styles, authorNode);
 		}
 		return styles;
 	}

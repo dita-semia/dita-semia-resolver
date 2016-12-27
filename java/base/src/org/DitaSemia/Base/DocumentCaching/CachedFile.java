@@ -1,24 +1,20 @@
 package org.DitaSemia.Base.DocumentCaching;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 import net.sf.saxon.s9api.XdmNode;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.apache.log4j.Logger;
 
-public class CachedFile {
+public class CachedFile extends CachedTopicRefContainer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(CachedFile.class.getName());
 	
-	protected final String 		decodedUrl;
-	protected final XdmNode		rootNode;
-	protected final NodeWrapper	rootWrapper;
-	
-	protected final Collection<CachedTopicRef> rootTopicRefs = new LinkedList<>();
+	protected final String 			decodedUrl;
+	protected final XdmNode			rootNode;
+	protected final NodeWrapper		rootWrapper;
 
 	public CachedFile(String decodedUrl, XdmNode rootNode, NodeWrapper rootWrapper) {
 		this.decodedUrl 	= decodedUrl;
@@ -39,23 +35,12 @@ public class CachedFile {
 	}
 	
 	public boolean isMap() {
-		final String classAttr = rootWrapper.getAttribute(DocumentCache.ATTR_CLASS, null);
+		final String classAttr = rootWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
 		if (classAttr != null) {
-			return classAttr.contains(DocumentCache.CLASS_MAP);
+			return classAttr.contains(DitaUtil.CLASS_MAP);
 		} else {
 			return false;
 		}
-	}
-	
-	public void addRootTopicRef(CachedTopicRef rootTopicRef) {
-		//logger.info("addRootTopicRef : " + rootTopicRef);
-		//logger.info("  parent: " + this);
-		rootTopicRefs.add(rootTopicRef);
-	}
-
-	public Collection<CachedFile> getRootTopics() {
-		//logger.info("  getRootTopics: " + toString());
-		return CachedTopicRef.getChildTopics(rootTopicRefs);
 	}
 	
 	public String toString() {

@@ -28,7 +28,7 @@ abstract public class SaxonConfigurationFactory {
 
 			return configuration;
 		} catch (Exception e) {
-			throw new RuntimeException("failed to load saxon configuration file (" + DocumentCache.decodeUrl(configUrl) + "): " + e.getMessage());
+			throw new RuntimeException("failed to load saxon configuration file (" + DitaUtil.decodeUrl(configUrl) + "): " + e.getMessage());
 		}
 	}
 

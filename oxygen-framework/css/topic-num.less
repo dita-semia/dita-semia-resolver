@@ -1,0 +1,38 @@
+
+
+*[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index}) {
+	content				: "?" " ";
+	background-color	: @conbat-background;
+}
+
+*[class~='topic/topic'] {
+	counter-reset		: topic1;
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] {
+	counter-reset		: topic2;
+	counter-increment	: topic1;
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] {
+	counter-reset		: topic3;
+	counter-increment	: topic2;
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] {
+	counter-reset		: topic4;
+	counter-increment	: topic3;
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index})  {
+	content				: "?" "." counter(topic1) " ";
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index})  {
+	content				: "?" "." counter(topic1) "." counter(topic2) " ";
+}
+
+*[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index})  {
+	content				: "?" "." counter(topic1) "." counter(topic2) ".x"  " ";
+	color				: red;	/* no more supported */
+}

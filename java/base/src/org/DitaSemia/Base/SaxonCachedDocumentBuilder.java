@@ -54,7 +54,7 @@ public class SaxonCachedDocumentBuilder extends SaxonDocumentBuilder {
 		String noNamespaceSchemaLocation = null;
 		if (source.getSystemId() != null) {
 			try {
-				final URL 				decodedUrl	= new URL(DocumentCache.decodeUrl(source.getSystemId()));
+				final URL 				decodedUrl	= new URL(DitaUtil.decodeUrl(source.getSystemId()));
 				final BufferedReader 	reader 		= new BufferedReader(new FileReader(decodedUrl.getFile()));
 				final Pattern 			pattern 	= Pattern.compile("xsi:noNamespaceSchemaLocation=\"([^\"]+)\"");
 				int i = 0;

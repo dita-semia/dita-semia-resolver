@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.sf.saxon.Configuration;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.DocumentCacheInitializer;
 import org.DitaSemia.Base.DocumentCacheProvider;
@@ -62,7 +63,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 				return configuration;
 			}
 		});
-		documentCacheMap.put(DocumentCache.decodeUrl(url), documentCache);
+		documentCacheMap.put(DitaUtil.decodeUrl(url), documentCache);
 		documentCache.fillCache();	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return documentCache;
 	}
@@ -76,7 +77,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
-			final String 	currMapDecodedUrl 	= DocumentCache.decodeUrl(currMapUrl);
+			final String 	currMapDecodedUrl 	= DitaUtil.decodeUrl(currMapUrl);
 			DocumentCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
 				mapCache = createDocumentCache(currMapUrl);
@@ -85,7 +86,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 				return mapCache;
 			}
 		}
-		final String 	decodedUrl 	= DocumentCache.decodeUrl(url);
+		final String 	decodedUrl 	= DitaUtil.decodeUrl(url);
 		DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 		if (fileCache == null) {
 			fileCache = createDocumentCache(url);
@@ -98,7 +99,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		
 		DocumentCache 	mapCache = null;
 		if (currMapUrl != null) {
-			final String currMapDecodedUrl 	= DocumentCache.decodeUrl(currMapUrl);
+			final String currMapDecodedUrl 	= DitaUtil.decodeUrl(currMapUrl);
 			mapCache = documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
 				mapCache = createDocumentCache(currMapUrl);
@@ -107,7 +108,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 			}
 		}
 		if ((mapCache == null) || (!mapCache.isUrlIncluded(url))) {
-			final String 	decodedUrl 	= DocumentCache.decodeUrl(url);
+			final String 	decodedUrl 	= DitaUtil.decodeUrl(url);
 			DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 			if (fileCache == null) {
 				fileCache = createDocumentCache(url);

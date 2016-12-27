@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="18.0">
+<project version="18.1">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="18.0" xml:space="preserve">
+            <serialized version="18.1" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
                         <String>scenario.associations</String>
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>../../../../../../TEMP/codeblock.dita</String>
+                                    <String>file:/../TEMP/codeblock.dita</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -203,10 +203,7 @@
                                                 </String-array>
                                             </field>
                                             <field name="possibleValuesDescriptions">
-                                                <String-array>
-                                                    <String></String>
-                                                    <String></String>
-                                                </String-array>
+                                                <null/>
                                             </field>
                                         </ditaParameter>
                                     </list>
@@ -1132,6 +1129,7 @@
     <projectTree name="dita-semia.resolver.test.xpr">
         <folder path="../org.dita-semia.pdf/"/>
         <folder path="."/>
+        <folder path="../org.dita-semia.topic-num/"/>
         <folder path="../org.dita.pdf2.fop/"/>
         <folder path="../org.dita.pdf2/"/>
         <folder path="../org.oasis-open.dita.v1_2/"/>
