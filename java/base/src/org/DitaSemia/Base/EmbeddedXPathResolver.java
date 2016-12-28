@@ -14,8 +14,7 @@ public class EmbeddedXPathResolver {
 		try {
 			while (tokenizer.hasMoreTokens()) {
 				nextToken = tokenizer.nextToken();
-				if (nextToken.equals("}"))
-				{
+				if (nextToken.equals("}")) {
 					result.append(nextToken);
 					if (tokenizer.hasMoreTokens()) {
 						nextToken = tokenizer.nextToken();
@@ -31,7 +30,10 @@ public class EmbeddedXPathResolver {
 						if (nextToken.equals("{")) {
 							result.append(nextToken);
 						} else if (!nextToken.equals("}")){
-							result.append(contextNode.evaluateXPathToString(nextToken));
+							final String resolved = contextNode.evaluateXPathToString(nextToken);
+							if (resolved != null) {
+								result.append(resolved);
+							}
 							if (tokenizer.hasMoreTokens()) {
 								nextToken = tokenizer.nextToken();
 								if(!nextToken.equals("}")) {

@@ -52,12 +52,12 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 				final String topicNum = getTopicNum(node, cache);
 				//logger.info("  topicNum: " + topicNum);
 				if (topicNum != null) {
-					StaticContent[] content = (StaticContent[])styles.getProperty(Styles.KEY_MIXED_CONTENT);
+					StaticContent[] content = styles.getMixedContent();
 					if ((content != null) && (content.length > 0)) {
 						content[0] = new StringContent(topicNum.toString()); //change the first content element to the global topic number
 					}
 				} else {
-					// no numbering -> remove complete prefix including seperator between number and title
+					// no numbering -> remove complete prefix including separator between number and title
 					styles.setProperty(Styles.KEY_MIXED_CONTENT, null);
 				}
 			} else {

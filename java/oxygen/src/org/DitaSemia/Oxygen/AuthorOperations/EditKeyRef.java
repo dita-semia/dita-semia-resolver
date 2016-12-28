@@ -53,7 +53,7 @@ public class EditKeyRef implements AuthorOperation {
 				keyDef = editKeyRefDialog.getSelectedKeyDef();
 			} else {
 				keyDef = null;
-			} 
+			}
 
 			if (keyDef != null) {
 				String keyValue = editKeyRefDialog.getKeyText();

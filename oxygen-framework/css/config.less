@@ -1,26 +1,32 @@
 
 /* general */
 @conbat-background						: rgb(240, 240, 240);
+
+/* following values needs to be the same as used in java: org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter */
 @conbat-inline-index					: 14;	/* used in :before(n) and :after(n) for generated inline content */
 @conbat-paragraph-index					: 10;	/* used in :before(n) and :after(n) for generated paragraph content */
-@conbat-default-content-index			: 10;	/* used in :after(n) for generated default content */
-@conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
+@conbat-default-content-index			: 11;	/* used in :after(n) for generated default content */
 @conbat-title-index						: 15;	/* used in :before(n) for generated titles */
 @conbat-header-index					: 16;	/* used in :before(n) for generated table header - needs to be greater than @conbat-inline-index */
-@conbat-dt-index						: 14;	/* used in :before(n) for generated dts */
+@conbat-dt-index						: 17;	/* used in :before(n) for generated dts */
+
+@conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
 @conbat-edit-brace1-index				: 1;	/* used in :after(n) for opening brace of attribute edits */
 @conbat-edit-index						: 2;	/* used in :after(n) for attribute edits */
 @conbat-edit-brace2-index				: 5;	/* used in :after(n) for closing brace of attribute edits */
-@csli-comma-index						: 14;	/* used in :before(n) for generated commas in comma separated lists */
+@csli-comma-index						: 19;	/* used in :before(n) for generated commas in comma separated lists */
 @code-font-family						: "Courier New", Monospace;
 @body-font-family						: "Palatine Linotype", Serif;
 @topic-title-font-family				: "Franklin Gothic Medium", Arial;
 @topic-title-font-size					: 1.8em;
 @code-font-size-scale					: 0.9;
 @keydef-info-prefix-index				: 2;
-@keyref-link-prefix-index				: 2;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
-@keyref-type-prefix-index				: 1;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
-@keyref-type-suffix-index				: 1;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
+
+/* following values needs to be the same as used in java: org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter */
+@keyref-link-prefix-index				: 2;	
+@keyref-type-prefix-index				: 1;
+@keyref-type-suffix-index				: 1;
+
 @keyref-edit-suffix-index				: 2;
 @keyref-name-suffix-index				: 3;
 @edit-only-font-size-scale				: 0.8;

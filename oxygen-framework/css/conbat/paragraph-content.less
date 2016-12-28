@@ -5,7 +5,7 @@
 *[class~="topic/ul"][*|prefix]:before(@{conbat-paragraph-index}),
 *[class~="topic/ol"][*|prefix]:before(@{conbat-paragraph-index}) {
 	display			: block;
-	content			: oxy_label(text, attr("*|prefix"));
+	content			: attr("*|prefix");
 	margin-top		: @conbat-paragraph-margin-top;
 }
 
@@ -19,7 +19,7 @@
 *[class~="topic/ul"][*|suffix]:after(@{conbat-paragraph-index}),
 *[class~="topic/ol"][*|suffix]:after(@{conbat-paragraph-index}) {
 	display			: block;
-	content			: oxy_label(text, attr("*|suffix"));
+	content			: attr("*|suffix");
 	margin-top		: @conbat-paragraph-margin-top;
 	margin-bottom	: @conbat-paragraph-margin-bottom;
 }
@@ -30,10 +30,10 @@
 
 *[class~="topic/sl"][*|prefix]:before(@{conbat-paragraph-index}) {
 	display			: block;
-	content			: oxy_label(text, attr("*|prefix"));
+	content			: attr("*|prefix");
 }
 
 *[class~="topic/sl"][*|suffix]:after(@{conbat-paragraph-index}) {
 	display			: block;
-	content			: oxy_label(text, attr("*|suffix"));
+	content			: attr("*|suffix");
 }

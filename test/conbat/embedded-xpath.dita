@@ -2,20 +2,57 @@
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <topic xmlns:cba = "http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
-	<!--<title>Testing Embedded XPath</title>-->
+	<title>Testing Embedded XPath</title>
 	<body>
-		<!--<section id="vtc_lxv_r5">
+		<section id="vtc_lxv_r5">
 			<title>Paragraph Content</title>
-			<sl cba:prefix="Attribute prefix of {name()}-element." cba:suffix="Attribute suffix of {name()}-element." id="m3d_rlp_zt">
+			<sl cba:prefix="Attribute prefix of '{name()}' element."
+				cba:suffix="Attribute suffix of '{name()}' element." id="m3d_rlp_zt">
 				<sli>1st list item</sli>
 				<sli>2nd list item</sli>
 			</sl>
-		</section>-->
+		</section>
 		<section id="swf_xyv_r5">
 			<title>Inline Content</title>
 			<p cba:prefix="[prefix within '{ancestor::section/title}' section]"
 				cba:suffix="[suffix within '{ancestor::section/title}' section]">Explicit
 				content</p>
+			<p cba:content="Fixed content of '{name()}' element"/>
+			<p cba:default-content="Default content of '{name()}' element"/>
+		</section>
+		<section id="gqn_g5n_ky" cba:title="Title of '{name()}' element">Text </section>
+		<section id="edn_gf4_ky">
+			<title>Empty XPath result</title>
+			<p cba:content="content: '{non-existing-element}'"/>
+		</section>
+		<section id="ohb_vb4_ky">
+			<title>Invalid XPath Expression</title>
+			<dl>
+				<dlentry>
+					<dt>Prefix</dt>
+					<dd>
+						<p cba:prefix="{unknown-function()}">Text</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Suffix</dt>
+					<dd>
+						<p cba:suffix="{unknown-function()}">Text</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Content</dt>
+					<dd>
+						<p cba:content="{unknown-function()}"/>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Default Content</dt>
+					<dd>
+						<p cba:default-content="{unknown-function()}"/>
+					</dd>
+				</dlentry>
+			</dl>
 		</section>
 	</body>
 </topic>
