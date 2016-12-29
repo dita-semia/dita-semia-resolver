@@ -20,7 +20,7 @@ public class GetChildTopicsDef extends ExtensionFunctionDefinition {
 
 	@Override
 		public SequenceType[] getArgumentTypes() {
-			SequenceType[] sequenceType = {SequenceType.SINGLE_ELEMENT_NODE};
+			SequenceType[] sequenceType = {SequenceType.SINGLE_NODE};
 			return sequenceType;
 	}
 

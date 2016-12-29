@@ -43,7 +43,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		this.documentCacheMap 	= new HashMap<>();
 		this.initializer		= initializer;
 		this.ditaOtUrl		= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
-		logger.info("ditaOtUrl: " + ditaOtUrl);
+		//logger.info("ditaOtUrl: " + ditaOtUrl);
 		
 		//logger.info("new DocumentCacheHandler(" + initializer + ")");
 		

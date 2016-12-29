@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bookmap PUBLIC "-//OASIS//DTD DITA BookMap//EN" "bookmap.dtd">
+<bookmap>
+    <booktitle>
+        <mainbooktitle>Local TOC Map-aware</mainbooktitle>
+    </booktitle>
+	<chapter href="local-toc-map-aware.dita">
+		<topicref href="child1.dita"/>
+		<topicref href="child2.dita"/>
+	</chapter>
+</bookmap>

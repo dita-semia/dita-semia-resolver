@@ -21,9 +21,11 @@ public class SaxonCachedDocumentBuilder extends SaxonDocumentBuilder {
 
 	private static final Logger logger = Logger.getLogger(SaxonCachedDocumentBuilder.class.getName());
 
+	protected final static Pattern						schemaPattern		= Pattern.compile("xsi:noNamespaceSchemaLocation=\"([^\"]+)\"");
+	
 	protected final SaxonConfigurationFactory 			configFactory;
 	protected final URIResolver 						uriResolver;
-	protected final HashMap<String, DocumentBuilder> 	documentBuilderMap = new HashMap<>();
+	protected final HashMap<String, DocumentBuilder> 	documentBuilderMap 	= new HashMap<>();
 	
 	public SaxonCachedDocumentBuilder(SaxonConfigurationFactory configFactory) {
 		super(configFactory.createConfiguration());
@@ -56,15 +58,15 @@ public class SaxonCachedDocumentBuilder extends SaxonDocumentBuilder {
 			try {
 				final URL 				decodedUrl	= new URL(FileUtil.decodeUrl(source.getSystemId()));
 				final BufferedReader 	reader 		= new BufferedReader(new FileReader(decodedUrl.getFile()));
-				final Pattern 			pattern 	= Pattern.compile("xsi:noNamespaceSchemaLocation=\"([^\"]+)\"");
 				int i = 0;
-				do {
-					String 	line 	= reader.readLine();
-					Matcher matcher = pattern.matcher(line);
+				String 	line 	= reader.readLine();
+				while ((noNamespaceSchemaLocation == null) && (i++ < 10) && (line != null)) {
+					Matcher matcher = schemaPattern.matcher(line);
 					if (matcher.find()) {
 						noNamespaceSchemaLocation = matcher.group(1);
 					}
-				} while ((noNamespaceSchemaLocation == null) && (i++ < 10));
+					line = reader.readLine();
+				}
 		    	reader.close();
 		    	if ((noNamespaceSchemaLocation != null) && (uriResolver != null)) {
 		    		final Source xsdSource = uriResolver.resolve(noNamespaceSchemaLocation, source.getSystemId());
