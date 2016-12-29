@@ -33,7 +33,6 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.DocumentCacheProvider;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
@@ -169,11 +168,11 @@ public class XsltConref {
 						xmlSource 			= node.getUriResolver().resolve(baseUrl, "");;
 						xmlSourceIsBaseUrl 	= true;
 					} catch (TransformerException e) {
-						throw new XPathException("Error resolving the source URL: '" + DitaUtil.decodeUrl(baseUrl) + "': " + e.getMessage());
+						throw new XPathException("Error resolving the source URL: '" + FileUtil.decodeUrl(baseUrl) + "': " + e.getMessage());
 					}
 				} else if (!FileUtil.fileExists(xmlSource.getSystemId())) {
 					// dedicated error message for this scenario
-					throw new XPathException("Input source could not be found. (URL: '" + DitaUtil.decodeUrl(xmlSource.getSystemId()) + "')");
+					throw new XPathException("Input source could not be found. (URL: '" + FileUtil.decodeUrl(xmlSource.getSystemId()) + "')");
 				}
 				
 				// remove the provided xml reader to force saxon creating its own one using the configuration and, thus, expanding the attribute defaults
@@ -217,11 +216,11 @@ public class XsltConref {
 							logger.error(" - " + suppressed[i].getMessage());
 						}
 					}
-					throw new XPathException("Error reading input source ('" + DitaUtil.decodeUrl(xmlSource.getSystemId()) + "'): " + e.getMessage());
+					throw new XPathException("Error reading input source ('" + FileUtil.decodeUrl(xmlSource.getSystemId()) + "'): " + e.getMessage());
 				}
 			}
 		} else if (sourceType.equals("text")) {
-			//TODO: text der source ungeparst übergeben
+			//TODO: pass source as unparsed text
 			if (!FileUtil.fileExists(node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI))) {
 				// dedicated error message for this scenario
 				throw new XPathException("Input source could not be found. (URL: '" + ATTR_XML_SOURCE_URI + "')");

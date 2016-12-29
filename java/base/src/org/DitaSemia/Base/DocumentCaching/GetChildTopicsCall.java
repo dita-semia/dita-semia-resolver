@@ -38,10 +38,10 @@ public class GetChildTopicsCall extends ExtensionFunctionCall {
 			
 			//logger.info("GetChildTopicsCall(" + DocumentCache.decodeUrl(topicNode.getBaseUrl()) + ")");
 			
-			final Collection<CachedFile> childTopics = documentCache.getChildTopics(topicNode);
+			final Collection<FileCache> childTopics = documentCache.getChildTopics(topicNode);
 			if (childTopics != null) {
 				List<Item> 	list = new LinkedList<>();
-				for (CachedFile childTopic : childTopics) {
+				for (FileCache childTopic : childTopics) {
 					//logger.info("  - '" + childTopic.getRootNode().getUnderlyingNode().getDisplayName() + "'");
 					list.add(childTopic.getRootNode().getUnderlyingNode());
 				}

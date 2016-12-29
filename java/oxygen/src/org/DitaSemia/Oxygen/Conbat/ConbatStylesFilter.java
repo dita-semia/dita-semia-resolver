@@ -47,6 +47,7 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 		boolean handled = false;
 		if (authorNode.getType() == AuthorNode.NODE_TYPE_PSEUDO_ELEMENT) {
 			final int pseudoLevel = styles.getPseudoLevel();
+			logger.info("filter: " + authorNode.getType() + ", " + authorNode.getName() + ", " + pseudoLevel);
 			if ((pseudoLevel == PSEUDO_LEVEL_INLINE) || (pseudoLevel == PSEUDO_LEVEL_PARAGRAPH)) {
 				if (authorNode.getName().equals(BEFORE)) {
 					handled = resolve(styles, authorNode, ATTR_PREFIX);

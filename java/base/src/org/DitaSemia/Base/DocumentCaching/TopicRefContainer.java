@@ -3,14 +3,14 @@ package org.DitaSemia.Base.DocumentCaching;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class CachedTopicRefContainer {
+public class TopicRefContainer {
 	
-	protected final Collection<CachedTopicRef> 		childTopicRefs 	= new LinkedList<>();
+	protected final Collection<TopicRef> 		childTopicRefs 	= new LinkedList<>();
 	
 	protected int currPos 	= 0;
-	protected int lastType	= CachedTopicRef.TYPE_UNKNOWN;
+	protected int lastType	= TopicRef.TYPE_UNKNOWN;
 
-	protected int addChildTopicRef(CachedTopicRef childTopicRef) {
+	protected int addChildTopicRef(TopicRef childTopicRef) {
 		//logger.info("addChildTopicRef : " + childTopicRef);
 		//logger.info("  parent: " + this);
 		childTopicRefs.add(childTopicRef);
@@ -24,10 +24,10 @@ public class CachedTopicRefContainer {
 		return currPos;
 	}
 
-	public Collection<CachedFile> getChildTopics() {
-		final Collection<CachedFile> list = new LinkedList<>();
-		for (CachedTopicRef childTopicRef : childTopicRefs) {
-			final CachedFile refFile = childTopicRef.getReferencedFile();
+	public Collection<FileCache> getChildTopics() {
+		final Collection<FileCache> list = new LinkedList<>();
+		for (TopicRef childTopicRef : childTopicRefs) {
+			final FileCache refFile = childTopicRef.getReferencedFile();
 			if (refFile.isMap()) {
 				list.addAll(refFile.getChildTopics());
 			} else {

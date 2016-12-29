@@ -1,8 +1,6 @@
 package org.DitaSemia.Base;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import org.apache.log4j.Logger;
 
 public class DitaUtil {
@@ -26,30 +24,23 @@ public class DitaUtil {
 	public static final String	CLASS_DATA				= " topic/data ";
 	public static final String	CLASS_TOPIC				= " topic/topic ";
 	public static final String	CLASS_TITLE				= " topic/title ";
+	public static final String	CLASS_XREF				= " topic/xref ";
 	public static final String	CLASS_MAP				= " map/map ";
 
 	public static final String	ROLE_RESOURCE_ONLY		= "resource-only";
 	
-	public static final String 	URL_ID_DELIMITER		= "#";
+	public static final String 	HREF_URL_ID_DELIMITER	= "#";
+	public static final String 	HREF_TOPIC_ID_DELIMITER	= "/";
 
 	public static final String	TOPIC_NUM_DELIMITER		= ".";
 
 
-
-	public static String decodeUrl(URL url) {
-		return decodeUrl(url.toString());
+	public static String getNodeLocation(URL url, String refId) {
+		return FileUtil.decodeUrl(url) + HREF_URL_ID_DELIMITER + refId;
 	}
 
-	public static String decodeUrl(String url) {
-		try {
-			return URLDecoder.decode(url, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
-	}
-
-	public static String getNodeLocation(URL url, String id) {
-		return decodeUrl(url) + URL_ID_DELIMITER + id;
+	public static String getRefId(String parentTopicId, String elementId) {
+		return (parentTopicId == null) ? elementId : (parentTopicId + HREF_TOPIC_ID_DELIMITER + elementId);
 	}
 
 	public static String numToLetter(int num) {

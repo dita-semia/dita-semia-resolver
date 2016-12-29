@@ -106,5 +106,12 @@
 	<xsl:variable name="CP_SVG_CONTAINER"	as="xs:string" select="concat('+ topic/foreign', $C_SVG_CONTAINER)"/>
 	
 	<xsl:variable name="CP_KEY_XREF"		as="xs:string" select="concat('+ topic/ph', $C_KEY_XREF)"/>
-		
+
+
+
+
+	<xsl:variable name="OCLASS_CSLI"	as="xs:string"	select="'csli'"/>
+	<xsl:variable name="OCLASS_CODE"	as="xs:string"	select="'code'"/>
+	
+	
 </xsl:stylesheet>

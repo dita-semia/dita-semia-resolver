@@ -15,6 +15,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.Configuration;
+import net.sf.saxon.lib.Validation;
 import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.XdmNode;
@@ -28,9 +29,9 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyspecInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
-import org.DitaSemia.Base.DocumentCaching.CachedFile;
-import org.DitaSemia.Base.DocumentCaching.CachedTopicRef;
-import org.DitaSemia.Base.DocumentCaching.CachedTopicRefContainer;
+import org.DitaSemia.Base.DocumentCaching.FileCache;
+import org.DitaSemia.Base.DocumentCaching.TopicRef;
+import org.DitaSemia.Base.DocumentCaching.TopicRefContainer;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.apache.log4j.Logger;
 
@@ -55,41 +56,53 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	private HashMap<String, KeyDefInterface> 	keyDefByRefString 	= new HashMap<>();
 	private HashMap<String, KeyDefInterface> 	keyDefByLocation	= new HashMap<>();
 	private HashMap<String, KeyTypeDef> 		keyTypeDefByName	= new HashMap<>();
-	private HashMap<String, CachedFile> 		cachedFileByUrl		= new HashMap<>();
-	private HashMap<String, CachedTopicRef> 	cachedTopicRefByUrl	= new HashMap<>();
+	private HashMap<String, FileCache> 			fileByUrl			= new HashMap<>();
+	private HashMap<String, TopicRef> 			topicRefByUrl		= new HashMap<>();
 	
 	
 	private final SaxonConfigurationFactory configurationFactory;
 	private final SaxonDocumentBuilder		documentBuilder;
 	private final Configuration				defaultConfiguration;
 	private final DocumentCacheInitializer	initializer;
+	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
+	private final URL						ditaOtUrl;
 
 		
 	/* used by oXygen */
-	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, SaxonConfigurationFactory configurationFactory) {
-		this.rootDocumentUrl 		= rootDocumentUrl;
-		this.initializer			= initializer;
-		this.configurationFactory	= configurationFactory;
-		this.defaultConfiguration	= this.configurationFactory.createConfiguration();
-		this.documentBuilder		= new SaxonCachedDocumentBuilder(this);
+	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl) {
+		this.rootDocumentUrl 			= rootDocumentUrl;
+		this.initializer				= initializer;
+		this.configurationFactory		= configurationFactory;
+		this.defaultConfiguration		= configurationFactory.createConfiguration();
+		this.documentBuilder			= new SaxonCachedDocumentBuilder(this);
+		this.ditaOtUrl				= ditaOtUrl;
 
 		registerExtensionFunctions(defaultConfiguration);
-		xPathCache			= createXPathCache(defaultConfiguration);
+		xPathCache = createXPathCache(defaultConfiguration);
+		
+		
+		final Configuration extractConfiguration = configurationFactory.createConfiguration();
+		// disable validation to allow usage of same configuration for any file type (attribute defaults are already expanded)
+		extractConfiguration.setSchemaValidationMode(Validation.STRIP);	
+		this.extractTransformerCache	= new XslTransformerCache(extractConfiguration);
 	}
 
 	/* used by OT */
-	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, Configuration baseConfiguration) {
+	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl) {
 		registerExtensionFunctions(baseConfiguration);
 
-		this.rootDocumentUrl 		= rootDocumentUrl;
-		this.initializer			= initializer;
-		this.configurationFactory	= null;
-		this.defaultConfiguration	= baseConfiguration;
-		this.documentBuilder		= new SaxonDocumentBuilder(defaultConfiguration);
+		this.rootDocumentUrl 			= rootDocumentUrl;
+		this.initializer				= initializer;
+		this.configurationFactory		= null;
+		this.defaultConfiguration		= baseConfiguration;
+		this.documentBuilder			= new SaxonDocumentBuilder(defaultConfiguration);
+		this.ditaOtUrl				= ditaOtUrl;
 
-		xPathCache			= createXPathCache(defaultConfiguration);
+		xPathCache = createXPathCache(defaultConfiguration);
+
+		this.extractTransformerCache	= new XslTransformerCache(defaultConfiguration);
 	}
-
+	
 
 	public void fillCache() {
 		try {
@@ -99,12 +112,12 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 				initializer.initDocumentCache(this);
 			}
 			
-			final Source 		source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
-			final CachedFile	file	= createFile(source);
+			final Source 	source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
+			final FileCache	file	= createFileCache(source);
 			if (file != null) {
-				parseFile(file);
+				file.parse();
 				final long time = Calendar.getInstance().getTimeInMillis() - startTime;
-				logger.info("fillCache done: " + time + "ms, " + cachedFileByUrl.size() + " files, " + keyDefByRefString.size() + " keys (" + DitaUtil.decodeUrl(source.getSystemId()) + ")");
+				logger.info("fillCache done: " + time + "ms, " + fileByUrl.size() + " files, " + keyDefByRefString.size() + " keys (" + FileUtil.decodeUrl(source.getSystemId()) + ")");
 			}
 		} catch (TransformerException e) {
 			logger.error(e);
@@ -129,13 +142,13 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	}
 	
 	public boolean isUrlIncluded(URL url) {
-		final String urlDecoded = DitaUtil.decodeUrl(url);
+		final String urlDecoded = FileUtil.decodeUrl(url);
 		if (urlDecoded == null) {
 			//logger.info("isUrlIncluded(" + url + ") -> null");
 			return false;
 		} else {
 			//logger.info("isUrlIncluded(" + url + ") -> '" + urlDecoded + "', " + decodedUrlList.contains(urlDecoded));
-			return cachedFileByUrl.containsKey(urlDecoded);
+			return fileByUrl.containsKey(urlDecoded);
 		}
 	}
 
@@ -147,11 +160,11 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		configuration.registerExtensionFunction(new AncestorPathDef(this));
 	}
 
-	private CachedFile createFile(Source source) {
-		final String 	decodedUrl	= DitaUtil.decodeUrl(source.getSystemId());
-		CachedFile 		cachedFile	= null;
+	public FileCache createFileCache(Source source) {
+		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
+		FileCache 		cachedFile	= null;
 
-		if (cachedFileByUrl.containsKey(decodedUrl)) {
+		if (fileByUrl.containsKey(decodedUrl)) {
 			logger.error("ERROR: File included twice: '" + decodedUrl + "' - ignored second one.");
 		} else {
 			try {
@@ -179,8 +192,8 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 				
 				//logger.info("rootElement: " + rootElement.getNodeName());
 				
-				cachedFile = new CachedFile(decodedUrl, rootElement, new SaxonNodeWrapper(rootElement.getUnderlyingNode(), xPathCache));
-				cachedFileByUrl.put(decodedUrl, cachedFile);	// first insert file into map before parsing it to avoid recursions when the cache is tried to be accessed during parsing.
+				cachedFile = new FileCache(decodedUrl, rootElement, this);
+				fileByUrl.put(decodedUrl, cachedFile);	// first insert file into map before parsing it to avoid recursions when the cache is tried to be accessed during parsing.
 
 				//logger.info("created file: '" + decodedUrl + "'");
 				
@@ -192,123 +205,23 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		}
 		return cachedFile;
 	}
-	
-	private void parseFile(CachedFile cachedFile) throws TransformerException {
-		//logger.info("parseFile: " + cachedFile);
-		parseNode(cachedFile.getRootNode(), cachedFile, cachedFile);
-	}
 
-	private void parseNode(XdmNode node, CachedFile cachedFile, CachedTopicRefContainer parentTopicRefContainer) throws TransformerException {
-		//logger.info("parseNode: " + node.getUnderlyingNode().getDisplayName() + ", " + node.getNodeKind());
-		if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
-			
-			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node.getUnderlyingNode(), xPathCache);
-			
-			final KeyDef keyDef = KeyDef.fromNode(nodeWrapper);
-			if (keyDef != null) {
-				addKeyDef(keyDef);
-			}
-			
-			final String classAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
-
-			//logger.info("parsing element: <" + nodeWrapper.getName() + " class=\"" + classAttr + "\">");
-
-			if (classAttr != null) {
-				final CachedTopicRef topicRef = parseTopicRef(nodeWrapper, classAttr, cachedFile, parentTopicRefContainer);
-				if (topicRef != null) {
-					parentTopicRefContainer = topicRef;	// take it as new parent for child nodes.
-				}
-				parseKeyTypeDefNode(nodeWrapper, classAttr);
-			}
-			
-			final XdmSequenceIterator iterator = node.axisIterator(Axis.CHILD);
-			while (iterator.hasNext()) {
-				parseNode((XdmNode)iterator.next(), cachedFile, parentTopicRefContainer);
-			}
-		}
-	}
-	
-	private CachedTopicRef parseTopicRef(NodeWrapper nodeWrapper, String classAttr, CachedFile containingFile, CachedTopicRefContainer parentTopicRefContainer) throws TransformerException {
-		//logger.info("parseTopicRef");
-		CachedTopicRef topicRef = null;
-		if (classAttr.contains(DitaUtil.CLASS_TOPIC_REF)) {
-			CachedFile refFile = null;
-			final String processingRoleAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_PROCESSING_ROLE, null);
-			if ((processingRoleAttr == null) || (!processingRoleAttr.equals(DitaUtil.ROLE_RESOURCE_ONLY))) {
-				final String href = nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null);
-				if ((href != null) && (!href.isEmpty())) {
-					refFile = createFile(nodeWrapper.resolveUri(href));
-				}
-			}
-
-			topicRef = new CachedTopicRef(containingFile, refFile, parentTopicRefContainer, nodeWrapper);
-			if (refFile != null) {
-				cachedTopicRefByUrl.put(refFile.getDecodedUrl(), topicRef);
-				//logger.info("new topicRef: " + topicRef + ", " + refFile.getDecodedUrl());
-				parseFile(refFile);
-			}
+	public TopicRef createTopicRef(FileCache containingFile, FileCache refFile, TopicRefContainer parentTopicRefContainer, NodeWrapper nodeWrapper) {
+		final TopicRef topicRef = new TopicRef(containingFile, refFile, parentTopicRefContainer, nodeWrapper);
+		if (refFile != null) {
+			topicRefByUrl.put(refFile.getDecodedUrl(), topicRef);
 		}
 		return topicRef;
 	}
-
-
-	private void parseKeyTypeDefNode(NodeWrapper nodeWrapper, String classAttr) throws TransformerException {
-		if (classAttr.contains(DitaUtil.CLASS_DATA)) {
-			final String nameAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_NAME, null);
-			if ((nameAttr != null) && (nameAttr.equals(DATA_NAME_TYPE_DEF_URI))) {
-				final String urlAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_VALUE, null);
-				if ((urlAttr != null) && (!urlAttr.isEmpty())) {
-					Source source;
-					final String xtrfAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_XTRF, null);
-					if ((xtrfAttr != null) && (!xtrfAttr.isEmpty())) {
-						// resolve URI when being called from DitaSemiaOtResolver
-						source = nodeWrapper.getUriResolver().resolve(urlAttr, xtrfAttr);
-					} else {
-						source = nodeWrapper.resolveUri(urlAttr);
-					}
-					parseKeyTypeDefSource(source);
-				}
-			}
-		}
-	}
-
-
-	public void parseKeyTypeDefFile(URL url) {
-		try {
-			final InputStream inputStream = new BufferedInputStream(new FileInputStream(url.getFile()));
-			final StreamSource 	source 		= new StreamSource(inputStream);
-			source.setSystemId(url.toExternalForm());
-			//logger.info("source.getSystemId(): " + source.getSystemId());
-			parseKeyTypeDefSource(source);
-		} catch (FileNotFoundException e) {
-			logger.error(e, e);
-		}
-	}
-
-
-	public void parseKeyTypeDefSource(Source source) {
-		try {
-			final XdmNode 				rootNode = documentBuilder.build(source);
-			final XdmSequenceIterator 	iterator = rootNode.axisIterator(Axis.CHILD, NAME_KEY_TYPE_DEF_LIST);
-			
-			while (iterator.hasNext()) {
-				createKeyTypeDef((XdmNode)iterator.next(), KeyTypeDef.DEFAULT);
-			}
-		} catch (Exception e) {
-			logger.error("Error parsing KeyTypeDef file '" + DitaUtil.decodeUrl(source.getSystemId()) + "':");
-			logger.error(e, e);
-		}
-	}
 	
-
 	public void refresh() {
 		//logger.info("refresh");
 
 		keyDefByRefString.clear();
 		keyDefByLocation.clear();
 		keyTypeDefByName.clear();
-		cachedFileByUrl.clear();
-		cachedTopicRefByUrl.clear();
+		fileByUrl.clear();
+		topicRefByUrl.clear();
 		
 		if (documentBuilder instanceof SaxonCachedDocumentBuilder) {
 			((SaxonCachedDocumentBuilder)documentBuilder).clearCache();
@@ -317,7 +230,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		fillCache();
 	}
 
-	private void addKeyDef(KeyDefInterface keyDef) {
+	public void addKeyDef(KeyDefInterface keyDef) {
 		keyDefByRefString.put(keyDef.getRefString(), keyDef);
 		keyDefByLocation.put(keyDef.getDefLocation(), keyDef);
 	}
@@ -340,6 +253,23 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	@Override
 	public XPathCache getXPathCache() {
 		return xPathCache;
+	}
+	
+	public XslTransformerCache getExtractTransformerCache() {
+		return extractTransformerCache;
+	}
+
+	public SaxonDocumentBuilder getDocumentBuilder() {
+		return documentBuilder;
+	}
+
+
+	public FileCache getFile(URL url) {
+		return fileByUrl.get(FileUtil.decodeUrl(url));
+	}
+
+	public URL getDitaOtUrl() {
+		return ditaOtUrl;
 	}
 
 	@Override
@@ -372,10 +302,10 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		}
 	}
 	
-	public Collection<CachedFile> getChildTopics(NodeWrapper topicNode) {
+	public Collection<FileCache> getChildTopics(NodeWrapper topicNode) {
 		//logger.info("getChildTopics(" + topicNode.getName() + ")");
-		final String 			decodedUrl 	= DitaUtil.decodeUrl(topicNode.getBaseUrl());
-		final CachedTopicRef	topicRef	= cachedTopicRefByUrl.get(decodedUrl);
+		final String 			decodedUrl 	= FileUtil.decodeUrl(topicNode.getBaseUrl());
+		final TopicRef	topicRef	= topicRefByUrl.get(decodedUrl);
 		//logger.info("topicRef: " + topicRef);
 		if (topicRef != null) {
 			return topicRef.getChildTopics();
@@ -387,8 +317,8 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	private NodeWrapper getParent(NodeWrapper node) {
 		NodeWrapper parent = node.getParent();
 		if (parent == null) {
-			final String 			decodedUrl 		= DitaUtil.decodeUrl(node.getBaseUrl());
-			final CachedTopicRef	parentTopicRef	= getParentTopicRef(decodedUrl);
+			final String 			decodedUrl 		= FileUtil.decodeUrl(node.getBaseUrl());
+			final TopicRef	parentTopicRef	= getParentTopicRef(decodedUrl);
 			if (parentTopicRef != null) {
 				//logger.info("parent: " + parentTopicRef.getReferencedFile().getRootWrapper().getName());
 				return parentTopicRef.getReferencedFile().getRootWrapper();
@@ -400,15 +330,15 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		}
 	}
 
-	private CachedTopicRef getParentTopicRef(CachedTopicRef topicRef) {
+	private TopicRef getParentTopicRef(TopicRef topicRef) {
 		//logger.info("getParentTopicRef: " + topicRef);
 		if (topicRef != null) {
-			CachedTopicRefContainer parentContainer = getParentTopicRefContainer(topicRef);
-			while ((parentContainer != null) && (!(parentContainer instanceof CachedTopicRef))) { 
+			TopicRefContainer parentContainer = getParentTopicRefContainer(topicRef);
+			while ((parentContainer != null) && (!(parentContainer instanceof TopicRef))) { 
 				parentContainer = getParentTopicRefContainer(parentContainer);
 			}
 			if (parentContainer != null) {
-				return (CachedTopicRef)parentContainer;
+				return (TopicRef)parentContainer;
 			} else {
 				return null;
 			}
@@ -418,30 +348,30 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		}
 	}
 	
-	private CachedTopicRef getParentTopicRef(String decodedUrl) {
-		return getParentTopicRef(cachedTopicRefByUrl.get(decodedUrl));
+	private TopicRef getParentTopicRef(String decodedUrl) {
+		return getParentTopicRef(topicRefByUrl.get(decodedUrl));
 	}
 	
-	private CachedTopicRefContainer getParentTopicRefContainer(CachedTopicRefContainer container) {
+	private TopicRefContainer getParentTopicRefContainer(TopicRefContainer container) {
 		//logger.info("getParentTopicRefContainer: " + container);
-		if (container instanceof CachedTopicRef) {
-			return ((CachedTopicRef)container).getParentContainer();
-		} else if (container instanceof CachedFile) {
-			return cachedTopicRefByUrl.get(((CachedFile)container).getDecodedUrl());
+		if (container instanceof TopicRef) {
+			return ((TopicRef)container).getParentContainer();
+		} else if (container instanceof FileCache) {
+			return topicRefByUrl.get(((FileCache)container).getDecodedUrl());
 		} else {
 			return null;
 		}
 	}
 	
-	public CachedTopicRef getTopicRef(String decodedUrl) {
-		return cachedTopicRefByUrl.get(decodedUrl);
+	public TopicRef getTopicRef(String decodedUrl) {
+		return topicRefByUrl.get(decodedUrl);
 	}
 	
-	public StringBuffer getTopicNum(CachedTopicRef topicRef) {
+	public StringBuffer getTopicNum(TopicRef topicRef) {
 		//logger.info("getTopicNum: " + topicRef);
 		if (topicRef != null) {
 			StringBuffer num = null;
-			final CachedTopicRef parentTopicRef = getParentTopicRef(topicRef);
+			final TopicRef parentTopicRef = getParentTopicRef(topicRef);
 			if (parentTopicRef != null) {
 				num = getTopicNum(parentTopicRef);
 				if (num != null) {
@@ -464,10 +394,10 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	}
 
 	public StringBuffer getTopicNum(String decodedUrl) {
-		return getTopicNum(cachedTopicRefByUrl.get(decodedUrl));	
+		return getTopicNum(topicRefByUrl.get(decodedUrl));	
 	}
 	
-	private void createKeyTypeDef(XdmNode node, KeyTypeDef parent) {
+	public void createKeyTypeDef(XdmNode node, KeyTypeDef parent) {
 		KeyTypeDef childParent = parent;
 		//logger.info("nodeName: " + node.getNodeName());
 		if (node.getNodeName().equals(NAME_KEY_TYPE_DEF)) {
@@ -486,5 +416,34 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	public KeyTypeDef getKeyTypeDef(String typeName) {
 		final KeyTypeDef keyTypeDef = keyTypeDefByName.get(typeName);
 		return (keyTypeDef != null) ? keyTypeDef : KeyTypeDef.DEFAULT;
+	}
+
+
+
+	public void parseKeyTypeDefFile(URL url) {
+		try {
+			final InputStream inputStream = new BufferedInputStream(new FileInputStream(url.getFile()));
+			final StreamSource 	source 		= new StreamSource(inputStream);
+			source.setSystemId(url.toExternalForm());
+			//logger.info("source.getSystemId(): " + source.getSystemId());
+			parseKeyTypeDefSource(source);
+		} catch (FileNotFoundException e) {
+			logger.error(e, e);
+		}
+	}
+
+
+	public void parseKeyTypeDefSource(Source source) {
+		try {
+			final XdmNode 				rootNode = documentBuilder.build(source);
+			final XdmSequenceIterator 	iterator = rootNode.axisIterator(Axis.CHILD, DocumentCache.NAME_KEY_TYPE_DEF_LIST);
+			
+			while (iterator.hasNext()) {
+				createKeyTypeDef((XdmNode)iterator.next(), KeyTypeDef.DEFAULT);
+			}
+		} catch (Exception e) {
+			logger.error("Error parsing KeyTypeDef file '" + FileUtil.decodeUrl(source.getSystemId()) + "':");
+			logger.error(e, e);
+		}
 	}
 }

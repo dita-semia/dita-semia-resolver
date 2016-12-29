@@ -6,6 +6,7 @@
 package org.DitaSemia.Base;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -71,14 +72,19 @@ public class XslTransformerCache {
 	 */
 	public XsltExecutable getExecutable(URL url, URIResolver uriResolver) throws XPathException {
 		
-		final URL urlDecoded		= FileUtil.decodeUrl(url);
+		final String decodedUrl		= FileUtil.decodeUrl(url);
 		Timestamp scriptTimestamp 	= new Timestamp(0);
-		if (!urlDecoded.toString().startsWith("jar:")) {
-			final File script 		= new File(urlDecoded.getFile());
-			if (!script.exists()) {
-				throw new XPathException("Script file could not be found. (URL: '" + urlDecoded + "')");
+		if (!decodedUrl.startsWith("jar:")) {
+			try {
+				final URL 	urlDecoded 	= new URL(decodedUrl);
+				final File 	script 		= new File(urlDecoded.getFile());
+				if (!script.exists()) {
+					throw new XPathException("Script file could not be found. (URL: '" + urlDecoded + "')");
+				}
+				scriptTimestamp = new Timestamp(script.lastModified());
+			} catch (MalformedURLException e) {
+				throw new XPathException("Script file could not be found. (URL: '" + decodedUrl + "')");
 			}
-			scriptTimestamp = new Timestamp(script.lastModified());
 		}
 		XsltExecutable xsltExecutable = null;
 		if (executableMap.containsKey(url) && executableMap.get(url).getTimestamp().equals(scriptTimestamp)) {
@@ -132,7 +138,7 @@ public class XslTransformerCache {
 	}
 
 	/**
-	 * Uses {@link XslTransformerCache#getTransformer(URL, URIResolver)} with the specified URL and without URIResolver (null).
+	 * Uses {@link XslTransformerCache#getTransformer(URL, URIResolver)} with the specified URL using the URIResolver from the configuration.
 	 * @see XslTransformerCache#getTransformer(URL, URIResolver)
 	 * 
 	 * @param url URL of the XSL script
@@ -140,7 +146,7 @@ public class XslTransformerCache {
 	 * @throws XPathException If the Script File could not be found or if the compilation led to an error.
 	 */
 	public XsltExecutable getExecutable(URL url) throws XPathException {
-		return getExecutable(url, null);
+		return getExecutable(url, configuration.getURIResolver());
 	}
 	
 	/**

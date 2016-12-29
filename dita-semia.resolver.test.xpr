@@ -568,6 +568,51 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
+                                    <String>xsl/common/extract-text.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>link-title</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>Validation_scenario</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>xsl/ot/conbat.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>OT-resolve</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>Validation_scenario</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>xsl/class.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Saxon-HE</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>Validation_scenario</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
                                     <String>schema/conbat/conbat-attr.mod.rng</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -708,21 +753,6 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>dita-semia.less</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>Validation_scenario</String>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>xsl/class.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Saxon-HE</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -1041,6 +1071,49 @@
                                             <field name="validationType">
                                                 <validationUnitType>
                                                     <field name="validationInputType">
+                                                        <String>text/rng</String>
+                                                    </field>
+                                                </validationUnitType>
+                                            </field>
+                                            <field name="url">
+                                                <String>${pdu}/schema/conbat/conbat-topic.rng</String>
+                                            </field>
+                                            <field name="validationEngine">
+                                                <validationEngine>
+                                                    <field name="engineType">
+                                                        <String>&lt;Default engine></String>
+                                                    </field>
+                                                    <field name="allowsAutomaticValidation">
+                                                        <Boolean>true</Boolean>
+                                                    </field>
+                                                </validationEngine>
+                                            </field>
+                                            <field name="allowAutomaticValidation">
+                                                <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="extensions">
+                                                <null/>
+                                            </field>
+                                            <field name="validationSchema">
+                                                <null/>
+                                            </field>
+                                        </validationUnit>
+                                    </list>
+                                </field>
+                                <field name="type">
+                                    <String>Validation_scenario</String>
+                                </field>
+                                <field name="name">
+                                    <String>conbat-topic.rng</String>
+                                </field>
+                            </validationScenario>
+                            <validationScenario>
+                                <field name="pairs">
+                                    <list>
+                                        <validationUnit>
+                                            <field name="validationType">
+                                                <validationUnitType>
+                                                    <field name="validationInputType">
                                                         <String>text/less</String>
                                                     </field>
                                                 </validationUnitType>
@@ -1084,12 +1157,12 @@
                                             <field name="validationType">
                                                 <validationUnitType>
                                                     <field name="validationInputType">
-                                                        <String>text/rng</String>
+                                                        <String>text/xsl</String>
                                                     </field>
                                                 </validationUnitType>
                                             </field>
                                             <field name="url">
-                                                <String>${pdu}/schema/conbat/conbat-topic.rng</String>
+                                                <String>${pdu}/xsl/ot/resolve.xsl</String>
                                             </field>
                                             <field name="validationEngine">
                                                 <validationEngine>
@@ -1117,7 +1190,50 @@
                                     <String>Validation_scenario</String>
                                 </field>
                                 <field name="name">
-                                    <String>conbat-topic.rng</String>
+                                    <String>OT-resolve</String>
+                                </field>
+                            </validationScenario>
+                            <validationScenario>
+                                <field name="pairs">
+                                    <list>
+                                        <validationUnit>
+                                            <field name="validationType">
+                                                <validationUnitType>
+                                                    <field name="validationInputType">
+                                                        <String>text/xsl</String>
+                                                    </field>
+                                                </validationUnitType>
+                                            </field>
+                                            <field name="url">
+                                                <String>${pdu}/xsl/cache/link-title.xsl</String>
+                                            </field>
+                                            <field name="validationEngine">
+                                                <validationEngine>
+                                                    <field name="engineType">
+                                                        <String>&lt;Default engine></String>
+                                                    </field>
+                                                    <field name="allowsAutomaticValidation">
+                                                        <Boolean>true</Boolean>
+                                                    </field>
+                                                </validationEngine>
+                                            </field>
+                                            <field name="allowAutomaticValidation">
+                                                <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="extensions">
+                                                <null/>
+                                            </field>
+                                            <field name="validationSchema">
+                                                <null/>
+                                            </field>
+                                        </validationUnit>
+                                    </list>
+                                </field>
+                                <field name="type">
+                                    <String>Validation_scenario</String>
+                                </field>
+                                <field name="name">
+                                    <String>link-title</String>
                                 </field>
                             </validationScenario>
                         </validationScenario-array>

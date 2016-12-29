@@ -2,8 +2,9 @@ package org.DitaSemia.Oxygen;
 
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
-import org.DitaSemia.Base.DocumentCaching.CachedTopicRef;
+import org.DitaSemia.Base.DocumentCaching.TopicRef;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.css.StaticContent;
@@ -79,17 +80,17 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 	}
 	
 	private static boolean isLocalRootTopic(NodeWrapper node) {
-		logger.info("node " + node.getName() + ", " + node);
-		logger.info("getRootElement(): " + node.getRootElement().getName() + ", " + node.getRootElement());
+		//logger.info("node " + node.getName() + ", " + node);
+		//logger.info("getRootElement(): " + node.getRootElement().getName() + ", " + node.getRootElement());
 		return node.getRootElement().isSameNode(node);
 	}
 	
 	private static String getTopicNum(NodeWrapper node, DocumentCache cache) {
-		final CachedTopicRef 	topicRef = cache.getTopicRef(DitaUtil.decodeUrl(node.getBaseUrl()));
-		final StringBuffer 		topicNum = cache.getTopicNum(topicRef);
+		final TopicRef 		topicRef = cache.getTopicRef(FileUtil.decodeUrl(node.getBaseUrl()));
+		final StringBuffer 	topicNum = cache.getTopicNum(topicRef);
 		if (topicNum == null) {
 			return null;
-		} else if ((topicRef.getType() == CachedTopicRef.TYPE_APPENDIX) && (isLocalRootTopic(node.getParent()))) {
+		} else if ((topicRef.getType() == TopicRef.TYPE_APPENDIX) && (isLocalRootTopic(node.getParent()))) {
 			return getAppendixPrefix() + " " + topicNum.toString() + APPENDIX_NUM_DELIMITER;
 		} else {
 			return topicNum.toString();

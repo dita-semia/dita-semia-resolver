@@ -9,9 +9,6 @@
 	<xsl:variable name="CBA_MARKER" as="processing-instruction()">
 		<xsl:processing-instruction name="CBA"/>
 	</xsl:variable>
-	
-	<xsl:variable name="OCLASS_CODE"	as="xs:string"	select="'code'"/>
-	<xsl:variable name="OCLASS_CSLI"	as="xs:string"	select="'csli'"/>
 
 
 	<!-- @cba:hide-empty -->

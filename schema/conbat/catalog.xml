@@ -10,6 +10,8 @@
 		
 		<system systemId="urn:dita-semia:conbat:schema:conbat-attr.xsd" 		uri="conbat-attr.xsd"/>
 		
+		<system systemId="urn:dita-semia:conbat:schema:conbat-topic.xsd" 		uri="conbat-topic.xsd"/>
+		
 	</group>
 	
 	
@@ -20,6 +22,8 @@
 		<uri name="urn:dita-semia:conbat:schema:conbat-attr.mod.rng" 	uri="conbat-attr.mod.rng"/>
 		
 		<uri name="urn:dita-semia:conbat:schema:conbat-attr.xsd" 		uri="conbat-attr.xsd"/>
+		
+		<uri name="urn:dita-semia:conbat:schema:conbat-topic.xsd" 		uri="conbat-topic.xsd"/>
 		
 	</group>
 	

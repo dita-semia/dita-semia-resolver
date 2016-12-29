@@ -2,11 +2,10 @@ package org.DitaSemia.Base.DocumentCaching;
 
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.apache.log4j.Logger;
 
-public class CachedTopicRef extends CachedTopicRefContainer {
+public class TopicRef extends TopicRefContainer {
 	
 	public static final int TYPE_UNKNOWN		= -1;
 	public static final int TYPE_FRONTMATTER	= 0;
@@ -16,17 +15,17 @@ public class CachedTopicRef extends CachedTopicRefContainer {
 	public static final int TYPE_TOPIC			= 4;
 
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(CachedTopicRef.class.getName());
+	private static final Logger logger = Logger.getLogger(TopicRef.class.getName());
 
-	protected final CachedFile 				containingFile;
-	protected final CachedFile 				referencedFile;
-	protected final CachedTopicRefContainer parentContainer;
+	protected final FileCache 				containingFile;
+	protected final FileCache 				referencedFile;
+	protected final TopicRefContainer parentContainer;
 	protected final NodeWrapper 			node;
 	protected final int						type;
 	protected final int						position;
 	protected final String					localNum;
 
-	public CachedTopicRef(CachedFile containingFile, CachedFile referencedFile, CachedTopicRefContainer parentContainer, NodeWrapper node) {
+	public TopicRef(FileCache containingFile, FileCache referencedFile, TopicRefContainer parentContainer, NodeWrapper node) {
 		this.containingFile		= containingFile;
 		this.referencedFile 	= referencedFile;
 		this.parentContainer	= parentContainer;
@@ -36,15 +35,15 @@ public class CachedTopicRef extends CachedTopicRefContainer {
 		this.localNum			= getLocalNum(type, position);
 	}
 	
-	public CachedFile getContainingFile() {
+	public FileCache getContainingFile() {
 		return containingFile;
 	}
 	
-	public CachedFile getReferencedFile() {
+	public FileCache getReferencedFile() {
 		return referencedFile;
 	}
 
-	public CachedTopicRefContainer getParentContainer() {
+	public TopicRefContainer getParentContainer() {
 		return parentContainer;
 	}
 
@@ -53,7 +52,7 @@ public class CachedTopicRef extends CachedTopicRefContainer {
 	}
 	
 	public String toString() {
-		return "CachedTopicRef - ref: " + ((referencedFile == null) ? "null" : referencedFile.getDecodedUrl()) + ", containing: " + containingFile.decodedUrl;
+		return "TopicRef - ref: " + ((referencedFile == null) ? "null" : referencedFile.getDecodedUrl()) + ", containing: " + containingFile.decodedUrl;
 	}
 	
 	public int getType() {

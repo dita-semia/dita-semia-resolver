@@ -9,6 +9,7 @@ import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.DocumentCache;
 import org.DitaSemia.Base.DocumentCacheInitializer;
 import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
@@ -17,6 +18,7 @@ import org.apache.log4j.Logger;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.util.editorvars.EditorVariables;
 
 public class DocumentCacheHandler implements DocumentCacheProvider {
 	
@@ -25,6 +27,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 	private static DocumentCacheHandler instance;
 	
 	private final HashMap<String, DocumentCache> 	documentCacheMap;
+	private final URL								ditaOtUrl;
 	
 	private DocumentCacheInitializer 	initializer;
 	
@@ -39,6 +42,8 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 	private DocumentCacheHandler(DocumentCacheInitializer initializer) {
 		this.documentCacheMap 	= new HashMap<>();
 		this.initializer		= initializer;
+		this.ditaOtUrl		= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
+		logger.info("ditaOtUrl: " + ditaOtUrl);
 		
 		//logger.info("new DocumentCacheHandler(" + initializer + ")");
 		
@@ -54,7 +59,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 	}
 	
 	private DocumentCache createDocumentCache(URL url) {
-		final DocumentCache documentCache = new DocumentCache(url, initializer, new SaxonConfigurationFactory() {
+		final SaxonConfigurationFactory configurationFactory = new SaxonConfigurationFactory() {
 			@Override
 			public Configuration createConfiguration() {
 				final Configuration configuration = DocumentCache.createBaseConfiguration();
@@ -62,8 +67,10 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 				configuration.setErrorListener(new Log4jErrorListener(logger));
 				return configuration;
 			}
-		});
-		documentCacheMap.put(DitaUtil.decodeUrl(url), documentCache);
+		};
+		
+		final DocumentCache documentCache = new DocumentCache(url, initializer, configurationFactory, ditaOtUrl);
+		documentCacheMap.put(FileUtil.decodeUrl(url), documentCache);
 		documentCache.fillCache();	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return documentCache;
 	}
@@ -77,7 +84,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
-			final String 	currMapDecodedUrl 	= DitaUtil.decodeUrl(currMapUrl);
+			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			DocumentCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
 				mapCache = createDocumentCache(currMapUrl);
@@ -86,7 +93,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 				return mapCache;
 			}
 		}
-		final String 	decodedUrl 	= DitaUtil.decodeUrl(url);
+		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
 		DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 		if (fileCache == null) {
 			fileCache = createDocumentCache(url);
@@ -99,7 +106,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		
 		DocumentCache 	mapCache = null;
 		if (currMapUrl != null) {
-			final String currMapDecodedUrl 	= DitaUtil.decodeUrl(currMapUrl);
+			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			mapCache = documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
 				mapCache = createDocumentCache(currMapUrl);
@@ -108,7 +115,7 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 			}
 		}
 		if ((mapCache == null) || (!mapCache.isUrlIncluded(url))) {
-			final String 	decodedUrl 	= DitaUtil.decodeUrl(url);
+			final String 	decodedUrl 	= FileUtil.decodeUrl(url);
 			DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 			if (fileCache == null) {
 				fileCache = createDocumentCache(url);

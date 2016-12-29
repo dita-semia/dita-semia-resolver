@@ -65,12 +65,17 @@ public class FileUtil {
 	 * Checks whether the specified URL represents an existing File.
 	 * 
 	 * @param url 
-	 * @return true if the File exists, false elsewise.
+	 * @return true if the File exists, false otherwise.
 	 */
 	public static boolean fileUrlExists(URL url) {
 		if (url != null) {
-			final File file = new File(decodeUrl(url).getFile());
-			return file.exists();
+			try {
+				final URL 	decodedUrl 	= new URL(decodeUrl(url));
+				final File 	file 		= new File(decodedUrl.getFile());
+				return file.exists();
+			} catch (MalformedURLException e) {
+				return false;
+			}
 		} else {
 			return false;
 		}
@@ -84,11 +89,24 @@ public class FileUtil {
 	 * @param url
 	 * @return the decoded URL or null if an error occurred.
 	 */
-	public static URL decodeUrl(URL url) {
+	public static String decodeUrl(URL url) {
+		return decodeUrl(url.toExternalForm());
+	}
+	
+	/**
+	 * Decodes the specified URL using the {@link java.net.URLDecoder}.
+	 * 
+	 * The URL is decoded with UTF-8.
+	 * 
+	 * @param url
+	 * @return the decoded URL or null if an error occurred.
+	 */
+	public static String decodeUrl(String url) {
 		try {
-			return new URL(URLDecoder.decode(url.toExternalForm(), "UTF-8"));
+			return URLDecoder.decode(url, "UTF-8");
 		} catch (Exception e) {
 			return null;
 		}
 	}
+	
 }

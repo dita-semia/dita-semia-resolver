@@ -20,21 +20,21 @@
 			
 			<sch:report test="not(jfile:fileExists($scriptUrl))">
 				Invalid value for @xcr:xsl ('<sch:value-of select="$scriptAttr"/>').
-				Not existing file: '<sch:value-of select="jfile:decodeUrl($scriptUrl)"/>'.
+				Not existing file: '<sch:value-of select="jfile:decodeUrl(string($scriptUrl))"/>'.
 			</sch:report>
 			<sch:report test="jfile:fileExists($scriptUrl) and not(jxcr:isValidXsl($scriptUrl))">
 				Invalid value for @xcr:xsl ('<sch:value-of select="$scriptAttr"/>').
-				No valid XSL file: '<sch:value-of select="jfile:decodeUrl($scriptUrl)"/>'.
+				No valid XSL file: '<sch:value-of select="jfile:decodeUrl(string($scriptUrl))"/>'.
 			</sch:report>
 			
 			<sch:report test="(string($sourceAttr) != '') and not(jfile:fileExists($sourceUrl))">
 				Invalid value for @xcr:source ('<sch:value-of select="$sourceAttr"/>').
-				Not existing file: '<sch:value-of select="jfile:decodeUrl($sourceUrl)"/>'.
+				Not existing file: '<sch:value-of select="jfile:decodeUrl(string($sourceUrl))"/>'.
 			</sch:report>
 			
 			<sch:report test="(string($sourceAttr) != '') and jfile:fileExists($sourceUrl) and not(doc-available($sourceUrl))">
 				Invalid value for @xcr:source ('<sch:value-of select="$sourceAttr"/>').
-				No valid XML file: '<sch:value-of select="jfile:decodeUrl($sourceUrl)"/>'.
+				No valid XML file: '<sch:value-of select="jfile:decodeUrl(string($sourceUrl))"/>'.
 			</sch:report>
 		</sch:rule>
 		<sch:rule context="*[@xcr:xsl]/@xcrcp:*">
