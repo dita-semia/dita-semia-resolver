@@ -63,7 +63,7 @@ public class GetKeyTypeDefCall extends ExtensionFunctionCall {
 
 	private  Sequence createKeyTypeElement(XPathContext context, String keyTypeName) throws XPathException {
 
-		final KeyTypeDef		keyTypeDef	= otResolver.getDocumentCache().getKeyTypeDef(keyTypeName);
+		final KeyTypeDef		keyTypeDef	= otResolver.getBookCache().getKeyTypeDef(keyTypeName);
 		final Processor 		processor 	= new Processor(context.getConfiguration());
 		final DocumentBuilder 	builder 	= processor.newDocumentBuilder();
 		

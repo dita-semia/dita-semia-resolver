@@ -30,7 +30,7 @@ public class GetReferencedKeyDefCall extends ExtensionFunctionCall {
 
 		final SaxonNodeWrapper 	keyRefNode	= new SaxonNodeWrapper((NodeInfo)arguments[0].head(), otResolver.getXPathCache());
 		final KeyRef 			keyRef		= KeyRef.fromNode(keyRefNode);
-		final KeyDefInterface 	keyDef		= otResolver.getDocumentCache().getExactMatch(keyRef);
+		final KeyDefInterface 	keyDef		= otResolver.getBookCache().getExactMatch(keyRef);
 		
 		if (keyDef == null) {
 			return EmptySequence.getInstance();
