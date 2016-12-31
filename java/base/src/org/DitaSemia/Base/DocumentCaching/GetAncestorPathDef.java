@@ -1,7 +1,7 @@
 package org.DitaSemia.Base.DocumentCaching;
 
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCacheProvider;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -12,10 +12,10 @@ public class GetAncestorPathDef extends ExtensionFunctionDefinition {
 	
 	public static final String LOCAL_NAME	= "getAncestorPath"; 
 
-	protected final DocumentCacheProvider 	documentCacheProvider;
+	protected final BookCacheProvider 	bookCacheProvider;
 	
-	public GetAncestorPathDef(DocumentCacheProvider documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetAncestorPathDef(BookCacheProvider bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class GetAncestorPathDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
-		return new GetAncestorPathCall(documentCacheProvider);
+		return new GetAncestorPathCall(bookCacheProvider);
 	}
 
 }

@@ -7,7 +7,7 @@ import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
@@ -74,11 +74,11 @@ public class SchematronUtil {
 		final Configuration elementConfig	= currentElement.getUnderlyingNodeInfo().getConfiguration();
 		if ((xPathCache == null) || (!xPathCache.isCompatible(elementConfig))) {
 			try {
-				final DocumentCache documentCache 	= DocumentCacheHandler.getInstance().getDocumentCache(new URL(currentElement.getBaseURI()));
-				final Configuration xPathConfig 	= documentCache.createConfiguration();
+				final BookCache 	bookCache 	= BookCacheHandler.getInstance().getBookCache(new URL(currentElement.getBaseURI()));
+				final Configuration xPathConfig = bookCache.createConfiguration();
 				xPathConfig.setNamePool(elementConfig.getNamePool());
 				xPathConfig.setDocumentNumberAllocator(elementConfig.getDocumentNumberAllocator());
-				xPathCache = DocumentCache.createXPathCache(xPathConfig);
+				xPathCache = BookCache.createXPathCache(xPathConfig);
 			} catch (MalformedURLException e) {
 				logger.error(e, e);
 				xPathCache = null;

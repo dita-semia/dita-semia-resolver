@@ -5,8 +5,8 @@ package org.DitaSemia.Oxygen;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.Styles;
@@ -19,10 +19,10 @@ public class DitaSemiaStylesFilter {
 	protected final static String AFTER		= "after";
 
 	
-	protected static DocumentCache getDocumentCache(AuthorNode authorNode) {
+	protected static BookCache getBookCache(AuthorNode authorNode) {
 		final URL baseUrl = authorNode.getXMLBaseURL();
 		if (baseUrl != null) {
-			return DocumentCacheHandler.getInstance().getDocumentCache(baseUrl);
+			return BookCacheHandler.getInstance().getBookCache(baseUrl);
 		} else {
 			return null;
 		}

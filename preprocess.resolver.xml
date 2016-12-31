@@ -9,6 +9,7 @@
 					<module class="org.DitaSemia.Ot.DitaSemiaOtResolver">
 						<param name="xsl" 					value="${dita.plugin.org.dita-semia.resolver.dir}/xsl/ot/resolve.xsl"/>
 						<param name="key-type-def-list-uri" value="${dita-semia.resolver.key-type-def-list-uri}" if="dita-semia.resolver.key-type-def-list-uri"/>
+						<param name="ditadir" 				location="${dita.dir}"/>
 					</module>
 				</pipeline>
 			</then>

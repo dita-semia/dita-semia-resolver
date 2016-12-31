@@ -8,7 +8,7 @@ import java.util.Set;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.XPathNotAvaliableException;

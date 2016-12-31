@@ -5,10 +5,9 @@ import java.util.HashMap;
 
 import net.sf.saxon.Configuration;
 
-import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheInitializer;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheInitializer;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.SaxonConfigurationFactory;
@@ -20,26 +19,26 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.util.editorvars.EditorVariables;
 
-public class DocumentCacheHandler implements DocumentCacheProvider {
+public class BookCacheHandler implements BookCacheProvider {
 	
-	private static final Logger logger = Logger.getLogger(DocumentCacheHandler.class.getName());
+	private static final Logger logger = Logger.getLogger(BookCacheHandler.class.getName());
 	
-	private static DocumentCacheHandler instance;
+	private static BookCacheHandler instance;
 	
-	private final HashMap<String, DocumentCache> 	documentCacheMap;
+	private final HashMap<String, BookCache> 	documentCacheMap;
 	private final URL								ditaOtUrl;
 	
-	private DocumentCacheInitializer 	initializer;
+	private BookCacheInitializer 	initializer;
 	
 		
-	public static DocumentCacheHandler getInstance() {
+	public static BookCacheHandler getInstance() {
 		if (instance == null) {
-			instance = new DocumentCacheHandler(null);
+			instance = new BookCacheHandler(null);
 		}
 		return instance;
 	}
 	
-	private DocumentCacheHandler(DocumentCacheInitializer initializer) {
+	private BookCacheHandler(BookCacheInitializer initializer) {
 		this.documentCacheMap 	= new HashMap<>();
 		this.initializer		= initializer;
 		this.ditaOtUrl		= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
@@ -50,29 +49,29 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 		OxyXPathHandler.getInstance().registerCustomFunction(new AncestorPath());
 	}
 
-	public DocumentCacheInitializer getInitializer() {
+	public BookCacheInitializer getInitializer() {
 		return initializer;
 	}
 	
-	public void setInitializer(DocumentCacheInitializer initializer) {
+	public void setInitializer(BookCacheInitializer initializer) {
 		this.initializer = initializer;
 	}
 	
-	private DocumentCache createDocumentCache(URL url) {
+	private BookCache createBookCache(URL url) {
 		final SaxonConfigurationFactory configurationFactory = new SaxonConfigurationFactory() {
 			@Override
 			public Configuration createConfiguration() {
-				final Configuration configuration = DocumentCache.createBaseConfiguration();
+				final Configuration configuration = BookCache.createBaseConfiguration();
 				OxySaxonConfigurationFactory.adaptConfiguration(configuration);
 				configuration.setErrorListener(new Log4jErrorListener(logger));
 				return configuration;
 			}
 		};
 		
-		final DocumentCache documentCache = new DocumentCache(url, initializer, configurationFactory, ditaOtUrl);
-		documentCacheMap.put(FileUtil.decodeUrl(url), documentCache);
-		documentCache.fillCache();	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
-		return documentCache;
+		final BookCache bookCache = new BookCache(url, initializer, configurationFactory, ditaOtUrl);
+		documentCacheMap.put(FileUtil.decodeUrl(url), bookCache);
+		bookCache.fillCache();	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
+		return bookCache;
 	}
 	
 	/*
@@ -80,47 +79,47 @@ public class DocumentCacheHandler implements DocumentCacheProvider {
 	 * Otherwise it returns the Cache only for the given file. If none exists yet, a new one is created. 
 	 */
 	@Override
-	public DocumentCache getDocumentCache(URL url) {
+	public BookCache getBookCache(URL url) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
 			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
-			DocumentCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
+			BookCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
-				mapCache = createDocumentCache(currMapUrl);
+				mapCache = createBookCache(currMapUrl);
 			}
 			if ((mapCache != null) && (mapCache.isUrlIncluded(url))) {
 				return mapCache;
 			}
 		}
 		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
-		DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
+		BookCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 		if (fileCache == null) {
-			fileCache = createDocumentCache(url);
+			fileCache = createBookCache(url);
 		}
 		return fileCache;
 	}
 
-	public void refreshCache(URL url) {
+	public void refreshBookCache(URL url) {
 		final URL currMapUrl = getCurrMapUrl();
 		
-		DocumentCache 	mapCache = null;
+		BookCache 	bookCache = null;
 		if (currMapUrl != null) {
 			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
-			mapCache = documentCacheMap.get(currMapDecodedUrl);
-			if (mapCache == null) {
-				mapCache = createDocumentCache(currMapUrl);
+			bookCache = documentCacheMap.get(currMapDecodedUrl);
+			if (bookCache == null) {
+				bookCache = createBookCache(currMapUrl);
 			} else {
-				mapCache.refresh();
+				bookCache.fullRefresh();
 			}
 		}
-		if ((mapCache == null) || (!mapCache.isUrlIncluded(url))) {
-			final String 	decodedUrl 	= FileUtil.decodeUrl(url);
-			DocumentCache 	fileCache 	= documentCacheMap.get(decodedUrl);
-			if (fileCache == null) {
-				fileCache = createDocumentCache(url);
+		if ((bookCache == null) || (!bookCache.isUrlIncluded(url))) {
+			final String 	decodedUrl 		= FileUtil.decodeUrl(url);
+			BookCache 		fileBookCache 	= documentCacheMap.get(decodedUrl);
+			if (fileBookCache == null) {
+				fileBookCache = createBookCache(url);
 			} else {
-				fileCache.refresh();
+				fileBookCache.fullRefresh();
 			}
 		}
 

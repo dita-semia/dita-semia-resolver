@@ -19,16 +19,20 @@ abstract public class SaxonConfigurationFactory {
 	protected final static DocumentNumberAllocator	documentNumberAllocator	= new DocumentNumberAllocator();
 
 	public static Configuration loadConfiguration(URL configUrl) {
-		try {
-			final Configuration configuration = Configuration.readConfiguration(new SAXSource(new InputSource(configUrl.toExternalForm())));
-			
-			// make compatible with base configration
-			configuration.setNamePool(namePool);
-			configuration.setDocumentNumberAllocator(documentNumberAllocator);
-
-			return configuration;
-		} catch (Exception e) {
-			throw new RuntimeException("failed to load saxon configuration file (" + FileUtil.decodeUrl(configUrl) + "): " + e.getMessage());
+		if (configUrl != null) {
+			try {
+				final Configuration configuration = Configuration.readConfiguration(new SAXSource(new InputSource(configUrl.toExternalForm())));
+				
+				// make compatible with base configration
+				configuration.setNamePool(namePool);
+				configuration.setDocumentNumberAllocator(documentNumberAllocator);
+	
+				return configuration;
+			} catch (Exception e) {
+				throw new RuntimeException("failed to load saxon configuration file (" + FileUtil.decodeUrl(configUrl) + "): " + e.getMessage());
+			}
+		} else {
+			throw new RuntimeException("can't load configuration file from URL 'null'.");
 		}
 	}
 

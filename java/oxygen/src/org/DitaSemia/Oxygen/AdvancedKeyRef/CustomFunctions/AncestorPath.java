@@ -2,11 +2,11 @@ package org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions;
 
 import java.util.List;
 
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.OxyXPathHandler;
 import org.apache.log4j.Logger;
 
@@ -27,8 +27,8 @@ public class AncestorPath implements OxyXPathHandler.CustomFunction {
 	public String evaluate(List<String> arguments, AuthorNodeWrapper context) {
 		KeyDefInterface keyDef = null;
 		if (context != null) {
-			final DocumentCache documentCache = DocumentCacheHandler.getInstance().getDocumentCache(context.getBaseUrl());
-			keyDef = documentCache.getAncestorKeyDef(context, arguments.get(0));
+			final BookCache bookCache = BookCacheHandler.getInstance().getBookCache(context.getBaseUrl());
+			keyDef = bookCache.getAncestorKeyDef(context, arguments.get(0));
 		} 
 
 		if (keyDef == null) {

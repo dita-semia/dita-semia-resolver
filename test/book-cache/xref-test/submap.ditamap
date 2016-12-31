@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map title="DITA Topic Map" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:map.xsd">
+	<topicref href="map-child-topic-1.dita"/>
+	<topicref href="map-child-topic-2.dita"/>
+</map>
+    
+    
+

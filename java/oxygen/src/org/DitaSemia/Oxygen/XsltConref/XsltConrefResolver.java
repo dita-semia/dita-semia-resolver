@@ -26,7 +26,7 @@ import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConref.Parameter;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.OxySaxonConfigurationFactory;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
@@ -66,7 +66,7 @@ public class XsltConrefResolver {
 	}
 	
 	public XsltConrefResolver() {
-		configuration 		= XsltConref.createConfiguration(DocumentCacheHandler.getInstance());
+		configuration 		= XsltConref.createConfiguration(BookCacheHandler.getInstance());
 		OxySaxonConfigurationFactory.adaptConfiguration(configuration);
 		
 		

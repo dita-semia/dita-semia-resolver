@@ -1,13 +1,11 @@
-package org.DitaSemia.Oxygen.Conbat;
+package org.DitaSemia.Oxygen;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
-import org.DitaSemia.Oxygen.AuthorNodeWrapper;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
@@ -42,10 +40,10 @@ public class XRefLinkTextResolver {
 			
 			//logger.info("refUrl: " + refUrl);
 			if (refUrl != null) {
-				final DocumentCache documentCache 	= DocumentCacheHandler.getInstance().getDocumentCache(node.getBaseUrl());
-				final FileCache		fileCache		= documentCache.getFile(refUrl);
+				final BookCache	bookCache 	= BookCacheHandler.getInstance().getBookCache(node.getBaseUrl());
+				final FileCache	fileCache	= bookCache.getFile(refUrl);
 				if (fileCache != null) {
-					resolved = fileCache.getLinkTitle(hrefId);
+					resolved = fileCache.getLinkText(hrefId, node);
 				}
 			}
 		}

@@ -7,11 +7,11 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheInitializer;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheInitializer;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorReferenceResolver;
@@ -29,14 +29,14 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 	
 	
 	public static void initDocumentCacheHandler() {
-		final DocumentCacheHandler cacheHandler = DocumentCacheHandler.getInstance();
+		final BookCacheHandler cacheHandler = BookCacheHandler.getInstance();
 		if (cacheHandler.getInitializer() == null) {
-			cacheHandler.setInitializer(new DocumentCacheInitializer() {
+			cacheHandler.setInitializer(new BookCacheInitializer() {
 				@Override
-				public void initDocumentCache(DocumentCache documentCache) {
+				public void initBookCache(BookCache bookCache) {
 					final URL keyTypeDefListUrl = getClass().getClassLoader().getResource(KEY_TYPE_DEF_LIST_URL);
 					if (keyTypeDefListUrl != null) {
-						documentCache.parseKeyTypeDefFile(keyTypeDefListUrl);
+						bookCache.parseKeyTypeDefFile(keyTypeDefListUrl);
 					}
 				}});
 		}

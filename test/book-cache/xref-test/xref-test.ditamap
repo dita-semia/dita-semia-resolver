@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookmap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:bookmap.xsd">
+    <booktitle>
+        <mainbooktitle>Topic-Num Test</mainbooktitle>
+    </booktitle>
+	<frontmatter>
+		<topicref href="frontmatter-topic.dita"/>
+		<booklists>
+			<toc/>
+			<figurelist/>
+			<tablelist/>
+		</booklists>
+	</frontmatter>
+	<chapter href="chapter-topic-1.dita">
+		<topicref href="Task.dita"/>
+	</chapter>
+	<chapter href="chapter-topic-2.dita">
+		<topicref href="chapter-child-topic-1.dita"/>
+		<topicref href="chapter-child-topic-2.dita"/>
+	</chapter>
+	<chapter navtitle="3rd Chapter">
+		<mapref href="submap.ditamap"/>
+	</chapter>
+	<appendix href="appendix-topic-1.dita"/>
+	<appendix href="appendix-topic-2.dita">
+		<topicref href="appendix-child-topic-1.dita"/>
+		<topicref href="appendix-child-topic-2.dita"/>
+	</appendix>
+	<backmatter>
+		<topicref href="backmatter-topic.dita"/>
+	</backmatter>
+</bookmap>

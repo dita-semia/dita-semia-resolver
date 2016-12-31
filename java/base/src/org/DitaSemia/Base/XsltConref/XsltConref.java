@@ -33,7 +33,7 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
@@ -92,13 +92,13 @@ public class XsltConref {
 		return null;
 	}
 
-	public static Configuration createConfiguration(DocumentCacheProvider documentCacheProvider) {
+	public static Configuration createConfiguration(BookCacheProvider bookCacheProvider) {
 		final Configuration 	configuration	= SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
 		configuration.setErrorListener(new Log4jErrorListener(logger));
 
-		configuration.registerExtensionFunction(new GetChildTopicsDef(documentCacheProvider));
-		configuration.registerExtensionFunction(new GetAncestorPathDef(documentCacheProvider));
-		configuration.registerExtensionFunction(new GetKeyDefRootDef(documentCacheProvider));
+		configuration.registerExtensionFunction(new GetChildTopicsDef(bookCacheProvider));
+		configuration.registerExtensionFunction(new GetAncestorPathDef(bookCacheProvider));
+		configuration.registerExtensionFunction(new GetKeyDefRootDef(bookCacheProvider));
 		
 		return configuration;
 	}

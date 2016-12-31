@@ -183,5 +183,9 @@ public class XslTransformerCache {
 	public Configuration getConfiguration() {
 		return configuration;
 	}
+
+	public void clear() {
+		executableMap.clear();
+	}
 	
 }

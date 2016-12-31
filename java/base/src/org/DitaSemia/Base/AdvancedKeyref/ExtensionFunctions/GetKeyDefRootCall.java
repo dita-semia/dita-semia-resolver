@@ -2,8 +2,8 @@ package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
@@ -22,10 +22,10 @@ public class GetKeyDefRootCall extends ExtensionFunctionCall {
 	private static final Logger logger = Logger.getLogger(GetKeyDefRootCall.class.getName());
 
 
-	protected final DocumentCacheProvider 	documentCacheProvider;
+	protected final BookCacheProvider 	bookCacheProvider;
 
-	public GetKeyDefRootCall(DocumentCacheProvider documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetKeyDefRootCall(BookCacheProvider bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 
 	@Override
@@ -38,14 +38,14 @@ public class GetKeyDefRootCall extends ExtensionFunctionCall {
 			}
 
 			final NodeInfo 			node 			= (NodeInfo)argument;
-			final DocumentCache		documentCache	= documentCacheProvider.getDocumentCache(new URL(node.getBaseURI()));
-			final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, documentCache.getXPathCache());
+			final BookCache			bookCache		= bookCacheProvider.getBookCache(new URL(node.getBaseURI()));
+			final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, bookCache.getXPathCache());
 			final KeyRefInterface 	keyRef			= KeyRef.fromNode(nodeWrapper);
 			if (keyRef == null) {
 				throw new XPathException("Supplied node '" + node.getLocalPart() + "' is no Advanced-KeyRef element.");
 			}
 			
-			final KeyDefInterface	keyDef	= documentCache.getExactMatch(keyRef);
+			final KeyDefInterface	keyDef	= bookCache.getExactMatch(keyRef);
 			if (keyDef != null) {
 				final SaxonNodeWrapper root = (SaxonNodeWrapper)keyDef.getRoot();
 				logger.info("done: " + root.getName());

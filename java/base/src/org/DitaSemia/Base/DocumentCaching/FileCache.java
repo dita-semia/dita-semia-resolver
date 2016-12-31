@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
@@ -27,24 +27,33 @@ public class FileCache extends TopicRefContainer {
 
 	private static final Logger logger = Logger.getLogger(FileCache.class.getName());
 	
-	protected static final String	LINK_TITLE_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
+	public static final String		LINK_TITLE_UNKNOWN	= "???";
+	public static final String		LINK_NUM_DELIMITER	= " ";
 	
-	protected final String 				decodedUrl;
-	protected final XdmNode				rootNode;
-	protected final DocumentCache 		documentCache;
-	protected final NodeWrapper			rootWrapper;
+	protected static final String	LINK_TITLE_XSL		= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
+	protected static final String	LOCAL_TOPIC_NUM_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/local-topic-num.xsl";
+
+	protected final String 			decodedUrl;
+	protected final XdmNode			rootNode;
+	protected final BookCache 		bookCache;
+	protected final NodeWrapper		rootWrapper;
+	
+	protected String rootTopicNum = null;
 	
 	protected final Collection<KeyDefInterface>		keyDefList 			= new LinkedList<>();
 	protected final Map<String, SaxonNodeWrapper>	nodeByRefId			= new HashMap<>();
 	protected final Map<String, String>				linkTitleByRefId	= new HashMap<>();
+	protected final Map<String, String>				linkTextByRefId		= new HashMap<>();
+	protected final Map<String, String>				localNumByTopicId	= new HashMap<>();
+	protected final Collection<FileCache>			refFileList			= new LinkedList<>();
 	
 	
 
-	public FileCache(String decodedUrl, XdmNode rootNode, DocumentCache documentCache) {
+	public FileCache(String decodedUrl, XdmNode rootNode, BookCache bookCache) {
 		this.decodedUrl 	= decodedUrl;
 		this.rootNode		= rootNode;
-		this.documentCache	= documentCache;
-		this.rootWrapper	= new SaxonNodeWrapper(rootNode.getUnderlyingNode(), documentCache.getXPathCache());
+		this.bookCache		= bookCache;
+		this.rootWrapper	= new SaxonNodeWrapper(rootNode.getUnderlyingNode(), bookCache.getXPathCache());
 	}
 
 	public String getDecodedUrl() {
@@ -72,6 +81,13 @@ public class FileCache extends TopicRefContainer {
 		}
 	}
 	
+	public void mapPosChanged() {
+		rootTopicNum = null;	// will be set on demand
+		for (FileCache refFile : refFileList) {
+			refFile.mapPosChanged();
+		}
+	}
+
 	public String toString() {
 		return "FileCache - url: " + decodedUrl + ", rootNode: " + rootWrapper.getName(); 
 	}
@@ -84,22 +100,96 @@ public class FileCache extends TopicRefContainer {
 		return nodeByRefId.get(refId);
 	}
 	
-	public String getLinkTitle(String refId) {
-		String linkTitle = linkTitleByRefId.get(refId);
-		if (linkTitle == null) {
+	public String getLinkText(String refId, NodeWrapper contextNode) {
+		String linkText = linkTextByRefId.get(refId);
+		if (linkText == null) {
 			final SaxonNodeWrapper linkedNode = nodeByRefId.get(refId);
+			logger.info("getLinkText(" + refId + "): " + linkedNode);
 			if (linkedNode != null) {
-				linkTitle = extractString(linkedNode, LINK_TITLE_XSL);
-				//logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
-				linkTitleByRefId.put(refId, linkTitle);
+				linkText = getLinkText(refId, linkedNode);
+				logger.info("linkText for '" + refId + "': '" + linkText + "'");
+				linkTextByRefId.put(refId, linkText);
 			}
 		}
+		// TODO: for target in different topic: add link text of target topic. e.g. "Section-Title in x.y TopicTitle" 
+		return linkText;
+	}
+	
+	private String getLinkText(String refId, SaxonNodeWrapper linkedNode) {
+		String linkText;
+		final String classAttr = linkedNode.getAttribute(DitaUtil.ATTR_CLASS, null);
+		logger.info("getLinkText(" + refId + "), class: " + classAttr);
+		if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
+			final StringBuffer topicNum = getTopicNum(refId, linkedNode);
+			logger.info("topicNum: " + topicNum);
+			if (topicNum != null) {
+				topicNum.append(LINK_NUM_DELIMITER);
+				topicNum.append(getLinkTitle(refId, linkedNode));
+				linkText = topicNum.toString();
+			} else {
+				linkText = getLinkTitle(refId, linkedNode);
+			}
+		} else if (classAttr.contains(DitaUtil.CLASS_FIG)) {
+			linkText = getLinkTitle(refId, linkedNode);
+			// TODO: add actual chapter or appendix number of root and prefix. e.g. "Fig. 1-x: " 
+		} else if (classAttr.contains(DitaUtil.CLASS_TABLE)) {
+			linkText = getLinkTitle(refId, linkedNode);
+			// TODO: add actual chapter or appendix number of root and prefix. e.g. "Tab. 1-x: "
+		} else {
+			linkText = getLinkTitle(refId, linkedNode);
+		}
+		logger.info("  result: " + linkText);
+		return linkText;
+	}
+	
+	private String getLinkTitle(String refId, SaxonNodeWrapper linkedNode) {
+		String linkTitle = linkTitleByRefId.get(refId);
+		if (linkTitle == null) {
+			linkTitle = extractString(linkedNode, LINK_TITLE_XSL);
+			if ((linkTitle == null) || (linkTitle.isEmpty())) {
+				linkTitle = LINK_TITLE_UNKNOWN;
+			}
+			logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
+			linkTitleByRefId.put(refId, linkTitle);
+		}
 		return linkTitle;
+	}
+
+	
+	private StringBuffer getTopicNum(String topicId, SaxonNodeWrapper topicNode) {
+		if (rootTopicNum == null) {
+			final StringBuffer rootTopicNumBuf = bookCache.getTopicNum(decodedUrl);
+			if (rootTopicNumBuf == null) {
+				rootTopicNum = "";
+			} else {
+				rootTopicNum = rootTopicNumBuf.toString();
+			}
+		}
+		if (!rootTopicNum.isEmpty()) {
+			final StringBuffer topicNum = new StringBuffer();
+			topicNum.append(rootTopicNum);
+			final String localNum = getLocalTopicNum(topicId, topicNode);
+			if (localNum != null) {
+				topicNum.append(localNum);
+			}
+			return topicNum;
+		} else {
+			return null;
+		}
+	}
+
+	private String getLocalTopicNum(String topicId, SaxonNodeWrapper topicNode) {
+		String localNum = localNumByTopicId.get(topicId);
+		if (localNum == null) {
+			localNum = extractString(topicNode, LOCAL_TOPIC_NUM_XSL);
+			localNumByTopicId.put(topicId, localNum);
+		}
+		return localNum;
 	}
 	
 	private String extractString(SaxonNodeWrapper node, String xslUrl) {
 		try {
-			final XsltExecutable 	executable 		= documentCache.getExtractTransformerCache().getExecutable(new URL(documentCache.getDitaOtUrl(), xslUrl));
+			final XsltExecutable 	executable 		= bookCache.getExtractTransformerCache().getExecutable(new URL(bookCache.getDitaOtUrl(), xslUrl));
 			final XsltTransformer 	xsltTransformer = executable.load();
 			xsltTransformer.setInitialContextNode(new XdmNode(node.getNodeInfo()));
 			
@@ -119,12 +209,12 @@ public class FileCache extends TopicRefContainer {
 		//logger.info("parseNode: " + node.getUnderlyingNode().getDisplayName() + ", " + node.getNodeKind());
 		if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
 			
-			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node.getUnderlyingNode(), documentCache.getXPathCache());
+			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node.getUnderlyingNode(), bookCache.getXPathCache());
 			
 			final KeyDef keyDef = KeyDef.fromNode(nodeWrapper);
 			if (keyDef != null) {
 				keyDefList.add(keyDef);
-				documentCache.addKeyDef(keyDef);
+				bookCache.addKeyDef(keyDef);
 			}
 			
 			final String classAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
@@ -169,13 +259,14 @@ public class FileCache extends TopicRefContainer {
 			if ((processingRoleAttr == null) || (!processingRoleAttr.equals(DitaUtil.ROLE_RESOURCE_ONLY))) {
 				final String href = nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null);
 				if ((href != null) && (!href.isEmpty())) {
-					refFile = documentCache.createFileCache(nodeWrapper.resolveUri(href));
+					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href));
 				}
 			}
 
-			topicRef = documentCache.createTopicRef(this, refFile, parentTopicRefContainer, nodeWrapper);
+			topicRef = bookCache.createTopicRef(this, refFile, parentTopicRefContainer, nodeWrapper);
 			if (refFile != null) {
 				refFile.parse();
+				refFileList.add(refFile);
 			}
 		}
 		return topicRef;
@@ -185,7 +276,7 @@ public class FileCache extends TopicRefContainer {
 	private void parseKeyTypeDefNode(NodeWrapper nodeWrapper, String classAttr) throws TransformerException {
 		if (classAttr.contains(DitaUtil.CLASS_DATA)) {
 			final String nameAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_NAME, null);
-			if ((nameAttr != null) && (nameAttr.equals(DocumentCache.DATA_NAME_TYPE_DEF_URI))) {
+			if ((nameAttr != null) && (nameAttr.equals(BookCache.DATA_NAME_TYPE_DEF_URI))) {
 				final String urlAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_VALUE, null);
 				if ((urlAttr != null) && (!urlAttr.isEmpty())) {
 					Source source;
@@ -196,7 +287,7 @@ public class FileCache extends TopicRefContainer {
 					} else {
 						source = nodeWrapper.resolveUri(urlAttr);
 					}
-					documentCache.parseKeyTypeDefSource(source);
+					bookCache.parseKeyTypeDefSource(source);
 				}
 			}
 		}

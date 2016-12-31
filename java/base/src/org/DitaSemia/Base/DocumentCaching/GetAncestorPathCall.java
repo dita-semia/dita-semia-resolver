@@ -3,8 +3,8 @@ package org.DitaSemia.Base.DocumentCaching;
 import java.net.URL;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathCall;
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
 
@@ -20,10 +20,10 @@ public class GetAncestorPathCall extends ExtensionFunctionCall {
 	private static final Logger logger = Logger.getLogger(GetAncestorPathCall.class.getName());
 
 
-	protected final DocumentCacheProvider documentCacheProvider;
+	protected final BookCacheProvider bookCacheProvider;
 
-	public GetAncestorPathCall(DocumentCacheProvider documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetAncestorPathCall(BookCacheProvider bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 
 	@Override
@@ -33,9 +33,9 @@ public class GetAncestorPathCall extends ExtensionFunctionCall {
 			final NodeInfo	node	= (NodeInfo)arguments[0].head();
 			final String	keyType	= ((StringValue)arguments[1].head()).asString();
 			
-			final DocumentCache		documentCache	= documentCacheProvider.getDocumentCache(new URL(node.getBaseURI()));
-			final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, documentCache.getXPathCache());
-			final KeyDefInterface 	keyDef 			= documentCache.getAncestorKeyDef(nodeWrapper, keyType);
+			final BookCache			bookCache		= bookCacheProvider.getBookCache(new URL(node.getBaseURI()));
+			final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, bookCache.getXPathCache());
+			final KeyDefInterface 	keyDef 			= bookCache.getAncestorKeyDef(nodeWrapper, keyType);
 			
 			return AncestorPathCall.getPath(keyDef);
 			

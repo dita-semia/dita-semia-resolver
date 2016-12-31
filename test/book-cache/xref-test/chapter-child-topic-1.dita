@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_ull_wtj_gy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd">
+  <title>1st Chapter Child Topic</title>
+  <body>
+    <p>Text</p>
+		<fig>
+			<title>Figure</title>
+			<p id="oz1_xxj_gy">figure content</p>
+		</fig>
+		<table frame="all" rowsep="1" colsep="1" id="flw_y4r_gy">
+			<title>Table</title>
+			<tgroup cols="2">
+				<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+				<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+				<thead>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+  </body>
+	<topic id="dy3_ytj_gy">
+		<title>1st Embedded Topic</title>
+		<body>
+			<p id="ey3_ytj_gy">Text</p>
+		</body>
+	</topic>
+	<topic id="f4h_xtj_gy">
+		<title>2nd Embedded Topic</title>
+		<body>
+			<p id="byc_ytj_gy">Text</p>
+			<fig>
+				<title>Figure</title>
+				<p id="kqf_xxj_gy">figure content</p>
+			</fig>
+			<table frame="all" rowsep="1" colsep="1" id="zk1_z4r_gy">
+				<title>Table</title>
+				<tgroup cols="2">
+					<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+					<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+					<thead>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</body>
+	</topic>
+</topic>

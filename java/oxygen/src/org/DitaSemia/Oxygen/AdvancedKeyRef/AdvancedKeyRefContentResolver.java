@@ -1,9 +1,9 @@
 package org.DitaSemia.Oxygen.AdvancedKeyRef;
 
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
@@ -18,7 +18,7 @@ public class AdvancedKeyRefContentResolver {
 
 		KeyRef keyRef = KeyRef.fromNode(new AuthorNodeWrapper(node, authorAccess));
 		if (keyRef != null) {
-			final DocumentCache cache = DocumentCacheHandler.getInstance().getDocumentCache(node.getXMLBaseURL());
+			final BookCache cache = BookCacheHandler.getInstance().getBookCache(node.getXMLBaseURL());
 			return keyRef.getDisplaySuffix(cache, true);
 		} else {
 			return null;

@@ -1,8 +1,8 @@
 package org.DitaSemia.Oxygen.ExtensionBundle;
 
+import org.DitaSemia.Oxygen.XRefLinkTextResolver;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefContentResolver;
 import org.DitaSemia.Oxygen.Conbat.ConbatContentResolver;
-import org.DitaSemia.Oxygen.Conbat.XRefLinkTextResolver;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;

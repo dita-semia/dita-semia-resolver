@@ -11,7 +11,7 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.SchematronUtil;
 import org.apache.log4j.Logger;
 
@@ -90,7 +90,7 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 	}
 	
 	public static KeyDefInterface getMatchingKeyDef(String refString, URL url) {
-		return DocumentCacheHandler.getInstance().getDocumentCache(url).getExactMatch(refString);
+		return BookCacheHandler.getInstance().getBookCache(url).getExactMatch(refString);
 	}
 	
 	public static boolean matchesPathLen(String path, String pathLenStr) {

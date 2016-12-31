@@ -25,6 +25,8 @@ public class DitaUtil {
 	public static final String	CLASS_TOPIC				= " topic/topic ";
 	public static final String	CLASS_TITLE				= " topic/title ";
 	public static final String	CLASS_XREF				= " topic/xref ";
+	public static final String	CLASS_FIG				= " topic/fig ";
+	public static final String	CLASS_TABLE				= " topic/table ";
 	public static final String	CLASS_MAP				= " map/map ";
 
 	public static final String	ROLE_RESOURCE_ONLY		= "resource-only";

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_nvw_ptj_gy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd">
+  <title>Frontmatter Topic</title>
+  <body>
+    <p>Text</p>
+		<section id="vkw_v4h_3y">
+			<title>Topic Cross References</title>
+			<ul id="pwm_w4h_3y">
+				<li id="ngn_y4h_3y"><xref href="chapter-topic-1.dita#topic_ljt_ttj_gy"/></li>
+				<li id="qwm_w4h_3y"><xref href="appendix-topic-1.dita#topic_cwd_y5j_gy"/></li>
+				<li id="zkl_1ph_3y"><xref href="appendix-child-topic-1.dita#topic_ull_wtj_gz"/></li>
+				<li id="bms_dph_3y"><xref href="appendix-child-topic-1.dita#dy3_ytj_gz"/></li>
+				<li id="zlk_z4h_3y"><xref href="backmatter-topic.dita#topic_p5k_rtj_gy"/></li>
+				<li id="hn1_h5d_ly"><xref href="Task.dita#task_bns_dtd_ly"/></li>
+			</ul>
+		</section>
+		<section id="awn_rrd_ly">
+			<title>Non-Topic Cross References</title>
+			<ul id="qxd_vrd_ly">
+				<li id="rxd_vrd_ly">section: <xref href="#topic_nvw_ptj_gy/tsl_krd_ly" format="dita"
+					/></li>
+				<li id="n4g_3vh_3y">table in different topic: <xref
+						href="appendix-child-topic-1.dita#topic_ull_wtj_gz/g4v_w4r_gy"/></li>
+				<li id="qyt_lvh_3y">figure in different topic: <xref
+						href="appendix-child-topic-1.dita#topic_ull_wtj_gz/w2q_kvh_3y"/></li>
+				<li id="htz_wrd_ly">dlentry of dl with outputclass
+						<codeph>numbered-list-titles</codeph>: <xref
+						href="#topic_nvw_ptj_gy/lss_qrd_ly" format="dita"/></li>
+				<li id="mqh_fsd_ly">dlentry of dl with outputclass
+						<codeph>bullet-list-titles</codeph>: <xref
+						href="#topic_nvw_ptj_gy/lss_qrd_ly" format="dita"/></li>
+				<li id="nq3_jtd_ly">task step in different topic: <xref
+						href="Task.dita#task_bns_dtd_ly/edk_gtd_ly"/></li>
+				<li id="i2j_vtd_ly">li of ol : <xref href="#topic_nvw_ptj_gy/ly4_5td_ly"
+						format="dita"/></li>
+				<li id="w4f_ztd_ly">section in different topic: <xref
+						href="chapter-topic-1.dita#topic_ljt_ttj_gy/mf4_25d_ly"/></li>
+			</ul>
+		</section>
+		<section id="tsl_krd_ly">
+			<title>Local Targets</title>
+			<p id="rwc_bsd_ly">dl with outputclass <codeph>numbered-list-titles</codeph></p>
+			<dl outputclass="numbered-list-titles">
+				<dlentry id="opv_lrd_ly">
+					<dt>Term 1</dt>
+					<dd>Text</dd>
+				</dlentry>
+				<dlentry id="lss_qrd_ly">
+					<dt>Term 2</dt>
+					<dd>Text</dd>
+				</dlentry>
+			</dl>
+			<p id="qq4_bsd_ly">dl with outputclass <codeph>bullet-list-titles</codeph></p>
+			<dl outputclass="bullet-list-titles">
+				<dlentry id="ftk_1sd_ly">
+					<dt>Term 1</dt>
+					<dd>Text</dd>
+				</dlentry>
+				<dlentry id="gtk_1sd_ly">
+					<dt>Term 2</dt>
+					<dd>Text</dd>
+				</dlentry>
+			</dl>
+			<p id="usl_krd_ly">ol</p>
+			<ol id="udg_5td_ly">
+				<li id="vdg_5td_ly">1st Entry</li>
+				<li id="ly4_5td_ly">2nd Entry</li>
+			</ol>
+		</section>
+  </body>
+	<topic id="r25_l5j_gy">
+		<title>Embedded Child Topic</title>
+		<body>
+			<p id="k5g_m5j_gy">Text</p>
+		</body>
+	</topic>
+</topic>

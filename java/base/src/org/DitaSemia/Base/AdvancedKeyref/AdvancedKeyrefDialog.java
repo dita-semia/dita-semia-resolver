@@ -60,7 +60,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.DitaSemia.Base.DocumentCache;
 import org.apache.log4j.Logger;
 
 
@@ -105,7 +104,6 @@ public class AdvancedKeyrefDialog extends JDialog {
 	private List<String>							currentNamespaceList	= null;
 	private String									currentPreview			= "";
 	private String									currentKey				= "";
-	private Font 									font 					= null;
 	
 	private KeyAdapter 								keyListener;
 	
@@ -120,7 +118,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	
 	private Frame									parentFrame;
 	
-	private DocumentCache							documentCache;
+	private KeyDefListInterface 					keyDefList;
 
 	
 	public AdvancedKeyrefDialog(Frame parentFrame, KeyDefListInterface keyDefList, KeyRefInterface currentKeyRef, KeyDefInterface contextKeyDef, KeyPrioritizer keyPrioritizer) {
@@ -128,15 +126,8 @@ public class AdvancedKeyrefDialog extends JDialog {
 		
 		this.setTitle("Edit KeyRef-Element");
 		
-		if (keyDefList instanceof DocumentCache) {
-			this.documentCache = (DocumentCache) keyDefList;
-		} else {
-			logger.error("keyDefList is not a DocumentCache!");
-			this.documentCache = null;
-		}
-		
-		
 		this.parentFrame 	= parentFrame;
+		this.keyDefList		= keyDefList;
 		this.contextKeyDef 	= contextKeyDef;
 				
 		this.currentKeyRef	= currentKeyRef;
@@ -886,7 +877,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	private String stylePreview(String preview, String nameSuffix) {
 		String text = "";
 		if (!outputclass.equals(KeyRef.OC_NAME)) {
-			KeyTypeDef keyTypeDef = documentCache.getKeyTypeDef(selectedKeyDef.getType());
+			KeyTypeDef keyTypeDef = keyDefList.getKeyTypeDef(selectedKeyDef.getType());
 			String 	fontFamily 	= "\"serif\"";
 			String	fontStyle 	= "\"normal\"";
 			String 	prefix		= keyTypeDef.prefix;

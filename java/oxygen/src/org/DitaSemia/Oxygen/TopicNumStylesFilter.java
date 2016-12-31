@@ -1,7 +1,7 @@
 package org.DitaSemia.Oxygen;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.DocumentCaching.TopicRef;
@@ -46,7 +46,7 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 		if (isTopicTitle(node)) {
 			handled = true;
 			
-			final DocumentCache cache 	= getDocumentCache(authorNode);
+			final BookCache cache 	= getBookCache(authorNode);
 			//logger.info("  cache: " + cache);
 			
 			if (cache != null) {
@@ -85,7 +85,7 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 		return node.getRootElement().isSameNode(node);
 	}
 	
-	private static String getTopicNum(NodeWrapper node, DocumentCache cache) {
+	private static String getTopicNum(NodeWrapper node, BookCache cache) {
 		final TopicRef 		topicRef = cache.getTopicRef(FileUtil.decodeUrl(node.getBaseUrl()));
 		final StringBuffer 	topicNum = cache.getTopicNum(topicRef);
 		if (topicNum == null) {

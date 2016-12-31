@@ -3,7 +3,7 @@ package org.DitaSemia.Oxygen.AuthorOperations;
 import java.awt.Component;
 import java.awt.Frame;
 
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyPrioritizer;
@@ -38,7 +38,7 @@ public class EditKeyRef implements AuthorOperation {
 			final int 						caretOffset 		= authorAccess.getEditorAccess().getCaretOffset();
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				nodeAtCaret 		= documentController.getNodeAtOffset(caretOffset);
-			final KeyDefListInterface 		keyDefList 			= DocumentCacheHandler.getInstance().getDocumentCache(nodeAtCaret.getXMLBaseURL());
+			final KeyDefListInterface 		keyDefList 			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
 			final KeyRef 					contextKeyref 		= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
 			// contextKeyDef?
 			// ancestorKeyDef, keyrefFactory für keyPrioritizer?

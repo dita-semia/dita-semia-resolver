@@ -15,9 +15,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheInitializer;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheInitializer;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
@@ -60,12 +60,13 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.ObjectValue;
 
-public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements DocumentCacheProvider, DocumentCacheInitializer {
+public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements BookCacheProvider, BookCacheInitializer {
 	
 	protected static final String FILE_EXTENSION_TEMP	= ".dita-semia.temp";
 	
 	public static final String ANT_INVOKER_PARAM_XSL 					= "xsl";
 	public static final String ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI	= "key-type-def-list-uri";
+	public static final String ANT_INVOKER_PARAM_OT_URL					= "ditadir";
 
 	//protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
 	//protected static final String XSLT_FILE_URL 		= "plugin:org.dita-semia.resolver:java/ot/src/xsl/resolve.xsl";
@@ -82,12 +83,12 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements D
 	protected XslTransformerCache	xsltConrefTransformerCache	= null;
 	protected XMLReader				xsltConrefXmlReader			= null;
 
-	protected DocumentCache			documentCache				= null;
+	protected BookCache			bookCache				= null;
 	protected XPathCache			xPathCache					= null;
 	
 	protected URL					currentBaseUrl				= null;
 	
-	protected File					keyTypeDefListFile			= null;	
+	protected File					keyTypeDefListFile			= null;
 
 	protected void init(AbstractPipelineInput input) throws DITAOTException {
 
@@ -143,9 +144,11 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements D
 			final String	inputUrl	= job.getInputMap().toString();
 			final URL		tempDirUrl	= job.tempDir.toURI().toURL();
 			final URL		rootUrl		= new URL(tempDirUrl, inputUrl);
-			//logger.info("Build documentCache for file: " + rootUrl);
-			documentCache = new DocumentCache(rootUrl, this, resolverConfiguration);
-			documentCache.fillCache();
+			final URL		ditaOtUrl	= new URL(input.getAttribute(ANT_INVOKER_PARAM_OT_URL));
+			//logger.info("Build bookCache for file: " + rootUrl);
+			logger.info("ditaOtUrl: " + ditaOtUrl);
+			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl);
+			bookCache.fillCache();
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
 			logger.error(e.getMessage(), e);
@@ -275,8 +278,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements D
 		return logger;
 	}
 	
-	public DocumentCache getDocumentCache() {
-		return documentCache;
+	public BookCache getBookCache() {
+		return bookCache;
 	}
 
 	public static KeyDefInterface getKeyDefFromItem(Item item) throws XPathException {
@@ -288,16 +291,16 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements D
 
 
 	@Override
-	public DocumentCache getDocumentCache(URL url) {
-		return documentCache;
+	public BookCache getBookCache(URL url) {
+		return bookCache;
 	}
 
 
 	@Override
-	public void initDocumentCache(DocumentCache documentCache) {
+	public void initBookCache(BookCache bookCache) {
 		if (keyTypeDefListFile != null) {
 			try {
-				documentCache.parseKeyTypeDefFile(keyTypeDefListFile.toURI().toURL());
+				bookCache.parseKeyTypeDefFile(keyTypeDefListFile.toURI().toURL());
 			} catch (MalformedURLException e) {
 				logger.error(e.getMessage(), e);
 			}

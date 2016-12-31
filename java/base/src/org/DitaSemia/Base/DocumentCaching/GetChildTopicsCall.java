@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
 
@@ -23,22 +23,22 @@ public class GetChildTopicsCall extends ExtensionFunctionCall {
 	private static final Logger logger = Logger.getLogger(GetChildTopicsCall.class.getName());
 
 
-	protected final DocumentCacheProvider documentCacheProvider;
+	protected final BookCacheProvider bookCacheProvider;
 
-	public GetChildTopicsCall(DocumentCacheProvider documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetChildTopicsCall(BookCacheProvider bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 
 	@Override
 	public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 		
 		try {
-			final SaxonNodeWrapper 	topicNode		= new SaxonNodeWrapper((NodeInfo)arguments[0].head(), null);
-			final DocumentCache		documentCache	= documentCacheProvider.getDocumentCache(topicNode.getBaseUrl());
+			final SaxonNodeWrapper 	topicNode	= new SaxonNodeWrapper((NodeInfo)arguments[0].head(), null);
+			final BookCache			bookCache	= bookCacheProvider.getBookCache(topicNode.getBaseUrl());
 			
-			//logger.info("GetChildTopicsCall(" + DocumentCache.decodeUrl(topicNode.getBaseUrl()) + ")");
+			//logger.info("GetChildTopicsCall(" + FileUtil.decodeUrl(topicNode.getBaseUrl()) + ")");
 			
-			final Collection<FileCache> childTopics = documentCache.getChildTopics(topicNode);
+			final Collection<FileCache> childTopics = bookCache.getChildTopics(topicNode);
 			if (childTopics != null) {
 				List<Item> 	list = new LinkedList<>();
 				for (FileCache childTopic : childTopics) {

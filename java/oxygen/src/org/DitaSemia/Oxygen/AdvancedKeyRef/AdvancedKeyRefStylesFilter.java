@@ -1,11 +1,7 @@
 package org.DitaSemia.Oxygen.AdvancedKeyRef;
 
 
-//import java.net.URL;
-
-import java.net.URL;
-
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
@@ -13,13 +9,11 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.DitaSemiaStylesFilter;
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.StringContent;
 import ro.sync.ecss.css.Styles;
-import ro.sync.ecss.css.URIContent;
 //import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.exml.view.graphics.Font;
@@ -76,7 +70,7 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 	}
 	
 	private static KeyTypeDef getKeyTypeDef(AuthorNode authorNode) {
-		final DocumentCache cache 	= getDocumentCache(authorNode);
+		final BookCache cache 	= getBookCache(authorNode);
 		if (cache != null) {
 			String keyTypeName = null;
 			final KeyRef keyRef = getKeyRefFromNode(authorNode);
@@ -99,7 +93,7 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 	private static boolean filterLink(Styles styles, AuthorNode authorNode) {
 		final KeyRef keyRef = getKeyRefFromNode(authorNode);
 		if (keyRef != null) {
-			final DocumentCache cache 	= getDocumentCache(authorNode);
+			final BookCache cache 	= getBookCache(authorNode);
 			if (cache != null) {
 				final KeyDefInterface	keyDef 	= cache.getExactMatch(keyRef);
 				if (keyDef != null) {

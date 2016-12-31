@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_p5k_rtj_gy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd">
+  <title>Backmatter Topic</title>
+  <body>
+    <p>Text</p>
+  </body>
+	<topic id="amv_m5j_gy">
+		<title>Embedded Child Topic</title>
+		<body>
+			<p id="vpf_n5j_gy">Text</p>
+		</body>
+	</topic>
+</topic>

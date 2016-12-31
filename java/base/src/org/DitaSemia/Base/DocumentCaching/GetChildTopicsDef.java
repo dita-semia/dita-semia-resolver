@@ -1,7 +1,7 @@
 package org.DitaSemia.Base.DocumentCaching;
 
-import org.DitaSemia.Base.DocumentCache;
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.BookCacheProvider;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -12,10 +12,10 @@ public class GetChildTopicsDef extends ExtensionFunctionDefinition {
 	
 	public static final String LOCAL_NAME	= "getChildTopics"; 
 
-	protected final DocumentCacheProvider documentCacheProvider;
+	protected final BookCacheProvider bookCacheProvider;
 	
-	public GetChildTopicsDef(DocumentCacheProvider documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetChildTopicsDef(BookCacheProvider bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class GetChildTopicsDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public StructuredQName getFunctionQName() {
-		return new StructuredQName(DocumentCache.NAMESPACE_PREFIX, DocumentCache.NAMESPACE_URI, LOCAL_NAME);
+		return new StructuredQName(BookCache.NAMESPACE_PREFIX, BookCache.NAMESPACE_URI, LOCAL_NAME);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class GetChildTopicsDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
-		return new GetChildTopicsCall(documentCacheProvider);
+		return new GetChildTopicsCall(bookCacheProvider);
 	}
 
 }

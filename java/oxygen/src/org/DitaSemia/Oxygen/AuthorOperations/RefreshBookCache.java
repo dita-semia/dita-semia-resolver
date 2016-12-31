@@ -1,6 +1,6 @@
 package org.DitaSemia.Oxygen.AuthorOperations;
 
-import org.DitaSemia.Oxygen.DocumentCacheHandler;
+import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.ArgumentDescriptor;
@@ -10,9 +10,9 @@ import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 
-public class RefreshCache implements AuthorOperation {
+public class RefreshBookCache implements AuthorOperation {
 
-	private static final Logger logger = Logger.getLogger(RefreshCache.class.getName());
+	private static final Logger logger = Logger.getLogger(RefreshBookCache.class.getName());
 
 	@Override
 	public String getDescription() {
@@ -26,7 +26,7 @@ public class RefreshCache implements AuthorOperation {
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				rootNode			= documentController.getNodeAtOffset(0);
 			
-			DocumentCacheHandler.getInstance().refreshCache(rootNode.getXMLBaseURL());
+			BookCacheHandler.getInstance().refreshBookCache(rootNode.getXMLBaseURL());
 
 		} catch (Exception e) {
 			logger.error(e, e);

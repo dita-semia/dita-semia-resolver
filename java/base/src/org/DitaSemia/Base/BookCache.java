@@ -35,12 +35,12 @@ import org.DitaSemia.Base.DocumentCaching.TopicRefContainer;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.apache.log4j.Logger;
 
-public class DocumentCache extends SaxonConfigurationFactory implements KeyDefListInterface, KeyTypeDefListInterface {
+public class BookCache extends SaxonConfigurationFactory implements KeyDefListInterface, KeyTypeDefListInterface {
 
-	private static final Logger logger = Logger.getLogger(DocumentCache.class.getName());
+	private static final Logger logger = Logger.getLogger(BookCache.class.getName());
 
-	public static final String 	NAMESPACE_URI			= "http://www.dita-semia.org/document-cache";
-	public static final String 	NAMESPACE_PREFIX		= "dc";
+	public static final String 	NAMESPACE_URI			= "http://www.dita-semia.org/book-cache";
+	public static final String 	NAMESPACE_PREFIX		= "bc";
 	
 	public static final String	DATA_NAME_TYPE_DEF_URI	= "ikd:TypeDefUri";
 	public static final QName	NAME_KEY_TYPE_DEF_LIST	= new QName("KeyTypeDefList");
@@ -48,7 +48,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	
 	public static final String 	ANY_KEY_TYPE			= "*";
 
-	public static final String 	CONFIG_FILE_URL 		= "/cfg/document-cache-saxon-config.xml";
+	public static final String 	CONFIG_FILE_URL 		= "/cfg/book-cache-saxon-config.xml";
 	
 	private final URL 				rootDocumentUrl;
 	private final XPathCache 		xPathCache;
@@ -63,13 +63,13 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	private final SaxonConfigurationFactory configurationFactory;
 	private final SaxonDocumentBuilder		documentBuilder;
 	private final Configuration				defaultConfiguration;
-	private final DocumentCacheInitializer	initializer;
+	private final BookCacheInitializer		initializer;
 	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
 	private final URL						ditaOtUrl;
 
 		
 	/* used by oXygen */
-	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl) {
+	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl) {
 		this.rootDocumentUrl 			= rootDocumentUrl;
 		this.initializer				= initializer;
 		this.configurationFactory		= configurationFactory;
@@ -88,7 +88,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	}
 
 	/* used by OT */
-	public DocumentCache(URL rootDocumentUrl, DocumentCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl) {
+	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl) {
 		registerExtensionFunctions(baseConfiguration);
 
 		this.rootDocumentUrl 			= rootDocumentUrl;
@@ -109,7 +109,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 			final long startTime = Calendar.getInstance().getTimeInMillis();
 			
 			if (initializer != null) {
-				initializer.initDocumentCache(this);
+				initializer.initBookCache(this);
 			}
 			
 			final Source 	source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
@@ -214,7 +214,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		return topicRef;
 	}
 	
-	public void refresh() {
+	public void fullRefresh() {
 		//logger.info("refresh");
 
 		keyDefByRefString.clear();
@@ -222,6 +222,8 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 		keyTypeDefByName.clear();
 		fileByUrl.clear();
 		topicRefByUrl.clear();
+		
+		extractTransformerCache.clear();
 		
 		if (documentBuilder instanceof SaxonCachedDocumentBuilder) {
 			((SaxonCachedDocumentBuilder)documentBuilder).clearCache();
@@ -436,7 +438,7 @@ public class DocumentCache extends SaxonConfigurationFactory implements KeyDefLi
 	public void parseKeyTypeDefSource(Source source) {
 		try {
 			final XdmNode 				rootNode = documentBuilder.build(source);
-			final XdmSequenceIterator 	iterator = rootNode.axisIterator(Axis.CHILD, DocumentCache.NAME_KEY_TYPE_DEF_LIST);
+			final XdmSequenceIterator 	iterator = rootNode.axisIterator(Axis.CHILD, BookCache.NAME_KEY_TYPE_DEF_LIST);
 			
 			while (iterator.hasNext()) {
 				createKeyTypeDef((XdmNode)iterator.next(), KeyTypeDef.DEFAULT);

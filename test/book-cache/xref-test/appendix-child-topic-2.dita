@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_ull_wtj_gx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd">
+  <title>2nd Appendix Child Topic</title>
+  <body>
+    <p>Text</p>
+		<fig>
+			<title>Figure</title>
+			<p id="bzh_wxj_gy">figure content</p>
+		</fig>
+		<table frame="all" rowsep="1" colsep="1" id="yfh_x4r_gy">
+			<title>Table</title>
+			<tgroup cols="2">
+				<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+				<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+				<thead>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+					<row>
+						<entry/>
+						<entry/>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+  </body>
+	<topic id="dy3_ytj_gx">
+		<title>1st Embedded Topic</title>
+		<body>
+			<p id="ey3_ytj_gx">Text</p>
+		</body>
+	</topic>
+	<topic id="f4h_xtj_gx">
+		<title>2nd Embedded Topic</title>
+		<body>
+			<p id="byc_ytj_gx">Text</p>
+			<fig>
+				<title>Figure</title>
+				<p id="iyl_wxj_gy">figure content</p>
+			</fig>
+			<table frame="all" rowsep="1" colsep="1" id="etm_x4r_gy">
+				<title>Table</title>
+				<tgroup cols="2">
+					<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+					<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+					<thead>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+						<row>
+							<entry/>
+							<entry/>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</body>
+	</topic>
+</topic>

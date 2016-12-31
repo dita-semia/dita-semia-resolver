@@ -1,6 +1,6 @@
 package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
-import org.DitaSemia.Base.DocumentCacheProvider;
+import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -12,10 +12,10 @@ public class GetKeyDefRootDef extends ExtensionFunctionDefinition {
 	
 	public static final String LOCAL_NAME	= "getKeyDefRoot"; 
 
-	protected final DocumentCacheProvider documentCacheProvider;
+	protected final BookCacheProvider bookCacheProvider;
 	
-	public GetKeyDefRootDef(DocumentCacheProvider 	documentCacheProvider) {
-		this.documentCacheProvider	= documentCacheProvider;
+	public GetKeyDefRootDef(BookCacheProvider 	bookCacheProvider) {
+		this.bookCacheProvider	= bookCacheProvider;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class GetKeyDefRootDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
-		return new GetKeyDefRootCall(documentCacheProvider);
+		return new GetKeyDefRootCall(bookCacheProvider);
 	}
 
 }

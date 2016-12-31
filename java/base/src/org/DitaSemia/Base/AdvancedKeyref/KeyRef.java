@@ -9,7 +9,7 @@ import java.util.Set;
 
 import net.sf.saxon.trans.XPathException;
 
-import org.DitaSemia.Base.DocumentCache;
+import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.XPathNotAvaliableException;
 import org.apache.log4j.Logger;
@@ -58,7 +58,7 @@ public class KeyRef implements KeyRefInterface {
 		this.node 	= node;	
 	}
 	
-	public String getDisplaySuffix(DocumentCache cache, boolean showUnknownName) {
+	public String getDisplaySuffix(BookCache cache, boolean showUnknownName) {
 		return getDisplaySuffix(getMatchingKeyDef(cache), showUnknownName);
 	}
 	
@@ -83,7 +83,7 @@ public class KeyRef implements KeyRefInterface {
 		}
 	}
 	
-	public KeyDefInterface getMatchingKeyDef(DocumentCache cache) {
+	public KeyDefInterface getMatchingKeyDef(BookCache cache) {
 		return cache.getExactMatch(this);
 	}
 	

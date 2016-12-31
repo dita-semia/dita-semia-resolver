@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task id="task_bns_dtd_ly" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:task.xsd">
+    <title>Task Topic</title>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>1st Action</cmd>
+            </step>
+			<step id="edk_gtd_ly">
+				<cmd>2nd Action</cmd>
+			</step>
+        </steps>
+    </taskbody>
+</task>

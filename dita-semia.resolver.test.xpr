@@ -1246,6 +1246,7 @@
         <folder path="../org.dita-semia.pdf/"/>
         <folder path="."/>
         <folder path="../org.dita-semia.topic-num/"/>
+        <folder path="../org.dita.base/"/>
         <folder path="../org.dita.pdf2.fop/"/>
         <folder path="../org.dita.pdf2/"/>
         <folder path="../org.oasis-open.dita.v1_2/"/>
