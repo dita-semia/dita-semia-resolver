@@ -104,10 +104,10 @@ public class FileCache extends TopicRefContainer {
 		String linkText = linkTextByRefId.get(refId);
 		if (linkText == null) {
 			final SaxonNodeWrapper linkedNode = nodeByRefId.get(refId);
-			logger.info("getLinkText(" + refId + "): " + linkedNode);
+			//logger.info("getLinkText(" + refId + "): " + linkedNode);
 			if (linkedNode != null) {
 				linkText = getLinkText(refId, linkedNode);
-				logger.info("linkText for '" + refId + "': '" + linkText + "'");
+				//logger.info("linkText for '" + refId + "': '" + linkText + "'");
 				linkTextByRefId.put(refId, linkText);
 			}
 		}
@@ -118,10 +118,10 @@ public class FileCache extends TopicRefContainer {
 	private String getLinkText(String refId, SaxonNodeWrapper linkedNode) {
 		String linkText;
 		final String classAttr = linkedNode.getAttribute(DitaUtil.ATTR_CLASS, null);
-		logger.info("getLinkText(" + refId + "), class: " + classAttr);
+		//logger.info("getLinkText(" + refId + "), class: " + classAttr);
 		if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
 			final StringBuffer topicNum = getTopicNum(refId, linkedNode);
-			logger.info("topicNum: " + topicNum);
+			//logger.info("topicNum: " + topicNum);
 			if (topicNum != null) {
 				topicNum.append(LINK_NUM_DELIMITER);
 				topicNum.append(getLinkTitle(refId, linkedNode));
@@ -138,7 +138,7 @@ public class FileCache extends TopicRefContainer {
 		} else {
 			linkText = getLinkTitle(refId, linkedNode);
 		}
-		logger.info("  result: " + linkText);
+		//logger.info("  result: " + linkText);
 		return linkText;
 	}
 	
@@ -149,7 +149,7 @@ public class FileCache extends TopicRefContainer {
 			if ((linkTitle == null) || (linkTitle.isEmpty())) {
 				linkTitle = LINK_TITLE_UNKNOWN;
 			}
-			logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
+			//logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
 			linkTitleByRefId.put(refId, linkTitle);
 		}
 		return linkTitle;

@@ -148,7 +148,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			//logger.info("Build bookCache for file: " + rootUrl);
 			logger.info("ditaOtUrl: " + ditaOtUrl);
 			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl);
-			bookCache.fillCache();
+			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
 			logger.error(e.getMessage(), e);

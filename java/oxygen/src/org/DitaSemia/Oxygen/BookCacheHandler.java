@@ -10,6 +10,7 @@ import org.DitaSemia.Base.BookCacheInitializer;
 import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
+import org.DitaSemia.Base.ProgressListener;
 import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
@@ -57,7 +58,7 @@ public class BookCacheHandler implements BookCacheProvider {
 		this.initializer = initializer;
 	}
 	
-	private BookCache createBookCache(URL url) {
+	private BookCache createBookCache(URL url, ProgressListener progressListener) {
 		final SaxonConfigurationFactory configurationFactory = new SaxonConfigurationFactory() {
 			@Override
 			public Configuration createConfiguration() {
@@ -70,7 +71,7 @@ public class BookCacheHandler implements BookCacheProvider {
 		
 		final BookCache bookCache = new BookCache(url, initializer, configurationFactory, ditaOtUrl);
 		documentCacheMap.put(FileUtil.decodeUrl(url), bookCache);
-		bookCache.fillCache();	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
+		bookCache.fillCache(progressListener);	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return bookCache;
 	}
 	
@@ -86,7 +87,7 @@ public class BookCacheHandler implements BookCacheProvider {
 			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			BookCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
-				mapCache = createBookCache(currMapUrl);
+				mapCache = createBookCache(currMapUrl, null);
 			}
 			if ((mapCache != null) && (mapCache.isUrlIncluded(url))) {
 				return mapCache;
@@ -95,12 +96,12 @@ public class BookCacheHandler implements BookCacheProvider {
 		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
 		BookCache 	fileCache 	= documentCacheMap.get(decodedUrl);
 		if (fileCache == null) {
-			fileCache = createBookCache(url);
+			fileCache = createBookCache(url, null);
 		}
 		return fileCache;
 	}
 
-	public void refreshBookCache(URL url) {
+	public void refreshBookCache(URL url, ProgressListener progressListener) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		BookCache 	bookCache = null;
@@ -108,18 +109,18 @@ public class BookCacheHandler implements BookCacheProvider {
 			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			bookCache = documentCacheMap.get(currMapDecodedUrl);
 			if (bookCache == null) {
-				bookCache = createBookCache(currMapUrl);
+				bookCache = createBookCache(currMapUrl, progressListener);
 			} else {
-				bookCache.fullRefresh();
+				bookCache.fullRefresh(progressListener);
 			}
 		}
 		if ((bookCache == null) || (!bookCache.isUrlIncluded(url))) {
 			final String 	decodedUrl 		= FileUtil.decodeUrl(url);
 			BookCache 		fileBookCache 	= documentCacheMap.get(decodedUrl);
 			if (fileBookCache == null) {
-				fileBookCache = createBookCache(url);
+				fileBookCache = createBookCache(url, progressListener);
 			} else {
-				fileBookCache.fullRefresh();
+				fileBookCache.fullRefresh(progressListener);
 			}
 		}
 

@@ -1,5 +1,13 @@
 package org.DitaSemia.Oxygen.AuthorOperations;
 
+import java.awt.BorderLayout;
+import java.awt.Frame;
+
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JProgressBar;
+
+import org.DitaSemia.Base.ProgressListener;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.apache.log4j.Logger;
 
@@ -25,8 +33,37 @@ public class RefreshBookCache implements AuthorOperation {
 		
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				rootNode			= documentController.getNodeAtOffset(0);
-			
-			BookCacheHandler.getInstance().refreshBookCache(rootNode.getXMLBaseURL());
+	
+			final Frame parentFrame = (Frame)authorAccess.getWorkspaceAccess().getParentFrame();
+
+		    final JDialog dialog = new JDialog(parentFrame, "Refreshing Book Cache...", true);
+		    JProgressBar progressBar = new JProgressBar(0, 1);
+		    progressBar.setBorder(BorderFactory.createEmptyBorder(5,  5,  5,  5));
+		    dialog.add(BorderLayout.CENTER, progressBar);
+		    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		    dialog.setSize(300, 65);
+		    dialog.setLocationRelativeTo(parentFrame);
+
+		    final ProgressListener progressListener = new ProgressListener() {
+				@Override
+				public void setProgress(int progress, int total) {
+					if (progressBar.getMaximum() != total) {
+						progressBar.setMaximum(total);
+					}
+					progressBar.setValue(progress);
+				}
+		    };
+
+		    Thread workerThread = new Thread(new Runnable() {
+		    	@Override
+		    	public void run() {
+		    		BookCacheHandler.getInstance().refreshBookCache(rootNode.getXMLBaseURL(), progressListener);
+		    		dialog.setVisible(false);
+		    	}
+		    });
+
+		    workerThread.start();
+		    dialog.setVisible(true);
 
 		} catch (Exception e) {
 			logger.error(e, e);

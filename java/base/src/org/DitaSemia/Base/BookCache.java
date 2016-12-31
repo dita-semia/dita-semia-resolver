@@ -66,6 +66,9 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private final BookCacheInitializer		initializer;
 	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
 	private final URL						ditaOtUrl;
+	
+	private ProgressListener				cacheProgressListener 	= null;
+	private int								cachedFileCount			= 0;
 
 		
 	/* used by oXygen */
@@ -104,7 +107,8 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	}
 	
 
-	public void fillCache() {
+	public void fillCache(ProgressListener progressListener) {
+		cacheProgressListener 	= progressListener;
 		try {
 			final long startTime = Calendar.getInstance().getTimeInMillis();
 			
@@ -119,9 +123,13 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 				final long time = Calendar.getInstance().getTimeInMillis() - startTime;
 				logger.info("fillCache done: " + time + "ms, " + fileByUrl.size() + " files, " + keyDefByRefString.size() + " keys (" + FileUtil.decodeUrl(source.getSystemId()) + ")");
 			}
+
+			cachedFileCount	= fileByUrl.size();
 		} catch (TransformerException e) {
 			logger.error(e);
+			cachedFileCount	= 0;
 		}
+		cacheProgressListener = null;
 	}
 	
 	@Override
@@ -195,6 +203,13 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 				cachedFile = new FileCache(decodedUrl, rootElement, this);
 				fileByUrl.put(decodedUrl, cachedFile);	// first insert file into map before parsing it to avoid recursions when the cache is tried to be accessed during parsing.
 
+				if (cacheProgressListener != null) {
+					final int currFileCount = fileByUrl.size();
+					if ((cachedFileCount > 0) && (cachedFileCount < currFileCount)) {
+						cachedFileCount = 0;	// file count must have changed -> don't guess it
+					}
+					cacheProgressListener.setProgress(currFileCount, cachedFileCount);
+				}
 				//logger.info("created file: '" + decodedUrl + "'");
 				
 			} catch (Exception e) {
@@ -214,7 +229,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		return topicRef;
 	}
 	
-	public void fullRefresh() {
+	public void fullRefresh(ProgressListener progressListener) {
 		//logger.info("refresh");
 
 		keyDefByRefString.clear();
@@ -229,7 +244,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			((SaxonCachedDocumentBuilder)documentBuilder).clearCache();
 		}
 
-		fillCache();
+		fillCache(progressListener);
 	}
 
 	public void addKeyDef(KeyDefInterface keyDef) {
