@@ -15,6 +15,9 @@ This is the core repository of the DITA-SEMIA project supporting different featu
 	
 	The second part is a new mechanism to reference these keys. Dedicated atributes allow to define a filter for which kind of keys (by namespace or type) can be referenced by a specific element. Since ths concept is designed to handle a large amount of keys (10.000+) there is also a dialog availiable to comfortably search for the correct key.
 	
+- **Topic Numbers**
+
+	Display topic numbers in oXygen Author Mode in front of topic titles and (id-based) cross references depending on the current DITA Map selected in the Maps Manager.
 
 ## Installation in oXygen
 To make oXygen resolve your xslt-conrefs you have to configure a reference resolver. The easiest way is to use the frameworks that comes with this plugin: dita-semia and dita-semia-map. They are located in the folder org.dita-semia.resolver\oxygen-framework. To let oxygen find these you have to add the folder org.dita-semia.resolver to the custom locations.
