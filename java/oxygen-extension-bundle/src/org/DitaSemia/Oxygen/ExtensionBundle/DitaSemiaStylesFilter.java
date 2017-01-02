@@ -3,6 +3,7 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 import org.DitaSemia.Oxygen.TopicNumStylesFilter;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter;
 //import org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter;
+import org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter;
 
 import ro.sync.ecss.css.Styles;
 import ro.sync.ecss.extensions.api.StylesFilter;
@@ -20,6 +21,9 @@ public class DitaSemiaStylesFilter implements StylesFilter {
 		boolean handled = AdvancedKeyRefStylesFilter.filter(styles, authorNode);
 		if (!handled) {
 			handled = TopicNumStylesFilter.filter(styles, authorNode);
+			if (!handled) {
+				handled = ConbatStylesFilter.filter(styles, authorNode);
+			}
 		}
 		return styles;
 	}

@@ -29,10 +29,10 @@ public class DitaSemiaLinkTextResolver extends DitaLinkTextResolver {
 		if (resolved == null) {
 			resolved = AdvancedKeyRefContentResolver.resolveContent(node, authorAccess);
 			if (resolved == null) {
-				resolved = ConbatContentResolver.resolveContent(node, authorAccess);
-				if (resolved == null) {
+				/*resolved = ConbatContentResolver.resolveContent(node, authorAccess);
+				if (resolved == null) {*/
 					resolved = super.resolveReference(node);
-				}
+				/*}*/
 			}
 		}
 		return resolved;

@@ -55,7 +55,7 @@
 *[class~="topic/stentry"][*|content],
 *[class~="topic/title"][*|content],
 *[class~="topic/dd"][*|content] {
-	content	: oxy_link-text();
+	content	: attr("*|content");
 }
 
 /* default-content */
@@ -64,14 +64,8 @@
 *[class~="topic/sli"][*|default-content]:empty:after(@{conbat-default-content-index}),
 *[class~="topic/stentry"][*|default-content]:empty:after(@{conbat-default-content-index}),
 *[class~="topic/title"][*|default-content]:empty:after(@{conbat-default-content-index}),
-/**[class~="topic/dd"][*|default-content]:empty*/ /*don't use :after here since it makes placing the cursor difficult */ {
+*[class~="topic/dd"][*|default-content]:empty:after(@{conbat-default-content-index}) {
 	/* have the cursor in front of the content to suggest the author that he can overwrite it */
-	content	: oxy_link-text();
+	content	: attr("*|default-content");
 }
 
-*[class~="topic/dd"][*|default-content]:empty {
-	/* Don't use ":after" for dd since it makes placing the cursor difficult. */
-	content: oxy_label(
-		text,				oxy_link-text(),
-		background-color,	@conbat-background);
-}

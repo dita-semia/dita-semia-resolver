@@ -59,7 +59,8 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 			}
 			
 		} else if (authorNode.getType() == AuthorNode.NODE_TYPE_ELEMENT) {
-			handled = filterFont(styles, authorNode);
+			filterFont(styles, authorNode);
+			// don't return true to support combination of KeyDef + Conbat
 		}
 		return handled;
 	}

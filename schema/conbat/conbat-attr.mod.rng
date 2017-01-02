@@ -203,6 +203,8 @@
 	<!-- dd -->
 	<define name="dd.attlist" combine="interleave">
 		<ref name="conbat-dt"/>
+		<ref name="conbat-default-content"/>
+		<ref name="conbat-content"/>
 	</define>
 	
 	<!-- allow dd elements as alternative to dlentry elements in dl -->
