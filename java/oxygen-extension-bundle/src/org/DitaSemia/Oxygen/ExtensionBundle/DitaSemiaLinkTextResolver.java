@@ -2,7 +2,6 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 
 import org.DitaSemia.Oxygen.XRefLinkTextResolver;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefContentResolver;
-import org.DitaSemia.Oxygen.Conbat.ConbatContentResolver;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
@@ -29,10 +28,7 @@ public class DitaSemiaLinkTextResolver extends DitaLinkTextResolver {
 		if (resolved == null) {
 			resolved = AdvancedKeyRefContentResolver.resolveContent(node, authorAccess);
 			if (resolved == null) {
-				/*resolved = ConbatContentResolver.resolveContent(node, authorAccess);
-				if (resolved == null) {*/
-					resolved = super.resolveReference(node);
-				/*}*/
+				resolved = super.resolveReference(node);
 			}
 		}
 		return resolved;
