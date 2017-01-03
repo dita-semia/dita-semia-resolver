@@ -135,9 +135,9 @@
 						<xsl:when test="empty(node())">
 							<xsl:sequence select="ds:createCbaPhrase(@cba:default-content)"/>
 						</xsl:when>
-						<xsl:otherwise>
-							<!-- handle list items without list container -->
-							<xsl:for-each-group select="node()" group-adjacent="string(tokenize(@class, '\s+')[2])">
+						<xsl:when test="exists(*[contains(@class, $C_LI) or contains(@class, $C_SLI)])">
+							<!-- handle list items without list container but ignore empty text nodes -->
+							<xsl:for-each-group select="node() except text()[matches(., '^\s+$')]" group-adjacent="string(tokenize(@class, '\s+')[2])">
 								<xsl:choose>
 									<xsl:when test="current-grouping-key() = 'topic/sli'">
 										<sl class="+ topic/sl ">
@@ -154,6 +154,9 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each-group>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="node()" mode="#current"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:with-param>
