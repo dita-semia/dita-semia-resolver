@@ -162,6 +162,29 @@
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 		</xsl:copy>
 	</xsl:template>
+	
+	
+	<!-- dl-header -->
+	<xsl:template match="*[@cba:header][contains(@class, $C_DL)]" priority="5">
+		<xsl:copy>
+			<xsl:variable name="resolvedHeader" as="xs:string" select="cba:resolveEmbeddedXPath(@cba:header)"/>
+			<xsl:apply-templates select="attribute()" mode="#current"/>
+			<xsl:apply-templates select="*[contains(@class, $C_COLSPEC)]" mode="#current"/>
+			<dlhead class="{$CP_DLHEAD}">
+				<xsl:sequence select="$CBA_MARKER"/>
+				<xsl:variable name="headerList" as="xs:string*" select="tokenize($resolvedHeader, '[|]')"/>
+				<dthd class="{$CP_DTHD}">
+					<xsl:sequence select="$CBA_MARKER"/>
+					<xsl:value-of select="$headerList[1]"/>
+				</dthd>
+				<ddhd class="{$CP_DDHD}">
+					<xsl:sequence select="$CBA_MARKER"/>
+					<xsl:value-of select="$headerList[2]"/>
+				</ddhd>
+			</dlhead>
+			<xsl:apply-templates select="node()" mode="#current"/>
+		</xsl:copy>
+	</xsl:template>
 
 
 	<!-- table-header -->
