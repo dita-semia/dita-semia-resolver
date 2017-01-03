@@ -30,7 +30,7 @@ public class GetKeyDefRootCall extends ExtensionFunctionCall {
 
 	@Override
 	public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-		logger.info("call");
+		//logger.info("call");
 		try {
 			final Sequence argument = arguments[0].head();
 			if (!(argument instanceof NodeInfo)) {
@@ -48,10 +48,10 @@ public class GetKeyDefRootCall extends ExtensionFunctionCall {
 			final KeyDefInterface	keyDef	= bookCache.getExactMatch(keyRef);
 			if (keyDef != null) {
 				final SaxonNodeWrapper root = (SaxonNodeWrapper)keyDef.getRoot();
-				logger.info("done: " + root.getName());
+				//logger.info("done: " + root.getName());
 				return root.getNodeInfo();
 			} else {
-				logger.info("done: empty");
+				//logger.info("done: empty");
 				return EmptySequence.getInstance();
 			}
 		} catch (XPathException e) {
