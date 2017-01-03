@@ -83,7 +83,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	protected XslTransformerCache	xsltConrefTransformerCache	= null;
 	protected XMLReader				xsltConrefXmlReader			= null;
 
-	protected BookCache			bookCache				= null;
+	protected BookCache				bookCache					= null;
 	protected XPathCache			xPathCache					= null;
 	
 	protected URL					currentBaseUrl				= null;
@@ -144,21 +144,21 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			final String	inputUrl	= job.getInputMap().toString();
 			final URL		tempDirUrl	= job.tempDir.toURI().toURL();
 			final URL		rootUrl		= new URL(tempDirUrl, inputUrl);
-			final URL		ditaOtUrl	= new URL(input.getAttribute(ANT_INVOKER_PARAM_OT_URL));
+			final URL		ditaOtUrl	= new File(input.getAttribute(ANT_INVOKER_PARAM_OT_URL)).toURI().toURL();
+			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			logger.info("ditaOtUrl: " + ditaOtUrl);
 			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl);
 			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("Error initializing the OT-Resolver: " + e.getMessage(), e);
 		}
 	}
 	
 
 	@Override
 	public AbstractPipelineOutput execute(AbstractPipelineInput input) throws DITAOTException {
-
+		
 		init(input);
 		
 		final Collection<FileInfo> fis = job.getFileInfo(new Filter<FileInfo>() {
