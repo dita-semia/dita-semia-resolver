@@ -197,6 +197,11 @@
 		<ref name="conbat-header"/>
 	</define>
 	
+	<!-- dl -->
+	<define name="dl.attlist" combine="interleave">
+		<ref name="conbat-header"/>
+	</define>
+	
 	<!-- ********************************************************************* -->
 	<!-- definition list -->
 	

@@ -14,6 +14,7 @@
 	<xsl:include href="dl-outputclasses/dl-bullet-list-dashes.xsl"/>
 	<xsl:include href="dl-outputclasses/dl-header-table.xsl"/>
 	<xsl:include href="dl-outputclasses/dl-parameter-table.xsl"/>
+	<xsl:include href="dl-outputclasses/dl-table.xsl"/>
 
 	<xsl:variable name="NO_TABLE_DL_OUTPUTCLASSES" as="xs:string*" select="($DL_OUTPUTCLASS_TREE, $DL_OUTPUTCLASS_HEADER_TABLE, $DL_OUTPUTCLASS_BULLET_LIST_TITLES)"/>
 	

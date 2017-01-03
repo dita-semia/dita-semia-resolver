@@ -33,6 +33,9 @@
 	<xsl:variable name="C_DLENTRY"			as="xs:string"> topic/dlentry </xsl:variable>
 	<xsl:variable name="C_DT"				as="xs:string"> topic/dt </xsl:variable>
 	<xsl:variable name="C_DD"				as="xs:string"> topic/dd </xsl:variable>
+	<xsl:variable name="C_DLHEAD"			as="xs:string"> topic/dlhead </xsl:variable>
+	<xsl:variable name="C_DTHD"				as="xs:string"> topic/dthd </xsl:variable>
+	<xsl:variable name="C_DDHD"				as="xs:string"> topic/ddhd </xsl:variable>
 	
 	<xsl:variable name="C_TABLE"			as="xs:string"> topic/table </xsl:variable>
 	<xsl:variable name="C_TGROUP"			as="xs:string"> topic/tgroup </xsl:variable>
@@ -85,6 +88,9 @@
 	<xsl:variable name="CP_DLENTRY"			as="xs:string"	select="concat('-', $C_DLENTRY)"/>
 	<xsl:variable name="CP_DT"				as="xs:string"	select="concat('-', $C_DT)"/>
 	<xsl:variable name="CP_DD"				as="xs:string"	select="concat('-', $C_DD)"/>
+	<xsl:variable name="CP_DLHEAD"			as="xs:string"	select="concat('-', $C_DLHEAD)"/>
+	<xsl:variable name="CP_DTHD"			as="xs:string"	select="concat('-', $C_DTHD)"/>
+	<xsl:variable name="CP_DDHD"			as="xs:string"	select="concat('-', $C_DDHD)"/>
 	
 	<xsl:variable name="CP_TABLE"			as="xs:string"	select="concat('-', $C_TABLE)"/>
 	<xsl:variable name="CP_TGROUP"			as="xs:string"	select="concat('-', $C_TGROUP)"/>

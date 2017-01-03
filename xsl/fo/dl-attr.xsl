@@ -131,6 +131,50 @@
 	</xsl:attribute-set>
 	
 	
+	<!-- dl with outputclass "table" -->
+	
+	<xsl:attribute-set name="ds:dl-table" use-attribute-sets="simpletable">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dlhead-table" use-attribute-sets="strow">
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dthd-table-cell" use-attribute-sets="ds:dt-table-cell">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:ddhd-table-cell" use-attribute-sets="ds:dd-table-cell">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dthd-table" use-attribute-sets="ds:dt-table">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:ddhd-table" use-attribute-sets="ds:dd-table">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dlentry-table" use-attribute-sets="strow">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dt-table-cell" use-attribute-sets="strow.stentry">
+		<xsl:attribute name="border-style"	>solid</xsl:attribute>
+		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
+		<xsl:attribute name="border-color"	>black</xsl:attribute>
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dd-table-cell" use-attribute-sets="strow.stentry">
+		<xsl:attribute name="border-style"	>solid</xsl:attribute>
+		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
+		<xsl:attribute name="border-color"	>black</xsl:attribute>
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dt-table" use-attribute-sets="strow.stentry__content">
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dd-table" use-attribute-sets="strow.stentry__content">
+	</xsl:attribute-set>
+	
+	
 	<!-- dl with outputclass "bullet-list-titles" -->
 	
 	<xsl:attribute-set name="ds:dt-bullet-list-titles">

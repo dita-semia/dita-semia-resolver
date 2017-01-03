@@ -4,7 +4,7 @@
 <topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
   <title>Definition List</title>
   <body>
-		<p>Predefined definition terms with different output classes.</p>
+  	<p>Predefined definition terms with different output classes.</p>
 		<section>
 			<title>Standard Layout</title>
 			<p>Outputclass: &lt;empty></p>
@@ -102,16 +102,34 @@
 			</dl>
 		</section>
 		<section>
-			<title>Table <draft-comment author="Patrik Stellmann">(not implemented
-				yet)</draft-comment></title>
+			<title>Table</title>
 			<p>Outputclass: <codeph>table</codeph></p>
 			<dl outputclass="table">
 				<dd cba:dt="Term 1">Description of 1st term.</dd>
 				<dd cba:dt="Term 2">Description of 2nd term.</dd>
 				<dd cba:dt="Term 3">Description of 3rd term.</dd>
 			</dl>
-			<p>Reference <codeph>dl</codeph> element without Conbat:</p>
+			<p><codeph>dl</codeph> element with explicit dts and conbat header:</p>
+			<dl outputclass="table" cba:header="Term|Data">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+			<p>Reference <codeph>dl</codeph> element with explicit dts and header:</p>
 			<dl outputclass="table">
+				<dlhead>
+					<dthd>Term</dthd>
+					<ddhd>Data</ddhd>
+				</dlhead>
 				<dlentry>
 					<dt>Term 1</dt>
 					<dd>Description of 1st term.</dd>
