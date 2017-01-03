@@ -334,17 +334,16 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private NodeWrapper getParent(NodeWrapper node) {
 		NodeWrapper parent = node.getParent();
 		if (parent == null) {
-			final String 			decodedUrl 		= FileUtil.decodeUrl(node.getBaseUrl());
-			final TopicRef	parentTopicRef	= getParentTopicRef(decodedUrl);
+			final String 	decodedUrl 		= FileUtil.decodeUrl(node.getBaseUrl());
+			TopicRef	parentTopicRef	= getParentTopicRef(decodedUrl);
+			while ((parentTopicRef != null) && (parentTopicRef.getReferencedFile() == null)) {
+				parentTopicRef = getParentTopicRef(parentTopicRef);
+			}
 			if (parentTopicRef != null) {
-				//logger.info("parent: " + parentTopicRef.getReferencedFile().getRootWrapper().getName());
-				return parentTopicRef.getReferencedFile().getRootWrapper();
-			} else {
-				return null;
-			} 
-		} else {
-			return parent;
+				parent = parentTopicRef.getReferencedFile().getRootWrapper();
+			}
 		}
+		return parent;
 	}
 
 	private TopicRef getParentTopicRef(TopicRef topicRef) {
@@ -388,15 +387,15 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		//logger.info("getTopicNum: " + topicRef);
 		if (topicRef != null) {
 			StringBuffer num = null;
+			final String localNum = topicRef.getLocalNum();
 			final TopicRef parentTopicRef = getParentTopicRef(topicRef);
 			if (parentTopicRef != null) {
 				num = getTopicNum(parentTopicRef);
-				if (num != null) {
+				if ((num != null) && (localNum != null)) {
 					num.append(DitaUtil.TOPIC_NUM_DELIMITER);
 					num.append(topicRef.getLocalNum());
 				}
 			} else {
-				final String localNum = topicRef.getLocalNum();
 				if (localNum != null) {
 					num = new StringBuffer();
 					num.append(localNum);

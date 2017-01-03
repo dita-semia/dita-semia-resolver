@@ -28,7 +28,9 @@ public class TopicRefContainer {
 		final Collection<FileCache> list = new LinkedList<>();
 		for (TopicRef childTopicRef : childTopicRefs) {
 			final FileCache refFile = childTopicRef.getReferencedFile();
-			if (refFile.isMap()) {
+			if (refFile == null) {
+				// no child topics
+			} else if (refFile.isMap()) {
 				list.addAll(refFile.getChildTopics());
 			} else {
 				//logger.info("   - " + refFile.getDecodedUrl());

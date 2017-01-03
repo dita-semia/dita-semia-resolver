@@ -32,7 +32,7 @@ public class TopicRef extends TopicRefContainer {
 		this.node				= node;
 		this.type				= getType(node.getAttribute(DitaUtil.ATTR_CLASS, null));
 		this.position			= parentContainer.addChildTopicRef(this);
-		this.localNum			= getLocalNum(type, position);
+		this.localNum			= getLocalNum(type, position, referencedFile);
 	}
 	
 	public FileCache getContainingFile() {
@@ -67,8 +67,10 @@ public class TopicRef extends TopicRefContainer {
 		return localNum;
 	}
 
-	private static String getLocalNum(int type, int position) {
-		if ((type == TYPE_FRONTMATTER) || (type == TYPE_FRONTMATTER)) {
+	private static String getLocalNum(int type, int position, FileCache referencedFile) {
+		if ((referencedFile != null) && (referencedFile.isMap())) {
+			return null; // maps have no topic number
+		} else if ((type == TYPE_FRONTMATTER) || (type == TYPE_FRONTMATTER)) {
 			return null;	// no numbering!
 		} else if (type == TYPE_APPENDIX) {
 			return DitaUtil.numToLetter(position);
