@@ -153,6 +153,7 @@
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dlentry-table" use-attribute-sets="strow">
+		<xsl:attribute name="keep-together.within-page"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dt-table-cell" use-attribute-sets="strow.stentry">

@@ -20,8 +20,14 @@
 				<fo:table-column column-number	= "1" column-width	= "35%"/>
 				<fo:table-column column-number	= "2" column-width	= "65%"/>
 				
+				<xsl:variable name="dlhead" as="element()*" select="*[contains(@class, ' topic/dlhead ')]"/>
+				<xsl:if test="exists($dlhead)">
+					<fo:table-header>
+						<xsl:apply-templates select="$dlhead" mode="dl-table"/>
+					</fo:table-header>
+				</xsl:if>
 				<fo:table-body>
-					<xsl:apply-templates mode="dl-table"/>
+					<xsl:apply-templates select="node() except $dlhead" mode="dl-table"/>
 				</fo:table-body>
 				
 			</fo:table>
