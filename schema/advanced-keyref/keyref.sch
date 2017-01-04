@@ -8,6 +8,8 @@
 	
 	<sch:ns uri="java:org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefSchematronUtil"  	prefix="jakr"/>
 	<sch:ns uri="java:org.DitaSemia.Oxygen.SchematronUtil"							   		prefix="jsu"/>
+	<sch:ns uri="java:org.DitaSemia.Base.AdvancedKeyref.KeyRef"  							prefix="jkr"/>
+	<sch:ns uri="java:org.DitaSemia.Base.AdvancedKeyref.KeyDef"  							prefix="jkd"/>
 	<sch:ns uri="http://www.dita-semia.org/advanced-keyref" 							 	prefix="akr"/>
 	<sch:ns uri="http://www.dita-semia.org/conbat" 							 				prefix="cba"/>
 	
@@ -23,10 +25,10 @@
 			<sch:let name="namespaceAttr" 	value="@akr:namespace"/>
 			<sch:let name="pathLenAttr" 	value="@akr:path-len"/>
 			<sch:let name="outputclassAttr" value="@outputclass"/>
-			<sch:let name="keyName" 		value="jakr:getKeyName($keyDef)"/>
+			<sch:let name="keyName" 		value="if (exists($keyDef)) then jkd:getName($keyDef) else ''"/>
 			
-			<sch:let name="refType"			value="jakr:getType($keyRef)"/>
-			<sch:let name="refNamespace" 	value="jakr:getNamespace($keyRef)"/>
+			<sch:let name="refType"			value="jkr:getType($keyRef)"/>
+			<sch:let name="refNamespace" 	value="jkr:getNamespace($keyRef)"/>
 			
 			<sch:let name="namespaceError" 	value="jakr:getXPathListErrorMessage(., $namespaceAttr)"/>
 			
@@ -43,7 +45,7 @@
 			<sch:assert test="jakr:matchesNamespaceFilter($keyRef, $keyDef)">
 				Invalid keyref: The referenced namespace ('<sch:value-of select="$refNamespace"/>') is not allowed in this context ('<sch:value-of select="$namespaceAttr"/>').
 			</sch:assert> 
-			<sch:report test="$outputclassAttr = 'name' and empty($keyName)">
+			<sch:report test="$outputclassAttr = 'name' and (not(exists($keyName)) or empty($keyName))">
 				Invalid keyref: The referenced key has no name to be displayed with this outputclass ('<sch:value-of select="$outputclassAttr"/>').
 			</sch:report>
 			<sch:assert test="exists($keyDef)"> 

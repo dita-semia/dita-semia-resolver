@@ -25,18 +25,6 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 		return KeyRef.fromNode(nodeWrapper);
 	}
 	
-	public static String getType(KeyRefInterface keyRef) {
-		return keyRef.getType();
-	}
-	
-	public static String getNamespace(KeyRefInterface keyRef) {
-		return keyRef.getNamespace();
-	}
-	
-	public static String getKey(KeyRefInterface keyRef) {
-		return keyRef.getKey();
-	}
-	
 	public static String getXPathListErrorMessage(ElementOverNodeInfo element, String xPath) {
 		if (xPath != null) {
 			try {
@@ -53,14 +41,6 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 	
 	public static boolean matchesNamespaceFilter(KeyRefInterface keyRef, KeyDefInterface keyDef) {
 		return ((keyRef.getNamespaceFilter() != null) ? KeyRef.matchesNamespaceFilter(keyRef.getNamespaceFilter(), keyDef.getNamespaceList()) : true);
-	}
-	
-	public static String getKeyName(KeyDefInterface keyDef) {
-		if (keyDef != null) {
-			return keyDef.getName();
-		} else {
-			return "";
-		}
 	}
 	
 	public static boolean matchesRefText(KeyRefInterface keyRef) {

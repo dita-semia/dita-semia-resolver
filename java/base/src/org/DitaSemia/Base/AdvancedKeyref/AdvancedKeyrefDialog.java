@@ -875,28 +875,32 @@ public class AdvancedKeyrefDialog extends JDialog {
 	}
 	
 	private String stylePreview(String preview, String nameSuffix) {
-		String text = "";
+		String text 	= "";
+		String style 	= " style= font-family:\"serif\"; ";
 		if (!outputclass.equals(KeyRef.OC_NAME)) {
 			KeyTypeDef keyTypeDef = keyDefList.getKeyTypeDef(selectedKeyDef.getType());
 			String 	fontFamily 	= "\"serif\"";
-			String	fontStyle 	= "\"normal\"";
 			String 	prefix		= keyTypeDef.prefix;
 			String 	suffix		= keyTypeDef.suffix;
+			String 	italicPre	= "";
+			String 	italicSuf	= "";
 			
 			if (keyTypeDef.isCodeFont) {
 				fontFamily = "\"monospace\"";
 			} 
 			if (keyTypeDef.isItalicFont) {
-				fontStyle = "\"italic\"";
+				italicPre = "<i>";
+				italicSuf = "</i>";
 			}
-			prefix = prefix.replace("<", "&lt;");
-			prefix = prefix.replace(">", "&gt;");
-			suffix = suffix.replace("<", "&lt;");
-			suffix = suffix.replace(">", "&gt;");
-			text = "<font face=" + fontFamily + " style=" + fontStyle + ">  " + prefix + preview + suffix + "</font>" +
-					"<font face=\"serif\" style=\"normal\">" + nameSuffix + "</font>";
+			prefix 	= prefix.replace("<", "&lt;");
+			prefix 	= prefix.replace(">", "&gt;");
+			suffix 	= suffix.replace("<", "&lt;");
+			suffix 	= suffix.replace(">", "&gt;");
+			style 	= " style= font-family:\"" + fontFamily + "\"; ";
+			text = "<span " + style + ">  " + italicPre + prefix + preview + suffix + italicSuf + "</span>" +
+					"<span style= font-family:\"serif\">" + nameSuffix + "</span>";
 		} else {
-			text = "<font face=\"serif\" style=\"normal\">" + nameSuffix + "</font>";
+			text = "<span " + style + ">" + nameSuffix + "</span>";
 		}
 		
 		
