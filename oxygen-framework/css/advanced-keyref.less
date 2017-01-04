@@ -65,6 +65,9 @@
 	content: "";	/* Hide the button within genrated content since it is read-only. */
 }
 
+*[*|ref][*|content]:after(@{keyref-edit-suffix-index}) {
+	content: "";	/* Hide the button when the key is set by cba:content. */
+}
 
 *[*|ref][outputclass='key-name-braced']:after(@{keyref-name-suffix-index}),
 *[*|ref][outputclass='key-name-braced!']:after(@{keyref-name-suffix-index}),
