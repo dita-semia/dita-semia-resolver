@@ -24,6 +24,7 @@
 			<fo:list-item-label xsl:use-attribute-sets="ol.li__label">
 				<fo:block xsl:use-attribute-sets="ds:dlentry-numbered-list-titles-label-content">
 					<fo:inline>
+						<xsl:copy-of select="@id"/>
 						<xsl:call-template name="commonattributes"/>
 					</fo:inline>
 					<xsl:call-template name="getVariable">

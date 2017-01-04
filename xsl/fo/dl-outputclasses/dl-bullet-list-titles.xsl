@@ -24,7 +24,7 @@
 			<fo:list-item-label xsl:use-attribute-sets="ul.li__label">
 				<fo:block xsl:use-attribute-sets="ul.li__label__content">
 					<fo:inline>
-						<xsl:apply-templates select="@id"/>
+						<xsl:copy-of select="@id"/>
 						<xsl:call-template name="commonattributes"/>
 					</fo:inline>
 					<xsl:call-template name="getVariable">
@@ -68,5 +68,5 @@
 		</fo:block>
 		
 	</xsl:template>
-
+	
 </xsl:stylesheet>

@@ -16,11 +16,4 @@
 	<xsl:include href="dl-outputclasses/dl-parameter-table.xsl"/>
 	<xsl:include href="dl-outputclasses/dl-table.xsl"/>
 
-	<xsl:variable name="NO_TABLE_DL_OUTPUTCLASSES" as="xs:string*" select="($DL_OUTPUTCLASS_TREE, $DL_OUTPUTCLASS_HEADER_TABLE, $DL_OUTPUTCLASS_BULLET_LIST_TITLES)"/>
-	
-	<!-- override special handling for FOP -->
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $NO_TABLE_DL_OUTPUTCLASSES]/*[contains(@class,' topic/dlentry ')]/@id" priority="10">
-		<xsl:copy/>
-	</xsl:template>
-	
 </xsl:stylesheet>
