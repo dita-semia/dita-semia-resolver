@@ -5,13 +5,13 @@
 	targetNamespace	= "http://www.dita-semia.org/advanced-keyref">
 	
 	
-	<xs:attribute name="ref" 		type="xs:string"/>
+	<xs:attribute name="ref" 		type="xs:string" default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
 	<xs:attribute name="type" 		type="xs:string"/>
 	<xs:attribute name="namespace" 	type="xs:string"/>
 	<xs:attribute name="path-len" 	type="xs:string"/>
 	
 	<xs:attributeGroup name="akr-atts">
-		<xs:attribute ref="akr:ref"			default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
+		<xs:attribute ref="akr:ref"/>
 		<xs:attribute ref="akr:type"/>
 		<xs:attribute ref="akr:namespace"/>
 		<xs:attribute ref="akr:path-len"/>
