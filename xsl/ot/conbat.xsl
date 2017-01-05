@@ -119,6 +119,7 @@
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
+			<xsl:call-template name="add-popup-edit-content"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -163,6 +164,7 @@
 			</xsl:call-template>
 			
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
+			<xsl:call-template name="add-popup-edit-content"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -229,6 +231,23 @@
 			</sthead>
 			<xsl:apply-templates select="node()" mode="#current"/>
 		</xsl:copy>
+	</xsl:template>
+	
+	
+	<xsl:template name="add-popup-edit-content">
+		<xsl:if test="(@cba:popup-edit) and (@cba:popup-edit != '#text')">
+			<ph class="{$CP_PH}">
+				<xsl:sequence select="$CBA_MARKER"/>
+				<xsl:variable name="popup-braced-edit" as="xs:boolean" select="@cba:o-class= 'popup-braced-edit'"/>
+				<xsl:if test="$popup-braced-edit">
+					<xsl:text> (</xsl:text>
+				</xsl:if>
+				<xsl:value-of select="attribute()[name(.) = current()/@cba:popup-edit]"/>
+				<xsl:if test="$popup-braced-edit">
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+			</ph>
+		</xsl:if>
 	</xsl:template>
 
 
