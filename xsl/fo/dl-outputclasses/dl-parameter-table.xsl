@@ -62,11 +62,11 @@
 				<xsl:attribute name="keep-with-next.within-column" select="$KEEP_TABLE_ROW_VALUE"/>
 			</xsl:if>-->
 
-			<fo:table-cell>
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell">
 				<xsl:copy-of select="$cellAttributes"/>
 				<xsl:apply-templates select="*[contains(@class, ' topic/dt ')]" mode="#current"/>
 			</fo:table-cell>
-			<fo:table-cell>
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell">
 				<xsl:copy-of select="$cellAttributes"/>
 				<xsl:apply-templates select="*[contains(@class, ' topic/dd ')]" mode="#current"/>
 			</fo:table-cell>

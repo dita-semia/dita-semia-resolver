@@ -14,6 +14,9 @@
 	
 	<xsl:attribute-set name="ds:dlentry.dd__content"/>
 	
+	<xsl:attribute-set name="ds:dl-table-cell"/>
+	
+	
 	<!-- dl with outputclass "tree" -->
 	
 	<xsl:variable name="DL_TREE_BORDER_WIDTH"	as="xs:string">0.3mm</xsl:variable>
@@ -159,13 +162,11 @@
 	<xsl:attribute-set name="ds:dt-table-cell" use-attribute-sets="strow.stentry">
 		<xsl:attribute name="border-style"	>solid</xsl:attribute>
 		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
-		<xsl:attribute name="border-color"	>black</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-table-cell" use-attribute-sets="strow.stentry">
 		<xsl:attribute name="border-style"	>solid</xsl:attribute>
 		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
-		<xsl:attribute name="border-color"	>black</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dt-table" use-attribute-sets="strow.stentry__content">

@@ -42,10 +42,10 @@
 			
 			<xsl:call-template name="commonattributes"/>
 			
-			<fo:table-cell xsl:use-attribute-sets="ds:dthd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dthd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dthd ')]" mode="#current"/>
 			</fo:table-cell>
-			<fo:table-cell xsl:use-attribute-sets="ds:ddhd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:ddhd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/ddhd ')]" mode="#current"/>
 			</fo:table-cell>
 		</fo:table-row>
@@ -93,10 +93,10 @@
 			
 			<xsl:call-template name="commonattributes"/>
 
-			<fo:table-cell xsl:use-attribute-sets="ds:dt-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dt-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dt ')]" mode="#current"/>
 			</fo:table-cell>
-			<fo:table-cell xsl:use-attribute-sets="ds:dd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dd ')]" mode="#current"/>
 			</fo:table-cell>
 		</fo:table-row>
