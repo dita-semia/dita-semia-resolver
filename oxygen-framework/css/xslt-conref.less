@@ -27,8 +27,7 @@
 *[class~="topic/dl"][*|xsl]:not([conaction]) > *,
 *[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *,
 *[class~="topic/ph"][*|xsl]:not([conaction]) > *,
-*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *
-{
+*[class~="topic/dlentry"][*|xsl]:not([conaction]) > * {
     display : none;
 }
 
@@ -122,15 +121,17 @@
 }
 
 /* support the no-content result element */
-*[*|xsl] no-content {
+no-content {
 	/* Mark content to be invisible in output */
-	font-size: 	0.8em;
-	color:		#999999;
+	display		: inherit !important;
+	font-size	: 0.8em;
+	color		: #999999;
 }
 
 /* support the temp-context element */
 *[*|xsl] temp-context {
 	/* Mark content to be invisible in output */
+	display		: inherit !important;
 	content: 	"<Refresh required>";
 	font-size: 	0.8em;
 	color:		#999999;
