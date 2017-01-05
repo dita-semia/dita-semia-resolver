@@ -20,8 +20,6 @@ import net.sf.saxon.trans.XPathException;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
-import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
-import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConref.Parameter;
@@ -137,6 +135,7 @@ public class XsltConrefResolver {
 		try {
 			final NodeInfo resolvedNode = xsltConref.resolve(frameworkParameters);
 			resolvedString = SaxonNodeWrapper.serializeNode(resolvedNode);
+			//logger.info("resolvedString: " + resolvedString);
 		} catch (XPathException e) {
 			logger.error(e.getMessage(), e);
 			throw new ReferenceResolverException(e.getMessage(), true, true);
