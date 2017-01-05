@@ -1,7 +1,7 @@
 
 /* rules for popup-edit of attributes */
 
-*[*|popup-edit]:after(@{conbat-edit-index}) {
+*[*|popup-edit]:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
 	content: oxy_popup(
 			edit,			oxy_concat('@', attr('*|popup-edit')),
 			selectionMode,	single,
@@ -10,11 +10,11 @@
 }
 
 
-*[*|o-class~="cba-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
+*[*|o-class~="popup-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
 	content: " (";
 }
 
-*[*|o-class~="cba-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+*[*|o-class~="popup-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
 	content: ")";
 }
 
@@ -28,4 +28,9 @@
 
 *[*|popup-edit='#text'] {
 	visibility: -oxy-collapse-text;
+	content: oxy_popup(
+			edit,			oxy_concat('#text'),
+			selectionMode,	single,
+			fontInherit,	true,
+			color,			inherit);
 }
