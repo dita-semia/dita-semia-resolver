@@ -45,23 +45,6 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
-											<String>classpath</String>
-										</field>
-										<field name="index">
-											<Integer>6</Integer>
-										</field>
-										<field name="value">
-											<String>${oxygenHome}/lib/DitaSemiaOxygen.jar</String>
-										</field>
-										<field name="patchHandling">
-											<String>addIndex</String>
-										</field>
-										<field name="anchor">
-											<null/>
-										</field>
-									</poPatch>
-									<poPatch>
-										<field name="fieldPath">
 											<String>authorExtensionDescriptor/cssDescriptors</String>
 										</field>
 										<field name="index">
