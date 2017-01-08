@@ -9,3 +9,4 @@ java/AdvancedKeyrefDialogTest/
 java/base/.externalToolBuilders/
 java/oxygen/.externalToolBuilders/DitaSemiaOxygen build.xml [Builder].launch
 java/oxygen/.externalToolBuilders/
+*.jar
