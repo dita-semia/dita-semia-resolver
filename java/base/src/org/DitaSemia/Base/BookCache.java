@@ -66,19 +66,26 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private final BookCacheInitializer		initializer;
 	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
 	private final URL						ditaOtUrl;
+	@SuppressWarnings("unused")
+	private final String					language;
+
+	private final String					appendixPrefix;
 	
 	private ProgressListener				cacheProgressListener 	= null;
 	private int								cachedFileCount			= 0;
 
 		
 	/* used by oXygen */
-	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl) {
+	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl, String language) {
 		this.rootDocumentUrl 			= rootDocumentUrl;
 		this.initializer				= initializer;
 		this.configurationFactory		= configurationFactory;
 		this.defaultConfiguration		= configurationFactory.createConfiguration();
 		this.documentBuilder			= new SaxonCachedDocumentBuilder(this);
-		this.ditaOtUrl				= ditaOtUrl;
+		this.ditaOtUrl					= ditaOtUrl;
+		this.language					= language;
+		
+		appendixPrefix					= getAppendixPrefix(language);
 
 		registerExtensionFunctions(defaultConfiguration);
 		xPathCache = createXPathCache(defaultConfiguration);
@@ -91,7 +98,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	}
 
 	/* used by OT */
-	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl) {
+	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl, String language) {
 		registerExtensionFunctions(baseConfiguration);
 
 		this.rootDocumentUrl 			= rootDocumentUrl;
@@ -99,7 +106,10 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		this.configurationFactory		= null;
 		this.defaultConfiguration		= baseConfiguration;
 		this.documentBuilder			= new SaxonDocumentBuilder(defaultConfiguration);
-		this.ditaOtUrl				= ditaOtUrl;
+		this.ditaOtUrl					= ditaOtUrl;
+		this.language					= language;
+		
+		appendixPrefix					= getAppendixPrefix(language);
 
 		xPathCache = createXPathCache(defaultConfiguration);
 
@@ -117,7 +127,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			}
 			
 			final Source 	source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
-			final FileCache	file	= createFileCache(source);
+			final FileCache	file	= createFileCache(source, null);
 			if (file != null) {
 				file.parse();
 				final long time = Calendar.getInstance().getTimeInMillis() - startTime;
@@ -168,7 +178,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		configuration.registerExtensionFunction(new AncestorPathDef(this));
 	}
 
-	public FileCache createFileCache(Source source) {
+	public FileCache createFileCache(Source source, String topicrefClass) {
 		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
 		FileCache 		cachedFile	= null;
 
@@ -200,7 +210,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 				
 				//logger.info("rootElement: " + rootElement.getNodeName());
 				
-				cachedFile = new FileCache(decodedUrl, rootElement, this);
+				cachedFile = new FileCache(decodedUrl, rootElement, this, topicrefClass);
 				fileByUrl.put(decodedUrl, cachedFile);	// first insert file into map before parsing it to avoid recursions when the cache is tried to be accessed during parsing.
 
 				if (cacheProgressListener != null) {
@@ -340,7 +350,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 				parentTopicRef = getParentTopicRef(parentTopicRef);
 			}
 			if (parentTopicRef != null) {
-				parent = parentTopicRef.getReferencedFile().getRootWrapper();
+				parent = parentTopicRef.getReferencedFile().getRootNode();
 			}
 		}
 		return parent;
@@ -460,6 +470,18 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		} catch (Exception e) {
 			logger.error("Error parsing KeyTypeDef file '" + FileUtil.decodeUrl(source.getSystemId()) + "':");
 			logger.error(e, e);
+		}
+	}
+	
+	public String getAppendixPrefix() {
+		return appendixPrefix;
+	}
+	
+	public static String getAppendixPrefix(String language) {
+		if (language.equals("de_DE")) {
+			return "Anhang ";
+		} else {
+			return "Appendix ";
 		}
 	}
 }

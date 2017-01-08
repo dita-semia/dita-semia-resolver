@@ -2,16 +2,14 @@ package org.DitaSemia.Oxygen;
 
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
-import org.DitaSemia.Base.DocumentCaching.TopicRef;
+import org.DitaSemia.Base.DocumentCaching.FileCache;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.StringContent;
 import ro.sync.ecss.css.Styles;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
 public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 
@@ -20,9 +18,7 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 	private static final Logger logger = Logger.getLogger(TopicNumStylesFilter.class.getName());
 	
 	private final static int	PSEUDO_LEVEL_TOPIC_NUM	= 20;
-	
-	private final static String	APPENDIX_NUM_DELIMITER	= ":"; 
-	
+
 	public static boolean filter(Styles styles, AuthorNode authorNode) {
 		boolean handled = false;
 		//logger.info("filter for node: " + authorNode.getName() + ", parent-node: " + (authorNode.getParent() == null ? "-" : authorNode.getParent().getName()) + ", pseudo-level: " + styles.getPseudoLevel());
@@ -85,29 +81,14 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 		return node.getRootElement().isSameNode(node);
 	}
 	
-	private static String getTopicNum(NodeWrapper node, BookCache cache) {
-		final TopicRef 		topicRef = cache.getTopicRef(FileUtil.decodeUrl(node.getBaseUrl()));
-		final StringBuffer 	topicNum = cache.getTopicNum(topicRef);
-		if (topicNum == null) {
+	private static String getTopicNum(NodeWrapper node, BookCache bookCache) {
+		final FileCache	fileCache	= bookCache.getFile(node.getBaseUrl());
+		if (fileCache == null) {
 			return null;
-		} else if ((topicRef.getType() == TopicRef.TYPE_APPENDIX) && (isLocalRootTopic(node.getParent()))) {
-			return getAppendixPrefix() + " " + topicNum.toString() + APPENDIX_NUM_DELIMITER;
+		} else if (isLocalRootTopic(node.getParent())) {
+			return fileCache.getRootTopicNumPrefix();
 		} else {
-			return topicNum.toString();
+			return fileCache.getRootTopicNum();
 		}
-	}
-	
-	static String appendixPrefix = null;
-	
-	public static String getAppendixPrefix() {
-		if (appendixPrefix == null) {
-			final String language = PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
-			if (language.equals("de_DE")) {
-				appendixPrefix = "Anhang";
-			} else {
-				appendixPrefix = "Appendix";
-			}
-		}
-		return appendixPrefix;
 	}
 }
