@@ -2,12 +2,12 @@ package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.apache.log4j.Logger;
 
 import net.sf.saxon.expr.XPathContext;

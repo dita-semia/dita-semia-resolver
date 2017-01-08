@@ -1,4 +1,4 @@
-package org.DitaSemia.Base;
+package org.DitaSemia.Base.DocumentCaching;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -22,6 +22,16 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmNodeKind;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 
+import org.DitaSemia.Base.DitaUtil;
+import org.DitaSemia.Base.FileUtil;
+import org.DitaSemia.Base.NodeWrapper;
+import org.DitaSemia.Base.ProgressListener;
+import org.DitaSemia.Base.SaxonCachedDocumentBuilder;
+import org.DitaSemia.Base.SaxonConfigurationFactory;
+import org.DitaSemia.Base.SaxonDocumentBuilder;
+import org.DitaSemia.Base.SaxonNodeWrapper;
+import org.DitaSemia.Base.XPathCache;
+import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefListInterface;
@@ -29,9 +39,6 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyspecInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
-import org.DitaSemia.Base.DocumentCaching.FileCache;
-import org.DitaSemia.Base.DocumentCaching.TopicRef;
-import org.DitaSemia.Base.DocumentCaching.TopicRefContainer;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.apache.log4j.Logger;
 

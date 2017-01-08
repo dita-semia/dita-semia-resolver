@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
 

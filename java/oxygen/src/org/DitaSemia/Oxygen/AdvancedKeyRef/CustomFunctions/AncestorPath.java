@@ -2,9 +2,9 @@ package org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions;
 
 import java.util.List;
 
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.OxyXPathHandler;

@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import net.sf.saxon.Configuration;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheInitializer;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.ProgressListener;
 import org.DitaSemia.Base.SaxonConfigurationFactory;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
 

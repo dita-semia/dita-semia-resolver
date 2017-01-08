@@ -15,15 +15,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheInitializer;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyDefLocationDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyRefDisplaySuffixDef;

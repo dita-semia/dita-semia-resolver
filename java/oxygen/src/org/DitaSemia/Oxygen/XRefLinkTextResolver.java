@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
 import org.apache.log4j.Logger;
 

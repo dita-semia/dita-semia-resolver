@@ -1,8 +1,5 @@
 package org.DitaSemia.Base.DocumentCaching;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheProvider;
-
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.StructuredQName;

@@ -1,4 +1,4 @@
-package org.DitaSemia.Base;
+package org.DitaSemia.Base.DocumentCaching;
 
 import java.net.URL;
 

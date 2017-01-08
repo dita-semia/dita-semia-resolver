@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
