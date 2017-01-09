@@ -1,7 +1,7 @@
 package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;

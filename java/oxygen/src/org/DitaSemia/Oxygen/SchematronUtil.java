@@ -7,10 +7,10 @@ import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.apache.log4j.Logger;
 
 public class SchematronUtil {

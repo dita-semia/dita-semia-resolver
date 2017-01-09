@@ -1,7 +1,7 @@
 package org.DitaSemia.Oxygen.AdvancedKeyRef;
 
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.apache.log4j.Logger;

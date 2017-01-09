@@ -15,15 +15,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheInitializer;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyDefLocationDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyRefDisplaySuffixDef;
@@ -67,6 +67,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	public static final String ANT_INVOKER_PARAM_XSL 					= "xsl";
 	public static final String ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI	= "key-type-def-list-uri";
 	public static final String ANT_INVOKER_PARAM_OT_URL					= "ditadir";
+	public static final String ANT_INVOKER_PARAM_LANGUAGE				= "language";
 
 	//protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
 	//protected static final String XSLT_FILE_URL 		= "plugin:org.dita-semia.resolver:java/ot/src/xsl/resolve.xsl";
@@ -145,9 +146,10 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			final URL		tempDirUrl	= job.tempDir.toURI().toURL();
 			final URL		rootUrl		= new URL(tempDirUrl, inputUrl);
 			final URL		ditaOtUrl	= new File(input.getAttribute(ANT_INVOKER_PARAM_OT_URL)).toURI().toURL();
+			final String	language	= input.getAttribute(ANT_INVOKER_PARAM_LANGUAGE);
 			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl);
+			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl, language);
 			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {

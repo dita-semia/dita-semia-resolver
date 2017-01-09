@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import net.sf.saxon.Configuration;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheInitializer;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.ProgressListener;
 import org.DitaSemia.Base.SaxonConfigurationFactory;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
 
@@ -27,7 +27,8 @@ public class BookCacheHandler implements BookCacheProvider {
 	private static BookCacheHandler instance;
 	
 	private final HashMap<String, BookCache> 	documentCacheMap;
-	private final URL								ditaOtUrl;
+	private final URL							ditaOtUrl;
+	private final String						language;
 	
 	private BookCacheInitializer 	initializer;
 	
@@ -42,7 +43,8 @@ public class BookCacheHandler implements BookCacheProvider {
 	private BookCacheHandler(BookCacheInitializer initializer) {
 		this.documentCacheMap 	= new HashMap<>();
 		this.initializer		= initializer;
-		this.ditaOtUrl		= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
+		this.ditaOtUrl			= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
+		this.language			= PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
 		//logger.info("ditaOtUrl: " + ditaOtUrl);
 		
 		//logger.info("new DocumentCacheHandler(" + initializer + ")");
@@ -69,7 +71,7 @@ public class BookCacheHandler implements BookCacheProvider {
 			}
 		};
 		
-		final BookCache bookCache = new BookCache(url, initializer, configurationFactory, ditaOtUrl);
+		final BookCache bookCache = new BookCache(url, initializer, configurationFactory, ditaOtUrl, language);
 		documentCacheMap.put(FileUtil.decodeUrl(url), bookCache);
 		bookCache.fillCache(progressListener);	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return bookCache;

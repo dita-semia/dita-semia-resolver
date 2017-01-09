@@ -1,4 +1,4 @@
-package org.DitaSemia.Base;
+package org.DitaSemia.Base.DocumentCaching;
 
 public interface BookCacheInitializer {
 	

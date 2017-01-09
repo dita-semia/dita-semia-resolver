@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
@@ -27,19 +26,23 @@ public class FileCache extends TopicRefContainer {
 
 	private static final Logger logger = Logger.getLogger(FileCache.class.getName());
 	
-	public static final String		LINK_TITLE_UNKNOWN	= "???";
-	public static final String		LINK_NUM_DELIMITER	= " ";
+	public static final String		LINK_TITLE_UNKNOWN		= "???";
+	public static final String		LINK_NUM_DELIMITER		= " ";
+	private final static String		APPENDIX_NUM_DELIMITER	= ":"; 
 	
 	protected static final String	LINK_TITLE_XSL		= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
 	protected static final String	LOCAL_TOPIC_NUM_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/local-topic-num.xsl";
 
 	protected final String 			decodedUrl;
-	protected final XdmNode			rootNode;
+	protected final XdmNode			rootXdmNode;
 	protected final BookCache 		bookCache;
-	protected final NodeWrapper		rootWrapper;
+	protected final NodeWrapper		rootNode;
+	protected final String			topicrefClass;
 	
-	protected String rootTopicNum = null;
-	
+	protected boolean				rootTopicNumInitialized	= false;
+	protected String 				rootTopicNum 			= null;
+	protected String 				rootTopicNumPrefix 		= null;
+
 	protected final Collection<KeyDefInterface>		keyDefList 			= new LinkedList<>();
 	protected final Map<String, SaxonNodeWrapper>	nodeByRefId			= new HashMap<>();
 	protected final Map<String, String>				linkTitleByRefId	= new HashMap<>();
@@ -49,23 +52,24 @@ public class FileCache extends TopicRefContainer {
 	
 	
 
-	public FileCache(String decodedUrl, XdmNode rootNode, BookCache bookCache) {
+	public FileCache(String decodedUrl, XdmNode rootXdmNode, BookCache bookCache, String topicrefClass) {
 		this.decodedUrl 	= decodedUrl;
-		this.rootNode		= rootNode;
+		this.rootXdmNode	= rootXdmNode;
 		this.bookCache		= bookCache;
-		this.rootWrapper	= new SaxonNodeWrapper(rootNode.getUnderlyingNode(), bookCache.getXPathCache());
+		this.rootNode		= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
+		this.topicrefClass	= topicrefClass;
 	}
 
 	public String getDecodedUrl() {
 		return decodedUrl;
 	}
 
-	public XdmNode getRootNode() {
-		return rootNode;
+	public XdmNode getRootXdmNode() {
+		return rootXdmNode;
 	}
 
-	public NodeWrapper getRootWrapper() {
-		return rootWrapper;
+	public NodeWrapper getRootNode() {
+		return rootNode;
 	}
 	
 	public Collection<KeyDefInterface> getKeyDefList() {
@@ -73,7 +77,7 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 	public boolean isMap() {
-		final String classAttr = rootWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
+		final String classAttr = rootNode.getAttribute(DitaUtil.ATTR_CLASS, null);
 		if (classAttr != null) {
 			return classAttr.contains(DitaUtil.CLASS_MAP);
 		} else {
@@ -82,18 +86,18 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 	public void mapPosChanged() {
-		rootTopicNum = null;	// will be set on demand
+		rootTopicNumInitialized = false;
 		for (FileCache refFile : refFileList) {
 			refFile.mapPosChanged();
 		}
 	}
 
 	public String toString() {
-		return "FileCache - url: " + decodedUrl + ", rootNode: " + rootWrapper.getName(); 
+		return "FileCache - url: " + decodedUrl + ", rootXdmNode: " + rootNode.getName(); 
 	}
 	
 	public void parse() throws TransformerException {
-		parseNode(getRootNode(), this, null);
+		parseNode(getRootXdmNode(), this, null);
 	}
 	
 	public SaxonNodeWrapper getElementByRefId(String refId) {
@@ -119,8 +123,9 @@ public class FileCache extends TopicRefContainer {
 		String linkText;
 		final String classAttr = linkedNode.getAttribute(DitaUtil.ATTR_CLASS, null);
 		//logger.info("getLinkText(" + refId + "), class: " + classAttr);
+		
 		if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
-			final StringBuffer topicNum = getTopicNum(refId, linkedNode);
+			final StringBuffer topicNum = getTopicNumPrefix(refId, linkedNode);
 			//logger.info("topicNum: " + topicNum);
 			if (topicNum != null) {
 				topicNum.append(LINK_NUM_DELIMITER);
@@ -155,16 +160,51 @@ public class FileCache extends TopicRefContainer {
 		return linkTitle;
 	}
 
-	
-	private StringBuffer getTopicNum(String topicId, SaxonNodeWrapper topicNode) {
-		if (rootTopicNum == null) {
+	private void initRootTopicNum() {
+		if (!rootTopicNumInitialized) {
+			rootTopicNumInitialized = true;
 			final StringBuffer rootTopicNumBuf = bookCache.getTopicNum(decodedUrl);
 			if (rootTopicNumBuf == null) {
-				rootTopicNum = "";
+				rootTopicNum 		= null;
+				rootTopicNumPrefix 	= null;
 			} else {
 				rootTopicNum = rootTopicNumBuf.toString();
+				if (topicrefClass.contains(DitaUtil.CLASS_APPENDIX)) {
+					rootTopicNumPrefix = bookCache.getAppendixPrefix() + rootTopicNum + APPENDIX_NUM_DELIMITER;	
+				} else {
+					rootTopicNumPrefix = rootTopicNum;
+				}
 			}
 		}
+	}
+	
+	public String getRootTopicNum() {
+		initRootTopicNum();
+		return rootTopicNum;
+	}
+	
+	public String getRootTopicNumPrefix() {
+		initRootTopicNum();
+		return rootTopicNumPrefix;
+	}
+	
+	private StringBuffer getTopicNumPrefix(String topicId, SaxonNodeWrapper topicNode) {
+		if (topicNode.isSameNode(rootNode)) {
+			initRootTopicNum();
+			if (rootTopicNumPrefix != null) {
+				final StringBuffer topicNumPrefix = new StringBuffer();
+				topicNumPrefix.append(rootTopicNumPrefix);
+				return topicNumPrefix;
+			} else {
+				return null;
+			}
+		} else {
+			return getTopicNum(topicId, topicNode);
+		}
+	}
+	
+	private StringBuffer getTopicNum(String topicId, SaxonNodeWrapper topicNode) {
+		initRootTopicNum();
 		if (!rootTopicNum.isEmpty()) {
 			final StringBuffer topicNum = new StringBuffer();
 			topicNum.append(rootTopicNum);
@@ -259,7 +299,7 @@ public class FileCache extends TopicRefContainer {
 			if ((processingRoleAttr == null) || (!processingRoleAttr.equals(DitaUtil.ROLE_RESOURCE_ONLY))) {
 				final String href = nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null);
 				if ((href != null) && (!href.isEmpty())) {
-					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href));
+					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href), classAttr);
 				}
 			}
 

@@ -5,7 +5,7 @@ package org.DitaSemia.Oxygen;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 
 import ro.sync.ecss.css.StaticContent;

@@ -33,7 +33,6 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
@@ -43,6 +42,7 @@ import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefRootDef;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.DocumentCaching.GetAncestorPathDef;
 import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
 import org.apache.log4j.Logger;

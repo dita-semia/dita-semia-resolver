@@ -1,12 +1,12 @@
 package org.DitaSemia.Oxygen.AdvancedKeyRef;
 
 
-import org.DitaSemia.Base.BookCache;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.DitaSemiaStylesFilter;
 import org.apache.log4j.Logger;

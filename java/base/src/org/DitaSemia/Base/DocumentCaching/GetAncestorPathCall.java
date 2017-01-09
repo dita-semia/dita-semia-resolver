@@ -3,8 +3,6 @@ package org.DitaSemia.Base.DocumentCaching;
 import java.net.URL;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathCall;
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheProvider;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
 

@@ -7,8 +7,8 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 
 import java.net.URL;
 
-import org.DitaSemia.Base.BookCache;
-import org.DitaSemia.Base.BookCacheInitializer;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
