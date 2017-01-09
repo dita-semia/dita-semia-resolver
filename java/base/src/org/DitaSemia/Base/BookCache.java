@@ -54,7 +54,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private final XPathCache 		xPathCache;
 	
 	private HashMap<String, KeyDefInterface> 	keyDefByRefString 	= new HashMap<>();
-	private HashMap<String, KeyDefInterface> 	keyDefByLocation	= new HashMap<>();
+	private HashMap<String, KeyDefInterface> 	keyDefByUrlAndId	= new HashMap<>();
 	private HashMap<String, KeyTypeDef> 		keyTypeDefByName	= new HashMap<>();
 	private HashMap<String, FileCache> 			fileByUrl			= new HashMap<>();
 	private HashMap<String, TopicRef> 			topicRefByUrl		= new HashMap<>();
@@ -233,7 +233,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		//logger.info("refresh");
 
 		keyDefByRefString.clear();
-		keyDefByLocation.clear();
+		keyDefByUrlAndId.clear();
 		keyTypeDefByName.clear();
 		fileByUrl.clear();
 		topicRefByUrl.clear();
@@ -249,7 +249,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 
 	public void addKeyDef(KeyDefInterface keyDef) {
 		keyDefByRefString.put(keyDef.getRefString(), keyDef);
-		keyDefByLocation.put(keyDef.getDefLocation(), keyDef);
+		keyDefByUrlAndId.put(FileUtil.decodeUrl(keyDef.getDefUrl()) + DitaUtil.HREF_URL_ID_DELIMITER + keyDef.getDefId(), keyDef);
 	}
 
 	@Override
@@ -298,7 +298,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			KeyDefInterface 	keyDef 	= null; 
 			if ((id != null) && (!id.isEmpty())) {
 				final String location = DitaUtil.getNodeLocation(parent.getBaseUrl(), id);
-				keyDef = keyDefByLocation.get(location);
+				keyDef = keyDefByUrlAndId.get(location);
 				//logger.info("  location: '" + location + "', keyDef: " + keyDef);
 				if ((keyDef != null) && 
 						(keyType != null) && 
