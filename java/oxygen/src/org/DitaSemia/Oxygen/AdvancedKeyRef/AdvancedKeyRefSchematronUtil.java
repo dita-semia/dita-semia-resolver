@@ -44,31 +44,49 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 	}
 	
 	public static boolean matchesRefText(KeyRefInterface keyRef) {
-		String 		namespace		= keyRef.getNamespace();
-		String 		key 			= keyRef.getKey();
-		String[] 	textList 		= keyRef.getText().split(KeyDef.PATH_DELIMITER);
+		String		namespace 		= keyRef.getNamespace();
 		String[] 	namespaceList	= null;
 		if (namespace != null) {
-			namespaceList = namespace.split(KeyDef.PATH_DELIMITER);
+			namespaceList = namespace.split(KeyRef.PATH_DELIMITER);
 		}
-		int 		textLength		= textList.length;
-		int 		namespaceLength	= (namespaceList != null ? namespaceList.length : 0);
-		if (key.equals(textList[textLength - 1]) && textLength == 1) {
-			return true;
-		} else if (key.equals(textList[textLength - 1]) && textLength > 1 && namespaceLength >= textLength - 1) {
-			int count = 1;
-			for (int i = textLength - 2; i >= 0; i--) {
-				if (!namespaceList[namespaceList.length - count].equals(textList[i])) {
-					return false;
-				}
-				count++;
-			}
-			return true;
-		} else {
+		String 		key 			= keyRef.getKey();
+		String[] 	textList 		= (keyRef.getText().isEmpty() 	? null 	: keyRef.getText().split(KeyDef.PATH_DELIMITER));
+		int 		textLength		= (textList 		== null 	? 0 	: textList.length);
+		int 		namespaceLength	= (namespaceList 	== null 	? 0 	: namespaceList.length);
+		
+		if (key != null && !key.equals(textList[textLength - 1])) {
 			return false;
+		} else if (key == null) {
+			return matchesNamespace(textList, namespaceList, textLength - 1, namespaceLength);
+		} else if (key.equals(textList[textLength - 1])) {
+			return matchesNamespace(textList, namespaceList, textLength - 2, namespaceLength);
 		}
+		return false;
 	}
 	
+	private static boolean matchesNamespace(String[] text, String[] namespace, int lastIndex, int nsLength) {
+		if (lastIndex < 0) {
+			// no namespace in text content
+			return true;
+		} else {
+			if (nsLength == 0) {
+				// namespace in text content, but not in @akr:ref
+				return false;
+			} else {
+				if (lastIndex + 1 > nsLength) {
+					// namespace in text content has more elements than namespace in @akr:ref
+					return false;
+				}
+				for (int i = lastIndex, j = namespace.length - 1; i >= 0 && j >= 0 ; i-- , j--) {
+					if (!text[i].equals(namespace[j])) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	public static KeyDefInterface getMatchingKeyDef(String refString, URL url) {
 		return BookCacheHandler.getInstance().getBookCache(url).getExactMatch(refString);
 	}
