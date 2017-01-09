@@ -9,6 +9,16 @@
 			color,			inherit);
 }
 
+*[*|popup-edit][*|pe-values][*|pe-labels]:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
+	content: oxy_popup(
+			edit,			oxy_concat('@', attr('*|popup-edit')),
+			values,			attr('*|pe-values'),
+			labels,			attr('*|pe-labels'),
+			selectionMode,	single,
+			fontInherit,	true,
+			color,			inherit);
+}
+
 
 *[*|o-class~="popup-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
 	content: " (";
@@ -27,9 +37,22 @@
 }
 
 *[*|popup-edit='#text'] {
-	visibility: -oxy-collapse-text;
+	visibility				: -oxy-collapse-text;
+	-oxy-show-placeholder	: inherit !important;
 	content: oxy_popup(
 			edit,			oxy_concat('#text'),
+			selectionMode,	single,
+			fontInherit,	true,
+			color,			inherit);
+}
+
+*[*|popup-edit='#text'][*|pe-values][*|pe-labels] {
+	visibility				: -oxy-collapse-text;
+	-oxy-show-placeholder	: inherit !important;
+	content: oxy_popup(
+			edit,			oxy_concat('#text'),
+			values,			attr('*|pe-values'),
+			labels,			attr('*|pe-labels'),
 			selectionMode,	single,
 			fontInherit,	true,
 			color,			inherit);

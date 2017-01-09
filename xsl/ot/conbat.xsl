@@ -118,8 +118,8 @@
 					</xsl:choose>
 				</xsl:with-param>
 			</xsl:call-template>
-			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 			<xsl:call-template name="add-popup-edit-content"/>
+			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -162,9 +162,8 @@
 					</xsl:choose>
 				</xsl:with-param>
 			</xsl:call-template>
-			
-			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 			<xsl:call-template name="add-popup-edit-content"/>
+			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -242,7 +241,19 @@
 				<xsl:if test="$popup-braced-edit">
 					<xsl:text> (</xsl:text>
 				</xsl:if>
-				<xsl:value-of select="attribute()[name(.) = current()/@cba:popup-edit]"/>
+				<xsl:variable name="value" 		as="xs:string" 	select="string(attribute()[name(.) = current()/@cba:popup-edit])"/>
+				<xsl:variable name="values"		as="xs:string*"	select="tokenize(@cba:pe-values, ',')"/>
+				<xsl:variable name="labels"		as="xs:string*"	select="tokenize(@cba:pe-labels, ',')"/>
+				<xsl:variable name="valueIndex"	as="xs:integer"	select="index-of($values, $value)"/>
+				<xsl:variable name="label"		as="xs:string?"	select="$labels[$valueIndex]"/>
+				<xsl:choose>
+					<xsl:when test="exists($label)">
+						<xsl:value-of select="$label"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$value"/>
+					</xsl:otherwise>
+				</xsl:choose>
 				<xsl:if test="$popup-braced-edit">
 					<xsl:text>)</xsl:text>
 				</xsl:if>
