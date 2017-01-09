@@ -14,14 +14,16 @@
 			<sch:let name="keyAttr"			value="@ikd:key"/>
 			<sch:let name="namespaceAttr"	value="@ikd:namespace"/>
 			<sch:let name="rootAttr"		value="@ikd:root"/>
+			<sch:let name="refNodeAttr"		value="@ikd:ref-node"/>
 			<sch:let name="nameAttr"		value="@ikd:name"/>
 			<sch:let name="descAttr"		value="@ikd:desc"/>
 
 			<sch:let name="jKeyDef"			value="jikd:createKeyDef(.)"/>
 
-			<sch:let name="keyValue"		value="if (exists($jKeyDef)) then jkd:getKey($jKeyDef) else ''"/>
-			<sch:let name="namespaceValue"	value="if (exists($jKeyDef)) then jkd:getNamespaceList($jKeyDef) else ()"/>
-			<sch:let name="rootNode"		value="if (exists($rootAttr)) then jsu:evaluateXPathToNode(., $rootAttr) else ."/>
+			<sch:let name="keyValue"		value="if (exists($jKeyDef)) 		then jkd:getKey($jKeyDef) else ''"/>
+			<sch:let name="namespaceValue"	value="if (exists($jKeyDef)) 		then jkd:getNamespaceList($jKeyDef) else ()"/>
+			<sch:let name="rootNode"		value="if (exists($rootAttr)) 		then jsu:evaluateXPathToNode(., $rootAttr) else ."/>
+			<sch:let name="refNode"			value="if (exists($refNodeAttr)) 	then jsu:evaluateXPathToNode($rootNode, $refNodeAttr) else $rootNode"/>
 
 			<sch:let name="namespaceError"	value="if (empty($jKeyDef)) then jikd:getXPathListErrorMessage(., $namespaceAttr) else ()"/>
 			<sch:let name="rootError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., $rootAttr) else ()"/>
@@ -35,8 +37,8 @@
 			<sch:report test="exists($rootAttr) and empty($rootNode intersect ancestor-or-self::*)">
 				Invalid value for @ikd:root. It must identify an ancestor or the element itself. 
 			</sch:report>
-			<sch:report test="exists($jKeyDef) and exists($rootNode) and empty($rootNode/@id) and empty(processing-instruction('SuppressWarnings')[tokenize(., '\s+') = 'ikd:missingId'])" role="warn">
-				The root element has no id attribute. Referencing elements won't create a link. <sch:value-of select="name($rootNode)"/>
+			<sch:report test="exists($jKeyDef) and exists($refNode) and empty($refNode/@id) and empty(processing-instruction('SuppressWarnings')[tokenize(., '\s+') = 'ikd:missingId'])" role="warn">
+				The referenced element ('<sch:value-of select="name($refNode)"/>') has no id attribute. Referencing elements won't create a link.
 			</sch:report>
 			<sch:report test="exists($keyError)">
 				Invalid value for @ikd:key. It must be empty or a valid XPath: <sch:value-of select="$keyError"/> 
@@ -50,9 +52,9 @@
 			<sch:report test="exists($descError)">
 				Invalid value for @ikd:desc. It must be empty or a valid XPath: <sch:value-of select="$descError"/> 
 			</sch:report>
-			<sch:report test="matches($keyValue, '[.:/]')">
+			<sch:report test="matches($keyValue, '[:/]')">
 				Invalid value for the key ('<sch:value-of select="$keyValue"/>').
-				It must not contain ".", ":" or "/".
+				It must not contain ":" or "/".
 			</sch:report>
 			<sch:report test="exists($namespaceValue[matches(., '[.:/]')])">
 				Invalid value for the namespace ('<sch:value-of select="string-join($namespaceValue, ', ')"/>').

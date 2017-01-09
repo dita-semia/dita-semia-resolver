@@ -7,6 +7,7 @@
 	
 	<xs:attribute name="key-type" 	type="xs:string"/>
 	<xs:attribute name="root" 		type="xs:string"/>
+	<xs:attribute name="ref-node"	type="xs:string"/>
 	<xs:attribute name="key" 		type="xs:string"/>
 	<xs:attribute name="namespace" 	type="xs:string"/>
 	<xs:attribute name="name" 		type="xs:string"/>
@@ -15,6 +16,7 @@
 	<xs:attributeGroup name="ikd-atts">
 		<xs:attribute ref="ikd:key-type"/>
 		<xs:attribute ref="ikd:root"/>
+		<xs:attribute ref="ikd:ref-node"/>
 		<xs:attribute ref="ikd:key"/>
 		<xs:attribute ref="ikd:namespace"/>
 		<xs:attribute ref="ikd:name"/>

@@ -23,6 +23,7 @@ public class KeyDef implements KeyDefInterface {
 
 	public static final String 	ATTR_TYPE		= "key-type";
 	private static final String ATTR_ROOT		= "root";
+	private static final String ATTR_REF_NODE	= "ref-node";
 	private static final String ATTR_KEY 		= "key";
 	private static final String ATTR_NAMESPACE	= "namespace";
 	private static final String ATTR_NAME 		= "name";
@@ -76,18 +77,28 @@ public class KeyDef implements KeyDefInterface {
 			throw new XPathException("Missing root node.");
 		}
 		this.root = root;
+		
 
-		defUrl 	= root.getBaseUrl();
-		defId	= root.getAttribute(ATTR_ID, null); 
+		final String 	refNodeAttr = node.getAttribute(ATTR_REF_NODE,	NAMESPACE_URI);
+		NodeWrapper 	refNode		= (refNodeAttr != null) ? root.evaluateXPathToNode(refNodeAttr) : root;
+		if (refNode == null) {
+			refNode = root;
+		}
+		
+
+		defUrl 	= refNode.getBaseUrl();
+		defId	= refNode.getAttribute(ATTR_ID, null); 
 		
 		final String classAttr = root.getAttribute("class", null);
 		if (classAttr.contains(" topic/topic ")) {
 			defAncestorTopicId = null;
 		} else {
-			NodeWrapper currentNode = root;
+			NodeWrapper currentNode 	= refNode;
+			String		currentClass;
 			do {
-				currentNode = currentNode.getParent();
-			} while ((currentNode != null) && (!currentNode.getAttribute("class", null).contains(" topic/topic ")));
+				currentNode 	= currentNode.getParent();
+				currentClass	= (currentNode == null) ? null : currentNode.getAttribute(DitaUtil.ATTR_CLASS, null);
+			} while ((currentClass != null) && (!currentClass.contains(" topic/topic ")));
 			if (currentNode != null) {
 				defAncestorTopicId = currentNode.getAttribute(ATTR_ID, null);
 			} else {
