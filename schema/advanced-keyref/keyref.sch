@@ -22,6 +22,7 @@
 			<sch:let name="keyDef" 			value="jakr:getMatchingKeyDef($refAttr, base-uri())"/>
 			
 			<sch:let name="typeAttr" 		value="@akr:type"/>
+			<sch:let name="typeList" 		value="tokenize($typeAttr, '\s+')"/>
 			<sch:let name="namespaceAttr" 	value="@akr:namespace"/>
 			<sch:let name="pathLenAttr" 	value="@akr:path-len"/>
 			<sch:let name="outputclassAttr" value="@outputclass"/>
@@ -51,8 +52,8 @@
 			<sch:assert test="exists($keyDef)"> 
 				 Invalid keyref: no matching key defined ('<sch:value-of select="$refAttr"/>')
 			</sch:assert> 
-			<sch:report test="$typeAttr != $refType">
-				Invalid keyref: referenced type ('<sch:value-of select="$typeAttr"/>') is not allowed in this context ('<sch:value-of select="$refAttr"/>')!
+			<sch:report test="exists($typeList) and not($refType = $typeList)">
+				Invalid keyref: referenced type ('<sch:value-of select="$refType"/>') is none of the allowed types: <sch:value-of select="string-join($typeList, ', ')"/>!
 			</sch:report>
 		</sch:rule>
 	</sch:pattern>
