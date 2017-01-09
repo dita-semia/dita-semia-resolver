@@ -15,8 +15,10 @@ public interface KeyDefInterface extends KeyspecInterface {
 	String 	getDesc();
 
 	URL		getDefUrl();
-
+	
 	String 	getDefId();
+
+	String getDefAncestorTopicId();
 
 	String 	getDefLocation();
 

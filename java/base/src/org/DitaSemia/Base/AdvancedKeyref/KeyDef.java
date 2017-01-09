@@ -169,6 +169,11 @@ public class KeyDef implements KeyDefInterface {
 	}
 
 	@Override
+	public String getDefAncestorTopicId() {
+		return defAncestorTopicId;
+	}
+
+	@Override
 	public String getDefLocation() {
 		if (defAncestorTopicId == null) {
 			return FileUtil.decodeUrl(defUrl) + DitaUtil.HREF_URL_ID_DELIMITER + getDefId();

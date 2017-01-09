@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Ot.DitaSemiaOtResolver;
 import org.apache.log4j.Logger;
@@ -15,7 +16,6 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.EmptySequence;
-import net.sf.saxon.value.ObjectValue;
 import net.sf.saxon.value.StringValue;
 
 public class GetKeyDefLocationCall extends ExtensionFunctionCall {
@@ -47,8 +47,16 @@ public class GetKeyDefLocationCall extends ExtensionFunctionCall {
 			try {
 				final URI 		baseUri		= new URI(contextNode.getBaseURI());
 				final URI 		relativeUri	= baseUri.relativize(defUrl.toURI());
-				final String	location	= relativeUri.getPath() + "#" + defId; 
-				return new StringValue(location);
+				final StringBuffer	location = new StringBuffer();
+				location.append(relativeUri.getPath());
+				location.append(DitaUtil.HREF_URL_ID_DELIMITER);
+				final String 	defAncestorTopicId	= keyDef.getDefAncestorTopicId();
+				if (defAncestorTopicId != null) {
+					location.append(defAncestorTopicId);
+					location.append(DitaUtil.HREF_TOPIC_ID_DELIMITER);
+				}
+				location.append(defId); 
+				return new StringValue(location.toString());
 			} catch (URISyntaxException e) {
 				throw new XPathException(e.getMessage());
 			}
