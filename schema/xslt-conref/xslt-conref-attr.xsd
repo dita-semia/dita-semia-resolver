@@ -8,6 +8,14 @@
 	<xs:attribute name="xsl" 				type="xs:anyURI"/>	
 	<xs:attribute name="source"				type="xs:anyURI"/>
 	<xs:attribute name="start-template" 	type="xs:string"/>
+	<xs:attribute name="stage" 				type="xs:integer"/>
+	<!--
+		-1: as last and not relevant for book cache
+		0: 	immediatly (not depending on other cached content)
+		1: 	after 0 (depending on other content)
+		>1: after 1 (depending on cached content from other xslt-conrefs)
+	-->
+	
 	<xs:attribute name="reparse">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
