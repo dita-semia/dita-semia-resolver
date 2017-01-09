@@ -485,7 +485,9 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	}
 	
 	public static String getAppendixPrefix(String language) {
-		if (language.equals("de_DE")) {
+		if (language == null) {
+			return "Appendix ";
+		} if (language.equals("de_DE")) {
 			return "Anhang ";
 		} else {
 			return "Appendix ";
