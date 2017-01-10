@@ -9,13 +9,11 @@
 *[class~="topic/dl"][*|xsl]:not([conaction]) > *[class~="topic/dl"],
 *[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
 *[class~="topic/ph"][*|xsl]:not([conaction]) > *[class~="topic/ph"],
-*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *[class~="topic/dlentry"]
-{
+*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *[class~="topic/dlentry"] {
     display : inherit;
 }
 
-*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *[class~="topic/simpletable"]
-{
+*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *[class~="topic/simpletable"] {
     display : table;
 }
 
@@ -52,6 +50,10 @@
 *[class~="topic/table"][*|xsl]:not([conaction])
 *[class~="topic/simpletable"][*|xsl]:not([conaction]){
     display : block;
+}
+
+*[class~="topic/dd"][*|xsl] > * {
+	margin-left: 0;
 }
 
 *[class~="topic/row"][*|xsl] {
