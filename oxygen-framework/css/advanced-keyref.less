@@ -88,7 +88,11 @@
 *[*|ref][outputclass~='name']:before(@{keyref-name-suffix-index}),
 *[*|ref][outputclass~='name']:after(@{keyref-name-suffix-index}),
 *[*|ref][outputclass~='name']:before(@{conbat-inline-index}),
-*[*|ref][outputclass~='name']:after(@{conbat-inline-index}) {
+*[*|ref][outputclass~='name']:after(@{conbat-inline-index}),
+*[*|ref][outputclass~='name!']:before(@{keyref-name-suffix-index}),
+*[*|ref][outputclass~='name!']:after(@{keyref-name-suffix-index}),
+*[*|ref][outputclass~='name!']:before(@{conbat-inline-index}),
+*[*|ref][outputclass~='name!']:after(@{conbat-inline-index}) {
 	/* undo changes for edit-only content */
 	color: 		black;
 	font-size: 	(1em / @edit-only-font-size-scale);
