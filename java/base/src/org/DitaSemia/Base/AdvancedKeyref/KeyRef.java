@@ -261,21 +261,20 @@ public class KeyRef implements KeyRefInterface {
 
 	@Override
 	public String getOutputclass() {
-		String outputclass = node.getAttribute(ATTR_OUTPUTCLASS, null);
-		if (isOutputclassFixed()) {
-			outputclass = outputclass.substring(0, outputclass.length()-1);
+		final String outputclass = node.getAttribute(ATTR_OUTPUTCLASS, null);
+		if ((outputclass == null) || (outputclass.isEmpty())) {
+			return OC_KEY_NAME_BRACED;
+		} else if (isOutputclassFixed()) {
+			return outputclass.substring(0, outputclass.length()-1);
+		} else {
+			return outputclass;
 		}
-		return outputclass;
 	}
 
 	@Override
 	public boolean isOutputclassFixed() {
-		String outputclass = node.getAttribute(ATTR_OUTPUTCLASS, null);
-		if (outputclass != null && !outputclass.isEmpty() && outputclass.endsWith(OC_FIXED_MARKER)) {
-			return true;
-		} else {
-			return false;
-		}
+		final String outputclass = node.getAttribute(ATTR_OUTPUTCLASS, null);
+		return ((outputclass == null) || (outputclass.endsWith(OC_FIXED_MARKER)));
 	}
 
 	public static boolean matchesNamespaceFilter(List<String> namespaceFilter, List<String> namespace) {
