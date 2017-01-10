@@ -57,7 +57,7 @@
 
 	<xs:attributeGroup name="key-xref.attributes">
 		<xs:attribute name="outputclass" 	type="key-xref.outputclass" default="key-name-braced"/>
-		<xs:attributeGroup ref="akr:akr-atts"/>
+		<xs:attribute ref="akr:ref"/>
 	</xs:attributeGroup>
 	
 	<xs:simpleType name="key-xref.outputclass">
