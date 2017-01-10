@@ -16,6 +16,7 @@
 	<xs:attribute name="popup-edit" 		type="xs:string"/>
 	<xs:attribute name="pe-values" 			type="xs:string"/>
 	<xs:attribute name="pe-labels" 			type="xs:string"/>
+	<xs:attribute name="pe-prefix" 			type="xs:string"/>
 	<xs:attribute name="o-class" 			type="xs:string"/>
 	<xs:attribute name="hide-empty" 		type="xs:boolean"/>	<!-- can be combined with default-content to display a hint in author mode -->
 

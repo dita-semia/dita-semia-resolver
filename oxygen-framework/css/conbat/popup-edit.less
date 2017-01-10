@@ -20,11 +20,15 @@
 }
 
 
-*[*|o-class~="popup-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
+*[*|o-class~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
 	content: " (";
 }
 
-*[*|o-class~="popup-braced-edit"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+*[*|o-class~="pe-braced"][*|popup-edit][*|pe-prefix]:after(@{conbat-edit-prefix-index}) {
+	content: attr('*|pe-prefix');
+}
+
+*[*|o-class~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
 	content: ")";
 }
 
