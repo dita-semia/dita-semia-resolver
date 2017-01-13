@@ -205,7 +205,7 @@ public class FileCache extends TopicRefContainer {
 	
 	private StringBuffer getTopicNum(String topicId, SaxonNodeWrapper topicNode) {
 		initRootTopicNum();
-		if (!rootTopicNum.isEmpty()) {
+		if (rootTopicNum != null) {
 			final StringBuffer topicNum = new StringBuffer();
 			topicNum.append(rootTopicNum);
 			final String localNum = getLocalTopicNum(topicId, topicNode);
