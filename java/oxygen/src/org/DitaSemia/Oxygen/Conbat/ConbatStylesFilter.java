@@ -15,6 +15,7 @@ import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.exml.view.graphics.Color;
+import ro.sync.exml.view.graphics.Font;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
@@ -31,7 +32,9 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 	public static final String	ERR_SUFFIX				="]";
 	public static final String	ERR_MSG_REMOVE_REGEXP	= "^.*XPath failed due to: ";
 	
-	public static final int		PSEUDO_LEVEL_INLINE		= 14;
+	public static final int		PSEUDO_LEVEL_INLINE		= 5;
+	public static final int		PSEUDO_LEVEL_EDIT_MIN	= 6;
+	public static final int		PSEUDO_LEVEL_EDIT_MAX	= 9;
 	public static final int		PSEUDO_LEVEL_PARAGRAPH	= 10;
 	public static final int		PSEUDO_LEVEL_DEFAULT	= 11;
 	public static final int		PSEUDO_LEVEL_TITLE		= 15;
@@ -43,6 +46,14 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 	public static final String	ATTR_PREFIX				= "prefix";
 	public static final String	ATTR_SUFFIX				= "suffix";
 	public static final String	ATTR_TITLE				= "title";
+	public static final String	ATTR_POPUP_EDIT			= "popup-edit";
+	public static final String	ATTR_PE_HIDE_VALUE		= "pe-hide-value";
+	
+	public static final String	VALUE_TRUE				= "true";
+	public static final String	POPUP_EDIT_TEXT			= "#text";
+	
+	public static final Color	EDIT_ONLY_COLOR			= new Color(140, 140, 140);
+	public static final double	EDIT_ONLY_FONT_SCALE	= 0.8;
 
 	public static boolean filter(Styles styles, AuthorNode authorNode) {
 		boolean handled = false;
@@ -53,13 +64,13 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 			//logger.info("filter: " + authorNode.getType() + ", " + authorNode.getName() + ", " + pseudoLevel);
 			if ((pseudoLevel == PSEUDO_LEVEL_INLINE) || (pseudoLevel == PSEUDO_LEVEL_PARAGRAPH)) {
 				if (authorNode.getName().equals(BEFORE)) {
-					handled = resolve(styles, authorNode.getParent(), ATTR_PREFIX);
+					handled = resolve(styles, authorNode.getParent(), ATTR_PREFIX, true);
 				} else if (authorNode.getName().equals(AFTER)) { 
-					handled = resolve(styles, authorNode.getParent(), ATTR_SUFFIX);
+					handled = resolve(styles, authorNode.getParent(), ATTR_SUFFIX, true);
 				}
 			} else if (pseudoLevel == PSEUDO_LEVEL_TITLE) {
 				if (authorNode.getName().equals(BEFORE)) {
-					handled = resolve(styles, authorNode.getParent(), ATTR_TITLE);
+					handled = resolve(styles, authorNode.getParent(), ATTR_TITLE, false);
 				}
 			} else if (pseudoLevel == PSEUDO_LEVEL_DEFAULT) {
 				final AuthorNode parentNode = authorNode.getParent();
@@ -67,20 +78,22 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 					final AuthorElement parent = (AuthorElement)parentNode;
 					try {
 						if ((parent.getContentNodes().isEmpty()) && (parent.getTextContent().isEmpty())) {
-							handled = resolve(styles, authorNode.getParent(), ATTR_DEFAULT_CONTENT);
+							handled = resolve(styles, authorNode.getParent(), ATTR_DEFAULT_CONTENT, true);
 						}
 					} catch (BadLocationException e) {
 						logger.error(e, e);
 					}
 				}
+			} else if ((pseudoLevel >= PSEUDO_LEVEL_EDIT_MIN) && (pseudoLevel <= PSEUDO_LEVEL_EDIT_MAX)) {
+				handled = filterEdit(styles, authorNode.getParent());
 			}
 		} else if (nodeType == AuthorNode.NODE_TYPE_ELEMENT) {
-			handled = resolve(styles, authorNode, ATTR_CONTENT);
+			handled = resolve(styles, authorNode, ATTR_CONTENT, true);
 		}
 		return handled;
 	}
 	
-	private static boolean resolve(Styles styles, AuthorNode contextNode, String attrName) {
+	private static boolean resolve(Styles styles, AuthorNode contextNode, String attrName, boolean replaceFirst) {
 		boolean handled = false;
 		final StaticContent[] mixedContent = styles.getMixedContent();
 		if ((mixedContent != null) && (mixedContent.length > 0)) {
@@ -98,7 +111,32 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 						styles.setProperty(Styles.KEY_FONT_WEIGHT, Styles.FONT_WEIGHT_BOLD);
 						styles.setProperty(Styles.KEY_FOREGROUND_COLOR, Color.COLOR_RED);
 					}
-					styles.getMixedContent()[0] = new StringContent(resolved);
+					styles.getMixedContent()[replaceFirst ? 0 : styles.getMixedContent().length-1] = new StringContent(resolved);
+				}
+			}
+			handled = true;
+		}
+		return handled;
+	}
+	
+	private static boolean filterEdit(Styles styles, AuthorNode contextNode) {
+		boolean handled = false;
+		final AuthorNodeWrapper node = new AuthorNodeWrapper(contextNode, null);
+		final String popupEdit = node.getAttribute(ATTR_POPUP_EDIT, 	NAMESPACE_URI);
+		if ((popupEdit != null) && (!popupEdit.isEmpty())) {
+			final String hideValue = node.getAttribute(ATTR_PE_HIDE_VALUE, 	NAMESPACE_URI);
+			if ((hideValue != null) && (!hideValue.isEmpty())) {	
+				final String value = (popupEdit.equals(POPUP_EDIT_TEXT)) ? node.getTextContent() : node.getAttribute(popupEdit, null);
+				if (hideValue.equals(value)) {
+					styles.setProperty(Styles.KEY_FOREGROUND_COLOR, EDIT_ONLY_COLOR);
+					final Font originalFont = styles.getFont();
+					final Font newFont		= new Font(
+							originalFont.getName(), 
+							originalFont.getStyle(), 
+							(int)(originalFont.getSize() * EDIT_ONLY_FONT_SCALE),
+							originalFont.getLetterSpacing(),
+							originalFont.getFontNames());
+					styles.setProperty(Styles.KEY_FONT, newFont);
 				}
 			}
 			handled = true;
