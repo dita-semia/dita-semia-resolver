@@ -6,15 +6,39 @@
 	xmlns:cba	= "http://www.dita-semia.org/conbat"
 	exclude-result-prefixes		= "#all">
 	
+	
 	<xsl:variable name="CBA_MARKER" as="processing-instruction()">
 		<xsl:processing-instruction name="CBA"/>
 	</xsl:variable>
 
 
 	<!-- @cba:hide-empty -->
-	<xsl:template match="*[xs:boolean(@cba:hide-empty)][empty(node())]" priority="9">
+	<xsl:template match="*[ds:isHidden(.)]" priority="9">
 		<!-- remove -->
 	</xsl:template>
+	
+	<!-- @cba:hide-empty -->
+	<!--<xsl:template match="*[() and (@cba:pe-hide-value) and ][empty(node())]" priority="9">
+		<!-\- remove -\->
+	</xsl:template>-->
+	
+	<xsl:function name="ds:isHidden" as="xs:boolean">
+		<xsl:param name="node" as="node()"/>
+		
+		<xsl:choose>
+			<xsl:when test="empty($node/(text() | element())) and 
+							(matches($node/@cba:flags, concat('(^|\s)', $CBA_FLAG_HIDE_EMPTY, '(\s|$)')))">
+				<xsl:sequence select="true()"/>
+			</xsl:when>
+			<xsl:when test="($node/@cba:popup-edit = '#text') and
+							(string($node/text()) = string($node/@cba:pe-hide-value))">
+				<xsl:sequence select="true()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="false()"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 
 	<!-- paragraph-prefix -->
 	<xsl:template match="*[@cba:prefix][contains(@class, $C_UL) or contains(@class, $C_OL) or contains(@class, $C_SL) or contains(@class, $C_CODEBLOCK)]" priority="8">
@@ -97,6 +121,7 @@
 	
 	<!-- inline-content -->
 	<xsl:template match="*[contains(@class, $C_P) or 
+							contains(@class, $C_DT) or 
 							contains(@class, $C_PH) or 
 							contains(@class, $C_SLI) or 
 							contains(@class, $C_STENTRY) or 
@@ -107,10 +132,18 @@
 			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
 			<xsl:call-template name="handle-code-oclass">
 				<xsl:with-param name="content" as="node()*">
-					<xsl:sequence select="ds:createCbaPhrase(@cba:content)"/>
 					<xsl:choose>
-						<xsl:when test="empty(node())">
-							<xsl:sequence select="ds:createCbaPhrase(@cba:default-content)"/>
+						<xsl:when test="@cba:content">
+							<xsl:call-template name="KeyFormatting">
+								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:content)"/>
+								<xsl:with-param name="keyNode"	select="."/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="empty(node()) and exists(@cba:default-content)">
+							<xsl:call-template name="KeyFormatting">
+								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:default-content)"/>
+								<xsl:with-param name="keyNode"	select="."/>
+							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="node()" mode="#current"/>
@@ -118,8 +151,9 @@
 					</xsl:choose>
 				</xsl:with-param>
 			</xsl:call-template>
-			<xsl:call-template name="add-popup-edit-content"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
+			<xsl:call-template name="add-popup-edit-content"/>
+			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix2)"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -232,33 +266,60 @@
 		</xsl:copy>
 	</xsl:template>
 	
+	<xsl:template match="*[@cba:popup-edit = '#text']/text()">
+		<xsl:call-template name="create-popup-content">
+			<xsl:with-param name="value" 	select="string(.)"/>
+			<xsl:with-param name="node"		select="parent::*"/>
+		</xsl:call-template>
+	</xsl:template>
 	
 	<xsl:template name="add-popup-edit-content">
 		<xsl:if test="(@cba:popup-edit) and (@cba:popup-edit != '#text')">
+			<xsl:call-template name="create-popup-content">
+				<xsl:with-param name="value" 	select="string(attribute()[name(.) = current()/@cba:popup-edit])"/>
+				<xsl:with-param name="node"		select="."/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+	
+	
+	<xsl:template name="create-popup-content">
+		<xsl:param name="value"	as="xs:string?"/>
+		<xsl:param name="node"	as="node()"/>
+		
+		<xsl:variable name="hideValue" 	as="xs:string?" select="$node/@cba:pe-hide-value"/>
+			
+		<xsl:if test="not($hideValue = $value)">
 			<ph class="{$CP_PH}">
 				<xsl:sequence select="$CBA_MARKER"/>
-				<xsl:variable name="popup-braced-edit" as="xs:boolean" select="@cba:o-class= 'popup-braced-edit'"/>
-				<xsl:if test="$popup-braced-edit">
+				<xsl:variable name="pe-braced" 	as="xs:boolean" select="matches($node/@cba:flags, concat('(^|\s)', $CBA_FLAG_PE_BRACED, '(\s|$)'))"/>
+				<xsl:if test="$pe-braced">
 					<xsl:text> (</xsl:text>
 				</xsl:if>
-				<xsl:variable name="value" 		as="xs:string" 	select="string(attribute()[name(.) = current()/@cba:popup-edit])"/>
-				<xsl:variable name="values"		as="xs:string*"	select="tokenize(@cba:pe-values, ',')"/>
-				<xsl:variable name="labels"		as="xs:string*"	select="tokenize(@cba:pe-labels, ',')"/>
-				<xsl:variable name="valueIndex"	as="xs:integer"	select="index-of($values, $value)"/>
-				<xsl:variable name="label"		as="xs:string?"	select="$labels[$valueIndex]"/>
+				<xsl:value-of select="$node/@cba:pe-prefix"/>
+				
+				<xsl:variable name="values"		as="xs:string*"		select="tokenize($node/@cba:pe-values, ',')"/>
+				<xsl:variable name="labels"		as="xs:string*"		select="tokenize($node/@cba:pe-labels, ',')"/>
+				<xsl:variable name="valueIndex"	as="xs:integer?"	select="index-of($values, $value)"/>
+				<xsl:variable name="label"		as="xs:string?"		select="$labels[$valueIndex]"/>
+				<xsl:variable name="output"		as="xs:string?"		select="if ($label) then $label else $value"/>
+				
 				<xsl:choose>
-					<xsl:when test="exists($label)">
-						<xsl:value-of select="$label"/>
+					<xsl:when test="matches($node/@cba:flags, concat('(^|\s)', $CBA_FLAG_PE_ITALIC, '(\s|$)'))">
+						<i class="{$CP_I}">
+							<xsl:value-of select="$output"/>
+						</i>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$value"/>
+						<xsl:value-of select="$output"/>
 					</xsl:otherwise>
 				</xsl:choose>
-				<xsl:if test="$popup-braced-edit">
+				<xsl:if test="$pe-braced">
 					<xsl:text>)</xsl:text>
 				</xsl:if>
 			</ph>
 		</xsl:if>
+		
 	</xsl:template>
 
 
@@ -271,8 +332,8 @@
 			<xsl:when test="exists(preceding-sibling::node()[1]/@cba:suffix)">
 				<!-- following node of an element with a suffix --> 
 			</xsl:when>
-			<xsl:when test="(tokenize(preceding-sibling::node()[1]/@cba:o-class, '\s+') = $OCLASS_CSLI) and
-							(tokenize(following-sibling::node()[1]/@cba:o-class, '\s+') = $OCLASS_CSLI)">
+			<xsl:when test="(tokenize(preceding-sibling::node()[1]/@cba:flags, '\s+') = $CBA_FLAG_CSLI) and
+							(tokenize(following-sibling::node()[1]/@cba:flags, '\s+') = $CBA_FLAG_CSLI)">
 				<!-- node between two csli elements --> 
 			</xsl:when>
 			<xsl:when test="exists(following-sibling::node()[1]/@cba:prefix)">
@@ -297,7 +358,7 @@
 		<xsl:param name="content" as="node()*"/>
 		
 		<xsl:choose>
-			<xsl:when test="tokenize(@cba:o-class, '\s+') = $OCLASS_CODE">
+			<xsl:when test="tokenize(@cba:flags, '\s+') = $CBA_FLAG_CODE">
 				<codeph class="{$CP_CODEPH}">
 					<xsl:sequence select="$content"/>
 				</codeph>
@@ -309,10 +370,10 @@
 	</xsl:template>
 	
 	
-	<!-- @cba:o-class = "csli" (comma seperated list item) -->
+	<!-- @cba:flags = "csli" (comma seperated list item) -->
 	<xsl:template name="insert-csli-prefix">
-		<xsl:variable name="pre" as="node()?" select="preceding-sibling::node()[not(self::text()[matches(., '^\s+$')])][1]"/>
-		<xsl:if test="(tokenize(@cba:o-class, '\s+') = $OCLASS_CSLI) and (tokenize($pre/@cba:o-class, '\s+') = $OCLASS_CSLI)">
+		<xsl:variable name="pre" as="node()?" select="preceding-sibling::node()[not(self::text()[matches(., '^\s+$')])][not(ds:isHidden(.))][1]"/>
+		<xsl:if test="(tokenize(@cba:flags, '\s+') = $CBA_FLAG_CSLI) and (tokenize($pre/@cba:flags, '\s+') = $CBA_FLAG_CSLI)">
 			<ph class="{$CP_PH}">
 				<xsl:sequence select="$CBA_MARKER"/>
 				<xsl:text>, </xsl:text>

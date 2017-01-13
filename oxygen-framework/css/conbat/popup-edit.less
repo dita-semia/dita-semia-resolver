@@ -9,6 +9,11 @@
 			color,			inherit);
 }
 
+*[*|popup-edit][*|flags~='pe-italic']:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
+	font-style	: italic;
+}
+
+
 *[*|popup-edit][*|pe-values][*|pe-labels]:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
 	content: oxy_popup(
 			edit,			oxy_concat('@', attr('*|popup-edit')),
@@ -19,22 +24,21 @@
 			color,			inherit);
 }
 
-
-*[*|o-class~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
+*[*|flags~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
 	content: " (";
 }
 
-*[*|o-class~="pe-braced"][*|popup-edit][*|pe-prefix]:after(@{conbat-edit-prefix-index}) {
+*[*|popup-edit][*|pe-prefix]:after(@{conbat-edit-prefix-index}) {
 	content: attr('*|pe-prefix');
 }
 
-*[*|o-class~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+*[*|flags~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
 	content: ")";
 }
 
-*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-brace1-index}),
-*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-index}),
-*[*|o-class~='code'][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
+*[*|flags~='code'][*|popup-edit]:after(@{conbat-edit-brace1-index}),
+*[*|flags~='code'][*|popup-edit]:after(@{conbat-edit-index}),
+*[*|flags~='code'][*|popup-edit]:after(@{conbat-edit-brace2-index}) {
 	/* undo the font changes for codeph */
 	font-family	: @body-font-family;
 	font-size	: (1em /@code-font-size-scale);
@@ -49,6 +53,16 @@
 			fontInherit,	true,
 			color,			inherit);
 }
+
+
+*[*|popup-edit][*|flags~='pe-italic'][*|popup-edit='#text'] {
+	font-style	: italic;
+}
+
+*[*|popup-edit][*|flags~='pe-italic'][*|popup-edit='#text']:before(@{conbat-inline-index}) {
+	font-style	: normal;
+}
+
 
 *[*|popup-edit='#text'][*|pe-values][*|pe-labels] {
 	visibility				: -oxy-collapse-text;
