@@ -7,21 +7,27 @@
 *[class~="topic/ul"][*|title]:before(@{conbat-title-index}),
 *[class~="topic/ol"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("*|title"));
+    content	: attr("*|title");
     .section-title-style();
+}
+
+*[class~="topic/fig"][*|title]:before(@{conbat-title-index}) {
+	display	: block;
+    content	: @fig-title-prefix attr("*|title");
+    .fig-title-style();
 }
 
 
 *[class~="topic/li"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("*|title"));
+    content	: attr("*|title");
     .li-title-style();
 }
 
 
 *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: oxy_label(text, attr("*|title"));
+    content	: attr("*|title");
     .topic-title-style();
 }
 
