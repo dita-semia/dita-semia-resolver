@@ -3,18 +3,19 @@
 @conbat-background						: rgb(240, 240, 240);
 
 /* following values needs to be the same as used in java: org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter */
-@conbat-inline-index					: 14;	/* used in :before(n) and :after(n) for generated inline content */
+@conbat-inline-index					: 5;	/* used in :before(n) and :after(n) for generated inline content */
+@conbat-edit-brace1-index				: 6;	/* used in :after(n) for opening brace of attribute edits */
+@conbat-edit-prefix-index				: 7;	/* used in :after(n) for prefix of attribute edits */
+@conbat-edit-index						: 8;	/* used in :after(n) for attribute edits */
+@conbat-edit-brace2-index				: 9;	/* used in :after(n) for closing brace of attribute edits */
 @conbat-paragraph-index					: 10;	/* used in :before(n) and :after(n) for generated paragraph content */
 @conbat-default-content-index			: 11;	/* used in :after(n) for generated default content */
+@conbat-suffix2-index					: 12;	/* used in :after(n) for generated suffix2 */
 @conbat-title-index						: 15;	/* used in :before(n) for generated titles */
 @conbat-header-index					: 16;	/* used in :before(n) for generated table header - needs to be greater than @conbat-inline-index */
 @conbat-dt-index						: 17;	/* used in :before(n) for generated dts */
 
 @conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
-@conbat-edit-brace1-index				: 4;	/* used in :after(n) for opening brace of attribute edits */
-@conbat-edit-prefix-index				: 5;	/* used in :after(n) for prefix of attribute edits */
-@conbat-edit-index						: 6;	/* used in :after(n) for attribute edits */
-@conbat-edit-brace2-index				: 7;	/* used in :after(n) for closing brace of attribute edits */
 @csli-comma-index						: 19;	/* used in :before(n) for generated commas in comma separated lists */
 @code-font-family						: "Courier New", Monospace;
 @body-font-family						: "Palatine Linotype", Serif;
@@ -32,7 +33,12 @@
 @keyref-name-suffix-index				: 3;
 @edit-only-font-size-scale				: 0.8;
 @edit-only-text-color					: rgb(140, 140, 140);
+
 @topic-num-prefix-index					: 20;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.TopicNumStylesFilter */
+@map-context-root-index					: 102;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.MapContextStylesFilter */
+@map-context-parent-index				: 101;	/* needs to be the same as used in java: org.DitaSemia.Oxygen.MapContextStylesFilter */
+
+@map-context-background-color			: rgb(230, 230, 255);
 
 @keyref-autotext-background-color		: @conbat-background;
 
@@ -74,6 +80,19 @@
 	margin-top		: 6pt;
 	margin-bottom	: 2pt;
 }
+
+/* figure title */
+.fig-title-style() {
+	font-family		: inherit;
+	font-weight		: normal;
+	font-style		: italic;
+	font-size		: 0.8em;
+	color			: inherit;
+	margin-top		: 6pt;
+	margin-bottom	: 2pt;
+}
+
+@fig-title-prefix	: "Figure: ";
 
 /* li title */
 .li-title-style() {

@@ -71,7 +71,7 @@
 }
 
 /* undo font changes for outputclass "code" */
-*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry'][*|o-class~='code']:before(@{conbat-header-index}) {
+*[class~='topic/simpletable'][*|header] > *[class~='topic/strow']:first-child *[class~='topic/stentry'][*|flags~='code']:before(@{conbat-header-index}) {
 	font-family	: @body-font-family;
 	font-size	: (1em / @code-font-size-scale);
 }

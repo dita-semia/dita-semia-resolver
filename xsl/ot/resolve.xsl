@@ -9,6 +9,7 @@
 	<xsl:include href="advanced-keyref.xsl"/>
 	
 	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
+	<xsl:include href="urn:dita-semia:xsl:cba-const.xsl"/>
 	
 	<xsl:template match="element() | document-node()">
 		<xsl:copy>

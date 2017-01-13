@@ -1,0 +1,38 @@
+
+
+/********************************************/
+/* flag: code 						*/
+
+*[class~="topic/ph"][*|flags~="code"],
+*[class~="topic/dt"][*|flags~="code"],
+*[class~="topic/dd"][*|flags~="code"],
+*[class~="topic/stentry"][*|flags~="code"],
+*[class~="topic/sli"][*|flags~="code"],
+*[class~="topic/p"][*|flags~="code"],
+*[class~="topic/section"] > *[class~="topic/title"][*|flags~="code"] {
+	font-family : @code-font-family;
+	font-size 	: (1em * @code-font-size-scale);
+}
+
+
+*[class~="topic/topic"] > *[class~="topic/title"][*|flags~="code"] {
+	font-family : @code-font-family;
+	font-size 	: (@topic-title-font-size * @code-font-size-scale);
+}
+
+/********************************************/
+/* flag: csli  						*/
+/* (comma-seperated-list-item) 				*/
+
+*[class~="topic/ph"][*|flags~='csli'] + *[class~="topic/ph"][*|flags~='csli']:before(@{csli-comma-index}) {
+	content: ", ";
+}
+
+
+/********************************************/
+/* flag: hide-empty  						*/
+
+*[*|flags~="hide-empty"]:empty {
+	font-size: 		@edit-only-font-size-scale;
+	color: 			@edit-only-text-color;
+}

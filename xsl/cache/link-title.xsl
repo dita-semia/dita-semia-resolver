@@ -8,6 +8,7 @@
 	
 	<xsl:include href="../common/extract-text.xsl"/>
 	<xsl:include href="../class.xsl"/>
+	<xsl:include href="../cba-const.xsl"/>
 
 
 

@@ -4,11 +4,13 @@
 	
 	<uri name="urn:dita-semia:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
 	<uri name="urn:dita-semia:xsl:class.xsl" 				uri="class.xsl"/>
+	<uri name="urn:dita-semia:xsl:cba-const.xsl" 			uri="cba-const.xsl"/>
 	<uri name="urn:dita-semia:xsl:csv-to-xml.xsl" 			uri="csv-to-xml.xsl"/>
 	<uri name="urn:dita-semia:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
 	
 	<system systemId="urn:dita-semia:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
 	<system systemId="urn:dita-semia:xsl:class.xsl" 				uri="class.xsl"/>
+	<system systemId="urn:dita-semia:xsl:cba-const.xsl" 			uri="cba-const.xsl"/>
 	<system systemId="urn:dita-semia:xsl:csv-to-xml.xsl" 			uri="csv-to-xml"/>
 	<system systemId="urn:dita-semia:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
 	

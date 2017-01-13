@@ -13,18 +13,20 @@
 }
 
 *[class~="pr-d/codeph"][*|prefix]:before(@{conbat-inline-index}),
-*[outputclass~="code"][*|prefix]:before(@{conbat-inline-index}) {
+*[*|flags~="code"][*|prefix]:before(@{conbat-inline-index}) {
 	/* undo the font changes for codeph */
 	font-family	: @body-font-family;
 	font-size	: (1em / @code-font-size-scale);
 	/* content is already generated for base class topic/ph */
 }
 
-[class~="topic/topic"] > *[class~="topic/title"][*|o-class~="code"][*|prefix]:before(@{conbat-inline-index}) {
+[class~="topic/topic"] > *[class~="topic/title"][*|flags~="code"][*|prefix]:before(@{conbat-inline-index}) {
 	font-family	: @topic-title-font-family;
 } 
 
-*[class~="pr-d/codeph"][*|code-prefix]:before(@{conbat-inline-index}) {
+*[class~="pr-d/codeph"][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/ph"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/sli"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}) {
 	content	: attr("*|code-prefix");
 }
 
@@ -39,14 +41,28 @@
 	content	: attr("*|suffix");
 }
 
-*[class~="pr-d/codeph"][*|suffix]:after(@{conbat-inline-index}) {
+/* suffix2 */
+*[class~="topic/p"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/ph"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/sli"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/stentry"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/title"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/xref"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/dt"][*|suffix2]:after(@{conbat-suffix2-index}) {
+	content	: attr("*|suffix2");
+}
+
+*[class~="pr-d/codeph"][*|suffix]:after(@{conbat-inline-index}),
+*[*|flags~="code"][*|suffix]:after(@{conbat-inline-index}) {
 	/* undo the font changes for codeph */
 	font-family	: @body-font-family;
 	font-size	: (1em / @code-font-size-scale);
 	/* content is already generated for base class topic/ph */
 }
 
-*[class~="pr-d/codeph"][*|code-suffix]:after(@{conbat-inline-index}) {
+*[class~="pr-d/codeph"][*|code-suffix]:after(@{conbat-inline-index})
+*[class~="topic/ph"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
+*[class~="topic/sli"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {
 	content	: attr("*|code-suffix");
 }
 

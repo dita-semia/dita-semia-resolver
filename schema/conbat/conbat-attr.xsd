@@ -7,6 +7,7 @@
 	<xs:attribute name="title" 				type="xs:string"/>
 	<xs:attribute name="prefix" 			type="xs:string"/>
 	<xs:attribute name="suffix" 			type="xs:string"/>
+	<xs:attribute name="suffix2" 			type="xs:string"/>
 	<xs:attribute name="content" 			type="xs:string"/>
 	<xs:attribute name="default-content" 	type="xs:string"/>
 	<xs:attribute name="header" 			type="xs:string"/>
@@ -17,7 +18,7 @@
 	<xs:attribute name="pe-values" 			type="xs:string"/>
 	<xs:attribute name="pe-labels" 			type="xs:string"/>
 	<xs:attribute name="pe-prefix" 			type="xs:string"/>
-	<xs:attribute name="o-class" 			type="xs:string"/>
-	<xs:attribute name="hide-empty" 		type="xs:boolean"/>	<!-- can be combined with default-content to display a hint in author mode -->
+	<xs:attribute name="pe-hide-value"		type="xs:string"/>
+	<xs:attribute name="flags" 				type="xs:string"/>
 
 </xs:schema>

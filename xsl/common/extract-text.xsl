@@ -98,8 +98,8 @@
 			<xsl:when test="exists(preceding-sibling::node()[1]/@cba:suffix)">
 				<!-- following node of an element with a suffix --> 
 			</xsl:when>
-			<xsl:when test="(tokenize(preceding-sibling::node()[1]/@cba:o-class, '\s+') = $OCLASS_CSLI) and
-							(tokenize(following-sibling::node()[1]/@cba:o-class, '\s+') = $OCLASS_CSLI)">
+			<xsl:when test="(tokenize(preceding-sibling::node()[1]/@cba:flags, '\s+') = $CBA_FLAG_CSLI) and
+				(tokenize(following-sibling::node()[1]/@cba:flags, '\s+') = $CBA_FLAG_CSLI)">
 				<!-- node between two csli elements --> 
 			</xsl:when>
 			<xsl:when test="exists(following-sibling::node()[1]/@cba:prefix)">
@@ -118,7 +118,7 @@
 	<!-- @cba:o-class = "csli" (comma seperated list item) -->
 	<xsl:template name="insert-csli-prefix">
 		<xsl:variable name="pre" as="node()?" select="preceding-sibling::node()[not(self::text()[matches(., '^\s+$')])][1]"/>
-		<xsl:if test="(tokenize(@cba:o-class, '\s+') = $OCLASS_CSLI) and (tokenize($pre/@cba:o-class, '\s+') = $OCLASS_CSLI)">
+		<xsl:if test="(tokenize(@cba:o-class, '\s+') = $CBA_FLAG_CSLI) and (tokenize($pre/@cba:flags, '\s+') = $CBA_FLAG_CSLI)">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
