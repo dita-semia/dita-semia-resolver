@@ -7,7 +7,7 @@
 	xmlns:xcrcp	= "http://www.dita-semia.org/xslt-conref/custom-parameter"
 	exclude-result-prefixes		= "#all">
     
-    <xsl:template match="*[@xcr:xsl]">
+    <xsl:template match="*[@xcr:xsl]" priority="20">
     	<xsl:variable name="resolved" as="element()" select="xcr:resolve(.)"/>
     	<xsl:if test="name($resolved) != 'no-content'">
 	    	<xsl:copy>
