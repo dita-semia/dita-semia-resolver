@@ -1,10 +1,19 @@
 
 /* default-content */
-*[class~="topic/p"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/ph"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/sli"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/stentry"][*|default-content]:empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/title"][*|default-content]:empty:after(@{conbat-default-content-marker-index}) {
+
+/*  show marker when
+ * 	- default-content is specified
+ *  - explicit content is empty
+ * 	- the element is not hidden (in this case it is obvious that the auther can add explicit content)
+ *  */
+*[class~="topic/p"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/ph"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/sli"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/stentry"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/title"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/dd"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/dt"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/section"][*|default-content]:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}) {
 	content: " (default)";
 	.author-only-text-style()
 }
