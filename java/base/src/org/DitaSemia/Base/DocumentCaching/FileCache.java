@@ -33,11 +33,11 @@ public class FileCache extends TopicRefContainer {
 	protected static final String	LINK_TITLE_XSL		= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
 	protected static final String	LOCAL_TOPIC_NUM_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/local-topic-num.xsl";
 
-	protected final String 			decodedUrl;
-	protected final XdmNode			rootXdmNode;
-	protected final BookCache 		bookCache;
-	protected final NodeWrapper		rootNode;
-	protected final String			topicrefClass;
+	protected final String 				decodedUrl;
+	protected final XdmNode				rootXdmNode;
+	protected final BookCache 			bookCache;
+	protected final SaxonNodeWrapper	rootNode;
+	protected final String				topicrefClass;
 	
 	protected boolean				rootTopicNumInitialized	= false;
 	protected String 				rootTopicNum 			= null;
@@ -103,11 +103,12 @@ public class FileCache extends TopicRefContainer {
 	public SaxonNodeWrapper getElementByRefId(String refId) {
 		return nodeByRefId.get(refId);
 	}
-	
+
+	/* pass null for refId to get link text to root element */
 	public String getLinkText(String refId, NodeWrapper contextNode) {
 		String linkText = linkTextByRefId.get(refId);
 		if (linkText == null) {
-			final SaxonNodeWrapper linkedNode = nodeByRefId.get(refId);
+			final SaxonNodeWrapper linkedNode = (refId == null) ? rootNode : nodeByRefId.get(refId);
 			//logger.info("getLinkText(" + refId + "): " + linkedNode);
 			if (linkedNode != null) {
 				linkText = getLinkText(refId, linkedNode);
