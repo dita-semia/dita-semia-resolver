@@ -309,7 +309,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	@Override
 	public KeyDefInterface getAncestorKeyDef(NodeWrapper node, String keyType) {
 		//logger.info("getAncestorKeyDef (" + ((node.isSameNode(node.getRootNode())) ? "#document" : node.getName()) + ", " + keyType + ")");
-		final NodeWrapper parent = getParent(node);
+		final NodeWrapper parent = getParentNode(node);
 		if (parent != null) {
 			final String		id		= parent.getAttribute(DitaUtil.ATTR_ID, null);
 			KeyDefInterface 	keyDef 	= null; 
@@ -347,23 +347,36 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			return null;
 		}
 	}
-
-	private NodeWrapper getParent(NodeWrapper node) {
+	
+	public FileCache getRootFile() {
+		return fileByUrl.get(FileUtil.decodeUrl(rootDocumentUrl));
+	}
+	
+	public FileCache getParentFile(URL url) {
+		final String 	decodedUrl 		= FileUtil.decodeUrl(url);
+		TopicRef		parentTopicRef	= getParentTopicRef(decodedUrl);
+		while ((parentTopicRef != null) && (parentTopicRef.getReferencedFile() == null)) {
+			parentTopicRef = getParentTopicRef(parentTopicRef);
+		}
+		if (parentTopicRef != null) {
+			return parentTopicRef.getReferencedFile();
+		} else {
+			return null;
+		}
+	}
+	
+	public NodeWrapper getParentNode(NodeWrapper node) {
 		NodeWrapper parent = node.getParent();
 		if (parent == null) {
-			final String 	decodedUrl 		= FileUtil.decodeUrl(node.getBaseUrl());
-			TopicRef	parentTopicRef	= getParentTopicRef(decodedUrl);
-			while ((parentTopicRef != null) && (parentTopicRef.getReferencedFile() == null)) {
-				parentTopicRef = getParentTopicRef(parentTopicRef);
-			}
-			if (parentTopicRef != null) {
-				parent = parentTopicRef.getReferencedFile().getRootNode();
+			final FileCache	parentFile	= getParentFile(node.getBaseUrl());
+			if (parentFile != null) {
+				parent = parentFile.getRootNode();
 			}
 		}
 		return parent;
 	}
 
-	private TopicRef getParentTopicRef(TopicRef topicRef) {
+	public TopicRef getParentTopicRef(TopicRef topicRef) {
 		//logger.info("getParentTopicRef: " + topicRef);
 		if (topicRef != null) {
 			TopicRefContainer parentContainer = getParentTopicRefContainer(topicRef);
