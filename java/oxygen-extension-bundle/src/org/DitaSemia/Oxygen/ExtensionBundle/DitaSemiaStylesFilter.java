@@ -1,5 +1,6 @@
 package org.DitaSemia.Oxygen.ExtensionBundle;
 
+import org.DitaSemia.Oxygen.MapContextStylesFilter;
 import org.DitaSemia.Oxygen.TopicNumStylesFilter;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.AdvancedKeyRefStylesFilter;
 //import org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter;
@@ -22,7 +23,10 @@ public class DitaSemiaStylesFilter implements StylesFilter {
 		if (!handled) {
 			handled = TopicNumStylesFilter.filter(styles, authorNode);
 			if (!handled) {
-				handled = ConbatStylesFilter.filter(styles, authorNode);
+				handled = MapContextStylesFilter.filter(styles, authorNode);
+				if (!handled) {
+					handled = ConbatStylesFilter.filter(styles, authorNode);
+				}
 			}
 		}
 		return styles;

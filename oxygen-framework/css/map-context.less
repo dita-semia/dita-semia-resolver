@@ -1,0 +1,40 @@
+*:root:before(@{map-context-root-index}) {
+	content		: 
+			oxy_label(
+					text, 	"root:",
+					width,	4em)
+			oxy_label(
+					text, 	"<title>",
+					width,	20em)
+			oxy_label(
+					text, 	"<tag>",
+					width,	10em)
+			oxy_label(
+					text, 	"<url>");
+}
+
+*:root:before(@{map-context-parent-index}) {
+	content		: 
+			oxy_label(
+					text, 	"parent:",
+					width,	4em)
+			oxy_label(
+					text, 	"<title>",
+					width,	20em)
+			oxy_label(
+					text, 	"<tag>",
+					width,	10em)
+			oxy_label(
+					text, 	"<url>");
+}
+
+*:root:before(@{map-context-root-index}),
+*:root:before(@{map-context-parent-index}) {
+	display		: block;
+	font-size			: (1em * @edit-only-font-size-scale);
+	color				: @edit-only-text-color;
+	padding-bottom		: 0.1em;
+	padding-left		: 0.5em;
+	background-color	: @map-context-background-color;
+	
+}

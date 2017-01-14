@@ -8,6 +8,7 @@ import java.net.URL;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 
+import ro.sync.ecss.css.LabelContent;
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.Styles;
 import ro.sync.ecss.css.URIContent;
@@ -17,6 +18,10 @@ public class DitaSemiaStylesFilter {
 
 	protected final static String BEFORE	= "before";
 	protected final static String AFTER		= "after";
+	
+	protected final static String PROPERTY_TEXT	= "text";
+	
+	protected final static String DISPLAY_NONE	= "none";
 
 	
 	protected static BookCache getBookCache(AuthorNode authorNode) {
@@ -37,6 +42,13 @@ public class DitaSemiaStylesFilter {
 					content[i] = new URIContent(uriContent.getBase(), uriContent.getHref().replace(fromImage, toImage));
 				}
 			}
+		}
+	}
+	
+	protected static void setLabelText(StaticContent content, String text) {
+		if (content instanceof LabelContent) {
+			final LabelContent label = ((LabelContent)content);
+			label.getProperties().put(PROPERTY_TEXT, text);
 		}
 	}
 
