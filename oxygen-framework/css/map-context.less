@@ -1,31 +1,31 @@
 *:root:before(@{map-context-root-index}) {
 	content		: 
 			oxy_label(
-					text, 	"root:",
+					text, 	'root:',
 					width,	4em)
 			oxy_label(
-					text, 	"<title>",
+					text, 	'"title"',
 					width,	20em)
 			oxy_label(
-					text, 	"<tag>",
+					text, 	'<tag>',
 					width,	10em)
 			oxy_label(
-					text, 	"<url>");
+					text, 	'url');
 }
 
 *:root:before(@{map-context-parent-index}) {
 	content		: 
 			oxy_label(
-					text, 	"parent:",
+					text, 	'parent:',
 					width,	4em)
 			oxy_label(
-					text, 	"<title>",
+					text, 	'"title"',
 					width,	20em)
 			oxy_label(
-					text, 	"<tag>",
+					text, 	'<tag>',
 					width,	10em)
 			oxy_label(
-					text, 	"<url>");
+					text, 	'url');
 }
 
 *:root:before(@{map-context-root-index}),
@@ -36,5 +36,5 @@
 	padding-bottom		: 0.1em;
 	padding-left		: 0.5em;
 	background-color	: @map-context-background-color;
-	
+	 white-space		: nowrap;
 }

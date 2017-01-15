@@ -44,11 +44,11 @@ public class MapContextStylesFilter extends DitaSemiaStylesFilter {
 			if (file != null) {
 				final String title = file.getLinkText(null, null);
 				if (title != null) {
-					setLabelText(content[INDEX_TITLE], 	title);
+					setLabelText(content[INDEX_TITLE], 	"\"" + title + "\" ");
 				} else {
 					setLabelText(content[INDEX_TITLE], 	"");
 				}
-				setLabelText(content[INDEX_TAG], 	file.getRootNode().getName());
+				setLabelText(content[INDEX_TAG], 	"<" + file.getRootNode().getName() + "> ");
 				setLabelText(content[INDEX_URL], 	file.getDecodedUrl());
 				styles.setProperty(Styles.KEY_LINK, file.getDecodedUrl());
 			} else {
