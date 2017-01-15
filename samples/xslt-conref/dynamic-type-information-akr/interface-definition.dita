@@ -63,7 +63,7 @@
 		<title>Description</title>
 		<refbody>
 			<section>
-				<p id="sgx_v2x_25">This sampel extends the sample "Dynamic Type Information" by making used of
+				<p id="sgx_v2x_25">This sample extends the sample "Dynamic Type Information" by making used of
 					the advanced keyref mechanism of DITA-SEMIA: The interface description used
 					key-xref element to reference the fields and the global field definitions
 					contains implicit key definitions. Due to the map-awareness of DITA-SEMIA the
