@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:ikd	= "http://www.dita-semia.org/implicit-keydef">
+	
+	<define name="ph.attributes" combine="interleave">
+		<optional>
+			<attribute name="ikd:key-type"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:root"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:ref-node"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:key"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:namespace"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:name"/>
+		</optional>
+		<optional>
+			<attribute name="ikd:desc"/>
+		</optional>
+	</define>
+
+</grammar>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:akr	= "http://www.dita-semia.org/advanced-keyref">
+	
+	
+	<define name="key-xref.element">
+		<element name="key-xref">
+			<a:documentation>Display type information for referenced field.</a:documentation>
+			<zeroOrMore>
+				<text/>
+			</zeroOrMore>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/ph dita-semia/key-xref "/>
+			</optional>
+			<optional>
+				<attribute name="id"/>
+			</optional>
+			<optional>
+				<attribute name="akr:ref" a:defaultValue=""/>
+			</optional>
+		</element>
+	</define>
+	
+	<define name="key-xref">
+		<ref name="key-xref.element"/>
+	</define>
+	
+	<define name="basic.ph" combine="choice">
+		<ref name="key-xref"/>
+	</define>
+
+</grammar>

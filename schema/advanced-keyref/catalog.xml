@@ -14,6 +14,11 @@
 		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 		uri="keytypedeflist.xsd"/>
 		
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:ikd-attr.mod.rng" 			uri="ikd-attr.mod.rng"/>
+		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:key-xref.mod.rng" 			uri="key-xref.mod.rng"/>
+		
 	</group>
 	
 	
@@ -28,6 +33,11 @@
 		<uri name="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" 	uri="advanced-keyref-topic.xsd"/>
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 			uri="keytypedeflist.xsd"/>
+		
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:ikd-attr.mod.rng" 				uri="ikd-attr.mod.rng"/>
+		
+		<uri name="urn:dita-semia:advanced-keyref:schema:key-xref.mod.rng" 				uri="key-xref.mod.rng"/>
 
 	</group>
 	
