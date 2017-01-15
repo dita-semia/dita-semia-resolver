@@ -3,6 +3,7 @@
 	xmlns:xsl	= "http://www.w3.org/1999/XSL/Transform"
 	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
 	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref"
+	xmlns:akr	= "http://www.dita-semia.org/advanced-keyref"
 	exclude-result-prefixes="#all">
 	
 	<xsl:output method="xml" indent="yes"/>
@@ -11,16 +12,11 @@
 	
 	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
-	<xsl:variable name="FIELD_DEF_REFERENCE_ID" as="xs:string" select="'global-field-definitions'"/>
 	
 	<xsl:template match="/">
 		
-		<xsl:variable name="fieldName" as="xs:string"
-			select="$xcr:current/ancestor::row/entry[1]//codeph"/>
-		<xsl:variable name="fieldDefTable" as="element()"
-			select="//reference[@id = $FIELD_DEF_REFERENCE_ID]/refbody/table"/>
-		<xsl:variable name="fieldDef" as="element()?"
-			select="$fieldDefTable/tgroup/tbody/row[entry[1]//codeph = $fieldName]"/>
+		<xsl:variable name="fieldRef" 	as="element()?"	select="$xcr:current/ancestor::row/entry[1]//key-xref"/>
+		<xsl:variable name="fieldDef" 	as="element()?" select="akr:getKeyDefRoot($fieldRef)"/>
 		
 		<xsl:choose>
 			<xsl:when test="exists($fieldDef)">
@@ -44,7 +40,7 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<no-content>(undefined field <codeph class="{$CP_CODEPH}"><xsl:value-of select="$fieldName"/></codeph>)</no-content>
+				<no-content>(undefined field <codeph class="{$CP_CODEPH}"><xsl:value-of select="$fieldRef"/></codeph>)</no-content>
 			</xsl:otherwise>
 		</xsl:choose>
 		

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../checkShell.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a		= "http://relaxng.org/ns/compatibility/annotations/1.0"
+	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref">
+	
+	<include href="urn:dita-semia:xslt-conref:schema:xslt-conref-reference.rng"/>
+	<include href="urn:dita-semia:advanced-keyref:schema:ikd-attr.mod.rng"/>
+	<include href="urn:dita-semia:advanced-keyref:schema:key-xref.mod.rng"/>
+	
+	
+	<define name="block.element">
+		<element name="block">
+			<optional>
+				<attribute name="class" a:defaultValue="+ dita-semia/block "/>
+			</optional>
+			<optional>
+				<ref name="any_content"/>
+			</optional>
+		</element>
+	</define>
+	
+	<define name="any_content">
+		<interleave>
+			<zeroOrMore>
+				<ref name="any_element"/>
+			</zeroOrMore>
+			<text/>
+		</interleave>
+	</define>
+	
+	<define name="any_element">
+		<element>
+			<anyName/>
+			<zeroOrMore>
+				<ref name="any_attribute"/>
+			</zeroOrMore>
+			<zeroOrMore>
+				<ref name="any_content"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	
+	<define name="any_attribute">
+		<attribute>
+			<anyName/>
+		</attribute>
+	</define>
+	
+	<define name="block">
+		<ref name="block.element"/>
+	</define>
+	
+	
+	<define name="type-info.element">
+		<element name="type-info">
+			<a:documentation>Display type information for referenced field.</a:documentation>
+			<optional>
+				<attribute name="class" a:defaultValue="+ topic/div dita-semia/type-info "/>
+			</optional>
+			<optional>
+				<attribute name="id"/>
+			</optional>
+			<optional>
+				<attribute name="xcr:xsl" a:defaultValue="urn:dita-semia:xslt-conref:xsl:dynamic-type-information-akr.xsl"/>
+			</optional>
+		</element>
+	</define>
+	
+	<define name="type-info">
+		<ref name="type-info.element"/>
+	</define>
+
+
+	<define name="tbl.entry.mdl" combine="interleave">
+		<optional>
+			<ref name="type-info"/>
+		</optional>
+	</define>
+	
+</grammar>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="reference-with-type-info-and-akr.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="reference-with-type-info-and-akr.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="topic_t4s_vvs_4t" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Interface Definition</title>
+	<refbody>
+		<table frame="all" rowsep="1" colsep="1" id="icc_vbx_zt">
+			<tgroup cols="2">
+				<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+				<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+				<thead>
+					<row>
+						<entry>Element</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+							<p><key-xref akr:ref="Field:TypeOfPerson">TypeOfPerson</key-xref></p>
+						</entry>
+						<entry>
+							<p>Type of the customer.</p>
+							<type-info/>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<p><key-xref akr:ref="Field:Name">Name</key-xref></p>
+						</entry>
+						<entry>
+							<p>Name of the customer.</p>
+							<type-info id="m54_q2x_zt"/>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<p><key-xref akr:ref="Field:Gender">Gender</key-xref></p>
+						</entry>
+						<entry><p>Gender of the customer.</p><type-info/></entry>
+					</row>
+					<row>
+						<entry>
+							<p><key-xref akr:ref="Field:UnknownField">UnknownField</key-xref></p>
+						</entry>
+						<entry>
+							<p>Some additional information.</p>
+							<type-info id="r32_r2x_zt"/>
+						</entry>
+					</row>
+					<row>
+						<entry><key-xref akr:ref="Field:InvalidField">InvalidField</key-xref></entry>
+						<entry>
+							<p id="zlv_2zw_25">Even more information.</p>
+							<type-info/>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</refbody>
+	<reference id="gfv_h2x_25">
+		<title>Description</title>
+		<refbody>
+			<section>
+				<p id="sgx_v2x_25">This sampel extends the sample "Dynamic Type Information" by making used of
+					the advanced keyref mechanism of DITA-SEMIA: The interface description used
+					key-xref element to reference the fields and the global field definitions
+					contains implicit key definitions. Due to the map-awareness of DITA-SEMIA the
+					field definitions no more need to be in a specific place. Instead the XSLT
+					script for XSL-Conref can use an extension function
+						(<codeph>akr:getKeyDefRoot()</codeph>) to get the definition.</p>
+			</section>
+		</refbody>
+	</reference>
+</reference>

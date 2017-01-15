@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Danymic Type Information with Advanced Keyref</title>
+	<data name="ikd:TypeDefUri" value="KeyTypeDefList.xml"></data>
+	<topicref href="interface-definition.dita"/>
+	<topicref href="global-field-definitions.dita"/>
+</map>

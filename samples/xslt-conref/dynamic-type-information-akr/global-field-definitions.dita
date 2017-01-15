@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="reference-with-type-info-and-akr.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="reference-with-type-info-and-akr.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<reference id="global-field-definitionst" xmlns:ikd="http://www.dita-semia.org/implicit-keydef">
+	<title>Global Field Definitions</title>
+	<refbody>
+		<table frame="all" rowsep="1" colsep="1">
+			<tgroup cols="2">
+				<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+				<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+				<thead>
+					<row>
+						<entry>Field</entry>
+						<entry>Type</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row id="dz1_gn4_py">
+						<entry>
+							<p><ph ikd:root="ancestor::row" ikd:key-type="Field">Gender</ph></p>
+						</entry>
+						<entry>
+							<p>Enumeration:</p>
+							<ul id="ixt_jbx_zt">
+								<li id="jxt_jbx_zt">1 – Male</li>
+								<li id="olb_kbx_zt">2 – Female</li>
+							</ul>
+						</entry>
+					</row>
+					<row id="cd5_gn4_py">
+						<entry><ph ikd:root="ancestor::row" ikd:key-type="Field">Name</ph></entry>
+						<entry>
+							<p id="rdw_pyw_25">String, length: 1 to 20</p>
+						</entry>
+					</row>
+					<row id="lp5_fn4_py">
+						<entry>
+							<p><ph ikd:root="ancestor::row" ikd:key-type="Field">TypeOfPerson</ph></p>
+						</entry>
+						<entry>
+							<p>Enumeration:</p>
+							<ul id="qpt_lbx_zt">
+								<li id="rpt_lbx_zt">1 – Natural person</li>
+								<li id="okd_rbx_zt">2 – Organization</li>
+							</ul>
+						</entry>
+					</row>
+					<row id="lvq_gn4_py">
+						<entry><ph ikd:root="ancestor::row" ikd:key-type="Field">InvalidField</ph></entry>
+						<entry>Text without p element</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</refbody>
+</reference>
