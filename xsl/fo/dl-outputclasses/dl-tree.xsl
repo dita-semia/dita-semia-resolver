@@ -6,22 +6,30 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	
-	<xsl:variable name="DL_OUTPUTCLASS_TREE" as="xs:string">tree</xsl:variable>
+	<xsl:variable name="DL_OUTPUTCLASS_TREE" 		as="xs:string">tree</xsl:variable>
+	<xsl:variable name="DL_OUTPUTCLASS_DT_WIDTH" 	as="xs:string">^dt-([0-9]+)$</xsl:variable>
+	
+	<xsl:variable name="PAGE_WIDTH" 				as="xs:string">165mm</xsl:variable>
 	
 	<!-- outputclass "tree" -->
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_TREE]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_TREE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-tree">
 			
 			<xsl:call-template name="commonattributes"/>
 			
-			<xsl:apply-templates mode="dl-tree"/>
+			<xsl:variable name="dt-width" select="tokenize(@outputclass, '\s+')[matches(., $DL_OUTPUTCLASS_DT_WIDTH)]"/>
+			
+			<xsl:apply-templates mode="dl-tree">
+				<xsl:with-param name="dt-width" select="xs:integer(replace($dt-width, $DL_OUTPUTCLASS_DT_WIDTH, '$1'))" tunnel="yes"/>
+			</xsl:apply-templates>
 			
 		</fo:block>
 	</xsl:template>
 	
 	
 	<xsl:template match="*[contains(@class, ' topic/dlentry ')]" mode="dl-tree">
+		<xsl:param name="dt-width" as="xs:integer" select="40" tunnel="yes"/>
 		
 		<xsl:variable name="allEntries"			as="element()*"	select="ancestor::*[contains(@class, ' topic/dl ')]//*[contains(@class, ' topic/dlentry ')]"/>
 		<xsl:variable name="countPreEntries"	as="xs:integer"	select="count($allEntries intersect (preceding::* | ancestor::*))"/>
@@ -51,11 +59,11 @@
 			
 			<xsl:choose>
 				<xsl:when test="exists(*[contains(@class, ' topic/dd ')]/node())">
-					
-					<!-- Formatierung als Tabelle -->
+
+					<!-- formatting as table -->
 					<fo:table>
-						<fo:table-column column-number="1" column-width="70mm - ({$level} * ({$DL_TREE_INDENT} + {$DL_TREE_BORDER_WIDTH}))"/>
-						<fo:table-column column-number="2" column-width="95mm"/>
+						<fo:table-column column-number="1" column-width="({$PAGE_WIDTH} * {$dt-width} div 100) - ({$level} * ({$DL_TREE_INDENT} + {$DL_TREE_BORDER_WIDTH}))"/>
+						<fo:table-column column-number="2" column-width="({$PAGE_WIDTH} * (100 - {$dt-width}) div 100)"/>
 						
 						<fo:table-body>
 							<fo:table-row keep-together.within-column	= "100">
