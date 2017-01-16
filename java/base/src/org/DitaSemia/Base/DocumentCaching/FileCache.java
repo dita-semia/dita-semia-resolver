@@ -125,7 +125,9 @@ public class FileCache extends TopicRefContainer {
 		final String classAttr = linkedNode.getAttribute(DitaUtil.ATTR_CLASS, null);
 		//logger.info("getLinkText(" + refId + "), class: " + classAttr);
 		
-		if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
+		if (classAttr == null) {
+			linkText = LINK_TITLE_UNKNOWN;
+		} if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
 			final StringBuffer topicNum = getTopicNumPrefix(refId, linkedNode);
 			//logger.info("topicNum: " + topicNum);
 			if (topicNum != null) {
