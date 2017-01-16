@@ -2,11 +2,12 @@
 /* rules for popup-edit of attributes */
 
 *[*|popup-edit]:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
-	content: oxy_popup(
+	content: oxy_combobox(
 			edit,			oxy_concat('@', attr('*|popup-edit')),
-			selectionMode,	single,
+			//selectionMode,	single,
 			fontInherit,	true,
-			color,			inherit);
+			color,			inherit,
+			editable, 		false);
 }
 
 *[*|popup-edit][*|flags~='pe-italic']:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
@@ -15,13 +16,14 @@
 
 
 *[*|popup-edit][*|pe-values][*|pe-labels]:not([*|popup-edit='#text']):after(@{conbat-edit-index}) {
-	content: oxy_popup(
+	content: oxy_combobox(
 			edit,			oxy_concat('@', attr('*|popup-edit')),
 			values,			attr('*|pe-values'),
 			labels,			attr('*|pe-labels'),
-			selectionMode,	single,
+			//selectionMode,	single,
 			fontInherit,	true,
-			color,			inherit);
+			color,			inherit,
+			editable, 		false);
 }
 
 *[*|flags~="pe-braced"][*|popup-edit]:after(@{conbat-edit-brace1-index}) {
@@ -47,11 +49,12 @@
 *[*|popup-edit='#text'] {
 	visibility				: -oxy-collapse-text;
 	-oxy-show-placeholder	: inherit !important;
-	content: oxy_popup(
+	content: oxy_combobox(
 			edit,			oxy_concat('#text'),
-			selectionMode,	single,
+			//selectionMode,	single,
 			fontInherit,	true,
-			color,			inherit);
+			color,			inherit,
+			editable, 		false);
 }
 
 
@@ -67,11 +70,12 @@
 *[*|popup-edit='#text'][*|pe-values][*|pe-labels] {
 	visibility				: -oxy-collapse-text;
 	-oxy-show-placeholder	: inherit !important;
-	content: oxy_popup(
+	content: oxy_combobox(
 			edit,			oxy_concat('#text'),
 			values,			attr('*|pe-values'),
 			labels,			attr('*|pe-labels'),
-			selectionMode,	single,
+			//selectionMode,	single,
 			fontInherit,	true,
-			color,			inherit);
+			color,			inherit,
+			editable, 		false);
 }
