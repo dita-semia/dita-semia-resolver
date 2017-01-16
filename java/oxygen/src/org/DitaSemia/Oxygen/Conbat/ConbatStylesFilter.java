@@ -12,6 +12,7 @@ import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.StringContent;
 import ro.sync.ecss.css.Styles;
 import ro.sync.ecss.extensions.api.AuthorAccess;
+import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.exml.view.graphics.Color;
@@ -89,6 +90,10 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 			}
 		} else if (nodeType == AuthorNode.NODE_TYPE_ELEMENT) {
 			handled = resolve(styles, authorNode, ATTR_CONTENT, true);
+			final AttrValue popupEdit = ((AuthorElement)authorNode).getAttribute(ATTR_POPUP_EDIT);
+			if ((popupEdit != null) && (POPUP_EDIT_TEXT.equals(popupEdit.getValue()))) {
+				handled = filterEdit(styles, authorNode);
+			}
 		}
 		return handled;
 	}
