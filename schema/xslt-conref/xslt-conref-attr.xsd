@@ -29,6 +29,7 @@
 		<xs:attribute ref="xcr:xsl"/>
 		<xs:attribute ref="xcr:source"/>
 		<xs:attribute ref="xcr:start-template"/>
+		<xs:attribute ref="xcr:stage"/>
 		<xs:attribute ref="xcr:reparse"/>
 	</xs:attributeGroup>
 	
