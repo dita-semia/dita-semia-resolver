@@ -108,8 +108,8 @@
   		!important;
 }
 
-*[*|xsl][*|source] > oxy|error:before,
-*[*|xsl][*|source] > oxy|reference:before {
+*[*|xsl][*|source]:not([*|source=""]) > oxy|error:before,
+*[*|xsl][*|source]:not([*|source=""]) > oxy|reference:before {
   	content: 
   		@OpenXsltConrefScriptButton
   		@OpenXsltConrefSourceButton
