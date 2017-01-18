@@ -23,11 +23,9 @@
 	</xs:group>
 	
 	<xs:group name="key-xref">
-		<xs:sequence>
-			<xs:choice>
-				<xs:element ref="key-xref"/>
-			</xs:choice>
-		</xs:sequence>
+		<xs:choice>
+			<xs:element ref="key-xref"/>
+		</xs:choice>
 	</xs:group>
 	
 	<xs:element name="key-xref">
@@ -42,6 +40,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	
 	<xs:complexType name="key-xref.class" mixed="true">
 		<xs:sequence>
 			<xs:group ref="key-xref.content"/>

@@ -3,12 +3,12 @@
 	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
 	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
 	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
-	<title>References <key-xref outputclass="key" akr:ref="Test:name/space/ParentKey2"
-			akr:namespace="'name'">ParentKey2</key-xref></title>
+	<title>References <filtered-key-xref outputclass="key" akr:ref="Test:name/space/ParentKey2"
+		akr:namespace="'name'">ParentKey2</filtered-key-xref></title>
 	<body>
-		<p><key-xref outputclass="key-name-braced" akr:ref="Test:Key">Key</key-xref>
-		</p>
-		<p><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
-				akr:namespace="((">Complete</key-xref></p>
+		<p><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key"
+			>Key</filtered-key-xref> </p>
+		<p><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+			>Complete</filtered-key-xref></p>
 	</body>
 </topic>
