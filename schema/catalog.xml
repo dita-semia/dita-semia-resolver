@@ -5,5 +5,6 @@
 	<nextCatalog catalog="xslt-conref/catalog.xml"/>
 	<nextCatalog catalog="conbat/catalog.xml"/>
 	<nextCatalog catalog="advanced-keyref/catalog.xml"/>
+	<nextCatalog catalog="dita-semia/catalog.xml"/>
 	
 </catalog>

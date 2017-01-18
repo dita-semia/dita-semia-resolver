@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_t4s_vvs_4t" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xcrcp="http://www.dita-semia.org/xslt-conref/custom-parameter"
+	xmlns:xcr="http://www.dita-semia.org/xslt-conref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:conbat:schema:dita-semia-topic.xsd">
+	<title>Import CSV to Table</title>
+	<body>
+		<simpletable relcolwidth="1.0* 1.0*" id="dc5_lhp_5t" xcr:xsl="import-csv-to-keys.xsl"
+			xcr:start-template="ImportCsv" xcrcp:csvFile="Data.csv" xcr:stage="0">
+			<strow/>
+		</simpletable>
+		<section id="mg3_cxf_qy">
+			<title>References</title>
+			<ul id="iyj_dxf_qy">
+				<li id="jyj_dxf_qy"><key-xref outputclass="key-name-braced" ad:ref="CSV:Key1"
+					xmlns:ad="http://www.dita-semia.org/advanced-keyref">Key1</key-xref></li>
+			</ul>
+		</section>
+	</body>
+	<topic id="f3d_nyy_25">
+		<title>Description</title>
+		<body>
+			<section>Import a CSV file and create key definitions from it.</section>
+		</body>
+	</topic>
+</topic>
