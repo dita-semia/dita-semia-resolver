@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import net.sf.saxon.Configuration;
 
+import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.ProgressListener;
-import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
-import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
+import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
 
@@ -20,31 +20,31 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.util.editorvars.EditorVariables;
 
-public class BookCacheHandler implements BookCacheProvider {
+public class BookCacheHandler implements BookCacheProvider, ConfigurationInitializer {
 	
 	private static final Logger logger = Logger.getLogger(BookCacheHandler.class.getName());
 	
 	private static BookCacheHandler instance;
 	
-	private final HashMap<String, BookCache> 	documentCacheMap;
+	private final HashMap<String, BookCache> 	bookCacheMap;
 	private final URL							ditaOtUrl;
 	private final String						language;
+	private final XsltConrefCache				xsltConrefCache;
+	private URL									globalKeyTypeDefUrl;
 	
-	private BookCacheInitializer 	initializer;
-	
-		
 	public static BookCacheHandler getInstance() {
 		if (instance == null) {
-			instance = new BookCacheHandler(null);
+			instance = new BookCacheHandler();
 		}
 		return instance;
 	}
 	
-	private BookCacheHandler(BookCacheInitializer initializer) {
-		this.documentCacheMap 	= new HashMap<>();
-		this.initializer		= initializer;
-		this.ditaOtUrl			= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
-		this.language			= PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
+	private BookCacheHandler() {
+		bookCacheMap 		= new HashMap<>();
+		ditaOtUrl			= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
+		language			= PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
+		xsltConrefCache 	= new XsltConrefCache(this, this);
+		globalKeyTypeDefUrl = null;
 		//logger.info("ditaOtUrl: " + ditaOtUrl);
 		
 		//logger.info("new DocumentCacheHandler(" + initializer + ")");
@@ -52,27 +52,18 @@ public class BookCacheHandler implements BookCacheProvider {
 		OxyXPathHandler.getInstance().registerCustomFunction(new AncestorPath());
 	}
 
-	public BookCacheInitializer getInitializer() {
-		return initializer;
+	public URL getGlobalKeyTypeDefUrl() {
+		return globalKeyTypeDefUrl;
 	}
 	
-	public void setInitializer(BookCacheInitializer initializer) {
-		this.initializer = initializer;
+	public void setGlobalKeyTypeDefUrl(URL url) {
+		globalKeyTypeDefUrl = url;
 	}
 	
 	private BookCache createBookCache(URL url, ProgressListener progressListener) {
-		final SaxonConfigurationFactory configurationFactory = new SaxonConfigurationFactory() {
-			@Override
-			public Configuration createConfiguration() {
-				final Configuration configuration = BookCache.createBaseConfiguration();
-				OxySaxonConfigurationFactory.adaptConfiguration(configuration);
-				configuration.setErrorListener(new Log4jErrorListener(logger));
-				return configuration;
-			}
-		};
-		
-		final BookCache bookCache = new BookCache(url, initializer, configurationFactory, ditaOtUrl, language);
-		documentCacheMap.put(FileUtil.decodeUrl(url), bookCache);
+	
+		final BookCache bookCache = new BookCache(url,  this, xsltConrefCache, true, ditaOtUrl, globalKeyTypeDefUrl, language);
+		bookCacheMap.put(FileUtil.decodeUrl(url), bookCache);
 		bookCache.fillCache(progressListener);	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return bookCache;
 	}
@@ -87,7 +78,7 @@ public class BookCacheHandler implements BookCacheProvider {
 		
 		if (currMapUrl != null) {
 			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
-			BookCache 	mapCache 			= documentCacheMap.get(currMapDecodedUrl);
+			BookCache 		mapCache 			= bookCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
 				mapCache = createBookCache(currMapUrl, null);
 			}
@@ -96,11 +87,17 @@ public class BookCacheHandler implements BookCacheProvider {
 			}
 		}
 		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
-		BookCache 	fileCache 	= documentCacheMap.get(decodedUrl);
+		BookCache 	fileCache 	= bookCacheMap.get(decodedUrl);
 		if (fileCache == null) {
 			fileCache = createBookCache(url, null);
 		}
 		return fileCache;
+	}
+
+	@Override
+	public void initConfig(Configuration configuration) {
+		OxySaxonConfigurationFactory.adaptConfiguration(configuration);
+		configuration.setErrorListener(new Log4jErrorListener(logger));
 	}
 
 	public void refreshBookCache(URL url, ProgressListener progressListener) {
@@ -109,7 +106,7 @@ public class BookCacheHandler implements BookCacheProvider {
 		BookCache 	bookCache = null;
 		if (currMapUrl != null) {
 			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
-			bookCache = documentCacheMap.get(currMapDecodedUrl);
+			bookCache = bookCacheMap.get(currMapDecodedUrl);
 			if (bookCache == null) {
 				bookCache = createBookCache(currMapUrl, progressListener);
 			} else {
@@ -118,7 +115,7 @@ public class BookCacheHandler implements BookCacheProvider {
 		}
 		if ((bookCache == null) || (!bookCache.isUrlIncluded(url))) {
 			final String 	decodedUrl 		= FileUtil.decodeUrl(url);
-			BookCache 		fileBookCache 	= documentCacheMap.get(decodedUrl);
+			BookCache 		fileBookCache 	= bookCacheMap.get(decodedUrl);
 			if (fileBookCache == null) {
 				fileBookCache = createBookCache(url, progressListener);
 			} else {

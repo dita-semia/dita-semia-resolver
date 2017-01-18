@@ -11,21 +11,19 @@ import java.util.List;
 
 import javax.xml.transform.sax.SAXSource;
 
-import net.sf.saxon.Configuration;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.SaxonNodeWrapper;
-import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConref.Parameter;
+import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
-import org.DitaSemia.Oxygen.OxySaxonConfigurationFactory;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -45,11 +43,8 @@ public class XsltConrefResolver {
 
 
 	private static XsltConrefResolver instance			= null;
-	
 
-	protected final Configuration 		configuration;
-	protected final XslTransformerCache	transformerCache;
-	protected final XPathCache			xPathCache;
+	protected final XsltConrefCache 	xsltConrefCache;
 	protected final List<Parameter> 	frameworkParameters	= new LinkedList<>();
 	
 
@@ -64,12 +59,7 @@ public class XsltConrefResolver {
 	}
 	
 	public XsltConrefResolver() {
-		configuration 		= XsltConref.createConfiguration(BookCacheHandler.getInstance());
-		OxySaxonConfigurationFactory.adaptConfiguration(configuration);
-		
-		
-		transformerCache	= new XslTransformerCache(this.configuration);
-		xPathCache			= new XPathCache(this.configuration);
+		xsltConrefCache = new XsltConrefCache(BookCacheHandler.getInstance(), BookCacheHandler.getInstance());
 	}
 
 	public void addFrameworkParameter(QName name, Sequence value) {
@@ -77,7 +67,7 @@ public class XsltConrefResolver {
 	}
 	
 	public XsltConref xsltConrefFromNode(AuthorNode node, AuthorAccess authorAccess) {
-		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess), transformerCache, xPathCache);
+		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess), xsltConrefCache);
 		return xsltConref;
 	}
 
@@ -148,16 +138,8 @@ public class XsltConrefResolver {
 		return saxSource;
 	}
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
 	public XslTransformerCache getTransformerCache() {
-		return transformerCache;
-	}
-
-	public XPathCache getXPathCache() {
-		return xPathCache;
+		return xsltConrefCache.getTransformerCache();
 	}
 
 }

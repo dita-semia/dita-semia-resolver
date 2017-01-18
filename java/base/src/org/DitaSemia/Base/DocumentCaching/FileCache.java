@@ -1,12 +1,15 @@
 package org.DitaSemia.Base.DocumentCaching;
 
-import net.sf.saxon.s9api.Axis;
+import net.sf.saxon.om.AxisInfo;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.pattern.NodeKindTest;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
-import net.sf.saxon.s9api.XdmNodeKind;
-import net.sf.saxon.s9api.XdmSequenceIterator;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
+import net.sf.saxon.tree.iter.AxisIterator;
+import net.sf.saxon.type.Type;
+
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,11 +18,15 @@ import java.util.Map;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
+import org.DitaSemia.Base.XsltConref.TempContextException;
+import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.apache.log4j.Logger;
 
 public class FileCache extends TopicRefContainer {
@@ -36,6 +43,7 @@ public class FileCache extends TopicRefContainer {
 	protected final String 				decodedUrl;
 	protected final XdmNode				rootXdmNode;
 	protected final BookCache 			bookCache;
+	protected final XsltConrefCache 	xsltConrefCache;
 	protected final SaxonNodeWrapper	rootNode;
 	protected final String				topicrefClass;
 	
@@ -53,11 +61,12 @@ public class FileCache extends TopicRefContainer {
 	
 
 	public FileCache(String decodedUrl, XdmNode rootXdmNode, BookCache bookCache, String topicrefClass) {
-		this.decodedUrl 	= decodedUrl;
-		this.rootXdmNode	= rootXdmNode;
-		this.bookCache		= bookCache;
-		this.rootNode		= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
-		this.topicrefClass	= topicrefClass;
+		this.decodedUrl 		= decodedUrl;
+		this.rootXdmNode		= rootXdmNode;
+		this.bookCache			= bookCache;
+		this.xsltConrefCache	= bookCache.getXsltConrefCache();
+		this.rootNode			= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
+		this.topicrefClass		= topicrefClass;
 	}
 
 	public String getDecodedUrl() {
@@ -97,7 +106,7 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 	public void parse() throws TransformerException {
-		parseNode(getRootXdmNode(), this, null);
+		parseNode(getRootXdmNode().getUnderlyingNode(), this, null);
 	}
 	
 	public SaxonNodeWrapper getElementByRefId(String refId) {
@@ -127,7 +136,7 @@ public class FileCache extends TopicRefContainer {
 		
 		if (classAttr == null) {
 			linkText = LINK_TITLE_UNKNOWN;
-		} if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
+		} else if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
 			final StringBuffer topicNum = getTopicNumPrefix(refId, linkedNode);
 			//logger.info("topicNum: " + topicNum);
 			if (topicNum != null) {
@@ -248,16 +257,22 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 
-	private void parseNode(XdmNode node, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
-		//logger.info("parseNode: " + node.getUnderlyingNode().getDisplayName() + ", " + node.getNodeKind());
-		if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
+	private void parseNode(NodeInfo node, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
+		//logger.info("parseNode: " + node/*.getUnderlyingNode()*/.getDisplayName() + ", " + node.getNodeKind());
+		//if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
+		if (node.getNodeKind() == Type.ELEMENT) {
 			
-			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node.getUnderlyingNode(), bookCache.getXPathCache());
+			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node/*.getUnderlyingNode()*/, bookCache.getXPathCache());
 			
-			final KeyDef keyDef = KeyDef.fromNode(nodeWrapper);
+			final KeyDef keyDef = KeyDef.fromNode(nodeWrapper, parentTopicId);
 			if (keyDef != null) {
 				keyDefList.add(keyDef);
 				bookCache.addKeyDef(keyDef);
+			}
+			
+			final XsltConref xsltConref = XsltConref.fromNode(nodeWrapper, xsltConrefCache);
+			if (xsltConref != null) {
+				processXsltConref(xsltConref, parentTopicRefContainer, parentTopicId);
 			}
 			
 			final String classAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
@@ -281,14 +296,44 @@ public class FileCache extends TopicRefContainer {
 					}
 				}
 			}
-			
+
+			final AxisIterator 	iterator 	= node.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT);
+			NodeInfo child = iterator.next();
+			while (child != null) {
+				parseNode(child, parentTopicRefContainer, parentTopicId);
+				child = iterator.next();
+			}
+			/*
 			final XdmSequenceIterator iterator = node.axisIterator(Axis.CHILD);
 			while (iterator.hasNext()) {
 				parseNode((XdmNode)iterator.next(), parentTopicRefContainer, parentTopicId);
-			}
+			}*/
 		}
 	}
 	
+	private void processXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
+		final int stage = xsltConref.getStage();
+		if (stage == XsltConref.STAGE_IMMEDIATELY) {
+			//logger.info("parsing xslt-conref start");
+			try {
+				final NodeInfo resolved = xsltConref.resolve(null);
+				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
+				parseNode(resolved.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next(), parentTopicRefContainer, parentTopicId);
+				// todo: handle @xcr:reparse = yes
+			} catch (TransformerException e) {
+				logger.error("Failed to resolve XSLT-Conref: " + e.getMessage());
+			} catch (TempContextException e) {
+				logger.error(e, e); // should never happen during parsing
+				throw new TransformerException(e);
+			}
+			//logger.info("parsing xslt-conref done");
+		} else if (stage >= XsltConref.STAGE_DELAYED) {
+			// TODO: ...
+		} else {
+			// no resolving during parsing 
+		}
+	}
+
 	private void addElementId(SaxonNodeWrapper nodeWrapper, String parentTopicId, String id) {
 		nodeByRefId.put(DitaUtil.getRefId(parentTopicId, id), nodeWrapper);
 	}

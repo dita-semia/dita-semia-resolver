@@ -3,7 +3,6 @@ package org.DitaSemia.Ot;
 import static org.apache.commons.io.FileUtils.*;
 import static org.dita.dost.util.URLUtils.*;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -15,16 +14,16 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
+import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.XPathCache;
-import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
-import org.DitaSemia.Base.DocumentCaching.BookCacheInitializer;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyDefLocationDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyRefDisplaySuffixDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyTypeDefDef;
@@ -60,7 +59,8 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.ObjectValue;
 
-public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements BookCacheProvider, BookCacheInitializer {
+@SuppressWarnings("deprecation")
+public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements BookCacheProvider {
 	
 	protected static final String FILE_EXTENSION_TEMP	= ".dita-semia.temp";
 	
@@ -81,24 +81,26 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	protected XPathExecutable 		needsResolveXPath			= null;
 	protected XPathExecutable 		baseUriXPath				= null;
 	
-	protected XslTransformerCache	xsltConrefTransformerCache	= null;
 	protected XMLReader				xsltConrefXmlReader			= null;
-
 	protected BookCache				bookCache					= null;
-	protected XPathCache			xPathCache					= null;
+	protected XsltConrefCache		xsltConrefCache				= null;
 	
 	protected URL					currentBaseUrl				= null;
 	
-	protected File					keyTypeDefListFile			= null;
 
 	protected void init(AbstractPipelineInput input) throws DITAOTException {
 
 		// xslt-conref
-		final Configuration xsltConrefConfiguration = XsltConref.createConfiguration(this);
-		xsltConrefConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
+		//final Configuration xsltConrefConfiguration = XsltConref.createConfiguration(this);
+		//xsltConrefConfiguration.;
 		
-		xsltConrefTransformerCache	= new XslTransformerCache(xsltConrefConfiguration);
-		xPathCache					= new XPathCache(xsltConrefConfiguration);
+		final ConfigurationInitializer configurationInitializer = new ConfigurationInitializer() {
+			@Override
+			public void initConfig(Configuration configuration) {
+				configuration.setURIResolver(CatalogUtils.getCatalogResolver());
+			}};
+		xsltConrefCache = new XsltConrefCache(this, configurationInitializer);
+		
 		try {
 			xsltConrefXmlReader		= XMLUtils.getXMLReader();
 		} catch (SAXException e) {
@@ -108,10 +110,11 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		xsltConrefXmlReader.setEntityResolver(CatalogUtils.getCatalogResolver());
 		
 		// general resolver
-		final Configuration resolverConfiguration = XsltConref.createConfiguration(this);
+		final Configuration resolverConfiguration = XsltConrefCache.createConfiguration(this);
 		resolverConfiguration.setErrorListener(new Log4jErrorListener(Logger.getLogger("OT-Resolver")));
 
 		// ensure that both configurations are compatible
+		final Configuration xsltConrefConfiguration = xsltConrefCache.getConfiguration();
 		resolverConfiguration.setNamePool(xsltConrefConfiguration.getNamePool());
 		resolverConfiguration.setDocumentNumberAllocator(xsltConrefConfiguration.getDocumentNumberAllocator());
 
@@ -139,17 +142,19 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			throw new DITAOTException(e.getMessage(), e);
 		}
 		
-		keyTypeDefListFile	= toFile(input.getAttribute(ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI));
 		
 		try {
-			final String	inputUrl	= job.getInputMap().toString();
-			final URL		tempDirUrl	= job.tempDir.toURI().toURL();
-			final URL		rootUrl		= new URL(tempDirUrl, inputUrl);
-			final URL		ditaOtUrl	= new File(input.getAttribute(ANT_INVOKER_PARAM_OT_URL)).toURI().toURL();
-			final String	language	= input.getAttribute(ANT_INVOKER_PARAM_LANGUAGE);
+			final String	inputUrl			= job.getInputMap().toString();
+			final URL		tempDirUrl			= job.tempDir.toURI().toURL();
+			final URL		rootUrl				= new URL(tempDirUrl, inputUrl);
+			final URL		ditaOtUrl			= new File(input.getAttribute(ANT_INVOKER_PARAM_OT_URL)).toURI().toURL();
+			final String	keyTypeDefListParam	= input.getAttribute(ANT_INVOKER_PARAM_KEY_TYPE_DEF_LIST_URI);
+			final URL		keyTypeDefListUrl	= (keyTypeDefListParam == null) ? null : new File(keyTypeDefListParam).toURI().toURL();
+			final String	language			= input.getAttribute(ANT_INVOKER_PARAM_LANGUAGE);
 			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			bookCache = new BookCache(rootUrl, this, resolverConfiguration, ditaOtUrl, language);
+			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, false, ditaOtUrl, keyTypeDefListUrl, language);
+			
 			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
@@ -261,15 +266,6 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	public XMLReader getXsltConrefXmlReader() {
 		return xsltConrefXmlReader;
 	}
-
-	public XPathCache getXPathCache() {
-		return xPathCache;
-	}
-
-
-	public XslTransformerCache getXsltConrefTransformerCache() {
-		return xsltConrefTransformerCache;
-	}
 	
 	public URL getCurrentBaseUrl() {
 		return currentBaseUrl;
@@ -298,15 +294,13 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	}
 
 
-	@Override
-	public void initBookCache(BookCache bookCache) {
-		if (keyTypeDefListFile != null) {
-			try {
-				bookCache.parseKeyTypeDefFile(keyTypeDefListFile.toURI().toURL());
-			} catch (MalformedURLException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
+	public XPathCache getXPathCache() {
+		return xsltConrefCache.getXPathCache();
+	}
+
+
+	public XsltConrefCache getXsltConrefCache() {
+		return xsltConrefCache;
 	}
 
 }

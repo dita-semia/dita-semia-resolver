@@ -5,8 +5,6 @@
 
 package org.DitaSemia.Oxygen.ExtensionBundle;
 
-import java.net.URL;
-
 import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.Base.XsltConref.XsltConref;

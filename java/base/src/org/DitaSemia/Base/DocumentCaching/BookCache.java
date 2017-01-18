@@ -8,6 +8,9 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -22,6 +25,7 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmNodeKind;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 
+import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
@@ -40,6 +44,7 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyspecInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
 import org.DitaSemia.Base.XsltConref.XsltConref;
+import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.apache.log4j.Logger;
 
 public class BookCache extends SaxonConfigurationFactory implements KeyDefListInterface, KeyTypeDefListInterface {
@@ -57,8 +62,6 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 
 	public static final String 	CONFIG_FILE_URL 		= "/cfg/book-cache-saxon-config.xml";
 	
-	private final URL 				rootDocumentUrl;
-	private final XPathCache 		xPathCache;
 	
 	private HashMap<String, KeyDefInterface> 	keyDefByRefString 	= new HashMap<>();
 	private HashMap<String, KeyDefInterface> 	keyDefByUrlAndId	= new HashMap<>();
@@ -66,77 +69,74 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private HashMap<String, FileCache> 			fileByUrl			= new HashMap<>();
 	private HashMap<String, TopicRef> 			topicRefByUrl		= new HashMap<>();
 	
-	
-	private final SaxonConfigurationFactory configurationFactory;
-	private final SaxonDocumentBuilder		documentBuilder;
-	private final Configuration				defaultConfiguration;
-	private final BookCacheInitializer		initializer;
-	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
+
+	private final URL 						rootDocumentUrl;
+	private final ConfigurationInitializer	configurationInitializer;
+	private final XsltConrefCache 			xsltConrefCache;
 	private final URL						ditaOtUrl;
-	@SuppressWarnings("unused")
-	private final String					language;
+	private final URL						globalKeyTypeDefUrl;
+	//private final String					language;
+
+	private final Configuration				defaultConfiguration;
+	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
+	private final XPathCache 				xPathCache;
+	private final SaxonDocumentBuilder		documentBuilder;
 
 	private final String					appendixPrefix;
 	
 	private ProgressListener				cacheProgressListener 	= null;
 	private int								cachedFileCount			= 0;
 
+	
+	public BookCache(
+			URL 						rootDocumentUrl,
+			ConfigurationInitializer	configurationInitializer,
+			XsltConrefCache 			xsltConrefCache,
+			boolean						expandAttributeDefaults,
+			URL 						ditaOtUrl,
+			URL 						globalKeyTypeDefUrl, 
+			String 						language) {
 		
-	/* used by oXygen */
-	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, SaxonConfigurationFactory configurationFactory, URL ditaOtUrl, String language) {
 		this.rootDocumentUrl 			= rootDocumentUrl;
-		this.initializer				= initializer;
-		this.configurationFactory		= configurationFactory;
-		this.defaultConfiguration		= configurationFactory.createConfiguration();
-		this.documentBuilder			= new SaxonCachedDocumentBuilder(this);
+		this.configurationInitializer	= configurationInitializer;
+		this.xsltConrefCache			= xsltConrefCache;
+		this.defaultConfiguration		= createConfiguration(); // needs to be done after this.configurationInitializer has been set
+		
 		this.ditaOtUrl					= ditaOtUrl;
-		this.language					= language;
-		
-		appendixPrefix					= getAppendixPrefix(language);
+		this.globalKeyTypeDefUrl		= globalKeyTypeDefUrl;
+		//this.language					= language;
 
-		registerExtensionFunctions(defaultConfiguration);
-		xPathCache = createXPathCache(defaultConfiguration);
-		
-		
-		final Configuration extractConfiguration = configurationFactory.createConfiguration();
+		if (expandAttributeDefaults) {
+			documentBuilder	= new SaxonCachedDocumentBuilder(this);	
+		} else {
+			documentBuilder	= new SaxonDocumentBuilder(defaultConfiguration);
+		}
+
+		appendixPrefix		= getAppendixPrefix(language);
+		xPathCache 			= createXPathCache(defaultConfiguration);
+
+		final Configuration extractConfiguration = createConfiguration();
 		// disable validation to allow usage of same configuration for any file type (attribute defaults are already expanded)
 		extractConfiguration.setSchemaValidationMode(Validation.STRIP);	
 		this.extractTransformerCache	= new XslTransformerCache(extractConfiguration);
 	}
-
-	/* used by OT */
-	public BookCache(URL rootDocumentUrl, BookCacheInitializer initializer, Configuration baseConfiguration, URL ditaOtUrl, String language) {
-		registerExtensionFunctions(baseConfiguration);
-
-		this.rootDocumentUrl 			= rootDocumentUrl;
-		this.initializer				= initializer;
-		this.configurationFactory		= null;
-		this.defaultConfiguration		= baseConfiguration;
-		this.documentBuilder			= new SaxonDocumentBuilder(defaultConfiguration);
-		this.ditaOtUrl					= ditaOtUrl;
-		this.language					= language;
-		
-		appendixPrefix					= getAppendixPrefix(language);
-
-		xPathCache = createXPathCache(defaultConfiguration);
-
-		this.extractTransformerCache	= new XslTransformerCache(defaultConfiguration);
-	}
-	
 
 	public void fillCache(ProgressListener progressListener) {
 		cacheProgressListener 	= progressListener;
 		try {
 			final long startTime = Calendar.getInstance().getTimeInMillis();
 			
-			if (initializer != null) {
-				initializer.initBookCache(this);
+			if (globalKeyTypeDefUrl != null) {
+				parseKeyTypeDefFile(globalKeyTypeDefUrl);
 			}
 			
 			final Source 	source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
 			final FileCache	file	= createFileCache(source, null);
 			if (file != null) {
 				file.parse();
+
+				// TODO: call FileCaches registered as delayed resolvers
+				
 				final long time = Calendar.getInstance().getTimeInMillis() - startTime;
 				logger.info("fillCache done: " + time + "ms, " + fileByUrl.size() + " files, " + keyDefByRefString.size() + " keys (" + FileUtil.decodeUrl(source.getSystemId()) + ")");
 			}
@@ -151,8 +151,13 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	
 	@Override
 	public Configuration createConfiguration() {
-		final Configuration configuration = configurationFactory.createConfiguration();
-		registerExtensionFunctions(configuration);
+		final Configuration configuration = SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
+		
+		configuration.registerExtensionFunction(new AncestorPathDef(this));
+		
+		if (configurationInitializer != null) {
+			configurationInitializer.initConfig(configuration);
+		}
 		return configuration;
 	}
 	
@@ -177,13 +182,6 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		}
 	}
 
-	public static Configuration createBaseConfiguration() {
-		return SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
-	}
-	
-	protected void registerExtensionFunctions(Configuration configuration) {
-		configuration.registerExtensionFunction(new AncestorPathDef(this));
-	}
 
 	public FileCache createFileCache(Source source, String topicrefClass) {
 		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
@@ -506,4 +504,22 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			return "Appendix ";
 		}
 	}
+
+	public Collection<KeyDefInterface> getMatchingKeyDefs(Set<String> typeFilter, List<String> namespaceFilter) {
+		// TODO improve performance ...
+		final Collection<KeyDefInterface> list = new LinkedList<>();
+		
+		for (KeyDefInterface keyDef : keyDefByRefString.values()) {
+			if ((keyDef.matchesTypeFilter(typeFilter)) && (keyDef.matchesNamespaceFilter(namespaceFilter))) {
+				list.add(keyDef);
+			}
+		}
+
+		return list;
+	}
+
+	public XsltConrefCache getXsltConrefCache() {
+		return xsltConrefCache;
+	}
+
 }
