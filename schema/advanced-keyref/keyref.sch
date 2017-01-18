@@ -14,7 +14,7 @@
 	<sch:ns uri="http://www.dita-semia.org/conbat" 							 				prefix="cba"/>
 	
 	<sch:pattern>
-		<sch:rule context="*[@akr:ref != '']"> 
+		<sch:rule context="*[@akr:ref]"> 
 
 			<sch:let name="refAttr"			value="@akr:ref"/>
 			
