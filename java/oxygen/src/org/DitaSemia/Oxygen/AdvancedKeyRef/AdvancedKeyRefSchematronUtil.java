@@ -49,19 +49,29 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 		if (namespace != null) {
 			namespaceList = namespace.split(KeyRef.PATH_DELIMITER);
 		}
+		
 		String 		key 			= keyRef.getKey();
 		String[] 	textList 		= (keyRef.getText().isEmpty() 	? null 	: keyRef.getText().split(KeyDef.PATH_DELIMITER));
+		
 		int 		textLength		= (textList 		== null 	? 0 	: textList.length);
 		int 		namespaceLength	= (namespaceList 	== null 	? 0 	: namespaceList.length);
 		
-		if (key != null && !key.equals(textList[textLength - 1])) {
+		if (key == null && namespace == null && textList != null) {
 			return false;
-		} else if (key == null) {
+		} else if (key == null && namespace == null && textList == null) { 
+			return true;
+		} else if (key != null && textList != null) {
+			if (!key.equals(textList[textList.length - 1])) {
+				return false;
+			} else {
+				return matchesNamespace(textList, namespaceList, textLength - 2, namespaceLength);
+			}
+		} else if (key == null && textList != null) {
 			return matchesNamespace(textList, namespaceList, textLength - 1, namespaceLength);
-		} else if (key.equals(textList[textLength - 1])) {
-			return matchesNamespace(textList, namespaceList, textLength - 2, namespaceLength);
+		} else if (textList == null) {
+			return true;
 		}
-		return false;
+		return true;
 	}
 	
 	private static boolean matchesNamespace(String[] text, String[] namespace, int lastIndex, int nsLength) {
