@@ -41,13 +41,16 @@ public class KeyDef implements KeyDefInterface {
 	private final String		defId;
 	private final String		defAncestorTopicId;
 	
-	
 	public static KeyDef fromNode(NodeWrapper node) {
+		return fromNode(node, null);
+	}
+	
+	public static KeyDef fromNode(NodeWrapper node, String parentTopicId) {
 //		logger.info("KeyDef fromNode");
 		final String type = getTypeFromNode(node);
 		if ((type != null) && (!type.isEmpty())) {
 			try {
-				return new KeyDef(node, type);
+				return new KeyDef(node, type, parentTopicId);
 			} catch (XPathException | XPathNotAvaliableException e) {
 				logger.error(e, e);
 				return null;
@@ -65,7 +68,7 @@ public class KeyDef implements KeyDefInterface {
 		return (node.getAttribute(ATTR_KEY, NAMESPACE_URI) != null);
 	}
 	
-	private KeyDef(NodeWrapper node, String type) throws XPathException, XPathNotAvaliableException {
+	private KeyDef(NodeWrapper node, String type, String parentTopicId) throws XPathException, XPathNotAvaliableException {
 		//this.node 	= node;
 		this.type	= type;
 		this.node	= node;
@@ -92,6 +95,8 @@ public class KeyDef implements KeyDefInterface {
 		final String classAttr = root.getAttribute("class", null);
 		if (classAttr.contains(" topic/topic ")) {
 			defAncestorTopicId = null;
+		} else if (parentTopicId != null) {
+			defAncestorTopicId = parentTopicId;
 		} else {
 			NodeWrapper currentNode 	= refNode;
 			String		currentClass;
