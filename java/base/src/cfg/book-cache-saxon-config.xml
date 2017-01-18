@@ -2,10 +2,9 @@
 <configuration edition="EE" xmlns="http://saxon.sf.net/ns/configuration">
 	<global expandAttributeDefaults="true" schemaValidation="lax" xInclude="true"
 		allowExternalFunctions="true" stripSpace="none"/>
-		<!--  don't use strict validation since it will fail when no XSD is specified (but an RNG schema) -->
-	<xslt 
-		schemaAware	= "true">
+	<!--  don't use strict validation since it will fail when no XSD is specified (but an RNG schema) -->
+	<xslt schemaAware="true">
 		<extensionElement/>
 	</xslt>
-	<xsd version="1.1"/>
+	<xsd version="1.1" multipleSchemaImports="true"/>
 </configuration>
