@@ -5,6 +5,7 @@
 
 package org.DitaSemia.Base.XsltConref;
 
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.NodeInfo;
@@ -31,20 +33,14 @@ import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.AnyURIValue;
 
-import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
-import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.NodeWrapper;
-import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
-import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefRootDef;
-import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
-import org.DitaSemia.Base.DocumentCaching.GetAncestorPathDef;
-import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
 import org.apache.log4j.Logger;
 
 public class XsltConref {
@@ -56,17 +52,23 @@ public class XsltConref {
 	public static final String 	ATTR_SOURCE_TYPE			= "source-type";
 	public static final String 	ATTR_START_TEMPLATE			= "start-template";
 	public static final String 	ATTR_REPARSE				= "reparse";
+	public static final String 	ATTR_STAGE					= "stage";
+	
+	public static final int		STAGE_DISPLAY				= -1;
+	public static final int		STAGE_IMMEDIATELY			= 0;
+	public static final int		STAGE_DELAYED				= 1;
 	
 	public static final String	YES							= "yes";
 	
-	public static final String 	PARAM_CURRENT				= "current";
+	public static final String 	PARAM_CURRENT_NODE			= "current";
+	public static final String 	PARAM_CURRENT_URI			= "current-uri";
 	public static final String 	NAMESPACE_PARAMETER_URI		= "http://www.dita-semia.org/xslt-conref/custom-parameter";
 	public static final String 	NAMESPACE_URI				= "http://www.dita-semia.org/xslt-conref";
 	public static final String 	NAMESPACE_PREFIX			= "xcr";
 
-	public static final String 	CONFIG_FILE_URL 			= "/cfg/xslt-conref-saxon-config.xml";
-
 	public static final String 	NAME_NO_CONTENT				= "no-content";
+	
+	public static final String 	EMPTY_SOURCE_XML			= "<?xml version=\"1.0\"?><dummy/>";
 
 	protected final NodeWrapper 			node;
 	protected final XslTransformerCache 	transformerCache;
@@ -85,24 +87,13 @@ public class XsltConref {
 		}
 	}
 
-	public static XsltConref fromNode(NodeWrapper node, XslTransformerCache transformerCache, XPathCache xPathCache)	{
+	public static XsltConref fromNode(NodeWrapper node, XsltConrefCache xsltConrefCache)	{
 		if (isXsltConref(node)) {
-			return new XsltConref(node, transformerCache, xPathCache);
+			return new XsltConref(node, xsltConrefCache);
 		}
 		return null;
 	}
 
-	public static Configuration createConfiguration(BookCacheProvider bookCacheProvider) {
-		final Configuration 	configuration	= SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
-		configuration.setErrorListener(new Log4jErrorListener(logger));
-
-		configuration.registerExtensionFunction(new GetChildTopicsDef(bookCacheProvider));
-		configuration.registerExtensionFunction(new GetAncestorPathDef(bookCacheProvider));
-		configuration.registerExtensionFunction(new GetKeyDefRootDef(bookCacheProvider));
-		
-		return configuration;
-	}
-	
 	
 	public static boolean isXsltConref(NodeWrapper node) {
 		boolean isXsltConref = ((node != null) && 
@@ -113,11 +104,21 @@ public class XsltConref {
 	}
 	
 	
-	private XsltConref(NodeWrapper node, XslTransformerCache transformerCache, XPathCache xPathCache) {
+	private XsltConref(NodeWrapper node, XsltConrefCache xsltConrefCache) {
 		this.node 				= node;
-		this.transformerCache	= transformerCache;
-		this.xPathCache			= xPathCache;
+		this.transformerCache	= xsltConrefCache.getTransformerCache();
+		this.xPathCache			= xsltConrefCache.getXPathCache();
 		this.baseUrl			= node.getBaseUrl();
+		
+		// set original base-url of file when processed by DITA-OT
+		final String xtrfString = node.getAttribute("xtrf", null);
+		if (xtrfString != null) {
+			try {
+				baseUrl = new URL(xtrfString);
+			} catch (MalformedURLException e) {
+				logger.error(e, e);
+			}
+		}
 	}
 	
 	
@@ -155,7 +156,7 @@ public class XsltConref {
 				xsltTransformer.setInitialContextNode(new XdmNode(nodeInfo.getRoot()));
 				
 				// set "xcr:current"
-				xsltTransformer.setParameter(new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT), new XdmNode(nodeInfo));
+				xsltTransformer.setParameter(new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT_NODE), new XdmNode(nodeInfo));
 				
 			} else {
 				boolean xmlSourceIsBaseUrl	= false;
@@ -170,7 +171,7 @@ public class XsltConref {
 					} catch (TransformerException e) {
 						throw new XPathException("Error resolving the source URL: '" + FileUtil.decodeUrl(baseUrl) + "': " + e.getMessage());
 					}
-				} else if (!FileUtil.fileExists(xmlSource.getSystemId())) {
+				} else if ((xmlSource.getSystemId() != null) && (!FileUtil.fileExists(xmlSource.getSystemId()))) {
 					// dedicated error message for this scenario
 					throw new XPathException("Input source could not be found. (URL: '" + FileUtil.decodeUrl(xmlSource.getSystemId()) + "')");
 				}
@@ -192,7 +193,9 @@ public class XsltConref {
 						final XPathSelector  	xPathSel	= xPathExe.load();
 						try {
 							xPathSel.setContextItem(context);
-							xsltTransformer.setParameter(new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT), xPathSel.evaluateSingle());
+							xsltTransformer.setParameter(
+									new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT_NODE), 
+									xPathSel.evaluateSingle());
 						} catch (SaxonApiException e) {
 							throw new XPathException(e.getMessage(), e);
 						}
@@ -232,6 +235,11 @@ public class XsltConref {
 		} else {
 			throw new XPathException("invalid value for source-type attribute ('" + sourceType + "')");
 		}
+		
+		// set xcr:current-uri
+		xsltTransformer.setParameter(
+				new QName(NAMESPACE_PREFIX, NAMESPACE_URI, PARAM_CURRENT_URI), 
+				XdmValue.wrap(new AnyURIValue(baseUrl.toString())));
 
 		setCustomParameters(xsltTransformer);
 		
@@ -248,8 +256,9 @@ public class XsltConref {
 			final XdmDestination destination = new XdmDestination();
 			xsltTransformer.setDestination(destination);
 			xsltTransformer.transform();
-			
-			return destination.getXdmNode().getUnderlyingNode();
+			final NodeInfo resolved = destination.getXdmNode().getUnderlyingNode();
+			resolved.setSystemId(FileUtil.decodeUrl(node.getBaseUrl()));
+			return resolved;
 			
 		} catch (SaxonApiException e) {
 			throw new XPathException("Runtime Error. " + e.getMessage());
@@ -281,15 +290,19 @@ public class XsltConref {
 	
 	public Source getXmlSource() {
 		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI);
-		if ((attrValue != null) && (!attrValue.isEmpty())) {
+		if (attrValue == null) {
+			return null;
+		} else if (attrValue.isEmpty()) {
+			return new StreamSource(new StringReader(EMPTY_SOURCE_XML));
+		} else {
 			final URIResolver uriResolver = node.getUriResolver();
 			try {
 				return uriResolver.resolve(attrValue, baseUrl.toExternalForm());
 			} catch (TransformerException e) {
 				logger.error(e, e);
+				return null;
 			}
 		}
-		return null;
 	}
 	
 	public URL getXmlSourceUrl() {
@@ -354,6 +367,19 @@ public class XsltConref {
 		
 		//logger.info("createXPathToElement: result = " + createXPathToElement);
 		return createXPathToElement;
+	}
+
+
+	public int getStage() {
+		final String stageString = node.getAttribute(ATTR_STAGE, NAMESPACE_URI);
+		if ((stageString != null) && (!stageString.isEmpty())) {
+			try {
+				return Integer.parseInt(stageString);
+			} catch (NumberFormatException e) {
+				// no special handling
+			}
+		}
+		return STAGE_DISPLAY;
 	}
 
 }
