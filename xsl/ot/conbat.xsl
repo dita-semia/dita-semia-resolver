@@ -130,27 +130,36 @@
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:call-template name="insert-csli-prefix"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
-			<xsl:call-template name="handle-code-flag">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:choose>
-						<xsl:when test="@cba:content">
+			<xsl:choose>
+				<xsl:when test="@cba:content">
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
 							<xsl:call-template name="KeyFormatting">
 								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:content)"/>
 								<xsl:with-param name="keyNode"	select="."/>
 							</xsl:call-template>
-						</xsl:when>
-						<xsl:when test="empty(node()) and exists(@cba:default-content)">
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="empty(node()) and exists(@cba:default-content)">
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
 							<xsl:call-template name="KeyFormatting">
 								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:default-content)"/>
 								<xsl:with-param name="keyNode"	select="."/>
 							</xsl:call-template>
-						</xsl:when>
-						<xsl:otherwise>
+						</xsl:with-param>
+						<xsl:with-param name="isDefaultContent" select="true()"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
 							<xsl:apply-templates select="node()" mode="#current"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-			</xsl:call-template>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 			<xsl:call-template name="add-popup-edit-content"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix2)"/>
@@ -163,39 +172,50 @@
 		<xsl:copy>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
-			<xsl:call-template name="handle-code-flag">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:sequence select="ds:createCbaPhrase(@cba:content)"/>
-					<xsl:choose>
-						<xsl:when test="empty(node())">
+			<xsl:choose>
+				<xsl:when test="@cba:content">
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
+							<xsl:sequence select="ds:createCbaPhrase(@cba:content)"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="empty(node())">
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
 							<xsl:sequence select="ds:createCbaPhrase(@cba:default-content)"/>
-						</xsl:when>
-						<xsl:when test="exists(*[contains(@class, $C_LI) or contains(@class, $C_SLI)])">
-							<!-- handle list items without list container but ignore empty text nodes -->
-							<xsl:for-each-group select="node() except text()[matches(., '^\s+$')]" group-adjacent="string(tokenize(@class, '\s+')[2])">
-								<xsl:choose>
-									<xsl:when test="current-grouping-key() = 'topic/sli'">
-										<sl class="+ topic/sl ">
-											<xsl:apply-templates select="current-group()"/>
-										</sl>
-									</xsl:when>
-									<xsl:when test="current-grouping-key() = 'topic/li'">
-										<ul class="+ topic/ul ">
-											<xsl:apply-templates select="current-group()"/>
-										</ul>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="current-group()"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:for-each-group>
-						</xsl:when>
-						<xsl:otherwise>
+						</xsl:with-param>
+						<xsl:with-param name="isDefaultContent" select="true()"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="exists(*[contains(@class, $C_LI) or contains(@class, $C_SLI)])">
+					<!-- handle list items without list container but ignore empty text nodes -->
+					<xsl:for-each-group select="node() except text()[matches(., '^\s+$')]" group-adjacent="string(tokenize(@class, '\s+')[2])">
+						<xsl:choose>
+							<xsl:when test="current-grouping-key() = 'topic/sli'">
+								<sl class="+ topic/sl ">
+									<xsl:apply-templates select="current-group()"/>
+								</sl>
+							</xsl:when>
+							<xsl:when test="current-grouping-key() = 'topic/li'">
+								<ul class="+ topic/ul ">
+									<xsl:apply-templates select="current-group()"/>
+								</ul>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="current-group()"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each-group>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="content" as="node()*">
 							<xsl:apply-templates select="node()" mode="#current"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-			</xsl:call-template>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:call-template name="add-popup-edit-content"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 		</xsl:copy>
@@ -354,11 +374,19 @@
 	</xsl:template>
 	
 	
-	<xsl:template name="handle-code-flag">
-		<xsl:param name="content" as="node()*"/>
+	<xsl:template name="handle-style-flags">
+		<xsl:param name="content" 			as="node()*"/>
+		<xsl:param name="isDefaultContent"	as="xs:boolean"	select="false()"/>
 		
+		<xsl:variable name="flags" as="xs:string*" select="tokenize(@cba:flags, '\s+')"/>
 		<xsl:choose>
-			<xsl:when test="tokenize(@cba:flags, '\s+') = $CBA_FLAG_CODE">
+			<xsl:when test="($isDefaultContent) and ($flags = $CBA_FLAG_DEFAULT_ITALIC)">
+				<i class="{$CP_I}">
+					<xsl:call-template name="cba-marker"/>
+					<xsl:sequence select="$content"/>
+				</i>
+			</xsl:when>
+			<xsl:when test="$flags = $CBA_FLAG_CODE">
 				<codeph class="{$CP_CODEPH}">
 					<xsl:call-template name="cba-marker"/>
 					<xsl:value-of select="@cba:code-prefix"/>
