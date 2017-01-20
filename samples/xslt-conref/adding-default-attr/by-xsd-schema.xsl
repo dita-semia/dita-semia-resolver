@@ -8,12 +8,10 @@
 
     <xsl:template match="/">
     	
-    	<section xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd:1.2" xcr:reparse="yes">
+    	<section xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd:1.2">
     		<title>By assigning an XSD schema</title>
     		<p>Just add <codeph>xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:topic.xsd"</codeph> to the root element.</p>
-    		<p>Additionally you should set the attribute <codeph>xcr:reparse</codeph> to "yes".
-    			This will ensure that the result is converted to a string first and be parsed again adding the default attributes.
-    			Otherwise the dita-ot-resolver might skip this step.</p>
+    		<p>When the returned root element does not have a class attribute this will automatically trigger a reparsing of the content to ad the default attributes from the schema.</p>
         </section>
     	
     </xsl:template>

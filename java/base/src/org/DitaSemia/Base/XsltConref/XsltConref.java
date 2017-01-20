@@ -17,8 +17,10 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.Configuration;
+import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
+import net.sf.saxon.pattern.NodeKindTest;
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.ItemType;
 import net.sf.saxon.s9api.Processor;
@@ -35,13 +37,13 @@ import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.AnyURIValue;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.EmbeddedXPathResolver;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
-import org.DitaSemia.Base.XPathCache;
-import org.DitaSemia.Base.XslTransformerCache;
 import org.apache.log4j.Logger;
+import org.xml.sax.InputSource;
 
 public class XsltConref {
 	
@@ -71,8 +73,7 @@ public class XsltConref {
 	public static final String 	EMPTY_SOURCE_XML			= "<?xml version=\"1.0\"?><dummy/>";
 
 	protected final NodeWrapper 			node;
-	protected final XslTransformerCache 	transformerCache;
-	protected final XPathCache 				xPathCache;
+	protected final XsltConrefCache			xsltConrefCache;
 	protected 		URL 					baseUrl;				
 
 	
@@ -106,8 +107,7 @@ public class XsltConref {
 	
 	private XsltConref(NodeWrapper node, XsltConrefCache xsltConrefCache) {
 		this.node 				= node;
-		this.transformerCache	= xsltConrefCache.getTransformerCache();
-		this.xPathCache			= xsltConrefCache.getXPathCache();
+		this.xsltConrefCache	= xsltConrefCache;
 		this.baseUrl			= node.getBaseUrl();
 		
 		// set original base-url of file when processed by DITA-OT
@@ -126,15 +126,50 @@ public class XsltConref {
 		this.baseUrl = baseUrl;
 	}
 	
+	public String resolveToString(List<Parameter> frameworkParameters) throws XPathException, TempContextException {
+		//logger.info("resolveToString: " + getScriptName());
+		final NodeInfo 	resolvedNode 	= resolve(frameworkParameters);
+		final String resolvedString = SaxonNodeWrapper.serializeNode(resolvedNode);
+		//logger.info(resolvedString);
+		return resolvedString;
+	}
+
+	public NodeInfo resolveToNode(List<Parameter> frameworkParameters) throws XPathException, TempContextException {
+		//logger.info("resolveToNode: " + getScriptName());
+		final NodeInfo 	resolvedNode 	= resolve(frameworkParameters);
+		NodeInfo 		resolvedElement = resolvedNode.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next();
+		//logger.info("needsReparse: " + XsltConref.needsReparse(resolvedElement));
+		if (XsltConref.needsReparse(resolvedElement)) {
+			final String 	serialized 		= SaxonNodeWrapper.serializeNode(resolvedNode);
+			try {
+				//logger.info("reparsing...");
+				//logger.info(serialized);
+				final Source 	source 			= new SAXSource(xsltConrefCache.getXmlReader(), new InputSource(new StringReader(serialized)));
+				final XdmNode 	reparsedNode 	= xsltConrefCache.getDocumentBuilder().build(source);
+				
+				resolvedElement = reparsedNode.getUnderlyingNode().iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next();
+				//logger.info("---");
+				//logger.info(SaxonNodeWrapper.serializeNode(reparsedElement));
+			} catch (SaxonApiException e) {
+				logger.info("------");
+				logger.info("serialized node:");
+				logger.info(serialized);
+				logger.info("------");
+				throw new XPathException("Failed to reparse resolved xslt-conref ('" + getScriptName() + "'): " + e.getMessage());
+			}
+		} 
+		resolvedElement.setSystemId(node.getBaseUrl().toString());
+		return resolvedElement;
+	}
 	
-	public NodeInfo resolve(List<Parameter> frameworkParameters) throws XPathException, TempContextException {
+	protected NodeInfo resolve(List<Parameter> frameworkParameters) throws XPathException, TempContextException {
 		//logger.info("resolve()");
 		final URL 				scriptUrl 		= getScriptUrl();
 		String 					sourceType		= node.getAttribute(ATTR_SOURCE_TYPE, null);
 		if (sourceType == null) {
 			sourceType = "";
 		}
-		final XsltExecutable 	xsltExecutable 	= transformerCache.getExecutable(scriptUrl, node.getUriResolver());
+		final XsltExecutable 	xsltExecutable 	= xsltConrefCache.getTransformerCache().getExecutable(scriptUrl, xsltConrefCache.getUriResolver());
 		final XsltTransformer 	xsltTransformer = xsltExecutable.load();
 		//logger.info("xsltTransformer: " + xsltTransformer);
 
@@ -166,7 +201,7 @@ public class XsltConref {
 					// 	use current base uri as input
 					final String baseUrl = node.getBaseUrl().toExternalForm();
 					try {
-						xmlSource 			= node.getUriResolver().resolve(baseUrl, "");;
+						xmlSource 			= xsltConrefCache.getUriResolver().resolve(baseUrl, "");;
 						xmlSourceIsBaseUrl 	= true;
 					} catch (TransformerException e) {
 						throw new XPathException("Error resolving the source URL: '" + FileUtil.decodeUrl(baseUrl) + "': " + e.getMessage());
@@ -182,14 +217,14 @@ public class XsltConref {
 				}
 				
 				try {
-					final Processor 		processor 	= new Processor(transformerCache.getConfiguration());
+					final Processor 		processor 	= new Processor(xsltConrefCache.getTransformerCache().getConfiguration());
 					final DocumentBuilder 	builder 	= processor.newDocumentBuilder();
 					final XdmNode 			context 	= builder.build(xmlSource);
 					
 					if (xmlSourceIsBaseUrl) {
 						// set "xcr:current"
 						final String 			xPathString	= createXPathToElement(node);
-						final XPathExecutable 	xPathExe 	= xPathCache.getXPathExecutable(xPathString);
+						final XPathExecutable 	xPathExe 	= xsltConrefCache.getXPathCache().getXPathExecutable(xPathString);
 						final XPathSelector  	xPathSel	= xPathExe.load();
 						try {
 							xPathSel.setContextItem(context);
@@ -266,11 +301,17 @@ public class XsltConref {
 	}
 	
 	public URL getScriptUrl() throws XPathException {
-		final URIResolver uriResolver = node.getUriResolver();
+		final URIResolver 	uriResolver 	= xsltConrefCache.getUriResolver();
+		final String 		scriptString 	= node.getAttribute(ATTR_URI, NAMESPACE_URI);
+		final String 		baseUrlString	= baseUrl.toExternalForm();
+		//logger.info("getScriptUrl:");
+		//logger.info("  uriResolver: " + uriResolver);
+		//logger.info("  scriptString:" + scriptString);
+		//logger.info("  baseUrlString: " + baseUrlString);
 		try {
-			return new URL(uriResolver.resolve(node.getAttribute(ATTR_URI, NAMESPACE_URI), baseUrl.toExternalForm()).getSystemId());
+			return new URL(uriResolver.resolve(scriptString, baseUrlString).getSystemId());
 		} catch (TransformerException | MalformedURLException e) {
-			throw new XPathException(e.getMessage());
+			throw new XPathException("Failed to resolve script URI '" + scriptString + "' with base-url '" + baseUrlString + "': " + e.getMessage());
 		}
 	}
 	
@@ -295,7 +336,7 @@ public class XsltConref {
 		} else if (attrValue.isEmpty()) {
 			return new StreamSource(new StringReader(EMPTY_SOURCE_XML));
 		} else {
-			final URIResolver uriResolver = node.getUriResolver();
+			final URIResolver uriResolver = xsltConrefCache.getUriResolver();
 			try {
 				return uriResolver.resolve(attrValue, baseUrl.toExternalForm());
 			} catch (TransformerException e) {
@@ -321,16 +362,22 @@ public class XsltConref {
 		return node.getAttribute(ATTR_START_TEMPLATE, NAMESPACE_URI);
 	}
 	
-	public static boolean getReparse(final NodeInfo resolvedElement) {
-		final String reparseString = resolvedElement.getAttributeValue(NAMESPACE_URI, ATTR_REPARSE);
+	private static boolean needsReparse(final NodeInfo resolvedElement) {
+		if (resolvedElement.getDisplayName() == NAME_NO_CONTENT) {
+			return false;
+		} else {
+			final String classAttr = resolvedElement.getAttributeValue(null, DitaUtil.ATTR_CLASS);
+			return ((classAttr == null) || (classAttr.isEmpty()));
+		}
+		//final String reparseString = resolvedElement.getAttributeValue(NAMESPACE_URI, ATTR_REPARSE);
 		//logger.info("reparseString: " + reparseString);
-		return ((reparseString != null) && (reparseString.equals(YES)));
+		//return ((reparseString != null) && (reparseString.equals(YES)));
 	}
 	
 	private void setCustomParameters(XsltTransformer xsltTransformer) throws XPathException {
 		//logger.info("setCustomParameters()");
 		final URL 				scriptUrl 		= getScriptUrl();
-		final XsltExecutable 	xsltExecutable 	= transformerCache.getExecutable(scriptUrl, node.getUriResolver());
+		final XsltExecutable 	xsltExecutable 	= xsltConrefCache.getTransformerCache().getExecutable(scriptUrl, xsltConrefCache.getUriResolver());
 		final List<String> attrNameList = node.getAttributeNamesOfNamespace(NAMESPACE_PARAMETER_URI);
 		for (String attrName : attrNameList) {
 			//logger.info("attribute: " + attrName);

@@ -316,10 +316,9 @@ public class FileCache extends TopicRefContainer {
 		if (stage == XsltConref.STAGE_IMMEDIATELY) {
 			//logger.info("parsing xslt-conref start");
 			try {
-				final NodeInfo resolved = xsltConref.resolve(null);
+				final NodeInfo resolved = xsltConref.resolveToNode(null);
 				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
-				parseNode(resolved.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next(), parentTopicRefContainer, parentTopicId);
-				// todo: handle @xcr:reparse = yes
+				parseNode(resolved, parentTopicRefContainer, parentTopicId);
 			} catch (TransformerException e) {
 				logger.error("Failed to resolve XSLT-Conref: " + e.getMessage());
 			} catch (TempContextException e) {

@@ -6,7 +6,7 @@
 	<refbody>
 		<section xcr:xsl="explicitly.xsl"/>
 		<!--<section xcr:xsl="by-validation.xsl"/> not supported bySaxon HE -->
-		<section xcr:xsl="by-type.xsl"/> <!--not supported by Saxon HE--> 
+		<!--<section xcr:xsl="by-type.xsl"/> not supported by Saxon HE--> 
 		<section xcr:xsl="by-xsd-schema.xsl"/>
 		<section xcr:xsl="by-rng-schema.xsl"/>
 	</refbody>

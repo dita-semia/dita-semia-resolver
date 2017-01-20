@@ -55,41 +55,13 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 			// set original URL as base URI to resolve relative URIs correctly
 			xsltConref.setBaseUrl(otResolver.getCurrentBaseUrl());
 			
-			final NodeInfo resolvedNode 	= xsltConref.resolve(null);
-			final NodeInfo resolvedElement 	= resolvedNode.iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next();
+			final NodeInfo resolvedNode = xsltConref.resolveToNode(null);
 	
 			//logger.info("resolved: " + SaxonNodeWrapper.serializeNode(resolvedElement));
+			checkResult(xsltConref, resolvedNode);
 			
-			if (XsltConref.getReparse(resolvedElement)) {
-				
-				logger.info("Reparsing...");
-				
-				// serializer roundtrip to set the default attributes
-				try {
-					
-					final String 	serialized 		= SaxonNodeWrapper.serializeNode(resolvedNode);
-					final Source 	source 			= new SAXSource(otResolver.getXsltConrefXmlReader(), new InputSource(new StringReader(serialized)));
-					final XdmNode 	reparsedNode 	= otResolver.getDocumentBuilder().build(source);
-					final NodeInfo 	reparsedElement = reparsedNode.getUnderlyingNode().iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next(); 
-	
-					checkResult(xsltConref, reparsedElement);
-					
-					// return the root element
-					return reparsedElement;
-					
-				} catch (SaxonApiException e) {
-					throw new XPathException("Failed to reparse resolved xslt-conref: " + e.getMessage());
-				}
-				
-				
-			} else {
-				
-				checkResult(xsltConref, resolvedElement);
-				
-				// return the root element
-				return resolvedElement;
-				
-			}
+			return resolvedNode;
+			
 		} catch (XPathException e) {
 			throw e;
 		} catch (Exception e) {

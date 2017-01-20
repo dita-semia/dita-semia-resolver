@@ -11,12 +11,10 @@ import java.util.List;
 
 import javax.xml.transform.sax.SAXSource;
 
-import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.trans.XPathException;
 
-import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
@@ -123,8 +121,7 @@ public class XsltConrefResolver {
 	public SAXSource resolveXsltConref(XsltConref xsltConref, AuthorAccess authorAccess) throws ReferenceResolverException {
 		String resolvedString;
 		try {
-			final NodeInfo resolvedNode = xsltConref.resolve(frameworkParameters);
-			resolvedString = SaxonNodeWrapper.serializeNode(resolvedNode);
+			resolvedString = xsltConref.resolveToString(frameworkParameters);
 			//logger.info("resolvedString: " + resolvedString);
 		} catch (XPathException e) {
 			logger.error(e.getMessage(), e);

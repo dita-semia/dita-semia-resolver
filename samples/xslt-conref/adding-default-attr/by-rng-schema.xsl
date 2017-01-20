@@ -13,9 +13,7 @@
     	<section xcr:reparse="yes">
     		<title>By assigning an RNG schema</title>
     		<p>Just add <codeph>&lt;?xml-model href="urn:oasis:names:tc:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?&gt;</codeph> result document.</p>
-    		<p>Additionally you should set the attribute <codeph>xcr:reparse</codeph> to "yes".
-    			This will ensure that the result is converted to a string first and be parsed again adding the default attributes.
-    			Otherwise the dita-ot-resolver might skip this step.</p>
+    		<p>When the returned root element does not have a class attribute this will automatically trigger a reparsing of the content to ad the default attributes from the schema.</p>
         </section>
     	
     </xsl:template>

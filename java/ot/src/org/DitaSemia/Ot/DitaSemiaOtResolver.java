@@ -1,6 +1,9 @@
 package org.DitaSemia.Ot;
 
 import static org.apache.commons.io.FileUtils.*;
+import static org.dita.dost.util.Constants.FEATURE_NAMESPACE;
+import static org.dita.dost.util.Constants.FEATURE_VALIDATION;
+import static org.dita.dost.util.Constants.FEATURE_VALIDATION_SCHEMA;
 import static org.dita.dost.util.URLUtils.*;
 
 import org.apache.log4j.Logger;
@@ -90,6 +93,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 
 	protected void init(AbstractPipelineInput input) throws DITAOTException {
 
+		System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
+		
 		// xslt-conref
 		//final Configuration xsltConrefConfiguration = XsltConref.createConfiguration(this);
 		//xsltConrefConfiguration.;
@@ -102,7 +107,10 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		xsltConrefCache = new XsltConrefCache(this, configurationInitializer);
 		
 		try {
-			xsltConrefXmlReader		= XMLUtils.getXMLReader();
+			xsltConrefXmlReader	= XMLUtils.getXMLReader();
+			xsltConrefXmlReader.setFeature(FEATURE_VALIDATION, 			true);
+			xsltConrefXmlReader.setFeature(FEATURE_VALIDATION_SCHEMA, 	true);
+			xsltConrefXmlReader.setFeature(FEATURE_NAMESPACE, 			true);
 		} catch (SAXException e) {
 			throw new DITAOTException(e.getMessage(), e);
 		}
