@@ -278,32 +278,40 @@ public class KeyRef implements KeyRefInterface {
 	}
 
 	public static boolean matchesNamespaceFilter(List<String> namespaceFilter, List<String> namespace) {
+		//logger.info("matchesNamespaceFilter(" + String.join("/", namespaceFilter) + ", " + String.join("/", namespace));
 		if ((namespace != null && !namespace.isEmpty()) && (namespaceFilter != null && !namespaceFilter.isEmpty())) {
 			int nsFilterLength 	= namespaceFilter.size();
 			int nsLength		= namespace.size();
 			if (namespaceFilter.get(namespaceFilter.size() - 1).equals(KeyDef.ANY_NAMESPACE)) {
 				//any subsidiary elements are allowed
 				if (nsFilterLength > nsLength + 1) {
+					//logger.info("  -> " + false + " (1)");
 					return false;
 				}
 				for (int i = 0; i < nsFilterLength; i++) {
 					if (!namespaceFilter.get(i).equals(KeyDef.ANY_NAMESPACE) && !namespaceFilter.get(i).equals(namespace.get(i))) {
+						//logger.info("  -> " + false + " (2)");
 						return false;
 					}
 				}
+				//logger.info("  -> " + true + " (3)");
 				return true;
 			} else {
 				//exact match
 				for (int i = 0; i < nsFilterLength; i++) {
 					if (!namespaceFilter.get(i).equals(namespace.get(i))) {
+						//logger.info("  -> " + false + " (4)");
 						return false;
 					}
 				}
+				//logger.info("  -> " + false + " (5)");
 				return true;
 			}
 		} else if ((namespace == null || namespace.isEmpty()) && (namespaceFilter != null && !namespaceFilter.isEmpty())) {
+			//logger.info("  -> " + false + " (6)");
 			return false;
 		} else {
+			//logger.info("  -> " + false + " (7)");
 			return true;
 		}
 	}
