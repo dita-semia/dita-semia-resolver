@@ -31,7 +31,7 @@ public class GetMatchingKeyDefsDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-		return SequenceType.OPTIONAL_ELEMENT_NODE;
+		return SequenceType.STRING_SEQUENCE;
 	}
 
 	@Override
