@@ -260,6 +260,11 @@
 	margin-left: 1em;
 }
 
+*[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dt'],
+*[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dd'] {
+	padding-top: 0;
+}
+
 *[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *:before(@{conbat-header-index}) {
     display	: block;
     
