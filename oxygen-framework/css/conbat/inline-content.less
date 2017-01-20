@@ -26,7 +26,8 @@
 
 *[class~="pr-d/codeph"][*|code-prefix]:before(@{conbat-inline-index}),
 *[class~="topic/ph"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
-*[class~="topic/sli"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}) {
+*[class~="topic/sli"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/dt"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}) {
 	content	: attr("*|code-prefix");
 }
 
@@ -62,7 +63,8 @@
 
 *[class~="pr-d/codeph"][*|code-suffix]:after(@{conbat-inline-index})
 *[class~="topic/ph"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
-*[class~="topic/sli"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {
+*[class~="topic/sli"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
+*[class~="topic/dt"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {
 	content	: attr("*|code-suffix");
 }
 
