@@ -19,6 +19,21 @@
 	<xs:attribute name="pe-labels" 			type="xs:string"/>
 	<xs:attribute name="pe-prefix" 			type="xs:string"/>
 	<xs:attribute name="pe-hide-value"		type="xs:string"/>
-	<xs:attribute name="flags" 				type="xs:string"/>
+	<xs:attribute name="flags">
+		<xs:simpleType>
+			<xs:list>
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="code"/>				<!-- wrap the content itself with codeph-element -->
+						<xs:enumeration value="csli"/>				<!-- comma seperated list item: add a ", " between two consecutive elements with this flas -->
+						<xs:enumeration value="hide-empty"/>		<!-- hide the complete element in the output when it does not contain any content -->
+						<xs:enumeration value="pe-italic"/>			<!-- wrap the popup-edit content with an i-element --> 
+						<xs:enumeration value="pe-braced"/>			<!-- wrap the popup-edit content with braces -->
+						<xs:enumeration value="default-italic"/>	<!-- wrap the default-content with an i-element -->
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:list>
+		</xs:simpleType>
+	</xs:attribute>
 
 </xs:schema>
