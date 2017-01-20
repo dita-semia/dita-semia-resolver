@@ -45,18 +45,29 @@
 		<xsl:attribute name="border-bottom-style"	>solid</xsl:attribute>
 	</xsl:attribute-set>
 	
+	<xsl:attribute-set name="ds:dl-tree-cell">
+		<xsl:attribute name="padding-top"			>0.1em</xsl:attribute>
+		<xsl:attribute name="padding-bottom"		>0.1em</xsl:attribute>
+	</xsl:attribute-set>
+		
 	<xsl:attribute-set name="ds:dt-tree">
 		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-top"			>0.5mm</xsl:attribute>
-		<xsl:attribute name="padding-bottom"		>0.0mm</xsl:attribute>
 		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
+		<!-- 
+			setting padding-top or padding-bottom here will have the effect that the space-before/-after of 
+			descending blocks (e.g. p-elements) will be set according to these boundaries. Whithoug these attributes
+			they will be ignored by FOP.
+		-->
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-tree">
 		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-top"			>0.5mm</xsl:attribute>
-		<xsl:attribute name="padding-bottom"		>0.5mm</xsl:attribute>
 		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
+		<!-- 
+			setting padding-top or padding-bottom here will have the effect that the space-before/-after of 
+			descending blocks (e.g. p-elements) will be set according to these boundaries. Whithoug these attributes
+			they will be ignored by FOP.
+		-->
 	</xsl:attribute-set>
 	
 	

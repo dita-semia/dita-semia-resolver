@@ -10,6 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_DT_WIDTH" 	as="xs:string">^dt-([0-9]+)$</xsl:variable>
 	
 	<xsl:variable name="PAGE_WIDTH" 				as="xs:string">165mm</xsl:variable>
+	<xsl:variable name="DEFAULT_TREE_DT_WIDTH" 		as="xs:integer" select="40"/>
 	
 	<!-- outputclass "tree" -->
 	
@@ -18,10 +19,11 @@
 			
 			<xsl:call-template name="commonattributes"/>
 			
-			<xsl:variable name="dt-width" select="tokenize(@outputclass, '\s+')[matches(., $DL_OUTPUTCLASS_DT_WIDTH)]"/>
+			<xsl:variable name="dt-width-attr"	as="xs:string?" 	select="tokenize(@outputclass, '\s+')[matches(., $DL_OUTPUTCLASS_DT_WIDTH)]"/>
+			<xsl:variable name="dt-width" 		as="xs:integer?"	select="if ($dt-width-attr) then xs:integer(replace($dt-width-attr, $DL_OUTPUTCLASS_DT_WIDTH, '$1')) else $DEFAULT_TREE_DT_WIDTH"/>
 			
 			<xsl:apply-templates mode="dl-tree">
-				<xsl:with-param name="dt-width" select="xs:integer(replace($dt-width, $DL_OUTPUTCLASS_DT_WIDTH, '$1'))" tunnel="yes"/>
+				<xsl:with-param name="dt-width" select="$dt-width" tunnel="yes"/>
 			</xsl:apply-templates>
 			
 		</fo:block>
@@ -29,7 +31,7 @@
 	
 	
 	<xsl:template match="*[contains(@class, ' topic/dlentry ')]" mode="dl-tree">
-		<xsl:param name="dt-width" as="xs:integer" select="40" tunnel="yes"/>
+		<xsl:param name="dt-width" as="xs:integer" tunnel="yes"/>
 		
 		<xsl:variable name="allEntries"			as="element()*"	select="ancestor::*[contains(@class, ' topic/dl ')]//*[contains(@class, ' topic/dlentry ')]"/>
 		<xsl:variable name="countPreEntries"	as="xs:integer"	select="count($allEntries intersect (preceding::* | ancestor::*))"/>
@@ -68,11 +70,11 @@
 						<fo:table-body>
 							<fo:table-row keep-together.within-column	= "100">
 								
-								<fo:table-cell margin-left = "0"> 
+								<fo:table-cell margin-left = "0" xsl:use-attribute-sets="ds:dl-tree-cell"> 
 									<!-- margin-left muss explizit auf 0 gesetzt werden, da es sich anderenfalls aufsummiert -->
 									<xsl:apply-templates select="*[contains(@class, ' topic/dt ')]" mode="#current"/>
 								</fo:table-cell>
-								<fo:table-cell margin-left="0" padding-right="1.5mm">									
+								<fo:table-cell margin-left="0" padding-right="1.5mm" xsl:use-attribute-sets="ds:dl-tree-cell">									
 									<!-- margin-left muss explizit auf 0 gesetzt werden, da es sich anderenfalls aufsummiert -->
 									<xsl:apply-templates select="*[contains(@class, ' topic/dd ')]" mode="#current"/>
 								</fo:table-cell>
