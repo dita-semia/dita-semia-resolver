@@ -42,11 +42,11 @@
 			<sch:assert test="exists(@cba:content) or (jakr:matchesRefText($keyRef))">
 				<!-- don't validate the text content when it's set by conbat -->
 				Invalid keyref: Text text content does not match the reference ('<sch:value-of select="$refAttr"/>').
-			</sch:assert> 
-			<sch:assert test="jakr:matchesNamespaceFilter($keyRef, $keyDef)">
+			</sch:assert>
+			<sch:assert test="empty($keyDef) or (jakr:matchesNamespaceFilter($keyRef, $keyDef))">
 				Invalid keyref: The referenced namespace ('<sch:value-of select="$refNamespace"/>') is not allowed in this context ('<sch:value-of select="$namespaceAttr"/>').
-			</sch:assert> 
-			<sch:report test="$outputclassAttr = 'name' and (not(exists($keyName)) or empty($keyName))">
+			</sch:assert>
+			<sch:report test="($outputclassAttr = 'name') and (not(exists($keyName)) or empty($keyName))">
 				Invalid keyref: The referenced key has no name to be displayed with this outputclass ('<sch:value-of select="$outputclassAttr"/>').
 			</sch:report>
 			<sch:assert test="exists($keyDef)"> 
