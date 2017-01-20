@@ -27,15 +27,15 @@
 	counter-increment	: topic3;
 }
 
-*[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/title']:before(@{topic-num-prefix-index})  {
+*[class~='topic/topic'] *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index})  {
 	content				: "?" "." counter(topic1) " ";
 }
 
-*[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/title']:before(@{topic-num-prefix-index}) {
+*[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index}) {
 	content				: "?" "." counter(topic1) "." counter(topic2) " ";
 }
 
-*[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/title']:before(@{topic-num-prefix-index})  {
+*[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] *[class~='topic/topic'] > *[class~='topic/title']:before(@{topic-num-prefix-index})  {
 	content				: "?" "." counter(topic1) "." counter(topic2) ".x"  " ";
 	color				: red;	/* no more supported */
 }
