@@ -264,7 +264,11 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 
 	public void addKeyDef(KeyDefInterface keyDef) {
 		keyDefByRefString.put(keyDef.getRefString(), keyDef);
-		keyDefByUrlAndId.put(FileUtil.decodeUrl(keyDef.getDefUrl()) + DitaUtil.HREF_URL_ID_DELIMITER + keyDef.getDefId(), keyDef);
+		final URL 		defUrl 	= keyDef.getDefUrl();
+		final String	defId 	= keyDef.getDefId();
+		if ((defUrl != null) && (defId != null)) {
+			keyDefByUrlAndId.put(FileUtil.decodeUrl(defUrl) + DitaUtil.HREF_URL_ID_DELIMITER + keyDef.getDefId(), keyDef);
+		}
 	}
 
 	@Override
