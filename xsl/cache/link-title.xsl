@@ -11,6 +11,17 @@
 	<xsl:include href="../cba-const.xsl"/>
 
 
+	<xsl:template match="*[contains(@class, $C_BOOKMAP)]" priority="4">
+		<xsl:variable name="mainTitle" as="xs:string?" select="normalize-space(ds:extractText(*[contains(@class, $C_TITLE)]/*[contains(@class, $C_MAINBOOKTITLE)]))"/>
+		<xsl:choose>
+			<xsl:when test="string($mainTitle) != ''">
+				<xsl:sequence select="$mainTitle"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="normalize-space(ds:extractText(*[contains(@class, $C_TITLE)]))"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 	<xsl:template match="*[contains(@class, $C_DL)][@outputclass = 'numbered-list-titles']/* | 
 						*[contains(@class, $C_OL)]/*" priority="3">
