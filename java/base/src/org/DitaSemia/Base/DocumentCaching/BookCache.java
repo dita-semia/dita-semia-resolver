@@ -172,14 +172,15 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	}
 	
 	public boolean isUrlIncluded(URL url) {
+		boolean isIncluded;
 		final String urlDecoded = FileUtil.decodeUrl(url);
 		if (urlDecoded == null) {
-			//logger.info("isUrlIncluded(" + url + ") -> null");
-			return false;
+			isIncluded = false;
 		} else {
-			//logger.info("isUrlIncluded(" + url + ") -> '" + urlDecoded + "', " + decodedUrlList.contains(urlDecoded));
-			return fileByUrl.containsKey(urlDecoded);
+			isIncluded = fileByUrl.containsKey(urlDecoded);
 		}
+		//logger.info("isUrlIncluded(" + url + ") -> " + isIncluded);
+		return isIncluded;
 	}
 
 
@@ -246,7 +247,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	
 	public void fullRefresh(ProgressListener progressListener) {
 		//logger.info("refresh");
-
+		
 		keyDefByRefString.clear();
 		keyDefByUrlAndId.clear();
 		keyTypeDefByName.clear();
@@ -258,7 +259,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		if (documentBuilder instanceof SaxonCachedDocumentBuilder) {
 			((SaxonCachedDocumentBuilder)documentBuilder).clearCache();
 		}
-
+	
 		fillCache(progressListener);
 	}
 
@@ -354,8 +355,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		return fileByUrl.get(FileUtil.decodeUrl(rootDocumentUrl));
 	}
 	
-	public FileCache getParentFile(URL url) {
-		final String 	decodedUrl 		= FileUtil.decodeUrl(url);
+	public FileCache getParentFile(String decodedUrl) {
 		TopicRef		parentTopicRef	= getParentTopicRef(decodedUrl);
 		while ((parentTopicRef != null) && (parentTopicRef.getReferencedFile() == null)) {
 			parentTopicRef = getParentTopicRef(parentTopicRef);
@@ -370,7 +370,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	public NodeWrapper getParentNode(NodeWrapper node) {
 		NodeWrapper parent = node.getParent();
 		if (parent == null) {
-			final FileCache	parentFile	= getParentFile(node.getBaseUrl());
+			final FileCache	parentFile	= getParentFile(FileUtil.decodeUrl(node.getBaseUrl()));
 			if (parentFile != null) {
 				parent = parentFile.getRootNode();
 			}
