@@ -82,6 +82,7 @@ public class XslTransformerCache {
 					throw new XPathException("Script file could not be found. (URL: '" + urlDecoded + "')");
 				}
 				scriptTimestamp = new Timestamp(script.lastModified());
+				//logger.info("timestamp: " + scriptTimestamp + " (" + decodedUrl + ")");
 			} catch (MalformedURLException e) {
 				throw new XPathException("Script file could not be found. (URL: '" + decodedUrl + "')");
 			}
@@ -107,7 +108,7 @@ public class XslTransformerCache {
 				final XsltCompiler 	compiler 	= processor.newXsltCompiler();
 				
 				xsltExecutable 	= compiler.compile(xslSource);		
-				//logger.info("new Executable: " + xsltExecutable);
+				//logger.info("compiled Executable: " + decodedUrl);
 				executableMap.put(url,  new ExecutableWithTimestamp(xsltExecutable, scriptTimestamp));
 			} 
 			catch (SaxonApiException e) {
