@@ -73,13 +73,14 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	 * Otherwise it returns the Cache only for the given file. If none exists yet, a new one is created. 
 	 */
 	@Override
-	public BookCache getBookCache(URL url) {
+	public synchronized BookCache getBookCache(URL url) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
 			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			BookCache 		mapCache 			= bookCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
+				//logger.info("create BookCache 1: " + currMapUrl);
 				mapCache = createBookCache(currMapUrl, null);
 			}
 			if ((mapCache != null) && (mapCache.isUrlIncluded(url))) {
@@ -89,6 +90,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
 		BookCache 	fileCache 	= bookCacheMap.get(decodedUrl);
 		if (fileCache == null) {
+			//logger.info("create BookCache 2: " + url);
 			fileCache = createBookCache(url, null);
 		}
 		return fileCache;
@@ -100,7 +102,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		configuration.setErrorListener(new Log4jErrorListener(logger));
 	}
 
-	public void refreshBookCache(URL url, ProgressListener progressListener) {
+	public synchronized void refreshBookCache(URL url, ProgressListener progressListener) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		BookCache 	bookCache = null;
@@ -108,6 +110,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			bookCache = bookCacheMap.get(currMapDecodedUrl);
 			if (bookCache == null) {
+				//logger.info("create BookCache 3: " + currMapUrl);
 				bookCache = createBookCache(currMapUrl, progressListener);
 			} else {
 				bookCache.fullRefresh(progressListener);
@@ -117,6 +120,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 			final String 	decodedUrl 		= FileUtil.decodeUrl(url);
 			BookCache 		fileBookCache 	= bookCacheMap.get(decodedUrl);
 			if (fileBookCache == null) {
+				//logger.info("create BookCache 4: " + url);
 				fileBookCache = createBookCache(url, progressListener);
 			} else {
 				fileBookCache.fullRefresh(progressListener);
