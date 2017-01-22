@@ -59,5 +59,9 @@ public class XPathCache {
 			return false;
 		}
 	}
+	
+	public void clear() {
+		xPathMap.clear();
+	}
 
 }

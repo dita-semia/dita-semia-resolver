@@ -160,9 +160,15 @@ public class XslTransformerCache {
 		executableMap.remove(url);
 	}
 
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void clear() {
+		executableMap.clear();
+	}
+
 	private static class ExecutableWithTimestamp {
-		@SuppressWarnings("unused")
-		private static final Logger logger = Logger.getLogger(ExecutableWithTimestamp.class.getName());
 		
 		private XsltExecutable 	xsltExecutable;
 		private Timestamp 		timestamp;
@@ -179,14 +185,6 @@ public class XslTransformerCache {
 		private Timestamp getTimestamp() {
 			return timestamp;
 		}
-	}
-
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public void clear() {
-		executableMap.clear();
 	}
 	
 }
