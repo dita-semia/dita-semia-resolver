@@ -144,8 +144,7 @@ public class XsltConref {
 			try {
 				//logger.info("reparsing...");
 				//logger.info(serialized);
-				final Source 	source 			= new SAXSource(xsltConrefCache.getXmlReader(), new InputSource(new StringReader(serialized)));
-				final XdmNode 	reparsedNode 	= xsltConrefCache.getDocumentBuilder().build(source);
+				final XdmNode 	reparsedNode 	= xsltConrefCache.getDocumentBuilder().buildFromString(serialized, true);
 				
 				resolvedElement = reparsedNode.getUnderlyingNode().iterateAxis(AxisInfo.CHILD, NodeKindTest.ELEMENT).next();
 				//logger.info("---");
