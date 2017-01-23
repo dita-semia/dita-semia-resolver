@@ -18,9 +18,6 @@ public class KeyDef implements KeyDefInterface {
 
 	private static final Logger logger = Logger.getLogger(KeyDef.class.getName());
 
-	public static final String 	NAMESPACE_URI		= "http://www.dita-semia.org/implicit-keydef";
-	public static final String 	NAMESPACE_PREFIX	= "ikd";
-
 	public static final String 	ATTR_TYPE		= "key-type";
 	private static final String ATTR_ROOT		= "root";
 	private static final String ATTR_REF_NODE	= "ref-node";

@@ -26,7 +26,6 @@ import net.sf.saxon.s9api.ItemType;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XPathExecutable;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmDestination;
@@ -43,7 +42,6 @@ import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
 
 public class XsltConref {
 	
@@ -66,6 +64,7 @@ public class XsltConref {
 	public static final String 	PARAM_CURRENT_URI			= "current-uri";
 	public static final String 	NAMESPACE_PARAMETER_URI		= "http://www.dita-semia.org/xslt-conref/custom-parameter";
 	public static final String 	NAMESPACE_URI				= "http://www.dita-semia.org/xslt-conref";
+	public static final String 	NAMESPACE_PARAMETER_PREFIX	= "xcp";
 	public static final String 	NAMESPACE_PREFIX			= "xcr";
 
 	public static final String 	NAME_NO_CONTENT				= "no-content";
@@ -223,8 +222,7 @@ public class XsltConref {
 					if (xmlSourceIsBaseUrl) {
 						// set "xcr:current"
 						final String 			xPathString	= createXPathToElement(node);
-						final XPathExecutable 	xPathExe 	= xsltConrefCache.getXPathCache().getXPathExecutable(xPathString);
-						final XPathSelector  	xPathSel	= xPathExe.load();
+						final XPathSelector  	xPathSel	= xsltConrefCache.getXPathCache().getXPathSelector(xPathString, context);
 						try {
 							xPathSel.setContextItem(context);
 							xsltTransformer.setParameter(

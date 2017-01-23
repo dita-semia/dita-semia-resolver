@@ -109,7 +109,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		this.globalKeyTypeDefUrl		= globalKeyTypeDefUrl;
 
 		appendixPrefix		= getAppendixPrefix(language);
-		xPathCache 			= createXPathCache(defaultConfiguration);
+		xPathCache 			= new XPathCache(defaultConfiguration);
 	}
 
 	public void fillCache(ProgressListener progressListener) {
@@ -149,12 +149,6 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			configurationInitializer.initConfig(configuration);
 		}
 		return configuration;
-	}
-	
-	public static XPathCache createXPathCache(Configuration configuration) {
-		XPathCache xPathCache = new XPathCache(configuration);
-		xPathCache.declareNamespace(KeyDef.NAMESPACE_PREFIX, KeyDef.NAMESPACE_URI);
-		return xPathCache;
 	}
 	
 	public URL getRootDocumentUrl() {

@@ -9,6 +9,9 @@ import java.util.Set;
 import org.DitaSemia.Base.NodeWrapper;
 
 public interface KeyDefInterface extends KeyspecInterface {
+
+	public static final String 	NAMESPACE_URI		= "http://www.dita-semia.org/implicit-keydef";
+	public static final String 	NAMESPACE_PREFIX	= "ikd";
 	
 	String 	getName();
 

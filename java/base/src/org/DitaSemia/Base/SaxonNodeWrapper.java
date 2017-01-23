@@ -211,9 +211,7 @@ public class SaxonNodeWrapper implements NodeWrapper
 		if (xPathCache == null) {
 			throw new XPathException("SaxonNodeWrapper: Can't evaluate XPath ('" + xPath + "') without XPathCache.");
 		} else {
-			XPathSelector selector = xPathCache.getXPathExecutable(xPath).load();
-			selector.setContextItem(new XdmNode(saxonNode));
-			return selector;
+			return xPathCache.getXPathSelector(xPath, new XdmNode(saxonNode));
 		}
 	}
 

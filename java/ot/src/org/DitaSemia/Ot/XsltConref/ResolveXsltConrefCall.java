@@ -1,23 +1,14 @@
 package org.DitaSemia.Ot.XsltConref;
 
-import java.io.StringReader;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Ot.DitaSemiaOtResolver;
 import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
-import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
-import net.sf.saxon.pattern.NodeKindTest;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XPathExecutable;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
@@ -74,9 +65,8 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 		
 		// check for missing class attribute
 		try {
-			final XPathExecutable 	xPath	= otResolver.getXPathCache().getXPathExecutable(MISSING_CLASS_XPATH);
-			final XPathSelector		sel		= xPath.load();
-			sel.setContextItem(new XdmNode(resolvedElement));
+			final XdmNode		context	= new XdmNode(resolvedElement);
+			final XPathSelector sel		= otResolver.getXPathCache().getXPathSelector(MISSING_CLASS_XPATH, context);
 			final XdmItem item = sel.evaluateSingle();
 			if (item != null) {
 				String name;

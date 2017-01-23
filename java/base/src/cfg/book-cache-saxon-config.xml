@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration edition="EE" xmlns="http://saxon.sf.net/ns/configuration">
 	<global allowExternalFunctions="true" stripSpace="none"/>
-	<!--  don't use strict validation since it will fail when no XSD is specified (but an RNG schema) -->
 	<xslt schemaAware="false">
 		<extensionElement/>
 	</xslt>

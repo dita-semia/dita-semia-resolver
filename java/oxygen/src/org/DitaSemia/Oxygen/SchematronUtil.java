@@ -78,7 +78,7 @@ public class SchematronUtil {
 				final Configuration xPathConfig = bookCache.createConfiguration();
 				xPathConfig.setNamePool(elementConfig.getNamePool());
 				xPathConfig.setDocumentNumberAllocator(elementConfig.getDocumentNumberAllocator());
-				xPathCache = BookCache.createXPathCache(xPathConfig);
+				xPathCache = new XPathCache(xPathConfig);
 			} catch (MalformedURLException e) {
 				logger.error(e, e);
 				xPathCache = null;
