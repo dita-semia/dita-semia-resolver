@@ -30,6 +30,7 @@
 						<xs:enumeration value="pe-italic"/>			<!-- wrap the popup-edit content with an i-element --> 
 						<xs:enumeration value="pe-braced"/>			<!-- wrap the popup-edit content with braces -->
 						<xs:enumeration value="default-italic"/>	<!-- wrap the default-content with an i-element -->
+						<xs:enumeration value="author-only"/>		<!-- the element is only visible for the author and hidden in any output -->
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:list>
