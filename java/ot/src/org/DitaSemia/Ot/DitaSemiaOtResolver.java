@@ -19,7 +19,9 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.Log4jErrorListener;
+import org.DitaSemia.Base.SaxonDocumentBuilder;
 import org.DitaSemia.Base.XPathCache;
+import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
@@ -99,12 +101,14 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		//final Configuration xsltConrefConfiguration = XsltConref.createConfiguration(this);
 		//xsltConrefConfiguration.;
 		
+		SaxonDocumentBuilder documentBuilder = new SaxonDocumentBuilder(CatalogUtils.getCatalogResolver(), CatalogUtils.getCatalogResolver());
+		
 		final ConfigurationInitializer configurationInitializer = new ConfigurationInitializer() {
 			@Override
 			public void initConfig(Configuration configuration) {
 				configuration.setURIResolver(CatalogUtils.getCatalogResolver());
 			}};
-		xsltConrefCache = new XsltConrefCache(this, configurationInitializer);
+		xsltConrefCache = new XsltConrefCache(this, configurationInitializer, documentBuilder);
 		
 		try {
 			xsltConrefXmlReader	= XMLUtils.getXMLReader();
@@ -150,6 +154,9 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			throw new DITAOTException(e.getMessage(), e);
 		}
 		
+		final Configuration extractConfiguration = new Configuration();
+		SaxonDocumentBuilder.makeConfigurationCompatible(extractConfiguration);
+		final XslTransformerCache	extractTransformerCache = new XslTransformerCache(extractConfiguration);
 		
 		try {
 			final String	inputUrl			= job.getInputMap().toString();
@@ -161,7 +168,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			final String	language			= input.getAttribute(ANT_INVOKER_PARAM_LANGUAGE);
 			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, false, ditaOtUrl, keyTypeDefListUrl, language);
+			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, documentBuilder, extractTransformerCache, false, ditaOtUrl, keyTypeDefListUrl, language);
 			
 			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());

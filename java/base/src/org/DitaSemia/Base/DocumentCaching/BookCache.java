@@ -14,11 +14,9 @@ import java.util.Set;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.Configuration;
-import net.sf.saxon.lib.Validation;
 import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.XdmNode;
@@ -30,8 +28,6 @@ import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.ProgressListener;
-import org.DitaSemia.Base.SaxonCachedDocumentBuilder;
-import org.DitaSemia.Base.SaxonConfigurationFactory;
 import org.DitaSemia.Base.SaxonDocumentBuilder;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
@@ -47,7 +43,7 @@ import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.apache.log4j.Logger;
 
-public class BookCache extends SaxonConfigurationFactory implements KeyDefListInterface, KeyTypeDefListInterface {
+public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	private static final Logger logger = Logger.getLogger(BookCache.class.getName());
 
@@ -81,6 +77,8 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	private final XslTransformerCache		extractTransformerCache;	// for data extraction from cached document -> attribute defaults are already resolved!
 	private final XPathCache 				xPathCache;
 	private final SaxonDocumentBuilder		documentBuilder;
+	//private final EntityResolver			entityResolver;
+	private final boolean					expandAttributeDefaults;
 
 	private final String					appendixPrefix;
 	
@@ -92,6 +90,8 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 			URL 						rootDocumentUrl,
 			ConfigurationInitializer	configurationInitializer,
 			XsltConrefCache 			xsltConrefCache,
+			SaxonDocumentBuilder		documentBuilder,
+			XslTransformerCache			extractTransformerCache,
 			boolean						expandAttributeDefaults,
 			URL 						ditaOtUrl,
 			URL 						globalKeyTypeDefUrl, 
@@ -100,25 +100,16 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		this.rootDocumentUrl 			= rootDocumentUrl;
 		this.configurationInitializer	= configurationInitializer;
 		this.xsltConrefCache			= xsltConrefCache;
+		this.documentBuilder			= documentBuilder;
+		this.extractTransformerCache	= extractTransformerCache;
+		this.expandAttributeDefaults	= expandAttributeDefaults;
 		this.defaultConfiguration		= createConfiguration(); // needs to be done after this.configurationInitializer has been set
 		
 		this.ditaOtUrl					= ditaOtUrl;
 		this.globalKeyTypeDefUrl		= globalKeyTypeDefUrl;
-		//this.language					= language;
-
-		if (expandAttributeDefaults) {
-			documentBuilder	= new SaxonCachedDocumentBuilder(this);	
-		} else {
-			documentBuilder	= new SaxonDocumentBuilder(defaultConfiguration);
-		}
 
 		appendixPrefix		= getAppendixPrefix(language);
 		xPathCache 			= createXPathCache(defaultConfiguration);
-
-		final Configuration extractConfiguration = createConfiguration();
-		// disable validation to allow usage of same configuration for any file type (attribute defaults are already expanded)
-		extractConfiguration.setSchemaValidationMode(Validation.STRIP);	
-		this.extractTransformerCache	= new XslTransformerCache(extractConfiguration);
 	}
 
 	public void fillCache(ProgressListener progressListener) {
@@ -149,9 +140,8 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		cacheProgressListener = null;
 	}
 	
-	@Override
 	public Configuration createConfiguration() {
-		final Configuration configuration = SaxonConfigurationFactory.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
+		final Configuration configuration = SaxonDocumentBuilder.loadConfiguration(XsltConref.class.getResource(CONFIG_FILE_URL));
 		
 		configuration.registerExtensionFunction(new AncestorPathDef(this));
 		
@@ -172,31 +162,29 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	}
 	
 	public boolean isUrlIncluded(URL url) {
+		boolean isIncluded;
 		final String urlDecoded = FileUtil.decodeUrl(url);
 		if (urlDecoded == null) {
-			//logger.info("isUrlIncluded(" + url + ") -> null");
-			return false;
+			isIncluded = false;
 		} else {
-			//logger.info("isUrlIncluded(" + url + ") -> '" + urlDecoded + "', " + decodedUrlList.contains(urlDecoded));
-			return fileByUrl.containsKey(urlDecoded);
+			isIncluded = fileByUrl.containsKey(urlDecoded);
 		}
+		//logger.info("isUrlIncluded(" + url + ") -> " + isIncluded);
+		return isIncluded;
 	}
 
 
 	public FileCache createFileCache(Source source, String topicrefClass) {
 		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
 		FileCache 		cachedFile	= null;
+		
+		//logger.info("Source: " + decodedUrl + ", " + source.getClass());
 
 		if (fileByUrl.containsKey(decodedUrl)) {
 			logger.error("ERROR: File included twice: '" + decodedUrl + "' - ignored second one.");
 		} else {
 			try {
-				// remove the provided xml reader to force saxon creating its own one using the configuration and, thus, expanding the attribute defaults
-				if (source instanceof SAXSource) {
-					((SAXSource)source).setXMLReader(null);
-				}
-
-				final XdmNode 				rootNode 		= documentBuilder.build(source);
+				final XdmNode 				rootNode 		= documentBuilder.build(source, expandAttributeDefaults);
 				final XdmSequenceIterator 	iterator 		= rootNode.axisIterator(Axis.CHILD);
 				
 				//logger.info(SaxonNodeWrapper.serializeNode(rootNode.getUnderlyingNode()));
@@ -246,19 +234,13 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	
 	public void fullRefresh(ProgressListener progressListener) {
 		//logger.info("refresh");
-
+		
 		keyDefByRefString.clear();
 		keyDefByUrlAndId.clear();
 		keyTypeDefByName.clear();
 		fileByUrl.clear();
 		topicRefByUrl.clear();
 		
-		extractTransformerCache.clear();
-		
-		if (documentBuilder instanceof SaxonCachedDocumentBuilder) {
-			((SaxonCachedDocumentBuilder)documentBuilder).clearCache();
-		}
-
 		fillCache(progressListener);
 	}
 
@@ -354,8 +336,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 		return fileByUrl.get(FileUtil.decodeUrl(rootDocumentUrl));
 	}
 	
-	public FileCache getParentFile(URL url) {
-		final String 	decodedUrl 		= FileUtil.decodeUrl(url);
+	public FileCache getParentFile(String decodedUrl) {
 		TopicRef		parentTopicRef	= getParentTopicRef(decodedUrl);
 		while ((parentTopicRef != null) && (parentTopicRef.getReferencedFile() == null)) {
 			parentTopicRef = getParentTopicRef(parentTopicRef);
@@ -370,7 +351,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 	public NodeWrapper getParentNode(NodeWrapper node) {
 		NodeWrapper parent = node.getParent();
 		if (parent == null) {
-			final FileCache	parentFile	= getParentFile(node.getBaseUrl());
+			final FileCache	parentFile	= getParentFile(FileUtil.decodeUrl(node.getBaseUrl()));
 			if (parentFile != null) {
 				parent = parentFile.getRootNode();
 			}
@@ -483,7 +464,7 @@ public class BookCache extends SaxonConfigurationFactory implements KeyDefListIn
 
 	public void parseKeyTypeDefSource(Source source) {
 		try {
-			final XdmNode 				rootNode = documentBuilder.build(source);
+			final XdmNode 				rootNode = documentBuilder.build(source, false);
 			final XdmSequenceIterator 	iterator = rootNode.axisIterator(Axis.CHILD, BookCache.NAME_KEY_TYPE_DEF_LIST);
 			
 			while (iterator.hasNext()) {

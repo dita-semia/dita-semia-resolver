@@ -1,6 +1,9 @@
 package org.DitaSemia.Oxygen;
 
+import org.DitaSemia.Base.FileUtil;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
+import org.DitaSemia.Base.DocumentCaching.TopicRef;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.css.StaticContent;
@@ -31,7 +34,13 @@ public class MapContextStylesFilter extends DitaSemiaStylesFilter {
 			if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_ROOT)) {
 				handled = filterMapContext(styles, getBookCache(authorNode).getRootFile());
 			} else if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_PARENT)) {
-				handled = filterMapContext(styles, getBookCache(authorNode).getParentFile(authorNode.getXMLBaseURL()));
+				final BookCache bookCache = getBookCache(authorNode);
+				TopicRef parentTopicRef = bookCache.getParentTopicRef(bookCache.getTopicRef(FileUtil.decodeUrl(authorNode.getXMLBaseURL())));
+				while ((parentTopicRef != null) && ((parentTopicRef.getReferencedFile() == null) || (parentTopicRef.getReferencedFile().isMap()))) {
+					parentTopicRef = bookCache.getParentTopicRef(parentTopicRef);
+				}
+				final FileCache parentTopic = (parentTopicRef == null) ? null : parentTopicRef.getReferencedFile();
+				handled = filterMapContext(styles, parentTopic);
 			}
 		}
 		return handled;

@@ -82,6 +82,7 @@ public class XslTransformerCache {
 					throw new XPathException("Script file could not be found. (URL: '" + urlDecoded + "')");
 				}
 				scriptTimestamp = new Timestamp(script.lastModified());
+				//logger.info("timestamp: " + scriptTimestamp + " (" + decodedUrl + ")");
 			} catch (MalformedURLException e) {
 				throw new XPathException("Script file could not be found. (URL: '" + decodedUrl + "')");
 			}
@@ -107,7 +108,7 @@ public class XslTransformerCache {
 				final XsltCompiler 	compiler 	= processor.newXsltCompiler();
 				
 				xsltExecutable 	= compiler.compile(xslSource);		
-				//logger.info("new Executable: " + xsltExecutable);
+				//logger.info("compiled Executable: " + decodedUrl);
 				executableMap.put(url,  new ExecutableWithTimestamp(xsltExecutable, scriptTimestamp));
 			} 
 			catch (SaxonApiException e) {
@@ -159,9 +160,15 @@ public class XslTransformerCache {
 		executableMap.remove(url);
 	}
 
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void clear() {
+		executableMap.clear();
+	}
+
 	private static class ExecutableWithTimestamp {
-		@SuppressWarnings("unused")
-		private static final Logger logger = Logger.getLogger(ExecutableWithTimestamp.class.getName());
 		
 		private XsltExecutable 	xsltExecutable;
 		private Timestamp 		timestamp;
@@ -178,14 +185,6 @@ public class XslTransformerCache {
 		private Timestamp getTimestamp() {
 			return timestamp;
 		}
-	}
-
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public void clear() {
-		executableMap.clear();
 	}
 	
 }

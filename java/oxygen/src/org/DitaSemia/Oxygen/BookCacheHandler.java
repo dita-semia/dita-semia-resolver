@@ -3,17 +3,22 @@ package org.DitaSemia.Oxygen;
 import java.net.URL;
 import java.util.HashMap;
 
+import javax.xml.transform.URIResolver;
+
 import net.sf.saxon.Configuration;
 
 import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.ProgressListener;
+import org.DitaSemia.Base.SaxonDocumentBuilder;
+import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
+import org.xml.sax.EntityResolver;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -29,6 +34,10 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	private final HashMap<String, BookCache> 	bookCacheMap;
 	private final URL							ditaOtUrl;
 	private final String						language;
+	private final EntityResolver				entityResolver;
+	private final URIResolver					uriResolver;
+	private final XslTransformerCache			extractTransformerCache;
+	private final SaxonDocumentBuilder			documentBuilder;
 	private final XsltConrefCache				xsltConrefCache;
 	private URL									globalKeyTypeDefUrl;
 	
@@ -40,11 +49,18 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	}
 	
 	private BookCacheHandler() {
-		bookCacheMap 		= new HashMap<>();
-		ditaOtUrl			= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
-		language			= PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
-		xsltConrefCache 	= new XsltConrefCache(this, this);
-		globalKeyTypeDefUrl = null;
+		bookCacheMap 			= new HashMap<>();
+		ditaOtUrl				= EditorVariables.expandEditorVariablesAsURL(EditorVariables.CONFIGURED_DITA_OT_DIR_URL + "/", "");
+		language				= PluginWorkspaceProvider.getPluginWorkspace().getUserInterfaceLanguage();
+		entityResolver			= PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess().getEntityResolver();
+		uriResolver				= PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess().getURIResolver();
+		
+		final Configuration extractConfiguration = new Configuration();
+		SaxonDocumentBuilder.makeConfigurationCompatible(extractConfiguration);
+		extractTransformerCache	= new XslTransformerCache(extractConfiguration);
+		documentBuilder			= new SaxonDocumentBuilder(entityResolver, uriResolver);
+		xsltConrefCache 		= new XsltConrefCache(this, this, documentBuilder);
+		globalKeyTypeDefUrl	 	= null;
 		//logger.info("ditaOtUrl: " + ditaOtUrl);
 		
 		//logger.info("new DocumentCacheHandler(" + initializer + ")");
@@ -62,7 +78,16 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	
 	private BookCache createBookCache(URL url, ProgressListener progressListener) {
 	
-		final BookCache bookCache = new BookCache(url,  this, xsltConrefCache, true, ditaOtUrl, globalKeyTypeDefUrl, language);
+		final BookCache bookCache = new BookCache(
+					url,  
+					this, 
+					xsltConrefCache, 
+					documentBuilder, 
+					extractTransformerCache, 
+					true, 
+					ditaOtUrl, 
+					globalKeyTypeDefUrl, 
+					language);
 		bookCacheMap.put(FileUtil.decodeUrl(url), bookCache);
 		bookCache.fillCache(progressListener);	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 
 		return bookCache;
@@ -73,13 +98,14 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	 * Otherwise it returns the Cache only for the given file. If none exists yet, a new one is created. 
 	 */
 	@Override
-	public BookCache getBookCache(URL url) {
+	public synchronized BookCache getBookCache(URL url) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
 			final String 	currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			BookCache 		mapCache 			= bookCacheMap.get(currMapDecodedUrl);
 			if (mapCache == null) {
+				//logger.info("create BookCache 1: " + currMapUrl);
 				mapCache = createBookCache(currMapUrl, null);
 			}
 			if ((mapCache != null) && (mapCache.isUrlIncluded(url))) {
@@ -89,6 +115,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		final String 	decodedUrl 	= FileUtil.decodeUrl(url);
 		BookCache 	fileCache 	= bookCacheMap.get(decodedUrl);
 		if (fileCache == null) {
+			//logger.info("create BookCache 2: " + url);
 			fileCache = createBookCache(url, null);
 		}
 		return fileCache;
@@ -100,7 +127,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		configuration.setErrorListener(new Log4jErrorListener(logger));
 	}
 
-	public void refreshBookCache(URL url, ProgressListener progressListener) {
+	public synchronized void refreshBookCache(URL url, ProgressListener progressListener) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		BookCache 	bookCache = null;
@@ -108,6 +135,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 			final String currMapDecodedUrl 	= FileUtil.decodeUrl(currMapUrl);
 			bookCache = bookCacheMap.get(currMapDecodedUrl);
 			if (bookCache == null) {
+				//logger.info("create BookCache 3: " + currMapUrl);
 				bookCache = createBookCache(currMapUrl, progressListener);
 			} else {
 				bookCache.fullRefresh(progressListener);
@@ -117,6 +145,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 			final String 	decodedUrl 		= FileUtil.decodeUrl(url);
 			BookCache 		fileBookCache 	= bookCacheMap.get(decodedUrl);
 			if (fileBookCache == null) {
+				//logger.info("create BookCache 4: " + url);
 				fileBookCache = createBookCache(url, progressListener);
 			} else {
 				fileBookCache.fullRefresh(progressListener);
@@ -128,6 +157,21 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	private URL getCurrMapUrl() {
 		final WSEditor 	editor 		= PluginWorkspaceProvider.getPluginWorkspace().getCurrentEditorAccess(PluginWorkspace.DITA_MAPS_EDITING_AREA);
 		return (editor != null) ? editor.getEditorLocation() : null;
+	}
+
+	public EntityResolver getEntityResolver() {
+		return entityResolver;
+	}
+
+	public XsltConrefCache getXsltConrefCache() {
+		return xsltConrefCache;
+	}
+	
+	public void clearCache() {
+		bookCacheMap.clear();
+		extractTransformerCache.clear();
+		documentBuilder.clearCache();
+		xsltConrefCache.clear();
 	}
 
 }

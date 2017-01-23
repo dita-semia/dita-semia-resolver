@@ -15,16 +15,16 @@ public class Log4jErrorHandler implements ErrorHandler {
 
 	@Override
 	public void warning(SAXParseException exception) throws SAXException {
-		logger.warn(exception.getMessage(), exception);
+		logger.warn(exception.getMessage());
 	}
 
 	@Override
 	public void error(SAXParseException exception) throws SAXException {
-		logger.error(exception.getMessage(), exception);
+		logger.error(exception.getMessage());
 	}
 
 	@Override
 	public void fatalError(SAXParseException exception) throws SAXException {
-		logger.fatal(exception.getMessage(), exception);
+		logger.fatal(exception.getMessage());
 	}
 }

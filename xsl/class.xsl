@@ -6,6 +6,9 @@
 	
 	<!-- classes to be used for checking elements with *[contains(@class, 'C_xxx')] -->
 	
+	<xsl:variable name="C_BOOKMAP"			as="xs:string"> bookmap/bookmap </xsl:variable>
+	<xsl:variable name="C_MAINBOOKTITLE"	as="xs:string"> bookmap/mainbooktitle </xsl:variable>
+	
 	<xsl:variable name="C_TOPIC"			as="xs:string"> topic/topic </xsl:variable>
 	<xsl:variable name="C_PROLOG"			as="xs:string"> topic/prolog </xsl:variable>
 	<xsl:variable name="C_BODY"				as="xs:string"> topic/body </xsl:variable>

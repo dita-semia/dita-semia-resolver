@@ -72,6 +72,68 @@
 									</poPatch>
 									<poPatch>
 										<field name="fieldPath">
+											<String>authorExtensionDescriptor/actionDescriptors</String>
+										</field>
+										<field name="index">
+											<Integer>29</Integer>
+										</field>
+										<field name="value">
+											<action>
+												<field name="id">
+													<String>clear-dita-semia-caches</String>
+												</field>
+												<field name="name">
+													<String>Clear DITA-SEMIA Cache</String>
+												</field>
+												<field name="description">
+													<String>Clears alls caches from dita-semia. This includes:
+- xml-document
+- schemas
+- xslt-scripts
+- xpath expressions
+- parsed dita documents</String>
+												</field>
+												<field name="largeIconPath">
+													<String>${framework}/img/ClearCache.png</String>
+												</field>
+												<field name="smallIconPath">
+													<String>${framework}/img/ClearCache.png</String>
+												</field>
+												<field name="accessKey">
+													<String></String>
+												</field>
+												<field name="accelerator">
+													<null/>
+												</field>
+												<field name="actionModes">
+													<actionMode-array>
+														<actionMode>
+															<field name="xpathCondition">
+																<String></String>
+															</field>
+															<field name="argValues">
+																<serializableOrderedMap/>
+															</field>
+															<field name="operationID">
+																<String>org.DitaSemia.Oxygen.AuthorOperations.ClearAllCaches</String>
+															</field>
+														</actionMode>
+													</actionMode-array>
+												</field>
+												<field name="enabledInReadOnlyContext">
+													<Boolean>false</Boolean>
+												</field>
+											</action>
+										</field>
+										<field name="patchHandling">
+											<String>addIndex</String>
+										</field>
+										<field name="anchor">
+											<null/>
+										</field>
+									</poPatch>
+									<poPatch>
+										<field name="fieldPath">
 											<String>description</String>
 										</field>
 										<field name="index">

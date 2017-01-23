@@ -57,7 +57,7 @@ public class XsltConrefResolver {
 	}
 	
 	public XsltConrefResolver() {
-		xsltConrefCache = new XsltConrefCache(BookCacheHandler.getInstance(), BookCacheHandler.getInstance());
+		xsltConrefCache = BookCacheHandler.getInstance().getXsltConrefCache();
 	}
 
 	public void addFrameworkParameter(QName name, Sequence value) {
