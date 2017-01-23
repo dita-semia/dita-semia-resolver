@@ -367,6 +367,12 @@
 							exists(parent::*/parent::*/@cba:suffix)">
 				<!-- last node within the last element within an element with a suffix -->
 			</xsl:when>
+			<xsl:when test="empty(following-sibling::node()) and 
+				empty(parent::*/following-sibling::node()[not(self::text()[matches(., '^\s+$')])]) and
+				empty(parent::*/parent::*/following-sibling::node()[not(self::text()[matches(., '^\s+$')])]) and
+				exists(parent::*/parent::*/parent::*/@cba:suffix)">
+				<!-- last node within the last element within the last element within an element with a suffix -->
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:next-match/>
 			</xsl:otherwise>
