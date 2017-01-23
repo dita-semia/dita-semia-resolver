@@ -98,7 +98,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	 * Otherwise it returns the Cache only for the given file. If none exists yet, a new one is created. 
 	 */
 	@Override
-	public synchronized BookCache getBookCache(URL url) {
+	public BookCache getBookCache(URL url) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		if (currMapUrl != null) {
@@ -127,7 +127,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		configuration.setErrorListener(new Log4jErrorListener(logger));
 	}
 
-	public synchronized void refreshBookCache(URL url, ProgressListener progressListener) {
+	public void refreshBookCache(URL url, ProgressListener progressListener) {
 		final URL currMapUrl = getCurrMapUrl();
 		
 		BookCache 	bookCache = null;
