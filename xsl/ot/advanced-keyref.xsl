@@ -18,7 +18,7 @@
 	<xsl:template match="*[@akr:ref][count(node()) = 1]/text()[not(matches(., '^\s+$'))]">
 		
 		<xsl:variable name="keyRef"			as="element()"										select="parent::*"/>
-		<xsl:variable name="outputclass"	as="xs:string?"										select="$keyRef/@outputclass"/>
+		<xsl:variable name="outputclass"	as="xs:string?"										select="replace($keyRef/@outputclass, '!$', '')"/>
 		<xsl:variable name="jKeyDef"		as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDef?" 	select="akr:getReferencedKeyDef(parent::*)"/>
 		<xsl:variable name="href"			as="xs:string?" 									select="if (exists($jKeyDef)) then akr:getKeyDefLocation($jKeyDef) else ()"/>
 
@@ -46,6 +46,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:sequence select="$refContent"/>
+				<xsl:message>WARNING: Failed to resolve advanced-keyref to xref (<xsl:value-of select="$keyRef/@akr:ref"/>)</xsl:message>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
