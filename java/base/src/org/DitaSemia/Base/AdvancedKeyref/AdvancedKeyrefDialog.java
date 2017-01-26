@@ -1,5 +1,6 @@
 package org.DitaSemia.Base.AdvancedKeyref;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -234,6 +235,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		
 		this.add(optionPane);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		previewTextField.setBackground(Color.WHITE);
 	}
 	
 	private void registerKeyBindings() {
@@ -896,11 +898,23 @@ public class AdvancedKeyrefDialog extends JDialog {
 			prefix 	= prefix.replace(">", "&gt;");
 			suffix 	= suffix.replace("<", "&lt;");
 			suffix 	= suffix.replace(">", "&gt;");
-			style 	= " style=\"font-family:" + fontFamily + "\"";
-			text = "<html><ul style=\"list-style-type: none; margin-left: 6px; margin-top: 6px\"><li><span " + style + ">" + italicPre + prefix + preview + suffix + italicSuf + "</span></li></ul>" +
-					"<span style= font-family:\"serif\">" + nameSuffix + "</span></html>";
+			style 	= " style=\"font-family:" + fontFamily + "; display: inline-block\"";
+			text = "<html>" +
+						"<ul style=\"list-style-type: none; margin-left: 6px; margin-top: 6px; display: inline-block\">" + 
+							"<li>" + 
+								"<span " + style + ">" + italicPre + prefix + preview + suffix + italicSuf + "</span>" +
+								"<span style=\"font-family:serif\">" + nameSuffix + "</span>" + 
+							"</li>" + 
+						"</ul>" + 
+					"</html>";
 		} else {
-			text = "<html><ul style=\"list-style-type: none; margin-left: 6px; margin-top: 6px\"><li><span " + style + ">" + nameSuffix + "</span></li></ul></html>";
+			text = "<html>" +
+						"<ul style=\"list-style-type: none; margin-left: 6px; margin-top: 6px\">" +
+							"<li>" +
+								"<span " + style + ">" + nameSuffix + "</span>" +
+							"</li>" +
+						"</ul>" +
+					"</html>";
 		}
 		
 		
