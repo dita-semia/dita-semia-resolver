@@ -253,20 +253,20 @@
 		<xsl:param name="hasResponse"		as="xs:boolean"	select="true()"/>
 
 		<xsl:variable name="xOffset"	as="xs:double" select="($COMPONENT_WIDTH div 2) + ($ACTION_WIDTH div 2)"/>
-
+		
+		<xsl:variable name="textHeight"		as="xs:double"	select="ds:ptToMm($CALL_FONT_SIZE) + (2 * $TEXT_MARGIN_Y)"/>
+		<xsl:variable name="componentIndex"	as="xs:integer"	select="index-of($componentList, $component)"/>
+		<xsl:variable name="componentXPos" 	as="xs:double"	select="($componentIndex - 1) * ($componentSpace + $COMPONENT_WIDTH) + ($COMPONENT_WIDTH div 2)"/>
+		
 		<!-- function name -->
 		<xsl:call-template name="SvgText">
 			<xsl:with-param name="xInMm"		select="$xOffset + $TEXT_MARGIN_X"/>
-			<xsl:with-param name="yInMm"		select="$yOffset + $TEXT_MARGIN_Y"/>
+			<xsl:with-param name="yInMm"		select="$yOffset + $textHeight - $TEXT_MARGIN_Y"/>
 			<xsl:with-param name="fontFamily"	select="$CALL_FONT_FAMILY"/>
 			<xsl:with-param name="fontSize"		select="$CALL_FONT_SIZE"/>
 			<xsl:with-param name="dy"			select="$SVG.DY_BOTTOM"/>
 			<xsl:with-param name="text"			select="$function"/>
 		</xsl:call-template>
-
-		<xsl:variable name="textHeight"		as="xs:double"	select="ds:ptToMm($CALL_FONT_SIZE) + (2 * $TEXT_MARGIN_Y)"/>
-		<xsl:variable name="componentIndex"	as="xs:integer"	select="index-of($componentList, $component)"/>
-		<xsl:variable name="componentXPos" 	as="xs:double"	select="($componentIndex - 1) * ($componentSpace + $COMPONENT_WIDTH) + ($COMPONENT_WIDTH div 2)"/>
 
 		<!-- calling arrow -->
 		<xsl:call-template name="SvgLine">

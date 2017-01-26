@@ -11,10 +11,12 @@
 	
 	<xsl:variable name="SVG.TEXT_ANCHOR_START" 			as="xs:string" select="'start'"/>
 	<xsl:variable name="SVG.TEXT_ANCHOR_MIDDLE"			as="xs:string" select="'middle'"/>
+	<xsl:variable name="SVG.TEXT_ANCHOR_END"			as="xs:string" select="'end'"/>
 	
-	<xsl:variable name="SVG.DY_BASELINE"				as="xs:string" select="'0.8em'"/>
+	<xsl:variable name="SVG.DY_TOP"						as="xs:string" select="'0.75em'"/>
+	<xsl:variable name="SVG.DY_BASELINE"				as="xs:string" select="'0'"/>
 	<xsl:variable name="SVG.DY_CENTER"					as="xs:string" select="'0.3em'"/>
-	<xsl:variable name="SVG.DY_BOTTOM"					as="xs:string" select="'1.0em'"/>
+	<xsl:variable name="SVG.DY_BOTTOM"					as="xs:string" select="'-0.25em'"/>
 
 	<xsl:variable name="SVG.COLOR_TRANSPARENT" 			as="xs:string" select="'none'"/>
 	<xsl:variable name="SVG.COLOR_BLACK" 				as="xs:string" select="'black'"/>
@@ -32,6 +34,10 @@
 	
 	<xsl:variable name="SVG.STANDARDFONT"				as="xs:string"	select="'Calibri'"/>
 	
+	<xsl:variable name="SVG.MOVE" 						as="xs:string" select="'M'"/>
+	<xsl:variable name="SVG.REL_MOVE" 					as="xs:string" select="'m'"/>
+	<xsl:variable name="SVG.LINE" 						as="xs:string" select="'L'"/>
+	<xsl:variable name="SVG.REL_LINE" 					as="xs:string" select="'l'"/>
 
 	<xsl:variable name="XML.SPACE_PRESERVE" as="attribute()">
 		<xsl:attribute name="xml:space" select="'preserve'"/>
@@ -58,32 +64,28 @@
 				</defs>
 			</xsl:if>
 			<xsl:sequence select="$content"/>
+			
+			<!--<xsl:call-template name="SvgRect">
+				<xsl:with-param name="xInMm"		select="0"/>
+				<xsl:with-param name="yInMm"		select="0"/>
+				<xsl:with-param name="widthInMm"	select="$widthInMm"/>
+				<xsl:with-param name="heightInMm"	select="$heightInMm"/>
+				<xsl:with-param name="strokeWidth"	select="0.1"/>
+				<xsl:with-param name="strokeColor"	select="$SVG.COLOR_BLACK"/>
+			</xsl:call-template>-->
 		</svg>
 	</xsl:template>
 	
 	
-	<!-- ========== Template: SvgGroup ========== -->
-	<xsl:template name="SvgGroup" as="element()">
-		<xsl:param name="translateXInMm"	as="xs:double"	select="0.0"/>
-		<xsl:param name="translateYInMm"	as="xs:double"	select="0.0"/>
-		<xsl:param name="scale"				as="xs:double?"/>
-		<xsl:param name="content" 			as="item()*"/>
+	<!-- ========== Template: SvgTranslate ========== -->
+	<xsl:template name="SvgTranslate" as="element()">
+		<xsl:param name="xInMm"		as="xs:double"	select="0.0"/>
+		<xsl:param name="yInMm"		as="xs:double"	select="0.0"/>
+		<xsl:param name="content" 	as="item()*"/>
 		
-		<g xmlns="http://www.w3.org/2000/svg">
-			<xsl:variable name="TransformList" as="xs:string*">
-				<xsl:if test="($translateXInMm != 0.0) or ($translateYInMm != 0.0)">
-					<xsl:text/>translate(<xsl:value-of select="ds:mmToPx($translateXInMm)"/>, <xsl:value-of select="ds:mmToPx($translateYInMm)"/>)<xsl:text/>
-				</xsl:if>
-				<xsl:if test="exists($scale)">
-					<xsl:text/>scale(<xsl:value-of select="$scale"/>)<xsl:text/>
-				</xsl:if>
-			</xsl:variable>
-			<xsl:if test="exists($TransformList)">
-				<xsl:attribute name="transform" select="string-join($TransformList, ' ')"/>
-			</xsl:if>
-			
+		<svg x="{$xInMm}mm" y="{$yInMm}mm" width="1" height="1" viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
 			<xsl:sequence select="$content"/>
-		</g>
+		</svg>
 	</xsl:template>
 
 
@@ -95,8 +97,9 @@
 		<xsl:param name="textAnchor"	as="xs:string?"	select="$SVG.TEXT_ANCHOR_START"/>
 		<xsl:param name="fontWeight"	as="xs:string?"	select="$SVG.FONT_NORMAL"/>
 		<xsl:param name="fontFamily"	as="xs:string?"/>
+		<xsl:param name="fontSizeInPt"	as="xs:double?"/>
 		<xsl:param name="fontSize"		as="item()?"/>
-		<xsl:param name="fillColor"		as="xs:string?"/>
+		<xsl:param name="color"			as="xs:string?"/>
 		<xsl:param name="text"			as="xs:string?"/>
 
 		<text xmlns="http://www.w3.org/2000/svg">
@@ -119,13 +122,18 @@
 				<xsl:attribute name="font-weight" select="$fontWeight"/>
 			</xsl:if>
 			<xsl:if test="exists($fontFamily)">
-				<xsl:attribute name="fontFamily" select="$fontFamily"/>
+				<xsl:attribute name="font-family" select="$fontFamily"/>
 			</xsl:if>
-			<xsl:if test="exists($fontSize)">
-				<xsl:attribute name="font-size" select="$fontSize"/>
-			</xsl:if>
-			<xsl:if test="exists($fillColor)">
-				<xsl:attribute name="fill" select="$fillColor"/>
+			<xsl:choose>
+				<xsl:when test="$fontSizeInPt">
+					<xsl:attribute name="font-size" select="concat($fontSizeInPt, 'pt')"/>	
+				</xsl:when>
+				<xsl:when test="$fontSize">
+					<xsl:attribute name="font-size" select="$fontSize"/>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:if test="exists($color)">
+				<xsl:attribute name="fill" select="$color"/>
 			</xsl:if>
 			<xsl:value-of select="$text"/>
 		</text>
@@ -225,37 +233,84 @@
 	<!-- ========== Template: SvgPath ========== -->
 	<xsl:template name="SvgPath" as="element()">
 		<xsl:param name="strokeWidth"		as="xs:double?"/>
-		<xsl:param name="stroke"			as="xs:string?"/>
+		<xsl:param name="strokeColor"		as="xs:string?"/>
 		<xsl:param name="strokeLinejoin"	as="xs:string?"/>
-		<xsl:param name="fill"				as="xs:string?"/>
+		<xsl:param name="fillColor"			as="xs:string?"/>
 		<xsl:param name="fillUrl"			as="xs:string?"/>
-		<xsl:param name="d"					as="xs:string+"/>
+		<xsl:param name="dInMm"				as="xs:string+"/>
 		<xsl:param name="strokeDasharray"	as="xs:string?"/>
 		
-		<path xmlns="http://www.w3.org/2000/svg">
-			<xsl:choose>
-				<xsl:when test="exists($fill)">
-					<xsl:attribute name="fill" select="$fill"/>
-				</xsl:when>
-				<xsl:when test="exists($fillUrl)">
-					<xsl:attribute name="fill" select="concat('url(#', $fillUrl, ')')"/>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:if test="exists($strokeWidth)">
-				<xsl:attribute name="stroke-width" select="concat($strokeWidth, 'mm')"/>
-			</xsl:if>
-			<xsl:if test="exists($stroke)">
-				<xsl:attribute name="stroke" select="$stroke"/>
-			</xsl:if>
-			<xsl:if test="exists($strokeLinejoin)">
-				<xsl:attribute name="stroke-linejoin" select="$strokeLinejoin"/>
-			</xsl:if>
-			<xsl:if test="exists($strokeDasharray)">
-				<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
-			</xsl:if>
-			<xsl:attribute name="d" select="$d"/>
-		</path>
+		<svg x="0" y="0" width="1mm" height="1mm" viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+			<path>
+				<xsl:choose>
+					<xsl:when test="exists($fillColor)">
+						<xsl:attribute name="fill" select="$fillColor"/>
+					</xsl:when>
+					<xsl:when test="exists($fillUrl)">
+						<xsl:attribute name="fill" select="concat('url(#', $fillUrl, ')')"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="fill" select="$SVG.COLOR_TRANSPARENT"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="exists($strokeWidth)">
+					<xsl:attribute name="stroke-width" select="$strokeWidth"/>
+				</xsl:if>
+				<xsl:if test="exists($strokeColor)">
+					<xsl:attribute name="stroke" select="$strokeColor"/>
+				</xsl:if>
+				<xsl:if test="exists($strokeLinejoin)">
+					<xsl:attribute name="stroke-linejoin" select="$strokeLinejoin"/>
+				</xsl:if>
+				<xsl:if test="exists($strokeDasharray)">
+					<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
+				</xsl:if>
+				<xsl:attribute name="d" select="$dInMm"/>
+			</path>
+		</svg>
 	</xsl:template>
+	
+	<xsl:function name="ds:pathPos">
+		<xsl:param name="command" 	as="xs:string"/>
+		<xsl:param name="xInMm" 	as="xs:double"/>
+		<xsl:param name="yInMm" 	as="xs:double"/>
+		
+		<xsl:sequence select="$command"/>
+		<xsl:sequence select="$xInMm"/>
+		<xsl:sequence select="$yInMm"/>
+	</xsl:function>
+	
+	<xsl:function name="ds:pathArc">
+		<xsl:param name="rInMm" 		as="xs:double"/>
+		<xsl:param name="large"			as="xs:boolean"/>
+		<xsl:param name="sweep"			as="xs:boolean"/>
+		<xsl:param name="destXInMm" 	as="xs:double"/>
+		<xsl:param name="destYInMm" 	as="xs:double"/>
+		<xsl:sequence select="ds:pathArc($rInMm, $rInMm, 0, $large, $sweep, $destXInMm, $destYInMm)"/>
+	</xsl:function>
+	
+	<xsl:function name="ds:pathArc">
+		<xsl:param name="rXInMm" 		as="xs:double"/>
+		<xsl:param name="rYInMm" 		as="xs:double"/>
+		<xsl:param name="rotInDegree" 	as="xs:double"/>
+		<xsl:param name="large"			as="xs:boolean"/>
+		<xsl:param name="sweep"			as="xs:boolean"/>
+		<xsl:param name="destXInMm" 	as="xs:double"/>
+		<xsl:param name="destYInMm" 	as="xs:double"/>
+		
+		<xsl:sequence select="'a'"/>
+		<xsl:sequence select="$rXInMm"/>
+		<xsl:sequence select="$rYInMm"/>
+		<xsl:sequence select="$rotInDegree"/>
+		<xsl:sequence select="if ($large) then 1 else 0"/>
+		<xsl:sequence select="if ($sweep) then 1 else 0"/>
+		<xsl:sequence select="$destXInMm"/>
+		<xsl:sequence select="$destYInMm"/>
+	</xsl:function>
+	
+	<xsl:function name="ds:pathClose">
+		<xsl:sequence select="'Z'"/>
+	</xsl:function>
 	
 	
 	<!-- ========== Template: SvgUse ========== -->
