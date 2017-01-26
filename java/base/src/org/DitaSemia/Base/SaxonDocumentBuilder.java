@@ -92,11 +92,11 @@ public class SaxonDocumentBuilder {
 				} catch (MalformedURLException e) {
 					// just ignore it here - will be handled by documentBuilder
 				}
+			}
 
-				if (result == null) {
-					// 	set reader
-					saxSource.setXMLReader(getXmlReader(expandAttributeDefaults));
-				}
+			if (result == null) {
+				// 	set reader
+				saxSource.setXMLReader(getXmlReader(expandAttributeDefaults));
 			}
 			//logger.info("CharacterStream: " + inputSource.getCharacterStream());
 			//logger.info("ByteStream: " + inputSource.getByteStream());
