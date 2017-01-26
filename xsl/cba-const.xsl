@@ -6,6 +6,7 @@
 	
 	
 	
+	<xsl:variable name="CBA_FLAG_HIDE"				as="xs:string"	select="'hide'"/>
 	<xsl:variable name="CBA_FLAG_HIDE_EMPTY"		as="xs:string"	select="'hide-empty'"/>
 	<xsl:variable name="CBA_FLAG_CSLI"				as="xs:string"	select="'csli'"/>
 	<xsl:variable name="CBA_FLAG_CODE"				as="xs:string"	select="'code'"/>
