@@ -47,12 +47,13 @@
 *[*|popup-edit='#text'] {
 	visibility				: -oxy-collapse-text;
 	-oxy-show-placeholder	: inherit !important;
-	content: oxy_combobox(
-			edit,			oxy_concat('#text'),
-			//selectionMode,	single,
-			fontInherit,	true,
-			color,			inherit,
-			editable, 		false);
+	content: oxy_editor(
+		        rendererClassName, "org.DitaSemia.Oxygen.PopupCheckBoxRenderer",
+		        swingEditorClassName, "ro.sync.ecss.component.editor.PopupListEditor",
+		        edit,			oxy_concat('#text'),
+				fontInherit,	true,
+				color,			inherit,
+				editable, 		false);
 }
 
 
@@ -64,16 +65,45 @@
 	font-style	: normal;
 }
 
-
 *[*|popup-edit='#text'][*|pe-values][*|pe-labels] {
 	visibility				: -oxy-collapse-text;
 	-oxy-show-placeholder	: inherit !important;
-	content: oxy_combobox(
-			edit,			oxy_concat('#text'),
-			values,			attr('*|pe-values'),
-			labels,			attr('*|pe-labels'),
-			//selectionMode,	single,
-			fontInherit,	true,
-			color,			inherit,
-			editable, 		false);
+	content: oxy_editor(
+		        rendererClassName, "org.DitaSemia.Oxygen.PopupCheckBoxRenderer",
+		        swingEditorClassName, "ro.sync.ecss.component.editor.PopupListEditor",
+		        edit,			oxy_concat('#text'),
+		        values,			attr('*|pe-values'),
+				labels,			attr('*|pe-labels'),
+				fontInherit,	true,
+				color,			inherit,
+				editable, 		false);
+}
+
+
+*[*|popup-edit='#text'][*|default-content] {
+	visibility				: -oxy-collapse-text;
+	-oxy-show-placeholder	: inherit !important;
+	content: oxy_editor(
+		        rendererClassName, "org.DitaSemia.Oxygen.PopupCheckBoxRenderer",
+		        swingEditorClassName, "ro.sync.ecss.component.editor.PopupListEditor",
+		        edit,			oxy_concat('#text'),
+				emptyLabel,		attr('*|default-content'),
+				fontInherit,	true,
+				color,			inherit,
+				editable, 		false);
+}
+
+*[*|popup-edit='#text'][*|default-content][*|pe-values][*|pe-labels] {
+	visibility				: -oxy-collapse-text;
+	-oxy-show-placeholder	: inherit !important;
+	content: oxy_editor(
+		        rendererClassName, "org.DitaSemia.Oxygen.PopupCheckBoxRenderer",
+		        swingEditorClassName, "ro.sync.ecss.component.editor.PopupListEditor",
+		        edit,			oxy_concat('#text'),
+		        values,			attr('*|pe-values'),
+				labels,			attr('*|pe-labels'),
+				emptyLabel,		attr('*|default-content'),
+				fontInherit,	true,
+				color,			inherit,
+				editable, 		false);
 }

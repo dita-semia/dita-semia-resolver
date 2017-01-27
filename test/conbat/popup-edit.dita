@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
+	<title>Popup-Edit</title>
+	<body>
+		<ul id="h3z_bxq_ry">
+			<li id="i3z_bxq_ry">
+				<p id="bk2_cxq_ry">attribute: <ph cba:popup-edit="props" cba:pe-values="a,b,c,"
+						cba:pe-labels="Value: a,Value: b,Value: c, Value: &lt;none>" props="b"
+						cba:flags="pe-braced"/></p>
+			</li>
+			<li id="zwb_dxq_ry">
+				<p id="a52_dxq_ry">text with default content: <ph cba:popup-edit="#text"
+						cba:default-content="Value: &lt;empty>"/></p>
+			</li>
+		</ul>
+	</body>
+</topic>

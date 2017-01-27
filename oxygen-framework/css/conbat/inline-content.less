@@ -2,13 +2,13 @@
 /* The content is displayed right in front of or behind the actual content. */
 
 /* prefix */
-*[class~="topic/p"][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/ph"][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/sli"][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/p"		][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/ph"		][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/sli"	][*|prefix]:before(@{conbat-inline-index}),
 *[class~="topic/stentry"][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/title"][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/xref"][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/dt"][*|prefix]:before(@{conbat-inline-index}) {
+*[class~="topic/title"	][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/xref"	][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/dt"		][*|prefix]:before(@{conbat-inline-index}) {
 	content	: attr("*|prefix");
 }
 
@@ -24,32 +24,32 @@
 	font-family	: @topic-title-font-family;
 } 
 
-*[class~="pr-d/codeph"][*|code-prefix]:before(@{conbat-inline-index}),
-*[class~="topic/ph"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
-*[class~="topic/sli"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
-*[class~="topic/dt"][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}) {
+*[class~="pr-d/codeph"	][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/ph"		][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/sli"	][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}),
+*[class~="topic/dt"		][*|flags~="code"][*|code-prefix]:before(@{conbat-inline-index}) {
 	content	: attr("*|code-prefix");
 }
 
 /* suffix */
-*[class~="topic/p"][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/ph"][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/sli"][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/p"		][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/ph"		][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/sli"	][*|suffix]:after(@{conbat-inline-index}),
 *[class~="topic/stentry"][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/title"][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/xref"][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/dt"][*|suffix]:after(@{conbat-inline-index}) {
+*[class~="topic/title"	][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/xref"	][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/dt"		][*|suffix]:after(@{conbat-inline-index}) {
 	content	: attr("*|suffix");
 }
 
 /* suffix2 */
-*[class~="topic/p"][*|suffix2]:after(@{conbat-suffix2-index}),
-*[class~="topic/ph"][*|suffix2]:after(@{conbat-suffix2-index}),
-*[class~="topic/sli"][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/p"		][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/ph"		][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/sli"	][*|suffix2]:after(@{conbat-suffix2-index}),
 *[class~="topic/stentry"][*|suffix2]:after(@{conbat-suffix2-index}),
-*[class~="topic/title"][*|suffix2]:after(@{conbat-suffix2-index}),
-*[class~="topic/xref"][*|suffix2]:after(@{conbat-suffix2-index}),
-*[class~="topic/dt"][*|suffix2]:after(@{conbat-suffix2-index}) {
+*[class~="topic/title"	][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/xref"	][*|suffix2]:after(@{conbat-suffix2-index}),
+*[class~="topic/dt"		][*|suffix2]:after(@{conbat-suffix2-index}) {
 	content	: attr("*|suffix2");
 }
 
@@ -61,33 +61,33 @@
 	/* content is already generated for base class topic/ph */
 }
 
-*[class~="pr-d/codeph"][*|code-suffix]:after(@{conbat-inline-index})
-*[class~="topic/ph"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
-*[class~="topic/sli"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
-*[class~="topic/dt"][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {
+*[class~="pr-d/codeph"	][*|code-suffix]:after(@{conbat-inline-index})
+*[class~="topic/ph"		][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
+*[class~="topic/sli"	][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
+*[class~="topic/dt"		][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {
 	content	: attr("*|code-suffix");
 }
 
 /* content */
-*[class~="topic/p"][*|content],
-*[class~="topic/ph"][*|content],
-*[class~="topic/sli"][*|content],
+*[class~="topic/p"		][*|content],
+*[class~="topic/ph"		][*|content],
+*[class~="topic/sli"	][*|content],
 *[class~="topic/stentry"][*|content],
-*[class~="topic/title"][*|content],
-*[class~="topic/dd"][*|content],
-*[class~="topic/dt"][*|content] {
+*[class~="topic/title"	][*|content],
+*[class~="topic/dd"		][*|content],
+*[class~="topic/dt"		][*|content] {
 	content	: attr("*|content");
 }
 
 /* default-content */
-*[class~="topic/p"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/ph"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/sli"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/stentry"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/title"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/dd"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/dt"][*|default-content]:empty:after(@{conbat-default-content-index}),
-*[class~="topic/section"][*|default-content]:empty:after(@{conbat-default-content-index}) {
+*[class~="topic/p"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/ph"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/sli"	][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/stentry"][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/title"	][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/dd"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/dt"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/section"][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}) {
 	/* have the cursor in front of the content to suggest the author that he can overwrite it */
 	content	: attr("*|default-content");
 }
@@ -102,15 +102,15 @@
 	font-size	: (1em / @code-font-size-scale);
 }
 
-*[class~="topic/p"]			[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/ph"]		[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/sli"]		[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/stentry"]	[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/title"]		[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/dd"]		[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/dt"]		[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
-*[class~="topic/section"]	[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index})
-*[class~="topic/p"]			[*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}){
+*[class~="topic/p"		][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/ph"		][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/sli"	][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/stentry"][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/title"	][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/dd"		][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/dt"		][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}),
+*[class~="topic/section"][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index})
+*[class~="topic/p"		][*|default-content][*|flags~='code']:not([*|flags~="hide-empty"]):empty:after(@{conbat-default-content-marker-index}){
 	/* undo the font changes for codeph */
 	font-family	: @body-font-family;
 	font-size	: (1em / @code-font-size-scale * @edit-only-font-size-scale);

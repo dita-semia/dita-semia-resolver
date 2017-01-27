@@ -60,6 +60,48 @@
 		</optional>
 	</define>
 	
+	<define name="conbat-popup-edit">
+		<optional>
+			<attribute name="cba:popup-edit"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-pe-values">
+		<optional>
+			<attribute name="cba:pe-values"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-pe-labels">
+		<optional>
+			<attribute name="cba:pe-labels"/>
+		</optional>
+	</define>
+	
+	<define name="conbat-flags">
+		<optional>
+			<attribute name="cba:flags">
+				<optional>
+					<list>
+						<choice>
+							<value>code</value>
+							<value>csli</value>
+							<value>hide-empty</value>
+							<value>pe-italic</value>
+							<value>pe-braced</value>
+							<value>default-italic</value>
+						</choice>
+					</list>
+				</optional>
+			</attribute>
+		</optional>
+	</define>
+	
+	
+	<!-- general properties -->
+	<define name="conbat-common.attlist">
+		<ref name="conbat-flags"/>
+	</define>
 
 	<!-- attlist to be resolved as inline content -->
 	<define name="conbat-inline.attlist">
@@ -67,6 +109,10 @@
 		<ref name="conbat-suffix"/>
 		<ref name="conbat-content"/>
 		<ref name="conbat-default-content"/>
+		<ref name="conbat-popup-edit"/>
+		<ref name="conbat-pe-values"/>
+		<ref name="conbat-pe-labels"/>
+		<ref name="conbat-common.attlist"/>
 	</define>
 	
 	
@@ -74,6 +120,7 @@
 	<define name="conbat-paragraph.attlist">
 		<ref name="conbat-prefix"/>
 		<ref name="conbat-suffix"/>
+		<ref name="conbat-common.attlist"/>
 	</define>
 	
 	
