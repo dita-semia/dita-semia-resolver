@@ -16,41 +16,56 @@
 	
 	<!-- do NOT match the element itself or whitespace text to avoid conflicts with conbat-templates -->
 	<xsl:template match="*[@akr:ref][count(node()) = 1]/text()[not(matches(., '^\s+$'))]">
-		
-		<xsl:variable name="keyRef"			as="element()"										select="parent::*"/>
-		<xsl:variable name="outputclass"	as="xs:string?"										select="replace($keyRef/@outputclass, '!$', '')"/>
-		<xsl:variable name="jKeyDef"		as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDef?" 	select="akr:getReferencedKeyDef(parent::*)"/>
-		<xsl:variable name="href"			as="xs:string?" 									select="if (exists($jKeyDef)) then akr:getKeyDefLocation($jKeyDef) else ()"/>
+		<xsl:call-template name="CreateKeyRefContent">
+			<xsl:with-param name="keyRef"	select="parent::*"/>
+			<xsl:with-param name="content"	select="."/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="CreateKeyRefContent">
+		<xsl:param name="keyRef"	as="element()"/>
+		<xsl:param name="content"	as="node()*"/>
 
-		<xsl:variable name="refContent" as="node()*">
-			<xsl:if test="not($outputclass = $OUTPUTCLASS_NAME)">
-				<!-- also applies when outputclass is missing -->
-				<xsl:call-template name="KeyFormatting">
-					<xsl:with-param name="keyNode" select="parent::*"/>
-					<xsl:with-param name="content" select="."/>
-				</xsl:call-template>
-			</xsl:if>
-			<xsl:if test="$outputclass != $OUTPUTCLASS_KEY">
-				<xsl:variable name="displaySuffix" as="xs:string*" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
-				<xsl:value-of select="$displaySuffix" separator=""/>
-				<xsl:if test="empty($displaySuffix) and ($outputclass = $OUTPUTCLASS_NAME)">
-					<xsl:text>&#xA0;</xsl:text>	<!-- insert some text to avoid generated content from link target -->
-				</xsl:if>
-			</xsl:if>
-		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="exists($href)">
-				<xref class="{$CP_XREF}" format="dita" outputclass="advanced-keyref" href="{$href}">
-					<xsl:sequence select="$refContent"/>
-				</xref>
+			<xsl:when test="$keyRef/@akr:ref">
+				<xsl:variable name="outputclass"	as="xs:string?"										select="replace($keyRef/@outputclass, '!$', '')"/>
+				<xsl:variable name="jKeyDef"		as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDef?" 	select="akr:getReferencedKeyDef($keyRef)"/>
+				<xsl:variable name="href"			as="xs:string?" 									select="if (exists($jKeyDef)) then akr:getKeyDefLocation($jKeyDef) else ()"/>
+				
+				<xsl:variable name="refContent" as="node()*">
+					<xsl:if test="not($outputclass = $OUTPUTCLASS_NAME)">
+						<!-- also applies when outputclass is missing -->
+						<xsl:call-template name="KeyFormatting">
+							<xsl:with-param name="keyNode" select="$keyRef"/>
+							<xsl:with-param name="content" select="$content"/>
+						</xsl:call-template>
+					</xsl:if>
+					<xsl:if test="$outputclass != $OUTPUTCLASS_KEY">
+						<xsl:variable name="displaySuffix" as="xs:string*" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
+						<xsl:value-of select="$displaySuffix" separator=""/>
+						<xsl:if test="empty($displaySuffix) and ($outputclass = $OUTPUTCLASS_NAME)">
+							<xsl:text>&#xA0;</xsl:text>	<!-- insert some text to avoid generated content from link target -->
+						</xsl:if>
+					</xsl:if>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="exists($href)">
+						<xref class="{$CP_XREF}" format="dita" outputclass="advanced-keyref" href="{$href}">
+							<xsl:sequence select="$refContent"/>
+						</xref>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:sequence select="$refContent"/>
+						<xsl:if test="empty($jKeyDef)">
+							<xsl:variable name="file"	as="xs:string?" select="$keyRef/@xtrf"/>
+							<xsl:variable name="pos"	as="xs:string?" select="substring-after($keyRef/@xtrc, ';')"/>
+							<xsl:message><xsl:value-of select="concat($file, ':', $pos)"/>: [DOTX][WARN]: Failed to resolve advanced-keyref to xref (<xsl:value-of select="$keyRef/@akr:ref"/>).</xsl:message>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:sequence select="$refContent"/>
-				<xsl:if test="empty($jKeyDef)">
-					<xsl:variable name="file"	as="xs:string?" select="parent::*/@xtrf"/>
-					<xsl:variable name="pos"	as="xs:string?" select="substring-after(parent::*/@xtrc, ';')"/>
-					<xsl:message><xsl:value-of select="concat($file, ':', $pos)"/>: [DOTX][WARN]: Failed to resolve advanced-keyref to xref (<xsl:value-of select="$keyRef/@akr:ref"/>).</xsl:message>
-				</xsl:if>
+				<xsl:sequence select="$content"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

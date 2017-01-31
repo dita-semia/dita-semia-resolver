@@ -4,12 +4,14 @@
 	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
 	xmlns:ikd	= "http://www.dita-semia.org/implicit-keydef"
 	xmlns:akr	= "http://www.dita-semia.org/advanced-keyref"
+	xmlns:cba	= "http://www.dita-semia.org/conbat"
 	elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 	
 	
-	<xs:import namespace="http://www.dita-semia.org/implicit-keydef" schemaLocation="urn:dita-semia:advanced-keyref:schema:ikd-attr.xsd"/>
-	<xs:import namespace="http://www.dita-semia.org/advanced-keyref" schemaLocation="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd"/>
+	<xs:import namespace="http://www.dita-semia.org/implicit-keydef" 	schemaLocation="urn:dita-semia:advanced-keyref:schema:ikd-attr.xsd"/>
+	<xs:import namespace="http://www.dita-semia.org/advanced-keyref" 	schemaLocation="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd"/>
+	<xs:import namespace="http://www.dita-semia.org/conbat" 			schemaLocation="urn:dita-semia:conbat:schema:conbat-attr.xsd"/>
 	
 	<!-- ================ TOPIC DOMAINS ===================== -->
 	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:abbreviateDomain.xsd:1.3"/>
@@ -174,6 +176,8 @@
 					<xs:attribute ref="akr:type"/>
 					<xs:attribute ref="akr:namespace"/>
 					<xs:attribute ref="akr:path-len"/>
+					<xs:attribute ref="cba:content"/>
+					<xs:attribute ref="cba:default-content"/>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

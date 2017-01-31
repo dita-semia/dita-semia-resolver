@@ -143,9 +143,9 @@
 				<xsl:when test="@cba:content">
 					<xsl:call-template name="handle-style-flags">
 						<xsl:with-param name="content" as="node()*">
-							<xsl:call-template name="KeyFormatting">
-								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:content)"/>
-								<xsl:with-param name="keyNode"	select="."/>
+							<xsl:call-template name="CreateKeyRefContent">
+								<xsl:with-param name="keyRef"	select="."/>
+								<xsl:with-param name="content"	select="ds:createCbaPhrase(@cba:content)"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:call-template>
@@ -153,9 +153,9 @@
 				<xsl:when test="empty(node()) and exists(@cba:default-content)">
 					<xsl:call-template name="handle-style-flags">
 						<xsl:with-param name="content" as="node()*">
-							<xsl:call-template name="KeyFormatting">
-								<xsl:with-param name="content" 	select="ds:createCbaPhrase(@cba:default-content)"/>
-								<xsl:with-param name="keyNode"	select="."/>
+							<xsl:call-template name="CreateKeyRefContent">
+								<xsl:with-param name="keyRef"	select="."/>
+								<xsl:with-param name="content"	select="ds:createCbaPhrase(@cba:default-content)"/>
 							</xsl:call-template>
 						</xsl:with-param>
 						<xsl:with-param name="isDefaultContent" select="true()"/>
@@ -164,7 +164,10 @@
 				<xsl:otherwise>
 					<xsl:call-template name="handle-style-flags">
 						<xsl:with-param name="content" as="node()*">
-							<xsl:apply-templates select="node()" mode="#current"/>
+							<xsl:call-template name="CreateKeyRefContent">
+								<xsl:with-param name="keyRef"	select="."/>
+								<xsl:with-param name="content"	select="node()"/>
+							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:otherwise>
