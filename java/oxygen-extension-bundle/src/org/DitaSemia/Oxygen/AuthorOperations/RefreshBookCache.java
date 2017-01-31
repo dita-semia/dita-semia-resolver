@@ -28,7 +28,7 @@ public class RefreshBookCache implements AuthorOperation {
 
 	@Override
 	public String getDescription() {
-		return "Cache aktualisieren";
+		return "Refresh current book cache.";
 	}
 
 	@Override

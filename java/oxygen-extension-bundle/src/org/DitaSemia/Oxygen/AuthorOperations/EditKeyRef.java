@@ -28,7 +28,7 @@ public class EditKeyRef implements AuthorOperation {
 	
 	@Override
 	public String getDescription() {
-		return "Öffnet einen Dialog, um KeyRef-Elemente zu editieren.";
+		return "Opens a dialog to edit key-xref elements.";
 	}
 
 	@Override

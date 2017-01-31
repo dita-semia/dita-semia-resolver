@@ -15,7 +15,7 @@ public class ClearAllCaches implements AuthorOperation {
 
 	@Override
 	public String getDescription() {
-		return "Cache aktualisieren";
+		return "Clear all DITA-SEMIA caches.";
 	}
 
 	@Override
