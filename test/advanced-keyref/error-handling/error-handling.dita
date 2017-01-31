@@ -7,7 +7,7 @@
 	<body>
 		<section id="rzx_tc1_by">
 			<title>Definitions</title>
-			<dl>
+			<dl outputclass="bullet-list-dashes">
 				<dlentry id="ad4_nc1_by">
 					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry">Key1</dt>
 					<dd>Name1</dd>
@@ -20,6 +20,16 @@
 					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry">Key3</dt>
 					<dd>Name3 (no id)</dd>
 				</dlentry>
+				<dlentry id="r4b_m2b_5y">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry"
+						ikd:flags="ref-expected">Key4</dt>
+					<dd>Name4 (ref-expected)</dd>
+				</dlentry>
+				<dlentry id="djf_m2b_5y">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry"
+						ikd:flags="ref-expected">Key5</dt>
+					<dd>Name5 (ref-expected)</dd>
+				</dlentry>
 			</dl>
 		</section>
 		<section id="vsc_vc1_by">
@@ -28,6 +38,12 @@
 				<dlentry id="xyy_4v1_5y">
 					<dt>Invalid key-ref</dt>
 					<dd><key-xref akr:ref="Test:unknown-key">unknown-key</key-xref></dd>
+				</dlentry>
+				<dlentry id="hdc_42b_5y">
+					<dt>Missing ref</dt>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test:Key4"
+						>Key4</key-xref></dd>
+					<dd>(no reference to Key5!)</dd>
 				</dlentry>
 			</dl>
 		</section>

@@ -26,7 +26,10 @@ public class KeyDef implements KeyDefInterface {
 	private static final String ATTR_NAME 		= "name";
 	private static final String ATTR_DESC		= "desc";
 	private static final String ATTR_ID			= "id";
+	public 	static final String ATTR_FLAGS		= "flags";
 
+	public  static final String FLAG_REF_EXPECTED	= "ref-expected";
+	
 	private final String 		key;
 	private final String 		type;
 	private final List<String> 	namespace;
@@ -37,6 +40,7 @@ public class KeyDef implements KeyDefInterface {
 	private final URL			defUrl;
 	private final String		defId;
 	private final String		defAncestorTopicId;
+	private final boolean		isRefExpected;
 	
 	public static KeyDef fromNode(NodeWrapper node) {
 		return fromNode(node, null);
@@ -111,12 +115,15 @@ public class KeyDef implements KeyDefInterface {
 		final String keyAttr 		= node.getAttribute(ATTR_KEY, 		NAMESPACE_URI);
 		final String namespaceAttr 	= node.getAttribute(ATTR_NAMESPACE, NAMESPACE_URI);
 		final String nameAttr 		= node.getAttribute(ATTR_NAME, 		NAMESPACE_URI);
-		final String descAttr 		= node.getAttribute(ATTR_DESC, 		NAMESPACE_URI); 
+		final String descAttr 		= node.getAttribute(ATTR_DESC, 		NAMESPACE_URI);
+		final String flagsAttr 		= node.getAttribute(ATTR_FLAGS, 		NAMESPACE_URI);
 
 		key 		= (keyAttr 			!= null) ? root.evaluateXPathToString(keyAttr) 			: node.getTextContent();
 		namespace	= (namespaceAttr 	!= null) ? root.evaluateXPathToStringList(namespaceAttr): null;
 		name		= (nameAttr 		!= null) ? root.evaluateXPathToString(nameAttr) 		: null;
 		desc		= (descAttr 		!= null) ? root.evaluateXPathToString(descAttr)			: null;
+		
+		isRefExpected = ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_EXPECTED + "\\b")));
 	}
 	
 	@Override
@@ -204,12 +211,22 @@ public class KeyDef implements KeyDefInterface {
 	public NodeWrapper getRoot() {
 		return root;
 	}
+
+	@Override
+	public NodeWrapper getNode() {
+		return node;
+	}
 	
 	@Override
 	public String toString() {
 		return "key = '" + getKey() + "'" +
 				", kype = '" + getType() + "'" + 
 				", namespace = '" + getNamespace() + "'";
+	}
+
+	@Override
+	public boolean isRefExpected() {
+		return isRefExpected;
 	}
 
 }

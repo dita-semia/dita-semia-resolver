@@ -12,6 +12,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -19,6 +21,7 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.Base.ConfigurationInitializer;
 import org.DitaSemia.Base.Log4jErrorListener;
+import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonDocumentBuilder;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
@@ -76,6 +79,11 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 
 	//protected static final String XSLT_FILE_URL 		= "/xsl/resolve.xsl";
 	//protected static final String XSLT_FILE_URL 		= "plugin:org.dita-semia.resolver:java/ot/src/xsl/resolve.xsl";
+	
+	protected static final String ATTR_OT_FILE			= "xtrf";
+	protected static final String ATTR_OT_POS			= "xtrc";
+	
+	protected static final String WARN_MARKER			= ": [DOTX][WARN]: ";
 
 	protected static final String NEEDS_RESOLVER_XPATH 	= "exists(//@xcr:xsl | //@cba:* | //@akr:ref | //@ikd:key-type)";
 	protected static final String BASE_URI_XPATH 		= "/*/@xtrf";
@@ -91,6 +99,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	protected XsltConrefCache		xsltConrefCache				= null;
 	
 	protected URL					currentBaseUrl				= null;
+	
+	protected Set<String>			referencedKeyDefRefList		= new HashSet<>();
 	
 
 	protected void init(AbstractPipelineInput input) throws DITAOTException {
@@ -213,6 +223,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 				throw new DITAOTException(e.getMessage(), e);
 			}
 		}
+		
+		checkKeyRefExpected();
 
 		return null;
 	}
@@ -273,6 +285,23 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			throw new DITAOTException("Failed to replace file '" + inputFile + "': " + e.getMessage(), e);
 		}
 	}
+	
+	public void checkKeyRefExpected() {
+		Collection<KeyDefInterface> keyDefs = bookCache.getKeyDefs();
+		for (KeyDefInterface keyDef : keyDefs) {
+			if ((keyDef.isRefExpected()) && (!referencedKeyDefRefList.contains(keyDef.getRefString()))) {
+				final NodeWrapper 	node	= keyDef.getNode();
+				final String 		file 	= node.getAttribute(ATTR_OT_FILE, null);
+				final String 		pos 	= node.getAttribute(ATTR_OT_POS, null);
+				//logger.info("file: " + file + ", pos: " + pos);
+				String location = "";
+				if ((file != null) && (pos != null)) {
+					location = file + ":" + pos.replaceFirst("^.*;", "");
+				}
+				logger.warn(location + WARN_MARKER + " No reference to implicit key-def '" + keyDef.getRefString() + "'.");
+			}
+		}
+	}
 
 	public DocumentBuilder getDocumentBuilder() {
 		return resolverDocBuilder;
@@ -316,6 +345,11 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 
 	public XsltConrefCache getXsltConrefCache() {
 		return xsltConrefCache;
+	}
+
+
+	public void notifyKeyDefReferenced(KeyDefInterface keyDef) {
+		referencedKeyDefRefList.add(keyDef.getRefString());
 	}
 
 }

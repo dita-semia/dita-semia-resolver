@@ -12,6 +12,17 @@
 	<xs:attribute name="namespace" 	type="xs:string"/>
 	<xs:attribute name="name" 		type="xs:string"/>
 	<xs:attribute name="desc" 		type="xs:string"/>
+	<xs:attribute name="flags">
+		<xs:simpleType>
+			<xs:list>
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="ref-expected"/>	<!-- OT publishing will generate a warning when the document contains no reference to a keydef with this flag.  -->
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:list>
+		</xs:simpleType>
+	</xs:attribute>
 	
 	<xs:attributeGroup name="ikd-atts">
 		<xs:attribute ref="ikd:key-type"/>
@@ -21,6 +32,7 @@
 		<xs:attribute ref="ikd:namespace"/>
 		<xs:attribute ref="ikd:name"/>
 		<xs:attribute ref="ikd:desc"/>
+		<xs:attribute ref="ikd:flags"/>
 	</xs:attributeGroup>
 	
 </xs:schema>

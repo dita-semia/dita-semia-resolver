@@ -35,6 +35,7 @@ public class GetReferencedKeyDefCall extends ExtensionFunctionCall {
 		if (keyDef == null) {
 			return EmptySequence.getInstance();
 		} else {
+			otResolver.notifyKeyDefReferenced(keyDef);
 			return new ObjectValue<KeyDefInterface>(keyDef);
 		}
 	}

@@ -27,6 +27,9 @@
 		<optional>
 			<attribute name="ikd:desc"/>
 		</optional>
+		<optional>
+			<attribute name="ikd:flags"/>
+		</optional>
 	</define>
 
 </grammar>

@@ -47,4 +47,8 @@ public interface KeyDefInterface extends KeyspecInterface {
 	List<NodeWrapper> getLinkedRefNodes();
 	
 	NodeWrapper getRoot();
+
+	NodeWrapper getNode();
+	
+	boolean isRefExpected();
 }
