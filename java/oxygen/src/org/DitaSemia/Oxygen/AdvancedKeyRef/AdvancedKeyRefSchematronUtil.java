@@ -43,58 +43,27 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 		return ((keyRef.getNamespaceFilter() != null) ? KeyRef.matchesNamespaceFilter(keyRef.getNamespaceFilter(), keyDef.getNamespaceList()) : true);
 	}
 	
-	public static boolean matchesRefText(KeyRefInterface keyRef) {
-		String		namespace 		= keyRef.getNamespace();
-		String[] 	namespaceList	= null;
-		if (namespace != null) {
-			namespaceList = namespace.split(KeyRef.PATH_DELIMITER);
+	public static boolean textMatchesPath(String text, String path) {
+		final String[] 	textList = (text == null) ? null : text.split("[./]");
+		final String[] 	pathList = (path == null) ? null : path.split(KeyDef.PATH_DELIMITER);
+		
+		int textPos	= (textList == null) ? -1 : textList.length - 1;
+		int pathPos	= (pathList == null) ? -1 : pathList.length - 1;
+		
+		while ((textPos >= 0) && (pathPos >= 0)) {
+			if (!textList[textPos].equals(pathList[pathPos])) {
+				return false;
+			}
+			--textPos;
+			--pathPos;
 		}
-		
-		String 		key 			= keyRef.getKey();
-		String[] 	textList 		= (keyRef.getText().isEmpty() 	? null 	: keyRef.getText().split(KeyDef.PATH_DELIMITER));
-		
-		int 		textLength		= (textList 		== null 	? 0 	: textList.length);
-		int 		namespaceLength	= (namespaceList 	== null 	? 0 	: namespaceList.length);
-		
-		if (key == null && namespace == null && textList != null) {
+		if (textPos >= 0) {
+			// no further path elements but more text element
 			return false;
-		} else if (key == null && namespace == null && textList == null) { 
-			return true;
-		} else if (key != null && textList != null) {
-			if (!key.equals(textList[textList.length - 1])) {
-				return false;
-			} else {
-				return matchesNamespace(textList, namespaceList, textLength - 2, namespaceLength);
-			}
-		} else if (key == null && textList != null) {
-			return matchesNamespace(textList, namespaceList, textLength - 1, namespaceLength);
-		} else if (textList == null) {
-			return true;
-		}
-		return true;
-	}
-	
-	private static boolean matchesNamespace(String[] text, String[] namespace, int lastIndex, int nsLength) {
-		if (lastIndex < 0) {
-			// no namespace in text content
-			return true;
 		} else {
-			if (nsLength == 0) {
-				// namespace in text content, but not in @akr:ref
-				return false;
-			} else {
-				if (lastIndex + 1 > nsLength) {
-					// namespace in text content has more elements than namespace in @akr:ref
-					return false;
-				}
-				for (int i = lastIndex, j = namespace.length - 1; i >= 0 && j >= 0 ; i-- , j--) {
-					if (!text[i].equals(namespace[j])) {
-						return false;
-					}
-				}
-			}
+			// all text path elements do match
+			return true;
 		}
-		return true;
 	}
 
 	public static KeyDefInterface getMatchingKeyDef(String refString, URL url) {

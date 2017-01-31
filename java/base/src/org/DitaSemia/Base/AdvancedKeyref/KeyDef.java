@@ -29,6 +29,7 @@ public class KeyDef implements KeyDefInterface {
 	public 	static final String ATTR_FLAGS		= "flags";
 
 	public  static final String FLAG_REF_EXPECTED	= "ref-expected";
+	public  static final String FLAG_REF_BY_ID		= "ref-by-id";
 	
 	private final String 		key;
 	private final String 		type;
@@ -41,6 +42,7 @@ public class KeyDef implements KeyDefInterface {
 	private final String		defId;
 	private final String		defAncestorTopicId;
 	private final boolean		isRefExpected;
+	private final boolean		isRefById;
 	
 	public static KeyDef fromNode(NodeWrapper node) {
 		return fromNode(node, null);
@@ -60,15 +62,27 @@ public class KeyDef implements KeyDefInterface {
 			return null;
 		}
 	}
-	
+
+	@Override
+	public String getRefString() {
+		if (isRefById) {
+			return getType() + TYPE_DELIMITER + ID_DELIMITER + defId;
+		} else {
+			final String namespace = getNamespace();
+			return getType() + TYPE_DELIMITER 
+					+ ((namespace == null) || (namespace.isEmpty()) ? "" : (namespace + PATH_DELIMITER))
+					+ getKey();
+		}
+	}
+
 	public static String getTypeFromNode(NodeWrapper node) {
 		return node.getAttribute(ATTR_TYPE, NAMESPACE_URI);
 	}
-	
+
 	public static boolean nodeHasExplicitKey(NodeWrapper node) {
 		return (node.getAttribute(ATTR_KEY, NAMESPACE_URI) != null);
 	}
-	
+
 	private KeyDef(NodeWrapper node, String type, String parentTopicId) throws XPathException, XPathNotAvaliableException {
 		//this.node 	= node;
 		this.type	= type;
@@ -123,7 +137,8 @@ public class KeyDef implements KeyDefInterface {
 		name		= (nameAttr 		!= null) ? root.evaluateXPathToString(nameAttr) 		: null;
 		desc		= (descAttr 		!= null) ? root.evaluateXPathToString(descAttr)			: null;
 		
-		isRefExpected = ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_EXPECTED + "\\b")));
+		isRefExpected 	= ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_EXPECTED + "\\b")));
+		isRefById		= ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_BY_ID + "\\b")));
 	}
 	
 	@Override
@@ -227,6 +242,11 @@ public class KeyDef implements KeyDefInterface {
 	@Override
 	public boolean isRefExpected() {
 		return isRefExpected;
+	}
+
+	@Override
+	public boolean isRefById() {
+		return isRefById;
 	}
 
 }

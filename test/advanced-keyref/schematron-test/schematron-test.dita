@@ -74,6 +74,12 @@
 					<li id="oqv_1zh_by"><key-xref outputclass="key" akr:ref="Test:Minimal">Minimal</key-xref></li>
 					<li id="vy2_4b3_by"><key-xref outputclass="key-name-braced"
 						akr:ref="Test:Key-Namespace/Complete">Complete</key-xref></li>
+					<li id="c3j_f3c_5y"><key-xref outputclass="key-name-braced"
+							akr:ref="Test:Key-Namespace/Complete"
+						>Key-Namespace.Complete</key-xref></li>
+					<li id="lgq_vlc_5y"><key-xref outputclass="key-name-braced"
+							akr:ref="Test:Key-Namespace/Complete"
+						>Key-Namespace/Complete</key-xref></li>
 					<li id="ugy_4b3_by"><key-xref outputclass="key-name-braced"
 						akr:ref="Test:Key-Namespace/Key-Key">Key-Key</key-xref></li>
 					<li id="fv5_js3_by"><key-xref outputclass="key" akr:ref="test:No-implicit-root-ID"
@@ -148,39 +154,53 @@
 			<p>
 				<dl>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced"
+						<dt><filtered-key-xref outputclass="key-name-braced"
 								akr:ref="Test:Key-Namespace/Complete" akr:type="Test2"
-								>Complete</key-xref></dt>
+								>Complete</filtered-key-xref></dt>
 						<dd>Invalid type</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced"
+						<dt><filtered-key-xref outputclass="key-name-braced"
 								akr:ref="Test:Key-Namespace/Complete" akr:namespace="(("
-								>Complete</key-xref></dt>
+								>Complete</filtered-key-xref></dt>
 						<dd>Invalid xpath expression for namespace</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
-								>CompleteX</key-xref></dt>
-						<dd>The text content does not match the referenced KeyDef</dd>
+						<dt><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								>CompleteX</filtered-key-xref></dt>
+						<dd>The text content does not match the referenced KeyDef – wrong key</dd>
+					</dlentry>
+					<dlentry id="qfw_khc_5y">
+						<dt><filtered-key-xref outputclass="key-name-braced"
+								akr:ref="Test:Key-Namespace/Complete"
+								>Key-NamespaceX.Complete</filtered-key-xref></dt>
+						<dd>The text content does not match the referenced KeyDef – wrong
+							namespace</dd>
+					</dlentry>
+					<dlentry id="zcx_khc_5y">
+						<dt><filtered-key-xref outputclass="key-name-braced"
+								akr:ref="Test:Key-Namespace/Complete"
+								>X.Key-Namespace.Complete</filtered-key-xref></dt>
+						<dd>The text content does not match the referenced KeyDef – too long
+							namespace</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced"
-								akr:ref="Test:Key-Namespace/CompleteX">CompleteX</key-xref></dt>
+						<dt><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								>Complete</filtered-key-xref></dt>
 						<dd>No matching KeyDef for ref</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
-								akr:namespace="'Key2-Namespace'">Complete</key-xref></dt>
+						<dt><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								akr:namespace="'Key2-Namespace'">Complete</filtered-key-xref></dt>
 						<dd>Referenced namespace does not match namespace</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="name" akr:ref="Test:Minimal">Minimal</key-xref></dt>
+						<dt><filtered-key-xref outputclass="name" akr:ref="Test:Minimal">Minimal</filtered-key-xref></dt>
 						<dd>No name to be displayed for outputclass 'name'</dd>
 					</dlentry>
 					<dlentry>
-						<dt><key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
-								akr:path-len="3">Complete</key-xref></dt>
+						<dt><filtered-key-xref outputclass="key-name-braced" akr:ref="Test:Key-Namespace/Complete"
+								akr:path-len="3">Complete</filtered-key-xref></dt>
 						<dd>Text content does not match @path-len</dd>
 					</dlentry>
 				</dl>

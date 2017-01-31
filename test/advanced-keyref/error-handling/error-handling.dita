@@ -3,7 +3,7 @@
 	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
 	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
 	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
-	<title>Advanced KeyRef Topic</title>
+	<title>Error Handling</title>
 	<body>
 		<section id="rzx_tc1_by">
 			<title>Definitions</title>

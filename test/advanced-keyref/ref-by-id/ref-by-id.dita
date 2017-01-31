@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>Reference by ID</title>
+	<body>
+		<section id="rzx_tc1_by">
+			<title>Definitions</title>
+			<dl outputclass="bullet-list-dashes">
+				<dlentry id="ad4_nc1_by" ikd:flags="ref-by-id">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry"
+						ikd:flags="ref-by-id">Key1</dt>
+					<dd>Name1</dd>
+				</dlentry>
+				<dlentry id="hnp_kl1_by">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry"
+						ikd:flags="ref-by-id"/>
+					<dd>No Key</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="vsc_vc1_by">
+			<title>References</title>
+			<dl outputclass="bullet-list-titles">
+				<dlentry id="xyy_4v1_5y">
+					<dt>Key1</dt>
+					<dd><key-xref akr:ref="Test:#ad4_nc1_by" outputclass="key-name-braced">Key1</key-xref></dd>
+				</dlentry>
+				<dlentry id="hdc_42b_5y">
+					<dt>Without key</dt>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test:#hnp_kl1_by"/></dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

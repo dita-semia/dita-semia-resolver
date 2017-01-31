@@ -18,6 +18,7 @@
 				<xs:simpleType>
 					<xs:restriction base="xs:token">
 						<xs:enumeration value="ref-expected"/>	<!-- OT publishing will generate a warning when the document contains no reference to a keydef with this flag.  -->
+						<xs:enumeration value="ref-by-id"/>		<!-- the reference string contains only of the type and the id attribute - without namesapce and key -->
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:list>

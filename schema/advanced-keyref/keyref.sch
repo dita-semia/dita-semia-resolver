@@ -27,10 +27,11 @@
 			<sch:let name="pathLenAttr" 	value="@akr:path-len"/>
 			<sch:let name="outputclassAttr" value="@outputclass"/>
 			<sch:let name="keyName" 		value="if (exists($keyDef)) then jkd:getName($keyDef) else ''"/>
-			
+			<sch:let name="keyPath" 		value="if (exists($keyDef)) then string-join((jkd:getNamespace($keyDef), jkd:getKey($keyDef)), '/') else if (contains($refAttr, '#')) then () else substring-after($refAttr, ':')"/>
+
 			<sch:let name="refType"			value="jkr:getType($keyRef)"/>
 			<sch:let name="refNamespace" 	value="jkr:getNamespace($keyRef)"/>
-			
+
 			<sch:let name="namespaceError" 	value="jakr:getXPathListErrorMessage(., $namespaceAttr)"/>
 			
 			<sch:assert test="jakr:matchesPathLen(./text(), $pathLenAttr)"> 
@@ -39,9 +40,13 @@
 			<sch:report test="exists($namespaceError)"> 
 				Invalid value for @akr:namespace. It must be empty or a valid XPath: <sch:value-of select="$namespaceError"/>
 			</sch:report>
-			<sch:assert test="exists(@cba:content) or (jakr:matchesRefText($keyRef))">
-				<!-- don't validate the text content when it's set by conbat -->
-				Invalid keyref: Text text content does not match the reference ('<sch:value-of select="$refAttr"/>').
+			<sch:assert test="exists(@cba:content) or empty($keyPath) or (jakr:textMatchesPath(text(), $keyPath))">
+				<!-- 
+					don't validate the text content when:
+						- it's set by conbat
+						- the key-path is not known (ref-by-id and no valid keydef)
+				-->
+				Invalid keyref: Text content does not match the reference ('<sch:value-of select="jkd:getRefString($keyDef)"/>').
 			</sch:assert>
 			<sch:assert test="empty($keyDef) or (jakr:matchesNamespaceFilter($keyRef, $keyDef))">
 				Invalid keyref: The referenced namespace ('<sch:value-of select="$refNamespace"/>') is not allowed in this context ('<sch:value-of select="$namespaceAttr"/>').

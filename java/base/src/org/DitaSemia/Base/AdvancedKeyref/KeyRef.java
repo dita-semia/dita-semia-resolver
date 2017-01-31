@@ -62,6 +62,11 @@ public class KeyRef implements KeyRefInterface {
 		this.node 	= node;	
 	}
 	
+	@Override
+	public String getRefString() {
+		return node.getAttribute(ATTR_REF, NAMESPACE_URI);
+	}
+	
 	public DisplaySuffix getDisplaySuffix(BookCache cache, boolean showUnknownName) {
 		return getDisplaySuffix(getMatchingKeyDef(cache), showUnknownName);
 	}

@@ -51,4 +51,6 @@ public interface KeyDefInterface extends KeyspecInterface {
 	NodeWrapper getNode();
 	
 	boolean isRefExpected();
+
+	boolean isRefById();
 }

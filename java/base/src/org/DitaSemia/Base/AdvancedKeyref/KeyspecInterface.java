@@ -6,6 +6,7 @@ public interface KeyspecInterface {
 	
 	final static String TYPE_DELIMITER 	= ":";
 	final static String PATH_DELIMITER 	= "/";
+	final static String ID_DELIMITER	= "#";
 	final static String ANY_NAMESPACE	= "*";
 	
 
@@ -21,13 +22,8 @@ public interface KeyspecInterface {
 	
 	List<String> getNamespaceList();
 	
-	default public String getRefString() {
-		final String namespace = getNamespace();
-		return getType() + TYPE_DELIMITER 
-				+ ((namespace == null) || (namespace.isEmpty()) ? "" : (namespace + PATH_DELIMITER))
-				+ getKey();
-	}
-	
+	String getRefString();
+
 	default public boolean equals(KeyspecInterface keyspec) {
 		return (getRefString().equals(keyspec.getRefString()));
 	}
