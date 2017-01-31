@@ -46,7 +46,11 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:sequence select="$refContent"/>
-				<xsl:message>WARNING: Failed to resolve advanced-keyref to xref (<xsl:value-of select="$keyRef/@akr:ref"/>)</xsl:message>
+				<xsl:if test="empty($jKeyDef)">
+					<xsl:variable name="file"	as="xs:string?" select="parent::*/@xtrf"/>
+					<xsl:variable name="pos"	as="xs:string?" select="substring-after(parent::*/@xtrc, ';')"/>
+					<xsl:message><xsl:value-of select="concat($file, ':', $pos)"/>: [DOTX][WARN]: Failed to resolve advanced-keyref to xref (<xsl:value-of select="$keyRef/@akr:ref"/>).</xsl:message>
+				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

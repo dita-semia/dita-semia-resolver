@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>Advanced KeyRef Topic</title>
+	<body>
+		<section id="rzx_tc1_by">
+			<title>Definitions</title>
+			<dl>
+				<dlentry id="ad4_nc1_by">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry">Key1</dt>
+					<dd>Name1</dd>
+				</dlentry>
+				<dlentry id="hnp_kl1_by">
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry">Key2</dt>
+					<dd>Name2</dd>
+				</dlentry>
+				<dlentry>
+					<dt ikd:key-type="Test" ikd:name="dd" ikd:root="parent::dlentry">Key3</dt>
+					<dd>Name3 (no id)</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="vsc_vc1_by">
+			<title>References</title>
+			<dl outputclass="bullet-list-titles">
+				<dlentry id="xyy_4v1_5y">
+					<dt>Invalid key-ref</dt>
+					<dd><key-xref akr:ref="Test:unknown-key">unknown-key</key-xref></dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>
