@@ -19,7 +19,7 @@ public class AdvancedKeyRefContentResolver {
 		KeyRef keyRef = KeyRef.fromNode(new AuthorNodeWrapper(node, authorAccess));
 		if (keyRef != null) {
 			final BookCache cache = BookCacheHandler.getInstance().getBookCache(node.getXMLBaseURL());
-			return keyRef.getDisplaySuffix(cache, true);
+			return keyRef.getDisplaySuffix(cache, true).toString();
 		} else {
 			return null;
 		}

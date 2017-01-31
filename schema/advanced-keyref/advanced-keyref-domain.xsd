@@ -65,6 +65,7 @@
 			<xs:enumeration value="key-name-braced"/>
 			<xs:enumeration value="key-name-dashed"/>
 			<xs:enumeration value="name"/>
+			<xs:enumeration value="key-colon-name-quoted"/>
 		</xs:restriction>
 	</xs:simpleType>
 	

@@ -36,6 +36,20 @@
 		<section id="vsc_vc1_by">
 			<title>References</title>
 			<dl outputclass="bullet-list-titles">
+				<dlentry id="xyy_4v1_5y">
+					<dt>outputclass <i>&lt;none></i></dt>
+					<dd>
+						<ul compact="yes" id="yyy_4v1_5y">
+							<li id="zyy_4v1_5y"><key-xref akr:ref="Test1:Key1"
+									>Key1</key-xref></li>
+							<li id="azy_4v1_5y"><key-xref akr:ref="Test2:Key2"
+									>Key2</key-xref></li>
+							<li id="bzy_4v1_5y"><key-xref akr:ref="Test3:Key3"
+									>Key3</key-xref></li>
+							<li id="czy_4v1_5y"><key-xref akr:ref="Test4:Key4">Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
 				<dlentry>
 					<dt>outputclass "key"</dt>
 					<dd>
@@ -74,8 +88,8 @@
 								akr:ref="Test1:Key1">Key1</key-xref></li>
 							<li id="d4c_dd1_by"><key-xref outputclass="key-name-dashed"
 								akr:ref="Test2:Key2">Key2</key-xref></li>
-							<li id="e4c_dd1_by"><key-xref outputclass="key-name-dashed"
-								akr:ref="Test3:Key3">Key3</key-xref></li>
+							<li id="e4c_dd1_by"><key-xref outputclass="key-name-dashed" akr:ref="Test3:Key3"
+									>Key3</key-xref></li>
 							<li id="bkd_mgb_by"><key-xref outputclass="key-name-dashed"
 								akr:ref="Test4:Key4">Key4</key-xref></li>
 						</ul>
@@ -91,6 +105,21 @@
 							<li id="jxd_dd1_by"><key-xref outputclass="name" akr:ref="Test3:Key3"
 								>Key3</key-xref></li>
 							<li id="ffj_mgb_by"><key-xref outputclass="name" akr:ref="Test4:Key4">Key4</key-xref></li>
+						</ul>
+					</dd>
+				</dlentry>
+				<dlentry id="rdk_vt1_5y">
+					<dt>outputclass "key-colon-name-quoted"</dt>
+					<dd>
+						<ul compact="yes" id="sdk_vt1_5y">
+							<li id="tdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test1:Key1"
+									>Key1</key-xref></li>
+							<li id="udk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test2:Key2"
+									>Key2</key-xref></li>
+							<li id="vdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test3:Key3"
+									>Key3</key-xref></li>
+							<li id="wdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test4:Key4"
+									>Key4</key-xref></li>
 						</ul>
 					</dd>
 				</dlentry>

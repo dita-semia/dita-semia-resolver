@@ -31,8 +31,8 @@
 				</xsl:call-template>
 			</xsl:if>
 			<xsl:if test="$outputclass != $OUTPUTCLASS_KEY">
-				<xsl:variable name="displaySuffix" as="xs:string?" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
-				<xsl:value-of select="$displaySuffix"/>
+				<xsl:variable name="displaySuffix" as="xs:string*" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
+				<xsl:value-of select="$displaySuffix" separator=""/>
 				<xsl:if test="empty($displaySuffix) and ($outputclass = $OUTPUTCLASS_NAME)">
 					<xsl:text>&#xA0;</xsl:text>	<!-- insert some text to avoid generated content from link target -->
 				</xsl:if>

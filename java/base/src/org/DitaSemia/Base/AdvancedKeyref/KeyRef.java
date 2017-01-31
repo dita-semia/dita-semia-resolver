@@ -24,10 +24,14 @@ public class KeyRef implements KeyRefInterface {
 	public 	static final String ATTR_REF				= "ref";
 	public 	static final String ATTR_OUTPUTCLASS		= "outputclass";
 	
-	public  static final String OC_KEY					= "key";
-	public  static final String OC_KEY_NAME_BRACED		= "key-name-braced";
-	public  static final String OC_KEY_NAME_DASHED		= "key-name-dashed";
-	public  static final String OC_NAME					= "name";
+	public  static final String OC_KEY						= "key";
+	public  static final String OC_KEY_NAME_BRACED			= "key-name-braced";
+	public  static final String OC_KEY_NAME_DASHED			= "key-name-dashed";
+	public  static final String OC_NAME						= "name";
+	public  static final String OC_KEY_COLON_NAME_QUOTED	= "key-colon-name-quoted";
+	
+	public  static final String LEFT_QUOTE				= "\u201C";
+	public  static final String RIGHT_QUOTE				= "\u201D";
 	
 	private static final String ATTR_TYPE_FILTER		= "type";
 	private static final String ATTR_NAMESPACE_FILTER 	= "namespace";
@@ -58,29 +62,45 @@ public class KeyRef implements KeyRefInterface {
 		this.node 	= node;	
 	}
 	
-	public String getDisplaySuffix(BookCache cache, boolean showUnknownName) {
+	public DisplaySuffix getDisplaySuffix(BookCache cache, boolean showUnknownName) {
 		return getDisplaySuffix(getMatchingKeyDef(cache), showUnknownName);
 	}
 	
-	public String getDisplaySuffix(KeyDefInterface keyDef, boolean showUnknownName) {
-		String name = (showUnknownName) ? UNKNOWN_NAME : null;
+	public DisplaySuffix getDisplaySuffix(KeyDefInterface keyDef, boolean showUnknownName) {
+		String key		= null;
+		String name 	= (showUnknownName) ? UNKNOWN_NAME : null;
 		if (keyDef != null) {
-			name = keyDef.getName();
+			key		= keyDef.getKey();
+			name 	= keyDef.getName();
 		}
+		String keySuffix 	= "";
+		String nameSuffix 	= "";
 		if ((name != null) && (!name.isEmpty())) {
-			String outputclass = getOutputclass();
+			final boolean 	isKeyEmpty 	= ((key == null) || (key.isEmpty()));
+			final String 	outputclass = getOutputclass();
 			if (outputclass.equals(OC_KEY_NAME_DASHED)) {
 				// for outputclass "key" hiding the name will be done by css - but not in every case so provide it here.
-				return " \u2013 " + name;
+				if (!isKeyEmpty) {
+					keySuffix = " \u2013 ";
+				}
+				nameSuffix = name;
 			} else if (outputclass.equals(OC_NAME)) {
-				return name;
+				nameSuffix = name;
+			} else if (outputclass.equals(OC_KEY_COLON_NAME_QUOTED)) {
+				if (!isKeyEmpty) {
+					keySuffix = ": ";
+				}
+				nameSuffix = LEFT_QUOTE + name + RIGHT_QUOTE;
 			} else {
+				if (!isKeyEmpty) {
+					keySuffix = " ";
+				}
 				// for outputclass "key" hiding the name will be done by css - but not in every case so provide it here.
-				return " (" + name + ")";	
+				nameSuffix = " (" + name + ")";
 			}
-		} else {
-			return "";
 		}
+		//logger.info("outputclass: " + getOutputclass() + ", keySuffix: " + keySuffix + ", nameSuffix:" + nameSuffix);
+		return new DisplaySuffix(keySuffix, nameSuffix);
 	}
 	
 	public KeyDefInterface getMatchingKeyDef(BookCache cache) {
@@ -318,5 +338,20 @@ public class KeyRef implements KeyRefInterface {
 	
 	public static boolean matchesTypeFilter(Set<String> typeFilter, String type) {
 		return (typeFilter == null) || (typeFilter.contains(type));
+	}
+	
+	public static class DisplaySuffix {
+		public final String keySuffix;
+		public final String nameSuffix;
+		
+		DisplaySuffix(String keySuffix, String nameSuffix) {
+			this.keySuffix 	= keySuffix;
+			this.nameSuffix = nameSuffix;
+		}
+		
+		@Override
+		public String toString() {
+			return keySuffix + nameSuffix;
+		}
 	}
 }

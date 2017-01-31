@@ -1,8 +1,12 @@
 package org.DitaSemia.Ot.AdvancedKeyRef;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.AdvancedKeyref.KeyRef.DisplaySuffix;
 import org.DitaSemia.Ot.DitaSemiaOtResolver;
 import org.apache.log4j.Logger;
 
@@ -13,6 +17,7 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.EmptySequence;
+import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.StringValue;
 
 public class GetKeyRefDisplaySuffixCall extends ExtensionFunctionCall {
@@ -37,12 +42,13 @@ public class GetKeyRefDisplaySuffixCall extends ExtensionFunctionCall {
 			return EmptySequence.getInstance();
 		} else {
 			final KeyDefInterface 	keyDef 			= DitaSemiaOtResolver.getKeyDefFromItem(arguments[1].head());
-			final String			displaySuffix	= keyRef.getDisplaySuffix(keyDef, false);
-			if ((displaySuffix == null) || (displaySuffix.isEmpty())) {
-				return EmptySequence.getInstance();
-			} else {
-				return new StringValue(displaySuffix);
-			}
+			final DisplaySuffix		displaySuffix	= keyRef.getDisplaySuffix(keyDef, false);
+			final List<Item> 		list 			= new LinkedList<>();
+			
+			list.add(new StringValue(displaySuffix.keySuffix));
+			list.add(new StringValue(displaySuffix.nameSuffix));
+
+			return new SequenceExtent(list);
 		}
 	}
 
