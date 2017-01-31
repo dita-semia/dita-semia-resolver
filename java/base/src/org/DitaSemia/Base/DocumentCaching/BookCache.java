@@ -32,7 +32,6 @@ import org.DitaSemia.Base.SaxonDocumentBuilder;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
-import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;

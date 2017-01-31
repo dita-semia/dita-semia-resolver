@@ -9,6 +9,7 @@ import net.sf.saxon.trans.XPathException;
 
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.FileUtil;
+import org.DitaSemia.Base.FilterAttrSet;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.XPathNotAvaliableException;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
@@ -30,6 +31,7 @@ public class KeyDef implements KeyDefInterface {
 
 	public  static final String FLAG_REF_EXPECTED	= "ref-expected";
 	public  static final String FLAG_REF_BY_ID		= "ref-by-id";
+	public  static final String FLAG_FILTERED_KEY	= "filtered-key";
 	
 	private final String 		key;
 	private final String 		type;
@@ -43,7 +45,10 @@ public class KeyDef implements KeyDefInterface {
 	private final String		defAncestorTopicId;
 	private final boolean		isRefExpected;
 	private final boolean		isRefById;
+	private final boolean		isFilteredKey;
 	
+	private final FilterAttrSet keyFilterAttrSet;
+
 	public static KeyDef fromNode(NodeWrapper node) {
 		return fromNode(node, null);
 	}
@@ -130,15 +135,31 @@ public class KeyDef implements KeyDefInterface {
 		final String namespaceAttr 	= node.getAttribute(ATTR_NAMESPACE, NAMESPACE_URI);
 		final String nameAttr 		= node.getAttribute(ATTR_NAME, 		NAMESPACE_URI);
 		final String descAttr 		= node.getAttribute(ATTR_DESC, 		NAMESPACE_URI);
-		final String flagsAttr 		= node.getAttribute(ATTR_FLAGS, 		NAMESPACE_URI);
+		final String flagsAttr 		= node.getAttribute(ATTR_FLAGS, 	NAMESPACE_URI);
 
 		key 		= (keyAttr 			!= null) ? root.evaluateXPathToString(keyAttr) 			: node.getTextContent();
 		namespace	= (namespaceAttr 	!= null) ? root.evaluateXPathToStringList(namespaceAttr): null;
 		name		= (nameAttr 		!= null) ? root.evaluateXPathToString(nameAttr) 		: null;
 		desc		= (descAttr 		!= null) ? root.evaluateXPathToString(descAttr)			: null;
 		
-		isRefExpected 	= ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_EXPECTED + "\\b")));
-		isRefById		= ((flagsAttr != null) && (flagsAttr.matches("\\b" + FLAG_REF_BY_ID + "\\b")));
+		isRefExpected 	= ((flagsAttr != null) && (flagsAttr.contains(FLAG_REF_EXPECTED)));
+		isRefById		= ((flagsAttr != null) && (flagsAttr.contains(FLAG_REF_BY_ID)));
+		isFilteredKey	= ((flagsAttr != null) && (flagsAttr.contains(FLAG_FILTERED_KEY)));
+
+		logger.info("flagsAttr: " + flagsAttr + ", isFilteredKey: " + isFilteredKey);
+		if ((isFilteredKey) && (keyAttr != null)) {
+			final NodeWrapper keyNode = root.evaluateXPathToNode(keyAttr);
+			logger.info("keyNode: " + keyNode);
+			if (keyNode == null) {
+				keyFilterAttrSet = null;	// key will not be visible
+			} else {
+				// TODO: consider context as well
+				keyFilterAttrSet = FilterAttrSet.getMerged(keyNode, null);
+			}
+		} else {
+			keyFilterAttrSet = new FilterAttrSet();	// key will always be visible
+		}
+		logger.info("keyFilterAttrSet (" + getRefString() + "): " + keyFilterAttrSet);
 	}
 	
 	@Override
@@ -247,6 +268,16 @@ public class KeyDef implements KeyDefInterface {
 	@Override
 	public boolean isRefById() {
 		return isRefById;
+	}
+
+	@Override
+	public boolean isFilteredKey() {
+		return isFilteredKey;
+	}
+
+	@Override
+	public FilterAttrSet getKeyFilterAttrSet() {
+		return keyFilterAttrSet;
 	}
 
 }

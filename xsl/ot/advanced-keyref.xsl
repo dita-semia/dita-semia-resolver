@@ -32,17 +32,42 @@
 				<xsl:variable name="jKeyDef"		as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDef?" 	select="akr:getReferencedKeyDef($keyRef)"/>
 				<xsl:variable name="href"			as="xs:string?" 									select="if (exists($jKeyDef)) then akr:getKeyDefLocation($jKeyDef) else ()"/>
 				
+				<xsl:variable name="displaySuffix" 	as="xs:string*" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
+				<xsl:variable name="isKeyFiltered" 	as="xs:boolean" select="ikd:getIsFilteredKey($jKeyDef)"/>
+				<xsl:variable name="isKeyHidden" 	as="xs:boolean" select="ikd:getIsKeyHidden($jKeyDef)"/>
+				
+				<!--<xsl:message>ref: <xsl:value-of select="@akr:ref"/>, isKeyFiltered: <xsl:value-of select="$isKeyFiltered"/><!-\-, isKeyHidden: <xsl:value-of select="$isKeyHidden"/>-\-></xsl:message>-->
+
 				<xsl:variable name="refContent" as="node()*">
-					<xsl:if test="not($outputclass = $OUTPUTCLASS_NAME)">
-						<!-- also applies when outputclass is missing -->
-						<xsl:call-template name="KeyFormatting">
-							<xsl:with-param name="keyNode" select="$keyRef"/>
-							<xsl:with-param name="content" select="$content"/>
-						</xsl:call-template>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="($outputclass = $OUTPUTCLASS_NAME) or ($isKeyHidden)">
+							<!-- no key to be displayed -->
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="keyContent" as="node()*">
+								<xsl:call-template name="KeyFormatting">
+									<xsl:with-param name="keyNode" select="$keyRef"/>
+									<xsl:with-param name="content" select="$content"/>
+								</xsl:call-template>
+								<xsl:value-of select="$displaySuffix[1]"/>
+							</xsl:variable>
+							<xsl:choose>
+								<xsl:when test="$isKeyFiltered">
+									<ph class="{$CP_PH}">
+										<xsl:variable name="attrContainer" as="element()?" select="ikd:getKeyFilterAttr($jKeyDef)"/>
+										<xsl:message>attrContainer: <xsl:copy-of select="$attrContainer"/></xsl:message>
+										<xsl:copy-of select="$attrContainer/attribute()"/>
+										<xsl:sequence select="$keyContent"/>
+									</ph>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:sequence select="$keyContent"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:if test="$outputclass != $OUTPUTCLASS_KEY">
-						<xsl:variable name="displaySuffix" as="xs:string*" select="akr:getKeyRefDisplaySuffix($keyRef, $jKeyDef)"/>
-						<xsl:value-of select="$displaySuffix" separator=""/>
+						<xsl:value-of select="$displaySuffix[2]"/>
 						<xsl:if test="empty($displaySuffix) and ($outputclass = $OUTPUTCLASS_NAME)">
 							<xsl:text>&#xA0;</xsl:text>	<!-- insert some text to avoid generated content from link target -->
 						</xsl:if>

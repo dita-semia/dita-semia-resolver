@@ -32,7 +32,10 @@ import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetIsFilteredKeyDef;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetIsKeyHiddenDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyDefLocationDef;
+import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyFilterAttrDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyRefDisplaySuffixDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetKeyTypeDefDef;
 import org.DitaSemia.Ot.AdvancedKeyRef.GetReferencedKeyDefDef;
@@ -148,6 +151,10 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		resolverConfiguration.registerExtensionFunction(new GetKeyDefLocationDef(this));
 		resolverConfiguration.registerExtensionFunction(new GetKeyTypeDefDef(this));
 		resolverConfiguration.registerExtensionFunction(new GetKeyRefDisplaySuffixDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetIsFilteredKeyDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetIsKeyHiddenDef(this));
+		resolverConfiguration.registerExtensionFunction(new GetKeyFilterAttrDef(this));
+		
 
 		resolverProcessor 		= new Processor(resolverConfiguration);
 		resolverDocBuilder 		= resolverProcessor.newDocumentBuilder();

@@ -18,6 +18,16 @@
 						ikd:flags="ref-by-id"/>
 					<dd>No Key</dd>
 				</dlentry>
+				<dlentry id="aml_5jd_5y">
+					<dt ikd:key-type="Test" ikd:key="dd/ph[1]" ikd:root="parent::dlentry"
+						ikd:name="dd/ph[2]" ikd:flags="ref-by-id filtered-key">Filtered Key</dt>
+					<dd><ph audience="internal">Key2</ph><ph>Name2</ph></dd>
+				</dlentry>
+				<dlentry id="lhg_c42_5y">
+					<dt ikd:key-type="Test" ikd:key="dd/ph[99]" ikd:root="parent::dlentry"
+						ikd:name="dd/ph[2]" ikd:flags="ref-by-id filtered-key">Hidden Key</dt>
+					<dd><ph audience="internal">-</ph><ph>Name3</ph></dd>
+				</dlentry>
 			</dl>
 		</section>
 		<section id="vsc_vc1_by">
@@ -30,6 +40,16 @@
 				<dlentry id="hdc_42b_5y">
 					<dt>Without key</dt>
 					<dd><key-xref outputclass="key-name-braced" akr:ref="Test:#hnp_kl1_by"/></dd>
+				</dlentry>
+				<dlentry id="jcw_bkd_5y">
+					<dt>With Filtered Key</dt>
+					<dd><key-xref outputclass="key-colon-name-quoted" akr:ref="Test:#aml_5jd_5y"
+							>Key2</key-xref></dd>
+				</dlentry>
+				<dlentry id="brs_f42_5y">
+					<dt>With Hidden Key</dt>
+					<dd><key-xref outputclass="key-colon-name-quoted" akr:ref="Test:#lhg_c42_5y"
+							>Key3</key-xref></dd>
 				</dlentry>
 			</dl>
 		</section>

@@ -6,6 +6,7 @@ import java.util.List;
 
 import java.util.Set;
 
+import org.DitaSemia.Base.FilterAttrSet;
 import org.DitaSemia.Base.NodeWrapper;
 
 public interface KeyDefInterface extends KeyspecInterface {
@@ -53,4 +54,8 @@ public interface KeyDefInterface extends KeyspecInterface {
 	boolean isRefExpected();
 
 	boolean isRefById();
+
+	boolean isFilteredKey();
+
+	FilterAttrSet getKeyFilterAttrSet();
 }
