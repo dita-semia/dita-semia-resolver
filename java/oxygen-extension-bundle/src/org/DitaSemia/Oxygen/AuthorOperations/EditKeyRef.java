@@ -17,7 +17,6 @@ import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperation;
-import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
@@ -39,11 +38,11 @@ public class EditKeyRef implements AuthorOperation {
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				nodeAtCaret 		= documentController.getNodeAtOffset(caretOffset);
 			final KeyDefListInterface 		keyDefList 			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
-			final KeyRef 					contextKeyref 		= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
+			final KeyRef 					keyRef 				= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
 			// contextKeyDef?
 			// ancestorKeyDef, keyrefFactory für keyPrioritizer?
-			final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(keyDefList, contextKeyref, null, null);
-			final OxyAdvancedKeyrefDialog 	editKeyRefDialog 	= new OxyAdvancedKeyrefDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), keyDefList, contextKeyref, null, keyPrioritizer);
+			final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(keyDefList, keyRef, null, null);
+			final OxyAdvancedKeyrefDialog 	editKeyRefDialog 	= new OxyAdvancedKeyrefDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), keyDefList, keyRef, null, keyPrioritizer);
 
 			editKeyRefDialog.setLocationRelativeTo((Component)authorAccess.getWorkspaceAccess().getParentFrame());
 
@@ -62,7 +61,7 @@ public class EditKeyRef implements AuthorOperation {
 				
 				AuthorElement keyRefElement = (AuthorElement)nodeAtCaret;
 				if (keyRefElement.getEndOffset() > keyRefElement.getStartOffset() + 1) {
-					//logger.info("Lösche bestehenden Inhalt.");
+					//logger.info("L�sche bestehenden Inhalt.");
 					documentController.delete(keyRefElement.getStartOffset() + 1, keyRefElement.getEndOffset() - 1);
 				}
 				//logger.info("Setze Key = " + keyValue);
@@ -78,7 +77,9 @@ public class EditKeyRef implements AuthorOperation {
 				}
 		        documentController.setAttribute(namespacePrefix + ":" + KeyRef.ATTR_REF, new AttrValue(keyDef.getRefString()), keyRefElement);
 		        
-		        documentController.setAttribute(KeyRef.ATTR_OUTPUTCLASS, new AttrValue(editKeyRefDialog.getOutputclass()), keyRefElement);
+		        if (!keyRef.isOutputclassFixed()) {
+		        	documentController.setAttribute(KeyRef.ATTR_OUTPUTCLASS, new AttrValue(editKeyRefDialog.getOutputclass()), keyRefElement);
+		        }
 				
 				documentController.endCompoundEdit();
 				
