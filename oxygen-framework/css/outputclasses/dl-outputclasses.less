@@ -42,7 +42,7 @@
 	display		: inline;
 }
 
-*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt']:after {
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt']:after(@{dt-outputclass-suffix-index}) {
 	content		: " – ";
 }
 
