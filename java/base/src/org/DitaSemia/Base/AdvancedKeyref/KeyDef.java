@@ -113,7 +113,7 @@ public class KeyDef implements KeyDefInterface {
 		defId	= refNode.getAttribute(ATTR_ID, null); 
 		
 		final String classAttr = root.getAttribute("class", null);
-		if (classAttr.contains(" topic/topic ")) {
+		if ((classAttr != null) && (classAttr.contains(" topic/topic "))) {
 			defAncestorTopicId = null;
 		} else if (parentTopicId != null) {
 			defAncestorTopicId = parentTopicId;
