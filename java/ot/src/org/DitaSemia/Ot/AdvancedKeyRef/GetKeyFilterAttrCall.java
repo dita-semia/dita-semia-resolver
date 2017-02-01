@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.BuildingStreamWriterImpl;
@@ -37,33 +38,34 @@ public class GetKeyFilterAttrCall extends ExtensionFunctionCall {
 
 	@Override
 	public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-		final KeyDefInterface 	keyDef = DitaSemiaOtResolver.getKeyDefFromItem(arguments[0].head());
-		//logger.info(keyDef + ": " + keyDef.isFilteredKey());
-		final FilterAttrSet 			set = keyDef.getKeyFilterAttrSet();
-		final Map<String, Set<String>>	map = (set == null) ? null : set.getMap();
-		
-		if (map != null) {
-			final Processor 				processor 	= new Processor(context.getConfiguration());
-			final DocumentBuilder 			builder 	= processor.newDocumentBuilder();
+		final Item keyDefItem = arguments[0].head();
+		if (keyDefItem != null) {
+			final KeyDefInterface keyDef = DitaSemiaOtResolver.getKeyDefFromItem(keyDefItem);
+			//logger.info(keyDef + ": " + keyDef.isFilteredKey());
+			final FilterAttrSet 			set = keyDef.getKeyFilterAttrSet();
+			final Map<String, Set<String>>	map = (set == null) ? null : set.getMap();
 			
-			try {
-				BuildingStreamWriterImpl 	writer 		= builder.newBuildingStreamWriter();
-				writer.writeStartElement("Container");
-				for (Entry<String, Set<String>> entry : map.entrySet()) {
-					writer.writeAttribute(entry.getKey(), String.join(" ", entry.getValue()));
+			if (map != null) {
+				final Processor 				processor 	= new Processor(context.getConfiguration());
+				final DocumentBuilder 			builder 	= processor.newDocumentBuilder();
+				
+				try {
+					BuildingStreamWriterImpl 	writer 		= builder.newBuildingStreamWriter();
+					writer.writeStartElement("Container");
+					for (Entry<String, Set<String>> entry : map.entrySet()) {
+						writer.writeAttribute(entry.getKey(), String.join(" ", entry.getValue()));
+					}
+					writer.writeEndElement();
+					
+					XdmSequenceIterator iterator = writer.getDocumentNode().axisIterator(Axis.CHILD);
+					return ((XdmNode)iterator.next()).getUnderlyingNode();
+					
+				} catch (SaxonApiException | XMLStreamException e) {
+					throw new XPathException("Failed to create result-node", e);
 				}
-				writer.writeEndElement();
-				
-				XdmSequenceIterator iterator = writer.getDocumentNode().axisIterator(Axis.CHILD);
-				return ((XdmNode)iterator.next()).getUnderlyingNode();
-				
-			} catch (SaxonApiException | XMLStreamException e) {
-				throw new XPathException("Failed to create result-node", e);
-			}
-				
-		} else {
-			return EmptySequence.getInstance();
+			}		
 		}
+		return EmptySequence.getInstance();
 	}
 
 }

@@ -333,7 +333,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 
 	public static KeyDefInterface getKeyDefFromItem(Item item) throws XPathException {
 		if ((!(item instanceof ObjectValue<?>)) || (!(((ObjectValue<?>)item).getObject() instanceof KeyDefInterface))) {
-			throw new XPathException("Supplied item  needs to be an instance of " + KeyDefInterface.class.getTypeName() + ".");
+			throw new XPathException("Supplied item (" + item + ") needs to be an instance of " + KeyDefInterface.class.getTypeName() + ".");
 		}
 		return (KeyDefInterface)(((ObjectValue<?>)item).getObject());
 	}
