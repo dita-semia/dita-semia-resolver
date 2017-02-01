@@ -146,10 +146,10 @@ public class KeyDef implements KeyDefInterface {
 		isRefById		= ((flagsAttr != null) && (flagsAttr.contains(FLAG_REF_BY_ID)));
 		isFilteredKey	= ((flagsAttr != null) && (flagsAttr.contains(FLAG_FILTERED_KEY)));
 
-		logger.info("flagsAttr: " + flagsAttr + ", isFilteredKey: " + isFilteredKey);
+		//logger.info("flagsAttr: " + flagsAttr + ", isFilteredKey: " + isFilteredKey);
 		if ((isFilteredKey) && (keyAttr != null)) {
 			final NodeWrapper keyNode = root.evaluateXPathToNode(keyAttr);
-			logger.info("keyNode: " + keyNode);
+			//logger.info("keyNode: " + keyNode);
 			if (keyNode == null) {
 				keyFilterAttrSet = null;	// key will not be visible
 			} else {
@@ -159,7 +159,7 @@ public class KeyDef implements KeyDefInterface {
 		} else {
 			keyFilterAttrSet = new FilterAttrSet();	// key will always be visible
 		}
-		logger.info("keyFilterAttrSet (" + getRefString() + "): " + keyFilterAttrSet);
+		//logger.info("keyFilterAttrSet (" + getRefString() + "): " + keyFilterAttrSet);
 	}
 	
 	@Override
