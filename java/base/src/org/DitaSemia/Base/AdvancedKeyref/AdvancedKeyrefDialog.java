@@ -399,10 +399,12 @@ public class AdvancedKeyrefDialog extends JDialog {
 	private void createPreviewPanel(JPanel previewPanel) {
 		previewPanel.setBorder(BorderFactory.createTitledBorder("Darstellung"));
 		previewPanel.setLayout(new GridBagLayout());
+		previewPanel.setPreferredSize(new Dimension(200, 50));
 		
 		previewTextField = new JEditorPane("text/html", "");
 		previewTextField.setEditable(false);
 		previewTextField.setOpaque(false);
+		previewTextField.setBackground(Color.BLUE);
 	
 		List<String> values = new ArrayList<>();
 		boolean enabled;
@@ -474,6 +476,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		textFieldConstraints.gridx 		= 0;
 		textFieldConstraints.fill 		= GridBagConstraints.BOTH;
 		textFieldConstraints.weightx 	= 1;
+		textFieldConstraints.insets		= new Insets(4, 4, 4, 4);
 		
 		GridBagConstraints comboConstraints = new GridBagConstraints();
 		comboConstraints.gridx = 1;
@@ -723,7 +726,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 			box.removeAllItems();
 			for (int i = 0; i < keyTable.getRowCount(); i++) {
 				String item = (String) keyTable.getModel().getValueAt(keyTable.convertRowIndexToModel(i), boxCounter);
-				if (!items.contains(item) && !item.isEmpty()) {
+				if (!items.contains(item) && item != null && !item.isEmpty()) {
 					items.add(item);
 				}
 			}
@@ -776,6 +779,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		for (int i = 0; i <= 3; i++) {
 			JComboBox<Object> currentBox = comboBoxes.get(i);
 			if (currentBox.isEnabled()) {
+				logger.info("updateComboBoxes: box " + i + "currentBox.getItemCount: " + currentBox.getItemCount());
 				if (currentBox.getItemCount() > 3 && currentBox.getItemAt(3).getClass().equals(JSeparator.class)) {
 					currentBox.removeItemAt(3);
 					currentBox.removeItemAt(2);

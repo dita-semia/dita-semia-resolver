@@ -28,12 +28,12 @@ public class FilterAttrSet {
 
 	public static FilterAttrSet getMerged(NodeWrapper node, FilterAttrSet parentFilterSet) {
 		Map<String, Set<String>> localMap = getLocalMap(node);
-		if (localMap == null) {
-			// no change -> return parent
-			return parentFilterSet;
-		} else if ((parentFilterSet == null) || (parentFilterSet.map == null)) {
+		if ((parentFilterSet == null) || (parentFilterSet.map == null)) {
 			// no parent filtering -> return local map
 			return new FilterAttrSet(localMap);
+		} else if (localMap == null) {
+			// no change -> return parent
+			return parentFilterSet;
 		} else {
 			Map<String, Set<String>> map = new HashMap<>();
 			for (int i = 0; i < FILTER_ATTR_LIST.length; ++i) {

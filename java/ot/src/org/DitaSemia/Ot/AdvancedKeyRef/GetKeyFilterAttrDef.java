@@ -36,7 +36,7 @@ public class GetKeyFilterAttrDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-		return SequenceType.SINGLE_ELEMENT_NODE;
+		return SequenceType.OPTIONAL_ELEMENT_NODE;
 	}
 
 	@Override

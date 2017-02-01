@@ -90,7 +90,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:sequence select="$content"/>
+				<xsl:apply-templates select="$content"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
