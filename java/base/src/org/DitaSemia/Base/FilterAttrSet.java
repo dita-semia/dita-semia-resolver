@@ -22,7 +22,7 @@ public class FilterAttrSet {
 		map = null;
 	}
 	
-	protected FilterAttrSet(Map<String, Set<String>> map) {
+	public FilterAttrSet(Map<String, Set<String>> map) {
 		this.map = map;
 	}
 

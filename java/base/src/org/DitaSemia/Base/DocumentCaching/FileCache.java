@@ -3,23 +3,35 @@ package org.DitaSemia.Base.DocumentCaching;
 import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.pattern.NodeKindTest;
+import net.sf.saxon.s9api.Axis;
+import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmNodeKind;
+import net.sf.saxon.s9api.XdmSequenceIterator;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.tree.iter.AxisIterator;
 import net.sf.saxon.type.Type;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.DitaSemia.Base.DitaUtil;
+import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
@@ -27,9 +39,16 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
-public class FileCache extends TopicRefContainer {
+public class FileCache extends TopicRefContainer implements NeedsInit {
 
 	private static final Logger logger = Logger.getLogger(FileCache.class.getName());
 	
@@ -40,13 +59,26 @@ public class FileCache extends TopicRefContainer {
 	protected static final String	LINK_TITLE_XSL		= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
 	protected static final String	LOCAL_TOPIC_NUM_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/local-topic-num.xsl";
 
+	protected static final String	HC_ROOT				= "hdd-cache";
+	protected static final String	HC_DEPENDENCY		= "dependency";
+	
+	protected static final String	HC_ATTR_SYSTEM_ID	= "system-id";
+	protected static final String	HC_ATTR_TIMESTAMP	= "timestamp";
+	protected static final String	HC_ATTR_ROOT_NAME	= "root-name";
+	protected static final String	HC_ATTR_ROOT_CLASS	= "root-class";
+	protected static final String	HC_ATTR_ROOT_TITLE	= "root-title";
+
+	protected final Source 				source;
+	protected final boolean				expandAttributeDefaults;
 	protected final String 				decodedUrl;
-	protected final XdmNode				rootXdmNode;
 	protected final BookCache 			bookCache;
 	protected final XsltConrefCache 	xsltConrefCache;
-	protected final SaxonNodeWrapper	rootNode;
 	protected final String				topicrefClass;
-	
+
+	protected SaxonNodeWrapper		rootElement				= null;
+	protected String				rootClass				= null;
+	protected String				rootTitle				= null;
+	protected String				rootName				= null;
 	protected boolean				rootTopicNumInitialized	= false;
 	protected String 				rootTopicNum 			= null;
 	protected String 				rootTopicNumPrefix 		= null;
@@ -58,37 +90,43 @@ public class FileCache extends TopicRefContainer {
 	protected final Map<String, String>				localNumByTopicId	= new HashMap<>();
 	protected final Collection<FileCache>			refFileList			= new LinkedList<>();
 	
+	protected String 	fileTimestamp;
+	protected boolean	isFileParsed;
 	
 
-	public FileCache(String decodedUrl, XdmNode rootXdmNode, BookCache bookCache, String topicrefClass) {
-		this.decodedUrl 		= decodedUrl;
-		this.rootXdmNode		= rootXdmNode;
-		this.bookCache			= bookCache;
-		this.xsltConrefCache	= bookCache.getXsltConrefCache();
-		this.rootNode			= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
-		this.topicrefClass		= topicrefClass;
+	public FileCache(Source source, boolean expandAttributeDefaults, String topicrefClass, BookCache bookCache) {
+		this.source						= source;
+		this.expandAttributeDefaults	= expandAttributeDefaults;
+		this.decodedUrl 				= FileUtil.decodeUrl(source.getSystemId());
+		this.bookCache					= bookCache;
+		this.xsltConrefCache			= bookCache.getXsltConrefCache();
+		//this.rootNode					= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
+		this.topicrefClass				= topicrefClass;
+		
+		fileTimestamp 	= FileUtil.getLastModifiedAsString(source.getSystemId());
+		isFileParsed	= false;
 	}
 
 	public String getDecodedUrl() {
 		return decodedUrl;
 	}
-
-	public XdmNode getRootXdmNode() {
-		return rootXdmNode;
-	}
-
-	public NodeWrapper getRootNode() {
-		return rootNode;
-	}
 	
+	public String getRootName() {
+		return rootName;
+	}
+
+	public SaxonNodeWrapper getRootElement() {
+		ensureFileIsParsed();
+		return rootElement;
+	}
+
 	public Collection<KeyDefInterface> getKeyDefList() {
 		return keyDefList;
 	}
 	
 	public boolean isMap() {
-		final String classAttr = rootNode.getAttribute(DitaUtil.ATTR_CLASS, null);
-		if (classAttr != null) {
-			return classAttr.contains(DitaUtil.CLASS_MAP);
+		if (rootClass != null) {
+			return rootClass.contains(DitaUtil.CLASS_MAP);
 		} else {
 			return false;
 		}
@@ -102,14 +140,150 @@ public class FileCache extends TopicRefContainer {
 	}
 
 	public String toString() {
-		return "FileCache - url: " + decodedUrl + ", rootXdmNode: " + rootNode.getName(); 
+		return "FileCache - url: " + decodedUrl + ", rootElement: " + rootElement.getName(); 
 	}
 	
-	public void parse() throws TransformerException {
-		parseNode(getRootXdmNode().getUnderlyingNode(), this, null);
+	public void init() {
+
+		final long startTime = Calendar.getInstance().getTimeInMillis();
+		String initType = "";
+		
+		// try to load from hddCache
+		final String fileHddCachePath 	= getFileHddCachePath();
+		//logger.info("fileHddCachePath: " + fileHddCachePath);
+		if (fileHddCachePath != null) {
+			final boolean success = parseHddCache(fileHddCachePath);
+			if (!success) {
+				parseFile(fileHddCachePath);
+				if (isHddCachable()) {
+					initType = ", complete parsing + write HDD cache";
+				} else {
+					initType = ", complete parsing";
+				}
+			} else {
+				initType = ", from HDD cache";
+			}
+		} else {
+			parseFile(fileHddCachePath);
+		}
+
+		
+		final long time = Calendar.getInstance().getTimeInMillis() - startTime;
+		logger.info("init (" + decodedUrl + ") done: " + time + "ms" + initType);
+	}
+
+	private boolean parseHddCache(String fileHddCachePath) {
+		try {
+			
+			final InputSource 	inputSource = new InputSource(new FileReader(fileHddCachePath));
+			final XMLReader 	xmlReader 	= XMLReaderFactory.createXMLReader();
+
+			xmlReader.setContentHandler(new HddCacheReader(new URL(source.getSystemId())));
+			xmlReader.parse(inputSource);
+			
+		} catch (FileNotFoundException e) {
+			return false;	// normal case -> no need to log anything
+		} catch (CacheOutOfDate e) {
+			//logger.info(e);
+			return false;	// normal case -> no need to log anything
+		} catch (SAXException | IOException e) {
+			logger.error(e, e);
+			return false;
+		}
+		return true;
+	}
+
+	private void parseFile(String fileHddCachePath) {
+		//logger.info("parseFile: " + decodedUrl);
+		try {
+			isFileParsed = true;	// on failure the value remains true since a reparsing makes no sense.
+			
+			final XdmNode 				rootNode 		= bookCache.getDocumentBuilder().build(source, expandAttributeDefaults);
+			final XdmSequenceIterator 	iterator 		= rootNode.axisIterator(Axis.CHILD);
+			
+			//logger.info(SaxonNodeWrapper.serializeNode(rootNode.getUnderlyingNode()));
+			
+			rootElement = null;
+			while ((iterator.hasNext()) && (rootElement == null)) {
+				final XdmNode child =(XdmNode)iterator.next();
+				//logger.info("  node: " + node.getNodeName() + ", " + node.getNodeKind());
+				if (child.getNodeKind() == XdmNodeKind.ELEMENT) {
+					rootElement = new SaxonNodeWrapper(child.getUnderlyingNode(), bookCache.getXPathCache());
+				}
+			}
+			
+			if (rootElement != null) {
+				parseNode(rootElement.getNodeInfo(), this, null);
+				
+				rootClass 	= rootElement.getAttribute(DitaUtil.ATTR_CLASS, null);
+				rootTitle	= extractString(rootElement, LINK_TITLE_XSL);
+				rootName	= rootElement.getName();
+
+				if (isHddCachable()) {
+					writeHddCache(fileHddCachePath, fileTimestamp);
+				}
+			}
+			
+		} catch(SaxonApiException | TransformerException e) {
+			logger.error(e, e);
+			rootElement = null;
+		}
+	}
+
+	/*
+	 * Cachable if:
+	 * 	- not referencing other files
+	 * 	- not containing uncachable XSLT-Conrefs
+	 */
+	private boolean isHddCachable() {
+		return refFileList.isEmpty();
+		// TODO: check for uncachable XSLT-Conrefs
+	}
+
+	private String getFileHddCachePath() {
+		final String cachepath	= bookCache.getHddCachePath();
+		if (cachepath != null) {
+			final String systemId	= source.getSystemId();
+			final String name 		= FilenameUtils.getBaseName(systemId);
+			final String hash		= Integer.toString(Math.abs(systemId.hashCode()));
+			return FilenameUtils.concat(cachepath, name + "-" + hash + ".xml");
+		} else {
+			return null;
+		}
+	}
+
+	private void writeHddCache(String fileHddCachePath, String fileTimestamp) {
+		try {
+			final XMLOutputFactory 	factory = bookCache.getXmlOutputFactory();
+	        final XMLStreamWriter 	writer	= factory.createXMLStreamWriter(new FileWriter(fileHddCachePath));
+	        
+			writer.writeStartElement(HC_ROOT);
+			writer.writeAttribute(HC_ATTR_SYSTEM_ID, 	source.getSystemId());
+			writer.writeAttribute(HC_ATTR_TIMESTAMP, 	fileTimestamp);
+			writer.writeAttribute(HC_ATTR_ROOT_NAME, 	rootName);
+			writer.writeAttribute(HC_ATTR_ROOT_CLASS, 	rootClass);
+			writer.writeAttribute(HC_ATTR_ROOT_TITLE, 	rootTitle);
+			
+			// TODO: write dependencies
+			
+			
+			for (KeyDefInterface keyDef : keyDefList) {
+				keyDef.writeToHddCache(writer);
+			}
+			
+			writer.writeCharacters("\n");
+			writer.writeEndElement();
+			
+			writer.flush();
+			writer.close();
+			
+		} catch (XMLStreamException | IOException e) {
+			logger.error(e, e);
+		}
 	}
 	
 	public SaxonNodeWrapper getElementByRefId(String refId) {
+		ensureFileIsParsed();
 		return nodeByRefId.get(refId);
 	}
 
@@ -117,16 +291,38 @@ public class FileCache extends TopicRefContainer {
 	public String getLinkText(String refId, NodeWrapper contextNode) {
 		String linkText = linkTextByRefId.get(refId);
 		if (linkText == null) {
-			final SaxonNodeWrapper linkedNode = (refId == null) ? rootNode : nodeByRefId.get(refId);
-			//logger.info("getLinkText(" + refId + "): " + linkedNode);
-			if (linkedNode != null) {
-				linkText = getLinkText(refId, linkedNode);
-				//logger.info("linkText for '" + refId + "': '" + linkText + "'");
-				linkTextByRefId.put(refId, linkText);
+			if (refId == null) {
+				linkText = getRootLinkText();
+				linkTextByRefId.put(null, linkText);
+			} else {
+				final SaxonNodeWrapper linkedNode = nodeByRefId.get(refId);
+				//logger.info("getLinkText(" + refId + "): " + linkedNode);
+				if (linkedNode != null) {
+					linkText = getLinkText(refId, linkedNode);
+					//logger.info("linkText for '" + refId + "': '" + linkText + "'");
+					linkTextByRefId.put(refId, linkText);
+				}
 			}
 		}
 		// TODO: for target in different topic: add link text of target topic. e.g. "Section-Title in x.y TopicTitle" 
 		return linkText;
+	}
+	
+	private String getRootLinkText() {
+		if (rootClass.contains(DitaUtil.CLASS_TOPIC)) {
+			initRootTopicNum();
+			if (rootTopicNumPrefix != null) {
+				final StringBuffer linkText = new StringBuffer();
+				linkText.append(rootTopicNumPrefix);
+				linkText.append(LINK_NUM_DELIMITER);
+				linkText.append(rootTitle);
+				return linkText.toString();
+			} else {
+				return rootTitle;
+			}	
+		} else {
+			return rootTitle;
+		}
 	}
 	
 	private String getLinkText(String refId, SaxonNodeWrapper linkedNode) {
@@ -160,16 +356,27 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 	private String getLinkTitle(String refId, SaxonNodeWrapper linkedNode) {
-		String linkTitle = linkTitleByRefId.get(refId);
-		if (linkTitle == null) {
-			linkTitle = extractString(linkedNode, LINK_TITLE_XSL);
-			if ((linkTitle == null) || (linkTitle.isEmpty())) {
-				linkTitle = LINK_TITLE_UNKNOWN;
+		if (refId == null) {
+			return rootTitle;
+		} else {
+			ensureFileIsParsed();
+			String linkTitle = linkTitleByRefId.get(refId);
+			if (linkTitle == null) {
+				linkTitle = extractString(linkedNode, LINK_TITLE_XSL);
+				if ((linkTitle == null) || (linkTitle.isEmpty())) {
+					linkTitle = LINK_TITLE_UNKNOWN;
+				}
+				//logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
+				linkTitleByRefId.put(refId, linkTitle);
 			}
-			//logger.info("linkTitle for '" + refId + "': '" + linkTitle + "'");
-			linkTitleByRefId.put(refId, linkTitle);
+			return linkTitle;
 		}
-		return linkTitle;
+	}
+
+	private void ensureFileIsParsed() {
+		if (!isFileParsed) {
+			parseFile(getFileHddCachePath());
+		}
 	}
 
 	private void initRootTopicNum() {
@@ -201,7 +408,7 @@ public class FileCache extends TopicRefContainer {
 	}
 	
 	private StringBuffer getTopicNumPrefix(String topicId, SaxonNodeWrapper topicNode) {
-		if (topicNode.isSameNode(rootNode)) {
+		if (topicNode.isSameNode(rootElement)) {
 			initRootTopicNum();
 			if (rootTopicNumPrefix != null) {
 				final StringBuffer topicNumPrefix = new StringBuffer();
@@ -303,14 +510,9 @@ public class FileCache extends TopicRefContainer {
 				parseNode(child, parentTopicRefContainer, parentTopicId);
 				child = iterator.next();
 			}
-			/*
-			final XdmSequenceIterator iterator = node.axisIterator(Axis.CHILD);
-			while (iterator.hasNext()) {
-				parseNode((XdmNode)iterator.next(), parentTopicRefContainer, parentTopicId);
-			}*/
 		}
 	}
-	
+
 	private void processXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
 		final int stage = xsltConref.getStage();
 		if (stage == XsltConref.STAGE_IMMEDIATELY) {
@@ -347,14 +549,13 @@ public class FileCache extends TopicRefContainer {
 				final String href = nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null);
 				if ((href != null) && (!href.isEmpty())) {
 					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href), classAttr);
+					if (refFile != null) {
+						refFileList.add(refFile);
+					}
 				}
 			}
 
 			topicRef = bookCache.createTopicRef(this, refFile, parentTopicRefContainer, nodeWrapper);
-			if (refFile != null) {
-				refFile.parse();
-				refFileList.add(refFile);
-			}
 		}
 		return topicRef;
 	}
@@ -380,4 +581,88 @@ public class FileCache extends TopicRefContainer {
 		}
 	}
 		
+	protected class HddCacheReader extends DefaultHandler {
+		
+		protected final URL 	defUrl;
+		protected 		KeyDef	lastKeydef = null;
+		
+		public HddCacheReader(URL defUrl) {
+			this.defUrl = defUrl;
+		}
+		
+		@Override
+		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+			switch (localName) {
+			case HC_ROOT:
+				checkRoot(attributes);
+				break;
+			case HC_DEPENDENCY:
+				// TODO: compare the timestamps and possibly throw CacheOutOfDate
+				break;
+			case KeyDef.HC_KEYDEF:
+				final KeyDef keyDef = KeyDef.fromHddCache(defUrl, attributes);
+				lastKeydef = keyDef;
+				keyDefList.add(keyDef);
+				bookCache.addKeyDef(keyDef);
+				break;
+			case KeyDef.HC_KEY_FILTER:
+				if (lastKeydef != null) {
+					lastKeydef.setKeyFilterFromHddCach(attributes);
+				} else {
+					throw new SAXException("Unexpected element '" + localName + "'!");	
+				}
+				//final KeyDefInterface keyDef = KeyDef.fromCache
+				break;
+			default:
+				throw new SAXException("Unexpected element '" + localName + "'!");
+			}
+		}
+
+		private void checkRoot(Attributes attributes) throws SAXException {
+			for (int i = 0; i < attributes.getLength(); ++i) {
+				switch (attributes.getQName(i)) {
+				case HC_ATTR_SYSTEM_ID:
+					//logger.info(HC_ATTR_SYSTEM_ID + ": " + source.getSystemId() + " / " + attributes.getValue(i));
+					if (!source.getSystemId().equals(attributes.getValue(i))) {
+						throw new CacheOutOfDate("system-id");
+					}
+					break;
+				case HC_ATTR_TIMESTAMP:
+					//logger.info(HC_ATTR_TIMESTAMP + ": " + fileTimestamp + " / " + attributes.getValue(i));
+					if (!fileTimestamp.equals(attributes.getValue(i))) {
+						throw new CacheOutOfDate("root-timestamp");
+					}
+					break;
+				case HC_ATTR_ROOT_NAME:
+					rootName = attributes.getValue(i);
+					break;
+				case HC_ATTR_ROOT_CLASS:
+					rootClass = attributes.getValue(i);
+					break;
+				case HC_ATTR_ROOT_TITLE:
+					rootTitle = attributes.getValue(i);
+					break;
+				default:
+					throw new SAXException("Unexpected attribute '" + attributes.getQName(i) + "' on root element.");
+				}
+			}
+			
+		}
+	}
+
+	@SuppressWarnings("serial")
+	protected class CacheOutOfDate extends SAXException {
+		
+		protected final String reason;
+		
+		CacheOutOfDate(String reason) {
+			this.reason = reason;
+		}
+		
+		@Override
+		public String getMessage() {
+			return reason;
+		}
+	}
+
 }

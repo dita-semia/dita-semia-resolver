@@ -18,6 +18,7 @@ import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
 import org.apache.log4j.Logger;
+import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.EntityResolver;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
@@ -40,6 +41,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 	private final SaxonDocumentBuilder			documentBuilder;
 	private final XsltConrefCache				xsltConrefCache;
 	private URL									globalKeyTypeDefUrl;
+	private final String						hddCachePath;
 	
 	public static BookCacheHandler getInstance() {
 		if (instance == null) {
@@ -60,6 +62,7 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 		extractTransformerCache	= new XslTransformerCache(extractConfiguration);
 		documentBuilder			= new SaxonDocumentBuilder(entityResolver, uriResolver);
 		xsltConrefCache 		= new XsltConrefCache(this, this, documentBuilder);
+		hddCachePath			= FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "DitaSemiaCache/");
 		globalKeyTypeDefUrl	 	= null;
 		//logger.info("ditaOtUrl: " + ditaOtUrl);
 		
@@ -86,7 +89,8 @@ public class BookCacheHandler implements BookCacheProvider, ConfigurationInitial
 					extractTransformerCache, 
 					true, 
 					ditaOtUrl, 
-					globalKeyTypeDefUrl, 
+					globalKeyTypeDefUrl,
+					hddCachePath,
 					language);
 		bookCacheMap.put(FileUtil.decodeUrl(url), bookCache);
 		bookCache.fillCache(progressListener);	// first insert cache into map before populating it to avoid recursions when the cache is tried to be accessed during populating it. 

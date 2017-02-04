@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 
 import javax.xml.transform.TransformerException;
 
@@ -20,6 +21,9 @@ import net.sf.saxon.om.NodeInfo;
  * The FileUtil class is a utility class for handling URLs that should represent Files.
  */
 public class FileUtil {
+	
+	public static final String 				TIMESTAMP_FORMAT_PATTERN 	= "yyyy-MM-dd HH:mm:ss.SSS";
+	public static final SimpleDateFormat	TIMESTAMP_FORMAT			= new SimpleDateFormat(TIMESTAMP_FORMAT_PATTERN);
 
 	private static final Logger logger = Logger.getLogger(FileUtil.class.getName());
 
@@ -108,5 +112,15 @@ public class FileUtil {
 			return null;
 		}
 	}
-	
+
+	public static String getLastModifiedAsString(String systemId) {
+		try {
+			final URL 	url 		= new URL(systemId);
+			final long 	timestamp 	= (new File(url.getFile())).lastModified();
+			return TIMESTAMP_FORMAT.format(timestamp);
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+
 }

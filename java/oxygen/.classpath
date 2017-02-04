@@ -6,5 +6,6 @@
 	<classpathentry kind="var" path="OXYGENXML/lib/oxygen.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/log4j.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DitaSemiaBase"/>
+	<classpathentry kind="var" path="OXYGENXML/lib/commons-io-1.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

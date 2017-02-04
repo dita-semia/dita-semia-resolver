@@ -1,6 +1,7 @@
 package org.DitaSemia.Base.DocumentCaching;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -10,8 +11,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
@@ -20,7 +24,6 @@ import net.sf.saxon.Configuration;
 import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.XdmNode;
-import net.sf.saxon.s9api.XdmNodeKind;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 
 import org.DitaSemia.Base.ConfigurationInitializer;
@@ -64,12 +67,14 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	private HashMap<String, FileCache> 			fileByUrl			= new HashMap<>();
 	private HashMap<String, TopicRef> 			topicRefByUrl		= new HashMap<>();
 	
+	
 
 	private final URL 						rootDocumentUrl;
 	private final ConfigurationInitializer	configurationInitializer;
 	private final XsltConrefCache 			xsltConrefCache;
 	private final URL						ditaOtUrl;
 	private final URL						globalKeyTypeDefUrl;
+	private final String					hddCachePath;
 	//private final String					language;
 
 	private final Configuration				defaultConfiguration;
@@ -78,9 +83,11 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	private final SaxonDocumentBuilder		documentBuilder;
 	//private final EntityResolver			entityResolver;
 	private final boolean					expandAttributeDefaults;
+	private final XMLOutputFactory			xmlOutputFactory;
 
 	private final String					appendixPrefix;
-	
+
+	private final Queue<NeedsInit>			initQueue = new ConcurrentLinkedQueue<>();
 	private ProgressListener				cacheProgressListener 	= null;
 	private int								cachedFileCount			= 0;
 
@@ -94,6 +101,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			boolean						expandAttributeDefaults,
 			URL 						ditaOtUrl,
 			URL 						globalKeyTypeDefUrl, 
+			String						hddCachePath,
 			String 						language) {
 		
 		this.rootDocumentUrl 			= rootDocumentUrl;
@@ -105,10 +113,16 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		this.defaultConfiguration		= createConfiguration(); // needs to be done after this.configurationInitializer has been set
 		
 		this.ditaOtUrl					= ditaOtUrl;
+		this.hddCachePath				= hddCachePath;
 		this.globalKeyTypeDefUrl		= globalKeyTypeDefUrl;
 
 		appendixPrefix		= getAppendixPrefix(language);
 		xPathCache 			= new XPathCache(defaultConfiguration);
+		xmlOutputFactory 	= XMLOutputFactory.newInstance();
+		
+
+		final File hddCacheFolder = new File(hddCachePath);
+		hddCacheFolder.mkdirs();
 	}
 
 	public void fillCache(ProgressListener progressListener) {
@@ -121,15 +135,17 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			}
 			
 			final Source 	source 	= defaultConfiguration.getURIResolver().resolve(rootDocumentUrl.toString(), "");
-			final FileCache	file	= createFileCache(source, null);
-			if (file != null) {
-				file.parse();
-
-				// TODO: call FileCaches registered as delayed resolvers
+			initQueue.clear();
+			createFileCache(source, null);
+			if (!initQueue.isEmpty()) {
+				while (!initQueue.isEmpty()) {
+					initQueue.poll().init();
+				}
 				
 				final long time = Calendar.getInstance().getTimeInMillis() - startTime;
 				logger.info("fillCache done: " + time + "ms, " + fileByUrl.size() + " files, " + keyDefByRefString.size() + " keys (" + FileUtil.decodeUrl(source.getSystemId()) + ")");
 			}
+
 
 			cachedFileCount	= fileByUrl.size();
 		} catch (TransformerException e) {
@@ -169,52 +185,18 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	public FileCache createFileCache(Source source, String topicrefClass) {
 		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
-		FileCache 		cachedFile	= null;
+		FileCache 		fileCache	= null;
 		
 		//logger.info("Source: " + decodedUrl + ", " + source.getClass());
 
 		if (fileByUrl.containsKey(decodedUrl)) {
 			logger.error("ERROR: File included twice: '" + decodedUrl + "' - ignored second one.");
 		} else {
-			try {
-				final XdmNode 				rootNode 		= documentBuilder.build(source, expandAttributeDefaults);
-				final XdmSequenceIterator 	iterator 		= rootNode.axisIterator(Axis.CHILD);
-				
-				//logger.info(SaxonNodeWrapper.serializeNode(rootNode.getUnderlyingNode()));
-				
-				XdmNode rootElement = null;
-				while ((iterator.hasNext()) && (rootElement == null)) {
-					final XdmNode node =(XdmNode)iterator.next();
-					//logger.info("  node: " + node.getNodeName() + ", " + node.getNodeKind());
-					if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
-						rootElement = node;
-					}
-				}
-				if (rootElement == null) {
-					throw new Exception("No root element.");
-				}
-				
-				//logger.info("rootElement: " + rootElement.getNodeName());
-				
-				cachedFile = new FileCache(decodedUrl, rootElement, this, topicrefClass);
-				fileByUrl.put(decodedUrl, cachedFile);	// first insert file into map before parsing it to avoid recursions when the cache is tried to be accessed during parsing.
-
-				if (cacheProgressListener != null) {
-					final int currFileCount = fileByUrl.size();
-					if ((cachedFileCount > 0) && (cachedFileCount < currFileCount)) {
-						cachedFileCount = 0;	// file count must have changed -> don't guess it
-					}
-					cacheProgressListener.setProgress(currFileCount, cachedFileCount);
-				}
-				//logger.info("created file: '" + decodedUrl + "'");
-				
-			} catch (Exception e) {
-				logger.error("Error parsing file '" + decodedUrl +"':");
-				logger.error(e, e);
-				cachedFile = null;
-			}
+			fileCache = new FileCache(source, expandAttributeDefaults, topicrefClass, this);
+			fileByUrl.put(decodedUrl, fileCache);
+			initQueue.add(fileCache);
 		}
-		return cachedFile;
+		return fileCache;
 	}
 
 	public TopicRef createTopicRef(FileCache containingFile, FileCache refFile, TopicRefContainer parentTopicRefContainer, NodeWrapper nodeWrapper) {
@@ -346,7 +328,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		if (parent == null) {
 			final FileCache	parentFile	= getParentFile(FileUtil.decodeUrl(node.getBaseUrl()));
 			if (parentFile != null) {
-				parent = parentFile.getRootNode();
+				parent = parentFile.getRootElement();
 			}
 		}
 		return parent;
@@ -498,6 +480,28 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	public XsltConrefCache getXsltConrefCache() {
 		return xsltConrefCache;
+	}
+
+	public String getHddCachePath() {
+		return hddCachePath;
+	}
+
+
+	public XMLOutputFactory getXmlOutputFactory() {
+		return xmlOutputFactory;
+	}
+
+	public NodeWrapper getNodeByLocation(String defLocation) {
+		if ((defLocation != null) && (!defLocation.isEmpty()) && (defLocation.contains(DitaUtil.HREF_URL_ID_DELIMITER))) {
+			final int 		splitPos	= defLocation.indexOf(DitaUtil.HREF_URL_ID_DELIMITER);
+			final String 	url 		= defLocation.substring(0, splitPos);
+			final String 	id 			= defLocation.substring(splitPos + 1);
+			final FileCache fileCache = fileByUrl.get(url);
+			if (fileCache != null) {
+				return fileCache.getElementByRefId(id);
+			}
+		}
+		return null;
 	}
 
 }

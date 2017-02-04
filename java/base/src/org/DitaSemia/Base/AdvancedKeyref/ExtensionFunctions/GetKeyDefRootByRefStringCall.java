@@ -2,6 +2,7 @@ package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
 import java.net.URL;
 
+import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
@@ -40,9 +41,12 @@ public class GetKeyDefRootByRefStringCall extends ExtensionFunctionCall {
 			final BookCache			bookCache	= bookCacheProvider.getBookCache(refUrl);
 			final KeyDefInterface	keyDef		= bookCache.getExactMatch(refString);
 			if (keyDef != null) {
-				final SaxonNodeWrapper root = (SaxonNodeWrapper)keyDef.getRoot();
-				//logger.info("done: " + root.getName());
-				return root.getNodeInfo();
+				final NodeWrapper root = bookCache.getNodeByLocation(keyDef.getDefLocation());
+				if (root != null) {
+					return ((SaxonNodeWrapper)root).getNodeInfo();
+				} else {
+					return EmptySequence.getInstance();
+				}
 			} else {
 				//logger.info("done: empty");
 				return EmptySequence.getInstance();

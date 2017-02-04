@@ -6,6 +6,9 @@ import java.util.List;
 
 import java.util.Set;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.DitaSemia.Base.FilterAttrSet;
 import org.DitaSemia.Base.NodeWrapper;
 
@@ -47,9 +50,9 @@ public interface KeyDefInterface extends KeyspecInterface {
 
 	List<NodeWrapper> getLinkedRefNodes();
 	
-	NodeWrapper getRoot();
+	//NodeWrapper getRoot();
 
-	NodeWrapper getNode();
+	//NodeWrapper getNode();
 	
 	boolean isRefExpected();
 
@@ -58,4 +61,8 @@ public interface KeyDefInterface extends KeyspecInterface {
 	boolean isFilteredKey();
 
 	FilterAttrSet getKeyFilterAttrSet();
+
+	String getFlags();
+
+	void writeToHddCache(XMLStreamWriter writer) throws XMLStreamException;
 }

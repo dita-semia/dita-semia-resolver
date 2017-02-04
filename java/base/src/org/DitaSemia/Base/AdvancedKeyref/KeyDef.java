@@ -3,7 +3,12 @@ package org.DitaSemia.Base.AdvancedKeyref;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import net.sf.saxon.trans.XPathException;
 
@@ -12,47 +17,56 @@ import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.FilterAttrSet;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.XPathNotAvaliableException;
-import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.apache.log4j.Logger;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public class KeyDef implements KeyDefInterface {
 
 	private static final Logger logger = Logger.getLogger(KeyDef.class.getName());
 
-	public static final String 	ATTR_TYPE		= "key-type";
-	private static final String ATTR_ROOT		= "root";
-	private static final String ATTR_REF_NODE	= "ref-node";
-	private static final String ATTR_KEY 		= "key";
-	private static final String ATTR_NAMESPACE	= "namespace";
-	private static final String ATTR_NAME 		= "name";
-	private static final String ATTR_DESC		= "desc";
-	private static final String ATTR_ID			= "id";
+	public 	static final String ATTR_TYPE		= "key-type";
+	public 	static final String ATTR_ROOT		= "root";
+	public 	static final String ATTR_REF_NODE	= "ref-node";
+	public 	static final String ATTR_KEY 		= "key";
+	public 	static final String ATTR_NAMESPACE	= "namespace";
+	public 	static final String ATTR_NAME 		= "name";
+	public 	static final String ATTR_DESC		= "desc";
+	public 	static final String ATTR_ID			= "id";
 	public 	static final String ATTR_FLAGS		= "flags";
 
 	public  static final String FLAG_REF_EXPECTED	= "ref-expected";
 	public  static final String FLAG_REF_BY_ID		= "ref-by-id";
 	public  static final String FLAG_FILTERED_KEY	= "filtered-key";
 	
+
+	public static final String HC_KEYDEF			= "keydef";
+	public static final String HC_KEY_FILTER		= "key-filter";
+	
+	public static final String HC_ATTR_DEF_ID		= "id";
+	public static final String HC_ATTR_DEF_TOPIC_ID	= "topic-id";
+	
 	private final String 		key;
 	private final String 		type;
 	private final List<String> 	namespace;
 	private final String 		desc;
 	private final String 		name;
-	private final NodeWrapper 	root;
-	private final NodeWrapper 	node;
+	/*private final NodeWrapper 	root;
+	private final NodeWrapper 	node;*/
 	private final URL			defUrl;
 	private final String		defId;
 	private final String		defAncestorTopicId;
+	private final String		flags;
 	private final boolean		isRefExpected;
 	private final boolean		isRefById;
 	private final boolean		isFilteredKey;
-	
-	private final FilterAttrSet keyFilterAttrSet;
+
+	private FilterAttrSet keyFilterAttrSet;
 
 	public static KeyDef fromNode(NodeWrapper node) {
 		return fromNode(node, null);
 	}
-	
+
 	public static KeyDef fromNode(NodeWrapper node, String parentTopicId) {
 //		logger.info("KeyDef fromNode");
 		final String type = getTypeFromNode(node);
@@ -68,6 +82,11 @@ public class KeyDef implements KeyDefInterface {
 		}
 	}
 
+
+	public static KeyDef fromHddCache(URL defUrl, Attributes attributes) throws SAXException {
+		return new KeyDef(defUrl, attributes);
+	}
+	
 	@Override
 	public String getRefString() {
 		if (isRefById) {
@@ -91,7 +110,7 @@ public class KeyDef implements KeyDefInterface {
 	private KeyDef(NodeWrapper node, String type, String parentTopicId) throws XPathException, XPathNotAvaliableException {
 		//this.node 	= node;
 		this.type	= type;
-		this.node	= node;
+		//this.node	= node;
 
 		final String 		rootAttr 	= node.getAttribute(ATTR_ROOT, NAMESPACE_URI);
 		final NodeWrapper 	root 		= (rootAttr != null) ? node.evaluateXPathToNode(rootAttr) : node;
@@ -99,7 +118,7 @@ public class KeyDef implements KeyDefInterface {
 		if (root == null) {
 			throw new XPathException("Missing root node.");
 		}
-		this.root = root;
+		//this.root = root;
 		
 
 		final String 	refNodeAttr = node.getAttribute(ATTR_REF_NODE,	NAMESPACE_URI);
@@ -135,18 +154,18 @@ public class KeyDef implements KeyDefInterface {
 		final String namespaceAttr 	= node.getAttribute(ATTR_NAMESPACE, NAMESPACE_URI);
 		final String nameAttr 		= node.getAttribute(ATTR_NAME, 		NAMESPACE_URI);
 		final String descAttr 		= node.getAttribute(ATTR_DESC, 		NAMESPACE_URI);
-		final String flagsAttr 		= node.getAttribute(ATTR_FLAGS, 	NAMESPACE_URI);
 
 		key 		= (keyAttr 			!= null) ? root.evaluateXPathToString(keyAttr) 			: node.getTextContent();
 		namespace	= (namespaceAttr 	!= null) ? root.evaluateXPathToStringList(namespaceAttr): null;
 		name		= (nameAttr 		!= null) ? root.evaluateXPathToString(nameAttr) 		: null;
 		desc		= (descAttr 		!= null) ? root.evaluateXPathToString(descAttr)			: null;
-		
-		isRefExpected 	= ((flagsAttr != null) && (flagsAttr.contains(FLAG_REF_EXPECTED)));
-		isRefById		= ((flagsAttr != null) && (flagsAttr.contains(FLAG_REF_BY_ID)));
-		isFilteredKey	= ((flagsAttr != null) && (flagsAttr.contains(FLAG_FILTERED_KEY)));
 
-		//logger.info("flagsAttr: " + flagsAttr + ", isFilteredKey: " + isFilteredKey);
+		flags 			= node.getAttribute(ATTR_FLAGS, NAMESPACE_URI);
+		isRefExpected 	= ((flags != null) && (flags.contains(FLAG_REF_EXPECTED)));
+		isRefById		= ((flags != null) && (flags.contains(FLAG_REF_BY_ID)));
+		isFilteredKey	= ((flags != null) && (flags.contains(FLAG_FILTERED_KEY)));
+
+		//logger.info("flags: " + flags + ", isFilteredKey: " + isFilteredKey);
 		if ((isFilteredKey) && (keyAttr != null)) {
 			final NodeWrapper keyNode = root.evaluateXPathToNode(keyAttr);
 			//logger.info("keyNode: " + keyNode);
@@ -159,6 +178,65 @@ public class KeyDef implements KeyDefInterface {
 		} else {
 			keyFilterAttrSet = new FilterAttrSet();	// key will always be visible
 		}
+		//logger.info("keyFilterAttrSet (" + getRefString() + "): " + keyFilterAttrSet);
+	}
+
+	private KeyDef(URL defUrl, Attributes attributes) throws SAXException {
+		//this.node	= null;
+		//this.root	= null;
+		this.defUrl = defUrl;
+		
+		String	key					= null;
+		String	type				= null;
+		String	namespace			= null;
+		String	name				= null;
+		String	desc				= null;
+		String	flags				= null;
+		String	defId				= null;
+		String	defAncestorTopicId	= null;
+		
+		for (int i = 0; i < attributes.getLength(); ++i) {
+			if (attributes.getLocalName(i).equals(ATTR_KEY)) {
+				key	= attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(ATTR_TYPE)) {
+				type = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(ATTR_NAMESPACE)) {
+				namespace = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(ATTR_NAME)) {
+				name = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(ATTR_DESC)) {
+				desc = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(ATTR_FLAGS)) {
+				flags = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(HC_ATTR_DEF_ID)) {
+				defId = attributes.getValue(i);
+			} else if (attributes.getLocalName(i).equals(HC_ATTR_DEF_TOPIC_ID)) {
+				defAncestorTopicId = attributes.getValue(i);
+			} else {
+				throw new SAXException("unexpected attribute '" + attributes.getLocalName(i) + "' on keydef.");
+			}
+		}
+
+		this.key				= key;
+		this.type				= type;
+		this.namespace			= new LinkedList<>();;
+		this.name				= name;
+		this.desc				= desc;
+		this.flags				= flags;
+		this.defId				= defId;
+		this.defAncestorTopicId	= defAncestorTopicId;
+		
+		if (namespace != null) {
+			final String[] array = namespace.split(PATH_DELIMITER);
+			for (int i = 0; i < array.length; ++i) {
+				this.namespace.add(array[i]);
+			}
+		}
+
+		isRefExpected 	= ((flags != null) && (flags.contains(FLAG_REF_EXPECTED)));
+		isRefById		= ((flags != null) && (flags.contains(FLAG_REF_BY_ID)));
+		isFilteredKey	= ((flags != null) && (flags.contains(FLAG_FILTERED_KEY)));
+
 		//logger.info("keyFilterAttrSet (" + getRefString() + "): " + keyFilterAttrSet);
 	}
 	
@@ -243,7 +321,7 @@ public class KeyDef implements KeyDefInterface {
 		return null;
 	}
 
-	@Override
+	/*@Override
 	public NodeWrapper getRoot() {
 		return root;
 	}
@@ -251,7 +329,7 @@ public class KeyDef implements KeyDefInterface {
 	@Override
 	public NodeWrapper getNode() {
 		return node;
-	}
+	}*/
 	
 	@Override
 	public String toString() {
@@ -278,6 +356,54 @@ public class KeyDef implements KeyDefInterface {
 	@Override
 	public FilterAttrSet getKeyFilterAttrSet() {
 		return keyFilterAttrSet;
+	}
+
+	@Override
+	public String getFlags() {
+		return flags;
+	}
+
+	@Override
+	public void writeToHddCache(XMLStreamWriter writer) throws XMLStreamException {
+
+		writer.writeCharacters("\n  ");
+		writer.writeStartElement(HC_KEYDEF);
+
+		writeAttribute(writer, ATTR_KEY, 				key);
+		writeAttribute(writer, ATTR_TYPE, 				type);
+		writeAttribute(writer, ATTR_NAMESPACE, 			getNamespace());
+		writeAttribute(writer, ATTR_NAME, 				name);
+		writeAttribute(writer, ATTR_DESC, 				desc);
+		writeAttribute(writer, ATTR_FLAGS, 				flags);
+		writeAttribute(writer, HC_ATTR_DEF_ID, 			defId);
+		writeAttribute(writer, HC_ATTR_DEF_TOPIC_ID, 	defAncestorTopicId);
+		
+		if ((isFilteredKey) && (keyFilterAttrSet != null)){
+			writer.writeCharacters("\n    ");
+			writer.writeStartElement(HC_KEY_FILTER);
+			Map<String, Set<String>> filterAttrMap = keyFilterAttrSet.getMap();
+			if  (filterAttrMap != null) {
+				for (Entry<String, Set<String>> entry : filterAttrMap.entrySet()) {
+					writer.writeAttribute(entry.getKey(), String.join(" ", entry.getValue()));	
+				}
+			}	
+			writer.writeEndElement();
+			writer.writeCharacters("\n  ");
+		}
+		
+		writer.writeEndElement();
+	}
+	
+	
+	private static void writeAttribute(XMLStreamWriter writer, String localName, String value) throws XMLStreamException {
+		if (value != null) {
+			writer.writeAttribute(localName, value);
+		}
+	}
+
+	public void setKeyFilterFromHddCach(Attributes attributes) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

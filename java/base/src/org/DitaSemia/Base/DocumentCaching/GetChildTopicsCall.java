@@ -41,7 +41,7 @@ public class GetChildTopicsCall extends ExtensionFunctionCall {
 				List<Item> 	list = new LinkedList<>();
 				for (FileCache childTopic : childTopics) {
 					//logger.info("  - '" + childTopic.getRootNode().getUnderlyingNode().getDisplayName() + "'");
-					list.add(childTopic.getRootXdmNode().getUnderlyingNode());
+					list.add(childTopic.getRootElement().getNodeInfo());
 				}
 				return new SequenceExtent(list);
 			} else {

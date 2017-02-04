@@ -57,7 +57,7 @@ public class MapContextStylesFilter extends DitaSemiaStylesFilter {
 				} else {
 					setLabelText(content[INDEX_TITLE], 	"");
 				}
-				setLabelText(content[INDEX_TAG], 	"<" + file.getRootNode().getName() + "> ");
+				setLabelText(content[INDEX_TAG], 	"<" + file.getRootName() + "> ");
 				setLabelText(content[INDEX_URL], 	file.getDecodedUrl());
 				styles.setProperty(Styles.KEY_LINK, file.getDecodedUrl());
 			} else {

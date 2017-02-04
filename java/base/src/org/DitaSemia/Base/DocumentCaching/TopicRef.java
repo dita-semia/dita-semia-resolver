@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 public class TopicRef extends TopicRefContainer {
 	
+	public static final int TYPE_UNDEFINED		= -2;
 	public static final int TYPE_UNKNOWN		= -1;
 	public static final int TYPE_FRONTMATTER	= 0;
 	public static final int TYPE_CHAPTER		= 1;
@@ -17,22 +18,25 @@ public class TopicRef extends TopicRefContainer {
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(TopicRef.class.getName());
 
-	protected final FileCache 				containingFile;
-	protected final FileCache 				referencedFile;
-	protected final TopicRefContainer parentContainer;
-	protected final NodeWrapper 			node;
-	protected final int						type;
-	protected final int						position;
-	protected final String					localNum;
+	protected final FileCache 			containingFile;
+	protected final FileCache 			referencedFile;
+	protected final TopicRefContainer 	parentContainer;
+	protected final NodeWrapper 		node;
+	protected final int					position;
+	
+	protected int						type;
+	protected String					localNum;
 
 	public TopicRef(FileCache containingFile, FileCache referencedFile, TopicRefContainer parentContainer, NodeWrapper node) {
 		this.containingFile		= containingFile;
 		this.referencedFile 	= referencedFile;
 		this.parentContainer	= parentContainer;
 		this.node				= node;
-		this.type				= getType(node.getAttribute(DitaUtil.ATTR_CLASS, null));
 		this.position			= parentContainer.addChildTopicRef(this);
-		this.localNum			= getLocalNum(type, position, referencedFile);
+
+		// Don't access the referencedFile here, since it is not initialized, yet.
+		this.type				= TYPE_UNDEFINED; 
+		this.localNum			= null;
 	}
 	
 	public FileCache getContainingFile() {
@@ -56,6 +60,9 @@ public class TopicRef extends TopicRefContainer {
 	}
 	
 	public int getType() {
+		if (type == TYPE_UNDEFINED) {
+			type = getType(node.getAttribute(DitaUtil.ATTR_CLASS, null));
+		}
 		return type;
 	}
 	
@@ -64,6 +71,9 @@ public class TopicRef extends TopicRefContainer {
 	}
 	
 	public String getLocalNum() {
+		if (localNum == null) {
+			localNum = getLocalNum(getType(), position, referencedFile);
+		}
 		return localNum;
 	}
 
