@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_t4s_vvs_4t" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xcrcp="http://www.dita-semia.org/xslt-conref/custom-parameter"
+	xmlns:xcr="http://www.dita-semia.org/xslt-conref"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:conbat:schema:dita-semia-topic.xsd">
+	<title>References</title>
+	<body>
+		<p id="ddl_p54_vy"><key-xref outputclass="key-name-braced" akr:ref="Test-Child:Key1/Child"
+				>Key1.Child</key-xref></p>
+	</body>
+</topic>

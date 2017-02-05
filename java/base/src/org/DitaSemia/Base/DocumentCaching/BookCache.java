@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -87,7 +88,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	private final String					appendixPrefix;
 
-	private final Queue<NeedsInit>			initQueue = new ConcurrentLinkedQueue<>();
+	private final Queue<NeedsInit>			initQueue = new PriorityQueue<>(100, new NeedsInit.PriorityComparator());
 	private ProgressListener				cacheProgressListener 	= null;
 	private int								cachedFileCount			= 0;
 
@@ -502,6 +503,10 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			}
 		}
 		return null;
+	}
+
+	public void addNeedsInit(NeedsInit needsInit) {
+		initQueue.add(needsInit);
 	}
 
 }

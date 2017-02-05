@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_t4s_vvs_4t" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xcrcp="http://www.dita-semia.org/xslt-conref/custom-parameter"
+	xmlns:xcr="http://www.dita-semia.org/xslt-conref"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:conbat:schema:dita-semia-topic.xsd">
+	<title>Generating Definitions</title>
+	<body>
+		<ul id="dc5_lhp_5t" xcr:xsl="delayed-xslt-conref.xsl" xcr:source="" xcr:stage="1">
+			<li id="ivv_pv4_vy"/>
+		</ul>
+	</body>
+</topic>

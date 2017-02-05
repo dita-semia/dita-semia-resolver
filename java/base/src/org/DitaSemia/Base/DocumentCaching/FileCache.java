@@ -521,16 +521,17 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	private void processXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
 		final ContainedXsltConref containedXsltConref = new ContainedXsltConref(xsltConref, parentTopicRefContainer, parentTopicId);
 		
-		containsUncachableXsltConref &= !containedXsltConref.isUncachable();
+		containsUncachableXsltConref |= containedXsltConref.isUncachable();
 		containedXsltConrefs.add(containedXsltConref);
 		
 		final int stage = xsltConref.getStage();
+		//logger.info("XSLT-Conref-stage: " + stage);
 		if (stage == XsltConref.STAGE_IMMEDIATELY) {
 			containedXsltConref.init();
-			
 			//logger.info("parsing xslt-conref done");
 		} else if (stage >= XsltConref.STAGE_DELAYED) {
-			// TODO: ... bookCache.addNeedsInit(containedXsltConref, stage);
+			//logger.info("delayed XSLT-Conref added");
+			bookCache.addNeedsInit(containedXsltConref);
 		} else {
 			// no resolving during parsing 
 		}
@@ -695,17 +696,19 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		protected final XsltConref 			xsltConref;
 		protected final TopicRefContainer 	parentTopicRefContainer;
 		protected final String 				parentTopicId;
+		protected final int					stage;
 		
 		protected ContainedXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) {
 			this.xsltConref 				= xsltConref;
 			this.parentTopicRefContainer	= parentTopicRefContainer;
 			this.parentTopicId				= parentTopicId;
+			this.stage						= xsltConref.getStage();
 		}
 
 		public void writeDependencyToHddCache(XMLStreamWriter writer) throws XMLStreamException {
 			//logger.info("writeDependencyToHddCache: stage = " + xsltConref.getStage() + ", isSingleSource: " + xsltConref.isSingleSource());
 			
-			if ((xsltConref.getStage() == XsltConref.STAGE_IMMEDIATELY) && (xsltConref.isSingleSource())) {
+			if ((stage == XsltConref.STAGE_IMMEDIATELY) && (xsltConref.isSingleSource())) {
 				final String scriptSystemId = xsltConref.getScriptSystemId();
 				if (scriptSystemId != null) {
 					writer.writeCharacters("\n  ");
@@ -729,7 +732,6 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		}
 
 		public boolean isUncachable() {
-			final int stage = xsltConref.getStage();
 			if (stage == XsltConref.STAGE_DISPLAY) {
 				return false;	//  no effect on cache at all
 			} else if (stage == XsltConref.STAGE_IMMEDIATELY) {
@@ -741,6 +743,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 
 		@Override
 		public void init() {
+			logger.info("init XSLT-Conref: " + xsltConref.getScriptName());
 			try {
 				final NodeInfo resolved = xsltConref.resolveToNode(null);
 				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
@@ -750,6 +753,11 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			} catch (TempContextException e) {
 				logger.error(e, e); // should never happen during parsing
 			}
+		}
+		
+		@Override
+		public int getPriority() {
+			return stage;
 		}
 		
 	}
