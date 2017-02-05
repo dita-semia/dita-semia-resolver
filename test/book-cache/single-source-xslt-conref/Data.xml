@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+	<Entry>
+		<Key>Key1</Key>
+		<Name>Name1</Name>
+	</Entry>
+	<Entry>
+		<Key>Key2</Key>
+		<Name>Name2</Name>
+	</Entry>
+</Data>

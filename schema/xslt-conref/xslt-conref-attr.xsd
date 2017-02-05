@@ -15,13 +15,16 @@
 		1: 	after 0 (depending on other content)
 		>1: after 1 (depending on cached content from other xslt-conrefs)
 	-->
-	
-	<xs:attribute name="reparse">
+	<xs:attribute name="flags">
 		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="yes"/>
-				<xs:enumeration value="no"/>
-			</xs:restriction>
+			<xs:list>
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="reparse"/>
+						<xs:enumeration value="single-source"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:list>
 		</xs:simpleType>
 	</xs:attribute>
 	
@@ -30,7 +33,7 @@
 		<xs:attribute ref="xcr:source"/>
 		<xs:attribute ref="xcr:start-template"/>
 		<xs:attribute ref="xcr:stage"/>
-		<xs:attribute ref="xcr:reparse"/>
+		<xs:attribute ref="xcr:flags"/>
 	</xs:attributeGroup>
 	
 </xs:schema>

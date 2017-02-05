@@ -51,8 +51,12 @@ public class XsltConref {
 	public static final String 	ATTR_XML_SOURCE_URI			= "source";
 	public static final String 	ATTR_SOURCE_TYPE			= "source-type";
 	public static final String 	ATTR_START_TEMPLATE			= "start-template";
-	public static final String 	ATTR_REPARSE				= "reparse";
 	public static final String 	ATTR_STAGE					= "stage";
+	public static final String 	ATTR_FLAGS					= "flags";
+	
+
+	public static final String 	FLAG_REPARSE				= "reparse";
+	public static final String 	FLAG_SINGLE_SOURCE			= "single-source";
 	
 	public static final int		STAGE_DISPLAY				= -1;
 	public static final int		STAGE_IMMEDIATELY			= 0;
@@ -325,6 +329,18 @@ public class XsltConref {
 	public String getScriptName() {
 		return node.getAttribute(ATTR_URI, NAMESPACE_URI);
 	}
+
+
+	public String getScriptSystemId() {
+		final URIResolver 	uriResolver 	= xsltConrefCache.getUriResolver();
+		final String 		scriptString 	= node.getAttribute(ATTR_URI, NAMESPACE_URI);
+		final String 		baseUrlString	= baseUrl.toExternalForm();
+		try {
+			return uriResolver.resolve(scriptString, baseUrlString).getSystemId();
+		} catch (TransformerException e) {
+			return null;
+		}
+	}
 	
 	public Source getXmlSource() {
 		final String attrValue = node.getAttribute(ATTR_XML_SOURCE_URI, NAMESPACE_URI);
@@ -424,6 +440,26 @@ public class XsltConref {
 			}
 		}
 		return STAGE_DISPLAY;
+	}
+
+
+	public boolean isSingleSource() {
+		final String flags = node.getAttribute(ATTR_FLAGS, NAMESPACE_URI);
+		if (flags != null) {
+			return flags.contains(FLAG_SINGLE_SOURCE);
+		} else {
+			return false;
+		}
+	}
+
+
+	public String getSourceSystemId() {
+		final Source source = getXmlSource();
+		if (source != null) {
+			return source.getSystemId();
+		} else {
+			return null;
+		}
 	}
 
 }

@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -83,15 +84,17 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	protected String 				rootTopicNum 			= null;
 	protected String 				rootTopicNumPrefix 		= null;
 
-	protected final Collection<KeyDefInterface>		keyDefList 			= new LinkedList<>();
-	protected final Map<String, SaxonNodeWrapper>	nodeByRefId			= new HashMap<>();
-	protected final Map<String, String>				linkTitleByRefId	= new HashMap<>();
-	protected final Map<String, String>				linkTextByRefId		= new HashMap<>();
-	protected final Map<String, String>				localNumByTopicId	= new HashMap<>();
-	protected final Collection<FileCache>			refFileList			= new LinkedList<>();
+	protected final Collection<KeyDefInterface>		keyDefList 				= new LinkedList<>();
+	protected final Map<String, SaxonNodeWrapper>	nodeByRefId				= new HashMap<>();
+	protected final Map<String, String>				linkTitleByRefId		= new HashMap<>();
+	protected final Map<String, String>				linkTextByRefId			= new HashMap<>();
+	protected final Map<String, String>				localNumByTopicId		= new HashMap<>();
+	protected final Collection<FileCache>			refFileList				= new LinkedList<>();
+	protected final Collection<ContainedXsltConref>	containedXsltConrefs	= new ArrayList<>();
 	
 	protected String 	fileTimestamp;
 	protected boolean	isFileParsed;
+	protected boolean	containsUncachableXsltConref;
 	
 
 	public FileCache(Source source, boolean expandAttributeDefaults, String topicrefClass, BookCache bookCache) {
@@ -103,8 +106,9 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		//this.rootNode					= new SaxonNodeWrapper(rootXdmNode.getUnderlyingNode(), bookCache.getXPathCache());
 		this.topicrefClass				= topicrefClass;
 		
-		fileTimestamp 	= FileUtil.getLastModifiedAsString(source.getSystemId());
-		isFileParsed	= false;
+		fileTimestamp 					= FileUtil.getLastModifiedAsString(source.getSystemId());
+		isFileParsed					= false;
+		containsUncachableXsltConref	= false;
 	}
 
 	public String getDecodedUrl() {
@@ -196,7 +200,8 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	private void parseFile(String fileHddCachePath) {
 		//logger.info("parseFile: " + decodedUrl);
 		try {
-			isFileParsed = true;	// on failure the value remains true since a reparsing makes no sense.
+			containsUncachableXsltConref	= false;
+			isFileParsed 					= true;	// on failure the value remains true since a reparsing makes no sense.
 			
 			final XdmNode 				rootNode 		= bookCache.getDocumentBuilder().build(source, expandAttributeDefaults);
 			final XdmSequenceIterator 	iterator 		= rootNode.axisIterator(Axis.CHILD);
@@ -236,8 +241,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	 * 	- not containing uncachable XSLT-Conrefs
 	 */
 	private boolean isHddCachable() {
-		return refFileList.isEmpty();
-		// TODO: check for uncachable XSLT-Conrefs
+		return ((refFileList.isEmpty()) && (!containsUncachableXsltConref));
 	}
 
 	private String getFileHddCachePath() {
@@ -264,8 +268,9 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			writer.writeAttribute(HC_ATTR_ROOT_CLASS, 	rootClass);
 			writer.writeAttribute(HC_ATTR_ROOT_TITLE, 	rootTitle);
 			
-			// TODO: write dependencies
-			
+			for (ContainedXsltConref containedXsltConref : containedXsltConrefs) {
+				containedXsltConref.writeDependencyToHddCache(writer);
+			}
 			
 			for (KeyDefInterface keyDef : keyDefList) {
 				keyDef.writeToHddCache(writer);
@@ -514,22 +519,18 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	}
 
 	private void processXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
+		final ContainedXsltConref containedXsltConref = new ContainedXsltConref(xsltConref, parentTopicRefContainer, parentTopicId);
+		
+		containsUncachableXsltConref &= !containedXsltConref.isUncachable();
+		containedXsltConrefs.add(containedXsltConref);
+		
 		final int stage = xsltConref.getStage();
 		if (stage == XsltConref.STAGE_IMMEDIATELY) {
-			//logger.info("parsing xslt-conref start");
-			try {
-				final NodeInfo resolved = xsltConref.resolveToNode(null);
-				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
-				parseNode(resolved, parentTopicRefContainer, parentTopicId);
-			} catch (TransformerException e) {
-				logger.error("Failed to resolve XSLT-Conref: " + e.getMessage());
-			} catch (TempContextException e) {
-				logger.error(e, e); // should never happen during parsing
-				throw new TransformerException(e);
-			}
+			containedXsltConref.init();
+			
 			//logger.info("parsing xslt-conref done");
 		} else if (stage >= XsltConref.STAGE_DELAYED) {
-			// TODO: ...
+			// TODO: ... bookCache.addNeedsInit(containedXsltConref, stage);
 		} else {
 			// no resolving during parsing 
 		}
@@ -597,7 +598,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 				checkRoot(attributes);
 				break;
 			case HC_DEPENDENCY:
-				// TODO: compare the timestamps and possibly throw CacheOutOfDate
+				checkDependency(attributes);
 				break;
 			case KeyDef.HC_KEYDEF:
 				final KeyDef keyDef = KeyDef.fromHddCache(defUrl, attributes);
@@ -648,6 +649,30 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			}
 			
 		}
+
+		private void checkDependency(Attributes attributes) throws SAXException {
+			String systemId 	= null;
+			String timestamp	= null;
+			for (int i = 0; i < attributes.getLength(); ++i) {
+				switch (attributes.getQName(i)) {
+				case HC_ATTR_SYSTEM_ID:
+					systemId = attributes.getValue(i);
+					break;
+				case HC_ATTR_TIMESTAMP:
+					timestamp = attributes.getValue(i);
+					break;
+				default:
+					throw new SAXException("Unexpected attribute '" + attributes.getQName(i) + "' on dependency element.");
+				}
+			}
+			if ((systemId != null) && (timestamp != null)) {
+				if (!timestamp.equals(FileUtil.getLastModifiedAsString(systemId))) {
+					throw new CacheOutOfDate("dependency: " + systemId);
+				}
+			} else {
+				throw new SAXException("incomplete dependency element.");
+			}
+		}
 	}
 
 	@SuppressWarnings("serial")
@@ -663,6 +688,70 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		public String getMessage() {
 			return reason;
 		}
+	}
+	
+	protected class ContainedXsltConref implements NeedsInit {
+		
+		protected final XsltConref 			xsltConref;
+		protected final TopicRefContainer 	parentTopicRefContainer;
+		protected final String 				parentTopicId;
+		
+		protected ContainedXsltConref(XsltConref xsltConref, TopicRefContainer parentTopicRefContainer, String parentTopicId) {
+			this.xsltConref 				= xsltConref;
+			this.parentTopicRefContainer	= parentTopicRefContainer;
+			this.parentTopicId				= parentTopicId;
+		}
+
+		public void writeDependencyToHddCache(XMLStreamWriter writer) throws XMLStreamException {
+			//logger.info("writeDependencyToHddCache: stage = " + xsltConref.getStage() + ", isSingleSource: " + xsltConref.isSingleSource());
+			
+			if ((xsltConref.getStage() == XsltConref.STAGE_IMMEDIATELY) && (xsltConref.isSingleSource())) {
+				final String scriptSystemId = xsltConref.getScriptSystemId();
+				if (scriptSystemId != null) {
+					writer.writeCharacters("\n  ");
+					writer.writeStartElement(HC_DEPENDENCY);				
+					writer.writeAttribute(HC_ATTR_SYSTEM_ID, scriptSystemId);
+					writer.writeAttribute(HC_ATTR_TIMESTAMP, FileUtil.getLastModifiedAsString(scriptSystemId));
+					writer.writeEndElement();
+				}
+				
+				final String sourceSystemId = xsltConref.getSourceSystemId();
+				if (sourceSystemId != null) {
+					writer.writeCharacters("\n  ");
+					writer.writeStartElement(HC_DEPENDENCY);
+					writer.writeAttribute(HC_ATTR_SYSTEM_ID, sourceSystemId);
+					writer.writeAttribute(HC_ATTR_TIMESTAMP, FileUtil.getLastModifiedAsString(sourceSystemId));
+					writer.writeEndElement();
+				}
+			} else {
+				// either not relevant for HddCache or not cachable at all
+			}
+		}
+
+		public boolean isUncachable() {
+			final int stage = xsltConref.getStage();
+			if (stage == XsltConref.STAGE_DISPLAY) {
+				return false;	//  no effect on cache at all
+			} else if (stage == XsltConref.STAGE_IMMEDIATELY) {
+				return (!xsltConref.isSingleSource());
+			} else {
+				return true;	// delayed xslt-conrefs are not cachable since they depend on the map as a whole.
+			}
+		}
+
+		@Override
+		public void init() {
+			try {
+				final NodeInfo resolved = xsltConref.resolveToNode(null);
+				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
+				parseNode(resolved, parentTopicRefContainer, parentTopicId);
+			} catch (TransformerException e) {
+				logger.error("Failed to resolve XSLT-Conref: " + e.getMessage());
+			} catch (TempContextException e) {
+				logger.error(e, e); // should never happen during parsing
+			}
+		}
+		
 	}
 
 }

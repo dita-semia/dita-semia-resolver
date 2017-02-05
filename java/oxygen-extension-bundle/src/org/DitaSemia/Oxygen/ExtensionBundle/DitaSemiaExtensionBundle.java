@@ -23,7 +23,6 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(DitaSemiaExtensionBundle.class.getName());
 	
-	
 	public static void initDocumentCacheHandler() {
 		final BookCacheHandler cacheHandler = BookCacheHandler.getInstance();
 		if (cacheHandler.getGlobalKeyTypeDefUrl() == null) {
