@@ -42,10 +42,10 @@
 			
 			<xsl:call-template name="commonattributes"/>
 			
-			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dthd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dthd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dthd ')]" mode="#current"/>
 			</fo:table-cell>
-			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:ddhd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:ddhd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/ddhd ')]" mode="#current"/>
 			</fo:table-cell>
 		</fo:table-row>
@@ -56,15 +56,8 @@
 	<xsl:template match="*[contains(@class, ' topic/dthd ')]" mode="dl-table">
 		
 		<fo:block xsl:use-attribute-sets="ds:dthd-table">
-			
 			<xsl:call-template name="commonattributes"/>
-			
-			<xsl:call-template name="remove-outer-space">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:apply-templates mode="#default"/>
-				</xsl:with-param>
-			</xsl:call-template>
-			
+			<xsl:apply-templates mode="#default"/>
 		</fo:block>
 		
 	</xsl:template>
@@ -75,13 +68,7 @@
 		<fo:block xsl:use-attribute-sets="ds:ddhd-table">
 			
 			<xsl:call-template name="commonattributes"/>
-			
-			<xsl:call-template name="remove-outer-space">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:apply-templates mode="#default"/>
-				</xsl:with-param>
-			</xsl:call-template>
-			
+			<xsl:apply-templates mode="#default"/>
 		</fo:block>
 		
 	</xsl:template>
@@ -93,10 +80,10 @@
 			
 			<xsl:call-template name="commonattributes"/>
 
-			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dt-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dt-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dt ')]" mode="#current"/>
 			</fo:table-cell>
-			<fo:table-cell xsl:use-attribute-sets="ds:dl-table-cell ds:dd-table-cell">
+			<fo:table-cell xsl:use-attribute-sets="ds:dd-table-cell">
 				<xsl:apply-templates select="*[contains(@class, ' topic/dd ')]" mode="#current"/>
 			</fo:table-cell>
 		</fo:table-row>
@@ -107,17 +94,9 @@
 	<xsl:template match="*[contains(@class, ' topic/dt ')]" mode="dl-table">
 		
 		<fo:block xsl:use-attribute-sets="ds:dt-table">
-			
 			<xsl:call-template name="commonattributes"/>
-			
 			<xsl:apply-templates select="parent::*/@id" mode="dlentry-id-for-fop"/>
-			
-			<xsl:call-template name="remove-outer-space">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:apply-templates mode="#default"/>
-				</xsl:with-param>
-			</xsl:call-template>
-			
+			<xsl:apply-templates mode="#default"/>
 		</fo:block>
 		
 	</xsl:template>
@@ -126,15 +105,8 @@
 	<xsl:template match="*[contains(@class, ' topic/dd ')]" mode="dl-table">
 		
 		<fo:block xsl:use-attribute-sets="ds:dd-table">
-			
 			<xsl:call-template name="commonattributes"/>
-			
-			<xsl:call-template name="remove-outer-space">
-				<xsl:with-param name="content" as="node()*">
-					<xsl:apply-templates mode="#default"/>
-				</xsl:with-param>
-			</xsl:call-template>
-			
+			<xsl:apply-templates mode="#default"/>
 		</fo:block>
 		
 	</xsl:template>

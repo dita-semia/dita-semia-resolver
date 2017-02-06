@@ -14,7 +14,10 @@
 	
 	<xsl:attribute-set name="ds:dlentry.dd__content"/>
 	
-	<xsl:attribute-set name="ds:dl-table-cell"/>
+	<xsl:attribute-set name="ds:dl-common-table-cell" use-attribute-sets="strow.stentry">
+		<xsl:attribute name="padding-before"	>3pt</xsl:attribute>
+		<xsl:attribute name="padding-after"		>3pt</xsl:attribute>
+	</xsl:attribute-set>
 	
 	
 	<!-- dl with outputclass "tree" -->
@@ -53,21 +56,11 @@
 	<xsl:attribute-set name="ds:dt-tree">
 		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
 		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
-		<!-- 
-			setting padding-top or padding-bottom here will have the effect that the space-before/-after of 
-			descending blocks (e.g. p-elements) will be set according to these boundaries. Whithoug these attributes
-			they will be ignored by FOP.
-		-->
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-tree">
 		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
 		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
-		<!-- 
-			setting padding-top or padding-bottom here will have the effect that the space-before/-after of 
-			descending blocks (e.g. p-elements) will be set according to these boundaries. Whithoug these attributes
-			they will be ignored by FOP.
-		-->
 	</xsl:attribute-set>
 	
 	
@@ -98,27 +91,23 @@
 	
 	<xsl:attribute-set name="ds:dt-header-table">
 		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-top"					>0.5mm</xsl:attribute>
-		<xsl:attribute name="padding-bottom"				>0.0mm</xsl:attribute>
 		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
 		<xsl:attribute name="font-weight"					>bold</xsl:attribute>
 		<xsl:attribute name="space-before"					>1.0mm</xsl:attribute>
-		<xsl:attribute name="space-before.conditionality"	>retain</xsl:attribute>
+		<xsl:attribute name="space-before.conditionality"	>discard</xsl:attribute>
 		<xsl:attribute name="space-after"					>0.5mm</xsl:attribute>
-		<xsl:attribute name="space-after.conditionality"	>retain</xsl:attribute>
+		<xsl:attribute name="space-after.conditionality"	>discard</xsl:attribute>
 		<xsl:attribute name="start-indent"					>1.5mm</xsl:attribute>
 		<xsl:attribute name="end-indent"					>1.5mm</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-header-table">
 		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-top"					>0.5mm</xsl:attribute>
-		<xsl:attribute name="padding-bottom"				>0.5mm</xsl:attribute>
 		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
 		<xsl:attribute name="space-before"					>1.0mm</xsl:attribute>
-		<xsl:attribute name="space-before.conditionality"	>retain</xsl:attribute>
+		<xsl:attribute name="space-before.conditionality"	>discard</xsl:attribute>
 		<xsl:attribute name="space-after"					>0.5mm</xsl:attribute>
-		<xsl:attribute name="space-after.conditionality"	>retain</xsl:attribute>
+		<xsl:attribute name="space-after.conditionality"	>discard</xsl:attribute>
 		<xsl:attribute name="start-indent"					>1.5mm</xsl:attribute>
 		<xsl:attribute name="end-indent"					>1.5mm</xsl:attribute>
 	</xsl:attribute-set>
@@ -170,21 +159,25 @@
 		<xsl:attribute name="keep-together.within-page"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
-	<xsl:attribute-set name="ds:dt-table-cell" use-attribute-sets="strow.stentry">
-		<xsl:attribute name="border-style"	>solid</xsl:attribute>
-		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
+	<xsl:attribute-set name="ds:dt-table-cell" use-attribute-sets="ds:dl-common-table-cell">
+		<xsl:attribute name="border-style"		>solid</xsl:attribute>
+		<xsl:attribute name="border-width"		>1pt</xsl:attribute>
 	</xsl:attribute-set>
 	
-	<xsl:attribute-set name="ds:dd-table-cell" use-attribute-sets="strow.stentry">
-		<xsl:attribute name="border-style"	>solid</xsl:attribute>
-		<xsl:attribute name="border-width"	>1pt</xsl:attribute>
+	<xsl:attribute-set name="ds:dd-table-cell" use-attribute-sets="ds:dl-common-table-cell">
+		<xsl:attribute name="border-style"		>solid</xsl:attribute>
+		<xsl:attribute name="border-width"		>1pt</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dt-table" use-attribute-sets="strow.stentry__content">
 		<xsl:attribute name="font-weight">bold</xsl:attribute>
+		<xsl:attribute name="space-after.conditionality">discard</xsl:attribute>
+		<xsl:attribute name="space-before.conditionality">discard</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-table" use-attribute-sets="strow.stentry__content">
+		<xsl:attribute name="space-after.conditionality">discard</xsl:attribute>
+		<xsl:attribute name="space-before.conditionality">discard</xsl:attribute>
 	</xsl:attribute-set>
 	
 	
