@@ -55,7 +55,7 @@
 								<xsl:when test="$isKeyFiltered">
 									<ph class="{$CP_PH}">
 										<xsl:variable name="attrContainer" as="element()?" select="ikd:getKeyFilterAttr($jKeyDef)"/>
-										<xsl:message>attrContainer: <xsl:copy-of select="$attrContainer"/></xsl:message>
+										<!--<xsl:message>attrContainer: <xsl:copy-of select="$attrContainer"/></xsl:message>-->
 										<xsl:copy-of select="$attrContainer/attribute()"/>
 										<xsl:sequence select="$keyContent"/>
 									</ph>

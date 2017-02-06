@@ -99,6 +99,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	
 	protected XMLReader				xsltConrefXmlReader			= null;
 	protected BookCache				bookCache					= null;
+	protected boolean				bookCacheInitialized		= false;
 	protected XsltConrefCache		xsltConrefCache				= null;
 	
 	protected URL					currentBaseUrl				= null;
@@ -185,9 +186,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			final String	language			= input.getAttribute(ANT_INVOKER_PARAM_LANGUAGE);
 			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, documentBuilder, extractTransformerCache, false, ditaOtUrl, keyTypeDefListUrl, language);
+			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, documentBuilder, extractTransformerCache, false, ditaOtUrl, keyTypeDefListUrl, null, language);
 			
-			bookCache.fillCache(null);
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
 			logger.error("Error initializing the OT-Resolver: " + e.getMessage(), e);
@@ -297,7 +297,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		Collection<KeyDefInterface> keyDefs = bookCache.getKeyDefs();
 		for (KeyDefInterface keyDef : keyDefs) {
 			if ((keyDef.isRefExpected()) && (!referencedKeyDefRefList.contains(keyDef.getRefString()))) {
-				final NodeWrapper 	node	= keyDef.getNode();
+				final NodeWrapper 	node 	= bookCache.getNodeByLocation(keyDef.getDefLocation());
 				final String 		file 	= node.getAttribute(ATTR_OT_FILE, null);
 				final String 		pos 	= node.getAttribute(ATTR_OT_POS, null);
 				//logger.info("file: " + file + ", pos: " + pos);
@@ -328,6 +328,10 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	}
 	
 	public BookCache getBookCache() {
+		if (!bookCacheInitialized) {
+			bookCacheInitialized = true;
+			bookCache.fillCache(null);			
+		}
 		return bookCache;
 	}
 
@@ -341,7 +345,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 
 	@Override
 	public BookCache getBookCache(URL url) {
-		return bookCache;
+		return getBookCache();
 	}
 
 

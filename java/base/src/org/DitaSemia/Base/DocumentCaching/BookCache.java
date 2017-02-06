@@ -122,8 +122,10 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		xmlOutputFactory 	= XMLOutputFactory.newInstance();
 		
 
-		final File hddCacheFolder = new File(hddCachePath);
-		hddCacheFolder.mkdirs();
+		if (hddCachePath != null) {
+			final File hddCacheFolder = new File(hddCachePath);
+			hddCacheFolder.mkdirs();
+		}
 	}
 
 	public void fillCache(ProgressListener progressListener) {

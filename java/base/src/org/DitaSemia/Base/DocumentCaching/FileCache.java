@@ -224,7 +224,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 				rootTitle	= extractString(rootElement, LINK_TITLE_XSL);
 				rootName	= rootElement.getName();
 
-				if (isHddCachable()) {
+				if ((fileHddCachePath != null) && (isHddCachable())) {
 					writeHddCache(fileHddCachePath, fileTimestamp);
 				}
 			}
