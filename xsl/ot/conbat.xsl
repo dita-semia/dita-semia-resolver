@@ -85,11 +85,23 @@
 				</ph>
 			</title>
 		</xsl:variable>
-		<xsl:for-each select="$resolved">
-			<xsl:copy>
-				<xsl:sequence select="attribute(), $title, node()"/>
-			</xsl:copy>
-		</xsl:for-each>
+		<xsl:choose>
+			<xsl:when test="contains(parent::*/@class, $C_BODY)">
+				<!-- within a body create a section wrapper -->
+				<section class="{$CP_SECTION}">
+					<xsl:sequence select="$title"/>
+					<xsl:sequence select="$resolved"/>
+				</section>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="$resolved">
+					<xsl:copy>
+						<xsl:sequence select="attribute(), $title, node()"/>
+					</xsl:copy>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:template>
 
 
