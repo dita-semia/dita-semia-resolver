@@ -1,0 +1,36 @@
+<table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="Table-DITA-conbat.xsd">
+	<name>Person</name>
+	<desc>List of all people.</desc>
+	<def>
+		<columns>
+			<column>
+				<name>PersonId</name>
+				<def>
+					<type>int</type>
+					<not-null/>
+				</def>
+				<desc>Unique ID</desc>
+			</column>
+			<column>
+				<name>Name</name>
+				<def>
+					<type>varchar(255)</type>
+					<not-null/>
+				</def>
+				<desc>The full name of the person</desc>
+			</column>
+			<column>
+				<name>EMail</name>
+				<def>
+					<type>varchar(255)</type>
+				</def>
+				<desc>The email address</desc>
+			</column>
+		</columns>
+		<properties>
+			<schema>DB1</schema>
+			<log-table method="by trigger">PersonLog</log-table>
+		</properties>
+	</def>
+</table>

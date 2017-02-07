@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd">
+	<title>Text</title>
+	<body>
+		<ul id="w1t_l4b_wy">
+			<li id="x1t_l4b_wy"><codeph>key-xref</codeph> to table:  <key-xref
+				outputclass="key-name-braced" akr:ref="db-table:DB1/Person"
+				>DB1/Person</key-xref></li>
+			<li id="lpl_44b_wy"><codeph>key-xref</codeph> to column: <key-xref outputclass="key-name-braced"
+				akr:ref="db-column:DB1/Person/Name">Person/Name</key-xref></li>
+			<li id="jnt_xzb_wy"><codeph>key-xref</codeph> to relation: <key-xref
+					outputclass="key-name-braced" akr:ref="db-relation:DB1/RP2C"
+				>RP2C</key-xref></li>
+		</ul>
+	</body>
+</topic>

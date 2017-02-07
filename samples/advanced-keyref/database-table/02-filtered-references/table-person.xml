@@ -1,0 +1,54 @@
+<table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
+	xsi:noNamespaceSchemaLocation="Table.xsd">
+	<name>Person</name>
+	<desc>List of all people.</desc>
+	<def>
+		<columns>
+			<column id="ihv_34b_wy">
+				<name>PersonId</name>
+				<def>
+					<type>int</type>
+					<not-null/>
+				</def>
+				<desc>Unique ID</desc>
+			</column>
+			<column id="ntz_34b_wy">
+				<name>Name</name>
+				<def>
+					<type>varchar(255)</type>
+					<not-null/>
+				</def>
+				<desc>The full name of the person</desc>
+			</column>
+			<column id="l51_j4b_wy">
+				<name>EMail</name>
+				<def>
+					<type>varchar(255)</type>
+				</def>
+				<desc>The email address</desc>
+			</column>
+			<column id="tz5_syb_wy">
+				<name>CompanyId</name>
+				<def>
+					<type>varchar(255)</type>
+				</def>
+				<desc>ID of the company the person is working with</desc>
+			</column>
+		</columns>
+		<properties>
+			<schema>DB1</schema>
+			<log-table method="by trigger">PersonLog</log-table>
+		</properties>
+		<relations>
+			<relation id="xbh_nzb_wy">
+				<name>RP2C</name>
+				<definition>
+					<to-table akr:ref="db-table:DB1/Company">Company</to-table>
+					<by-column akr:ref="db-column:DB1/Person/CompanyId">CompanyId</by-column>
+				</definition>
+			</relation>
+		</relations>
+	</def>
+</table>

@@ -1,0 +1,28 @@
+<table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Table.xsd">
+	<name>Dummy</name>
+	<desc>Some useless data.</desc>
+	<def>
+		<columns>
+			<column id="ohy_bzb_wy">
+				<name>Id</name>
+				<def>
+					<type>int</type>
+					<not-null/>
+				</def>
+				<desc>Unique ID</desc>
+			</column>
+			<column id="upw_bzb_wy">
+				<name>Data</name>
+				<def>
+					<type>varchar(255)</type>
+					<not-null/>
+				</def>
+				<desc>Content</desc>
+			</column>
+		</columns>
+		<properties>
+			<schema>DBx</schema>
+			<log-table method="by trigger">DummyLog</log-table>
+		</properties>
+	</def>
+</table>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:map.xsd">
+	<title>Database Table with Implicit Key Definition</title>
+	<topicmeta>
+		<data name="ikd:TypeDefUri" value="db-keytypes.xml"/>
+	</topicmeta>
+	<topicref href="table-person.xml"/>
+	<topicref href="text.dita"/>
+</map>
+    
+    
+

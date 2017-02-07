@@ -264,7 +264,7 @@
 													<String>*</String>
 												</field>
 												<field name="fileName">
-													<String>*-DITA*.xml</String>
+													<String>*</String>
 												</field>
 												<field name="publicID">
 													<String>*</String>
@@ -273,13 +273,13 @@
 													<String></String>
 												</field>
 												<field name="attributeLocalName">
-													<String>*</String>
+													<String>id</String>
 												</field>
 												<field name="attributeNamespace">
 													<String>*</String>
 												</field>
 												<field name="attributeValue">
-													<String>*</String>
+													<String>*DITA*</String>
 												</field>
 											</documentTypeRule>
 										</field>

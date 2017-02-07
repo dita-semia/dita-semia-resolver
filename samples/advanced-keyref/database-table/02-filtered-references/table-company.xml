@@ -1,0 +1,28 @@
+<table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Table.xsd">
+	<name>Company</name>
+	<desc>List of all companies.</desc>
+	<def>
+		<columns>
+			<column id="ohy_bzb_wy">
+				<name>Id</name>
+				<def>
+					<type>int</type>
+					<not-null/>
+				</def>
+				<desc>Unique ID</desc>
+			</column>
+			<column id="upw_bzb_wy">
+				<name>Name</name>
+				<def>
+					<type>varchar(255)</type>
+					<not-null/>
+				</def>
+				<desc>Name of the company</desc>
+			</column>
+		</columns>
+		<properties>
+			<schema>DB1</schema>
+			<log-table method="by trigger">CompanyLog</log-table>
+		</properties>
+	</def>
+</table>

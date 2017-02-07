@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="x2d-2017" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:oasis:names:tc:dita:xsd:reference.xsd" xml:lang="en">
+	<title>Table: <codeph>Person</codeph></title>
+	<shortdesc>List of all people.</shortdesc>
+	<body>
+		<simpletable relcolwidth="1.0* 1.0* 2.0*">
+			<sthead>
+				<stentry>Name</stentry>
+				<stentry>Type</stentry>
+				<stentry>Description</stentry>
+			</sthead>
+			<strow>
+				<stentry><codeph>PersonId</codeph></stentry>
+				<stentry><codeph>int</codeph>, <ph>Not-Null</ph></stentry>
+				<stentry>Unique ID</stentry>
+			</strow>
+			<strow>
+				<stentry><codeph>Name</codeph></stentry>
+				<stentry><codeph>varchar(255)</codeph>, <ph>Not-Null</ph></stentry>
+				<stentry>The full name of the person</stentry>
+			</strow>
+			<strow>
+				<stentry><codeph>EMail</codeph></stentry>
+				<stentry><codeph>varchar(255)</codeph></stentry>
+				<stentry>The email address</stentry>
+			</strow>
+		</simpletable>
+		<section id="a3g_cbm_hx">
+			<title>Properties of Table Person</title>
+			<dl outputclass="header-table">
+				<dlentry>
+					<dt>Schema</dt>
+					<dd><codeph>DB1</codeph></dd>
+				</dlentry>
+				<dlentry>
+					<dt>Log Table</dt>
+					<dd><codeph>PersonLog</codeph> (<ph>by trigger</ph>)</dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

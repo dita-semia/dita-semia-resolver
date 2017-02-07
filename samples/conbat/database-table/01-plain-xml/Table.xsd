@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
+	xmlns:cba	= "http://www.dita-semia.org/conbat"
+	elementFormDefault="qualified">
+	
+	
+	<xs:import namespace="http://www.dita-semia.org/conbat" schemaLocation="urn:dita-semia:conbat:schema:conbat-attr.xsd"/>
+
+
+	<xs:element name="table">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:NCName"/>
+				<xs:element name="desc" type="xs:string"/>
+				<xs:element name="def">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="columns">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="unbounded" name="column" type="columnType"/>
+									</xs:sequence>	
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="properties" type="propertiesType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="columnType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:NCName"/>
+			<xs:element name="def" 	type="columnDefType"/>
+			<xs:element name="desc"	type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="columnDefType">
+		<xs:sequence>
+			<xs:element name="type" type="xs:token"/>
+			<xs:element name="not-null" minOccurs="0">
+				<xs:complexType/>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="propertiesType">
+		<xs:sequence>
+			<xs:element name="schema" type="xs:NCName"/>
+			<xs:element name="log-table">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:NCName">
+							<xs:attribute name="method">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="by trigger"/>
+										<xs:enumeration value="explicit"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+</xs:schema>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
+	xmlns:cba	= "http://www.dita-semia.org/conbat"
+	elementFormDefault="qualified">
+	
+	
+	<xs:import namespace="http://www.dita-semia.org/conbat" schemaLocation="urn:dita-semia:conbat:schema:conbat-attr.xsd"/>
+
+
+	<xs:element name="table">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:NCName">
+								<xs:attribute name="class" 			fixed="+ topic/title "/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="desc">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="class" fixed="+ topic/shortdesc "/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="def">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="columns">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="unbounded" name="column" type="columnType"/>
+									</xs:sequence>
+									<xs:attribute name="class" fixed="+ topic/simpletable "/>
+									<xs:attribute name="relcolwidth" default="1.0* 1.0* 2.0*"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="properties" type="propertiesType"/>
+						</xs:sequence>
+						<xs:attribute name="class" fixed="- topic/body "/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="class" 		fixed="+ topic/topic "/>
+			<xs:attribute name="domains" 	fixed="(topic hi-d) (topic pr-d) (topic reference) (topic sw-d)"/>
+			<xs:attribute name="id"			fixed="DITA-dummy-id"/>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="columnType">
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:NCName">
+							<xs:attribute name="class" 			fixed="+ topic/stentry "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="def" type="columnDefType"/>
+			<xs:element name="desc">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="class" fixed="+ topic/stentry "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="class" fixed="+ topic/strow "/>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="columnDefType">
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:token">
+							<xs:attribute name="class" 			fixed="+ topic/ph pr-d/codeph "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="not-null" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="class" 			fixed="+ topic/ph "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="class" fixed="+ topic/stentry "/>
+	</xs:complexType>
+
+
+	<xs:complexType name="propertiesType">
+		<xs:sequence>
+			<xs:element name="schema">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:NCName">
+							<xs:attribute name="class" 			fixed="+ topic/dd "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="log-table">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:NCName">
+							<xs:attribute name="method">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="by trigger"/>
+										<xs:enumeration value="explicit"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="class" 			fixed="+ topic/dd "/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="class" 			fixed="+ topic/dl "/>
+		<xs:attribute name="outputclass" 	fixed="header-table"/>
+	</xs:complexType>
+	
+	
+</xs:schema>
