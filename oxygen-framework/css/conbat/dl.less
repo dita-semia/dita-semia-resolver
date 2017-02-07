@@ -101,9 +101,16 @@
 }
 
 *[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dd']:first-child {
-	border-top	: none;
+    border-top-color		: black;
+    border-top-style		: double;
+    border-top-width		: 4px;
 }
 
+*[class~='topic/dl'][outputclass='header-table'] > *[class~='topic/dd']:last-child {
+    border-bottom-color		: black;
+    border-bottom-style		: double;
+    border-bottom-width		: 4px;
+}
 
 *[class~="topic/dl"][outputclass='header-table'] > *[class~="topic/dd"][*|flags~='code'][*|dt]:before(@{conbat-dt-index}) {
 	/* undo the font changes for code */

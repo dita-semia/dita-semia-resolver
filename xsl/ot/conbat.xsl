@@ -86,7 +86,7 @@
 			</title>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="contains(parent::*/@class, $C_BODY)">
+			<xsl:when test="contains(parent::*/@class, $C_BODY) and not(contains(@class, $C_SECTION))">
 				<!-- within a body create a section wrapper -->
 				<section class="{$CP_SECTION}">
 					<xsl:sequence select="$title"/>
