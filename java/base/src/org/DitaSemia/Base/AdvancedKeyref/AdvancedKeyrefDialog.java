@@ -339,10 +339,10 @@ public class AdvancedKeyrefDialog extends JDialog {
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "scrollDown");
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "scrollUp");
 		
-//		logger.info("ohne alles: " + keyTable.getInputMap().get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
-//		logger.info("in focused window: " + keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
-//		logger.info("ancestor of focused: " + keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
-//		logger.info("focused: " + keyTable.getInputMap(JComponent.WHEN_FOCUSED).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
+		//logger.info("ohne alles: " + keyTable.getInputMap().get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
+		//logger.info("in focused window: " + keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
+		//logger.info("ancestor of focused: " + keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
+		//logger.info("focused: " + keyTable.getInputMap(JComponent.WHEN_FOCUSED).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
 		
 		keyTable.getActionMap().put("enter", enterAction);
 		keyTable.getActionMap().put("cancel", cancelAction);
@@ -779,7 +779,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		for (int i = 0; i <= 3; i++) {
 			JComboBox<Object> currentBox = comboBoxes.get(i);
 			if (currentBox.isEnabled()) {
-				logger.info("updateComboBoxes: box " + i + "currentBox.getItemCount: " + currentBox.getItemCount());
+				//logger.info("updateComboBoxes: box " + i + "currentBox.getItemCount: " + currentBox.getItemCount());
 				if (currentBox.getItemCount() > 3 && currentBox.getItemAt(3).getClass().equals(JSeparator.class)) {
 					currentBox.removeItemAt(3);
 					currentBox.removeItemAt(2);
@@ -1110,7 +1110,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 				}
 			}
 
-//			logger.info("gefilterte Liste: " + currentKeyDefList);
+			//logger.info("gefilterte Liste: " + currentKeyDefList);
 			Collections.sort(currentKeyDefList, new KeyDefTableModelEntry.Comparator());
 		}
 		
