@@ -265,8 +265,12 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			writer.writeAttribute(HC_ATTR_SYSTEM_ID, 	source.getSystemId());
 			writer.writeAttribute(HC_ATTR_TIMESTAMP, 	fileTimestamp);
 			writer.writeAttribute(HC_ATTR_ROOT_NAME, 	rootName);
-			writer.writeAttribute(HC_ATTR_ROOT_CLASS, 	rootClass);
-			writer.writeAttribute(HC_ATTR_ROOT_TITLE, 	rootTitle);
+			if (rootClass != null) {
+				writer.writeAttribute(HC_ATTR_ROOT_CLASS, 	rootClass);	
+			}
+			if (rootTitle != null) {
+				writer.writeAttribute(HC_ATTR_ROOT_TITLE, 	rootTitle);
+			}
 			
 			for (ContainedXsltConref containedXsltConref : containedXsltConrefs) {
 				containedXsltConref.writeDependencyToHddCache(writer);
@@ -314,7 +318,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	}
 	
 	private String getRootLinkText() {
-		if (rootClass.contains(DitaUtil.CLASS_TOPIC)) {
+		if ((rootClass != null) && (rootClass.contains(DitaUtil.CLASS_TOPIC))) {
 			initRootTopicNum();
 			if (rootTopicNumPrefix != null) {
 				final StringBuffer linkText = new StringBuffer();
