@@ -6,9 +6,14 @@ import java.util.LinkedList;
 public class TopicRefContainer {
 	
 	protected final Collection<TopicRef> 		childTopicRefs 	= new LinkedList<>();
+	protected final boolean						isResourceOnly;
 	
 	protected int currPos 	= 0;
 	protected int lastType	= TopicRef.TYPE_UNKNOWN;
+	
+	protected TopicRefContainer(boolean isResourceOnly) {
+		this.isResourceOnly = isResourceOnly;
+	}
 
 	protected int addChildTopicRef(TopicRef childTopicRef) {
 		//logger.info("addChildTopicRef : " + childTopicRef);
@@ -38,6 +43,10 @@ public class TopicRefContainer {
 			}
 		}
 		return list;
+	}
+	
+	public boolean isResourceOnly() {
+		return isResourceOnly;
 	}
 
 }

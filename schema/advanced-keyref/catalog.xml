@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
 	<group><!-- System ID (URL) catalog entries -->
@@ -8,12 +7,17 @@
 		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd" 				uri="akr-attr.xsd"/>
 		
+		<system systemId="urn:dita-semia:advanced-keyref:schema:dxd-attr.xsd" 				uri="dxd-attr.xsd"/>
+		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:advanced-keyref-domain.xsd" uri="advanced-keyref-domain.xsd"/>
 		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" 	uri="advanced-keyref-topic.xsd"/>
 		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 		uri="keytypedeflist.xsd"/>
 		
+		<system systemId="urn:dita-semia:dynamic-xml-definition:schema:dynamic-xml-definition-topic.xsd" uri="dynamic-xml-definition-topic.xsd"/>
+		
+		<system systemId="urn:dita-semia:dynamic-xml-definition:schema:dynamic-xml-definition-domain.xsd" uri="dynamic-xml-definition-domain.xsd"/>
 		
 		<system systemId="urn:dita-semia:advanced-keyref:schema:ikd-attr.mod.rng" 			uri="ikd-attr.mod.rng"/>
 		
@@ -28,17 +32,28 @@
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:akr-attr.xsd" 					uri="akr-attr.xsd"/>
 		
+		<uri name="urn:dita-semia:advanced-keyref:schema:dxd-attr.xsd" 					uri="dxd-attr.xsd"/>
+		
 		<uri name="urn:dita-semia:advanced-keyref:schema:advanced-keyref-domain.xsd" 	uri="advanced-keyref-domain.xsd"/>
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" 	uri="advanced-keyref-topic.xsd"/>
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:keytypedeflist.xsd" 			uri="keytypedeflist.xsd"/>
 		
+		<uri name="urn:dita-semia:dynamic-xml-definition:schema:dynamic-xml-definition-topic.xsd" 	uri="dynamic-xml-definition-topic.xsd"/>
+		
+		<uri name="urn:dita-semia:dynamic-xml-definition:schema:dynamic-xml-definition-domain.xsd" 	uri="dynamic-xml-definition-domain.xsd"/>
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:ikd-attr.mod.rng" 				uri="ikd-attr.mod.rng"/>
 		
 		<uri name="urn:dita-semia:advanced-keyref:schema:key-xref.mod.rng" 				uri="key-xref.mod.rng"/>
 
 	</group>
+
+	<rewriteURI 	uriStartString="urn:ds-dxd;" 		rewritePrefix="convert:/processor=java;jars=;ccn=org.DitaSemia.Oxygen.DynamicXmlDefinition.CreateXsd;"/>
+	<rewriteSystem 	systemIdStartString="urn:ds-dxd;" 	rewritePrefix="convert:/processor=java;jars=;ccn=org.DitaSemia.Oxygen.DynamicXmlDefinition.CreateXsd;"/>
+
+	<system systemId="urn:dxd-dummy" 			uri="dxd-dummy.xml"/>
+	<uri name="urn:dxd-dummy" 					uri="dxd-dummy.xml"/>
 	
 </catalog>

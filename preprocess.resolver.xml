@@ -10,9 +10,15 @@
 				<pipeline message="Resolving DITA-SEMIA (xslt-conref)." taskname="dita-semia" tempdir="${dita.temp.dir}">
 					<module class="org.DitaSemia.Ot.DitaSemiaOtResolver">
 						<param name="xsl" 					value="${dita.plugin.org.dita-semia.resolver.dir}/xsl/ot/resolve.xsl"/>
-						<param name="key-type-def-list-uri" value="${dita-semia.resolver.key-type-def-list-uri}" if="dita-semia.resolver.key-type-def-list-uri"/>
+						<param name="key-type-def-list-uri" value="${dita-semia.resolver.key-type-def-list-uri}" 	if="dita-semia.resolver.key-type-def-list-uri"/>
+						<param name="outsource-svg" 		value="${dita-semia.resolver.outsource-svg}" 			if="dita-semia.resolver.outsource-svg"/>
+						<param name="wrap-cba-ph" 			value="${dita-semia.resolver.wrap-cba-ph}" 				if="dita-semia.resolver.wrap-cba-ph"/>
+						<param name="dxd-max-width" 		value="${dita-semia.resolver.dxd-max-width}" 			if="dita-semia.resolver.dxd-max-width"/>
+						<param name="dxd-indent" 			value="${dita-semia.resolver.dxd-indent}" 				if="dita-semia.resolver.dxd-indent"/>
+						<param name="dxd-markup" 			value="${dita-semia.resolver.dxd-markup}" 				if="dita-semia.resolver.dxd-markup"/>
 						<param name="ditadir" 				location="${dita.dir}"/>
 						<param name="language" 				value="${default-language}"/>
+						<param name="basedir" 				expression="${basedir}"/>
 					</module>
 				</pipeline>
 			</then>

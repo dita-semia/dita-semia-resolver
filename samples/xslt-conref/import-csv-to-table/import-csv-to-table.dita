@@ -4,13 +4,22 @@
 <reference id="topic_t4s_vvs_4t" 
 	xmlns:xcrcp = "http://www.dita-semia.org/xslt-conref/custom-parameter"
 	xmlns:xcr 	= "http://www.dita-semia.org/xslt-conref">
-  <title>Import CSV to Table</title>
-  <refbody>
-  	<simpletable relcolwidth="1.0* 1.0*" id="dc5_lhp_5t" xcr:xsl="import-csv-to-table.xsl"
-			xcr:start-template="ImportCsv" xcrcp:csvFile="Data.csv">
+  	<title>Import CSV to Table</title>
+  	<refbody>
+	  	<simpletable relcolwidth="1.0* 1.0*" id="dc5_lhp_5t" xcr:xsl="import-csv-to-table.xsl"
+				xcr:source="Data.csv" xcr:source-type="csv">
 			<strow/>
 		</simpletable>
 	</refbody>
+	<reference id="rpj_5cf_x1b">
+		<title>XSLT-Copy-Conref</title>
+		<refbody>
+			<simpletable relcolwidth="1.0* 1.0*" id="dc6_lhp_5t" xcr:xsl="import-csv-to-table.xsl"
+				xcr:source-type="csv" xcr:source="Data.csv" xcr:flags="copy">
+				<strow/>
+			</simpletable>
+		</refbody>
+	</reference>
 	<reference id="f3d_nyy_25">
 		<title>Description</title>
 		<refbody>

@@ -36,7 +36,7 @@ public class GetChildTopicsCall extends ExtensionFunctionCall {
 			
 			//logger.info("GetChildTopicsCall(" + FileUtil.decodeUrl(topicNode.getBaseUrl()) + ")");
 			
-			final Collection<FileCache> childTopics = bookCache.getChildTopics(topicNode);
+			final Collection<FileCache> childTopics = (bookCache != null ? bookCache.getChildTopics(topicNode) : null);
 			if (childTopics != null) {
 				List<Item> 	list = new LinkedList<>();
 				for (FileCache childTopic : childTopics) {

@@ -56,16 +56,19 @@
 
 	<xs:attributeGroup name="key-xref.attributes">
 		<xs:attribute name="outputclass" 	type="key-xref.outputclass" default="key-name-braced"/>
-		<xs:attribute ref="akr:ref"/>
+		<xs:attribute ref="akr:ref" default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
+		<xs:attribute ref="akr:type"/>
+		<xs:attribute ref="akr:namespace"/>
+		<xs:attribute ref="akr:path-len"/>
 	</xs:attributeGroup>
 	
 	<xs:simpleType name="key-xref.outputclass">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="key"/>
 			<xs:enumeration value="key-name-braced"/>
-			<xs:enumeration value="key-name-dashed"/>
+			<xs:enumeration value="key-dash-name"/>
 			<xs:enumeration value="name"/>
-			<xs:enumeration value="key-colon-name-quoted"/>
+			<xs:enumeration value="key-colon-name"/>
 		</xs:restriction>
 	</xs:simpleType>
 	

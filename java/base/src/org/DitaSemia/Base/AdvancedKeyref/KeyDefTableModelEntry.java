@@ -20,6 +20,7 @@ public class KeyDefTableModelEntry {
 	private final String		desc;
 	private final String		defUrl;
 	private final String		defId;
+	private final String		filterProperties;
 
 	public KeyDefTableModelEntry (	KeyDefInterface keyDef,
 									int priority,
@@ -29,7 +30,8 @@ public class KeyDefTableModelEntry {
 									String name, 
 									String desc, 
 									String defUrl, 
-									String defId) {
+									String defId,
+									String filterProperties) {
 		
 		this.keyDef					= keyDef;
 		
@@ -41,6 +43,7 @@ public class KeyDefTableModelEntry {
 		this.desc					= desc;
 		this.defUrl					= defUrl;
 		this.defId					= defId;
+		this.filterProperties		= filterProperties;
 		
 	}
 	
@@ -54,8 +57,9 @@ public class KeyDefTableModelEntry {
 		String 			desc 		= keyDef.getDesc();
 		String 			defUrl 		= keyDef.getDefUrl().getPath();
 		String 			defId 		= keyDef.getDefId();
+		String 			filterProps = keyDef.getFilterProperties().toString();
 		
-		return new KeyDefTableModelEntry(keyDef, priority, key, type, namespace, name, desc, defUrl, defId);
+		return new KeyDefTableModelEntry(keyDef, priority, key, type, namespace, name, desc, defUrl, defId, filterProps);
 	}
 	
 	/** 
@@ -88,6 +92,8 @@ public class KeyDefTableModelEntry {
 			return defUrl;
 		case 7:
 			return defId;
+		case 8: 
+			return filterProperties;
 		default: 
 			throw new IllegalArgumentException("Index must be a number between 0 and 7");
 		}
@@ -136,6 +142,10 @@ public class KeyDefTableModelEntry {
 
 	public String getDefId() {
 		return defId;
+	}
+	
+	public String getFilterProperties() {
+		return filterProperties;
 	}
 	
 	public String getUniqueString() {

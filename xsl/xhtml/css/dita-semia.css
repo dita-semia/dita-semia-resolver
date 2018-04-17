@@ -1,0 +1,119 @@
+
+
+/* dl - outputclass numbered-list-titles */
+ol.numbered-list-titles li.dlentry {
+	font-weight: bold;
+}
+
+ol.numbered-list-titles div.dd {
+	font-weight: normal;
+}
+
+
+
+/* dl - common for tables */
+
+table.dl {
+	border-spacing	: 0;
+	border-collapse	: collapse;
+}
+
+table.dl td {
+	vertical-align: top;
+}
+
+table.dl td > *:last-child,
+table.dl td > div > *:last-child{
+	margin-bottom	: 0;
+}
+
+
+
+/* dl - outputclass table */
+table.dl.table td {
+	border-width	: 1px;
+	border-style	: solid;
+}
+
+table.dl.table td {
+	padding			: 0.1em 0.3em 0.2em 0.3em;
+}
+
+
+
+/* dl - outputclass header-table */
+table.dl.header-table {
+	border-width		: 4px;
+	border-top-style	: double;
+	border-bottom-style	: double;
+}
+
+table.dl.header-table td {
+	padding			: 3px 10px;
+}
+
+table.dl.header-table tr:not(:first-child) td {
+	border-width		: 1px;
+	border-top-style	: solid;
+}
+
+table.dl.header-table td.dt {
+	width: 25%;
+}
+
+
+
+/* dl - outputclass table */
+
+table.dl.parameter-table td {
+	padding				: 3px 10px;
+	border-width		: 1px;
+	border-top-style	: solid;
+	border-bottom-style	: solid;
+}
+
+table.dl.parameter-table td.dt {
+	border-width		: 1px;
+	border-left-style	: solid;
+	font-weight			: inherit;
+}
+
+table.dl.parameter-table td.dd {
+	border-width		: 1px;
+	border-right-style	: solid;
+}
+
+
+
+/* dl - outputclass tree */
+
+div.dl.tree {
+    border-bottom: 1px solid gray;
+    border-right: 1px solid gray;
+    margin: 0;
+    padding: 0;
+}
+
+div.dl.tree div.dlentry {
+    border-left: 0.3mm solid gray;
+    border-top: 0.3mm solid gray;
+}
+
+div.dl.tree div.dlentry div.dlentry {
+    padding-bottom: 0;
+    margin-left: 5.0mm;
+}
+
+div.dl.tree div.dt {
+	font-weight: normal;
+    margin: 0;
+    padding: 3px 0 3px 5px;
+}
+
+div.dl.tree td,
+div.dl.tree table {
+	padding			: 0;
+	border-spacing	: 0;
+	border-collapse	: collapse;
+    vertical-align	: baseline;
+}

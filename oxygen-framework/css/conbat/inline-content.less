@@ -12,6 +12,11 @@
 	content	: attr("*|prefix");
 }
 
+*[*|flags~="prefix-italic"][*|prefix]:before(@{conbat-inline-index}) {
+	font-style: italic;
+}
+
+
 *[class~="pr-d/codeph"][*|prefix]:before(@{conbat-inline-index}),
 *[*|flags~="code"][*|prefix]:before(@{conbat-inline-index}) {
 	/* undo the font changes for codeph */
@@ -82,12 +87,15 @@
 /* default-content */
 *[class~="topic/p"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/ph"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/sl"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/sli"	][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/stentry"][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/title"	][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/dd"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
 *[class~="topic/dt"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
-*[class~="topic/section"][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}) {
+*[class~="topic/dl"		][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/section"][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}),
+*[class~="topic/div"	][*|default-content]:not([*|popup-edit~="#text"]):empty:after(@{conbat-default-content-index}) {
 	/* have the cursor in front of the content to suggest the author that he can overwrite it */
 	content	: attr("*|default-content");
 }

@@ -68,6 +68,9 @@ public class OxyXPathHandler {
 					stateStack.pop();
 					stateStack.push(STATE_CONST);
 					addString(xPathTokenStack, "(");
+				} else if ((stateStack.peek() == STATE_SEQUENCE) || (stateStack.peek() == STATE_PARAMETER)) {
+					stateStack.push(STATE_SEQUENCE);
+					xPathTokenStack.push(new LeftBrace());
 				}
 			} else if (token.equals(")")) {
 				// Function end
@@ -140,7 +143,7 @@ public class OxyXPathHandler {
 					expression.add(xPathTokenStack.pop());
 					xPathTokenStack.push(new Expression(evaluate(expression, context)));
 					xPathTokenStack.push(new Comma());
-				} else if (xPathTokenStack.peek().getType() == XPathToken.Type.STRING_CONSTANT){
+				} else if ((xPathTokenStack.peek().getType() == XPathToken.Type.STRING_CONSTANT) || (stateStack.peek() == STATE_SEQUENCE)){
 					xPathTokenStack.push(new Comma());
 				} else {
 					return xPath;
@@ -194,7 +197,6 @@ public class OxyXPathHandler {
 	}
 
 	private String evaluate(List<XPathToken> xPath, AuthorNodeWrapper context) throws XPathException, XPathNotAvaliableException {
-//		logger.info("evaluate Expression: " + xPath);
 		if (xPath.size() == 1) {
 			return xPath.get(0).toString();
 		} else if (xPath.size() > 1) {

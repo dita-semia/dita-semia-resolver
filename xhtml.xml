@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<target name="dita-semia.xhtml.copy-css">
+		<copy todir="${output.dir}/css" overwrite="true" encoding="UTF-8" failonerror="true">
+			<fileset dir="${dita.plugin.org.dita-semia.resolver.dir}/xsl/xhtml/css">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+    </target>
+
+</project>
+

@@ -1,10 +1,24 @@
 
 
+*[class~='topic/dl'][outputclass~='width-160mm'] {
+	width: 160mm;
+}
+
 /********************************************/
 /* outputclass: bullet-list-titles 			*/
 *[class~='topic/dl'][outputclass~='bullet-list-titles'] {
 	list-style	: disc;
 	margin-left : 0;
+}
+
+*[class~='topic/ul'] *[class~='topic/dl'][outputclass~='bullet-list-titles'],
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dl'][outputclass~='bullet-list-titles'] {
+	list-style		: circle;
+}
+
+dl[class~='topic/dl'][outputclass~='bullet-list-titles'] dlentry[class~='topic/dlentry'] {
+	-oxy-foldable 			: true;
+	-oxy-not-foldable-child : dt;
 }
 
 *[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dlentry'] {
@@ -28,6 +42,11 @@
 	list-style		: disc;
 	margin-top		: 0;
 	margin-bottom	: 0;
+}
+
+*[class~='topic/ul'] *[class~='topic/dl'][outputclass~='bullet-list-dashes'],
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dl'][outputclass~='bullet-list-dashes'] {
+	list-style		: circle;
 }
 
 *[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] {
@@ -69,9 +88,9 @@
 	margin-left	: 1em;
 }
 
-*[class~='topic/dl'][outputclass~='numbered-list-titles'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+*[class~='topic/dl'][outputclass~='numbered-list-titles'] *[class~='topic/dlentry'] > *:not([class~='topic/dt']) {
 	margin-left	: 0ex;
-	font-weight	: normal;	/* undo changed for dlentry */
+	font-weight	: normal;	/* undo changes for dlentry */
 }
 
 
@@ -127,6 +146,11 @@
 
 *[class~='topic/dl'][outputclass~='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
 	width		: 75%;
+}
+
+*[class~='topic/dl'][outputclass~='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'],
+*[class~='topic/dl'][outputclass~='header-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	-oxy-placeholder-content:	oxy_name();
 }
 
 *[class~='topic/dl'][outputclass~='header-table'] *[class~='topic/dd'] > *:first-child,
@@ -185,6 +209,12 @@
 
 *[class~='topic/dl'][outputclass~='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
 	width		: 75%;
+}
+
+
+*[class~='topic/dl'][outputclass~='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'],
+*[class~='topic/dl'][outputclass~='parameter-table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	-oxy-placeholder-content:	oxy_name();
 }
 
 *[class~='topic/dl'][outputclass~='parameter-table'] *[class~='topic/dd'] > *:first-child,
@@ -279,6 +309,17 @@
 	padding-top: 0;
 }
 
+*[class~='topic/dl'][outputclass~='table'] > *[class~='topic/dlentry'] > *[class~='topic/dt'],
+*[class~='topic/dl'][outputclass~='table'] > *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	-oxy-placeholder-content:	oxy_name();
+}
+
+*[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dt']:not([*|content]),
+*[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dd']:not([*|content]) {
+	-oxy-show-placeholder: always;
+}
+
+
 *[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *:before(@{conbat-header-index}) {
     display	: block;
     
@@ -297,7 +338,9 @@
     margin-right:   -5px;
 }
 
-
+*[class~='topic/dl'][outputclass~='table'][*|header] > *[class~='topic/dlentry']:first-child > *:not([*|xsl]):empty:before(1) {
+	content: "\200B";	/* add zero-width-space to fix display of cursor in 1st row below header */
+}
 
 
 /********************************************/

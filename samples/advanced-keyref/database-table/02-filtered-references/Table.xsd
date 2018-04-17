@@ -205,7 +205,7 @@
 							<xs:attribute ref="cba:prefix" 		fixed="to table "/>
 							<xs:attribute ref="akr:type"		fixed="db-table"/>
 							<xs:attribute ref="akr:namespace"	fixed="ancestor::table/def/properties/schema"/>
-							<xs:attribute ref="akr:ref"/>
+							<xs:attribute ref="akr:ref" 		default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -219,7 +219,7 @@
 							<xs:attribute ref="cba:prefix" 		fixed=", by column "/>
 							<xs:attribute ref="akr:type"		fixed="db-column"/>
 							<xs:attribute ref="akr:namespace"	fixed="ikd:ancestor-path('db-table')"/>
-							<xs:attribute ref="akr:ref"/>
+							<xs:attribute ref="akr:ref" 		default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>

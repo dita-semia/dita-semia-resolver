@@ -5,15 +5,13 @@
 	xmlns:xcr	= "http://www.dita-semia.org/xslt-conref"
     exclude-result-prefixes	= "#all">
 	
-	<xsl:param name="cppFile" as="xs:string"/>
-	
 	<xsl:include href="urn:dita-semia:xsl:class.xsl"/>
 	
 	<xsl:output method="xml" indent="yes"/>
 	
-	<xsl:template name="ImportCpp">
+	<xsl:template match="text()">
     	
-    	<xsl:variable name="cppCode" as="xs:string" select="unparsed-text(resolve-uri($cppFile))"/>
+    	<xsl:variable name="cppCode" as="xs:string" select="."/>
     	
     	<xsl:processing-instruction name="xml-model">href="urn:oasis:names:tc:dita:rng:topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"</xsl:processing-instruction>
     	

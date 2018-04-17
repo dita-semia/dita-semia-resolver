@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema 
+	xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
+	xmlns:dxd	= "http://www.dita-semia.org/dynamic-xml-definition"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<dita:domainsModule xmlns:dita="http://dita.oasis-open.org/architecture/2005/">(topic dxd-d)</dita:domainsModule>
+		</xs:appinfo>
+		<xs:documentation> </xs:documentation>
+	</xs:annotation>
+	
+	<xs:import namespace="http://www.dita-semia.org/dynamic-xml-definition" schemaLocation="urn:dita-semia:advanced-keyref:schema:dxd-attr.xsd"/>
+	
+	<xs:group name="dxd-codeblock">
+		<xs:choice>
+			<xs:element ref="dxd-codeblock"/>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:element name="dxd-codeblock">
+		<xs:annotation>
+			<xs:documentation>Codeblock with Dynamic XML Definition.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="dxd-codeblock.class">
+					<xs:attribute ref="class"	fixed="+ topic/pre pr-d/codeblock ds-d/dxd-codeblock gc-d/av/dxd-codeblock "/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="dxd-codeblock.class">
+		<xs:sequence>
+			<xs:group ref="dxd-codeblock.content"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="dxd-codeblock.attributes"/>
+	</xs:complexType>
+	
+	<xs:group name="dxd-codeblock.content">
+		<xs:sequence>
+			<!-- by default no child elements allowed. -->
+		</xs:sequence>
+	</xs:group>
+
+	<xs:attributeGroup name="dxd-codeblock.attributes">
+		<xs:attribute name="coderef" 		type="xs:string"/>
+		<xs:attribute name="outputclass"	fixed="language-xml"/>
+		<xs:attribute ref="dxd:root-type"/>
+		<xs:attribute ref="dxd:root-name"/>
+		<xs:attributeGroup ref="id-atts"/>
+		<xs:attributeGroup ref="filter-atts"/>
+	</xs:attributeGroup>
+	
+	
+</xs:schema>

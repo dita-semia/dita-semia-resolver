@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>KeyRef-Edit-Listener</title>
+	<body>
+		<section>
+			<title>same namespace</title>
+			<p>
+				<dl>
+					<dlentry id="tyk_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd"
+							ikd:namespace="for $i in (1 to 4) return $i">Key</dt>
+						<dd>Typ: Test, Namespace: 1/2/3/4</dd>
+					</dlentry>
+					<dlentry id="z7x_hln_kx">
+						<dt ikd:key-type="Test" ikd:namespace="for $i in (1 to 4) return $i" ikd:root="parent::*"
+							ikd:desc="dd">KeyX</dt>
+						<dd>Typ: Test, Namespace: 1/2/3/4</dd>
+					</dlentry>
+				</dl>
+			</p>
+			<p><key-xref outputclass="key-name-braced" akr:ref="Test:1/2/3/4/Key">Key</key-xref></p>
+			<p>TODO</p>
+		</section>
+		<section>
+			<title>same namespace at a higher level</title>
+			<p>
+				<dl>
+					<dlentry id="g5j_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('test','x','y')"
+							>Key</dt>
+						<dd>Typ: Test, Namespace: test/x/y</dd>
+					</dlentry>
+					<dlentry id="obm_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="'test'">KeyX</dt>
+						<dd>Typ: Test, Namespace: test</dd>
+					</dlentry>
+				</dl>
+			</p>
+			<p><key-xref outputclass="key-name-braced" akr:ref="Test:test/x/y/Key">Key</key-xref></p>
+			<p>TODO</p>
+		</section>
+		<section>
+			<title>multiple matches at a higher level, one at a lower level</title>
+			<p>
+				<dl>
+					<dlentry id="g6j_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('w','x','y','z')"
+							>Key</dt>
+						<dd>Typ: Test, Namespace: w/x/y/z</dd>
+					</dlentry>
+					<dlentry id="g7j_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('w','x','y')"
+							>KeyX</dt>
+						<dd>Typ: Test, Namespace: w/x/y</dd>
+					</dlentry>
+					<dlentry id="o3m_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('w','x')">KeyX</dt>
+						<dd>Typ: Test, Namespace: w/x</dd>
+					</dlentry>
+				</dl>
+			</p>
+			<p><key-xref outputclass="key-name-braced" akr:ref="Test:w/x/y/z/Key">Key</key-xref></p>
+			<p>TODO</p>
+		</section>
+		<section>
+			<title>no match in namespace</title>
+			<p>
+				<dl>
+					<dlentry id="c3x_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="'namespace'"
+							>Key</dt>
+						<dd>Typ: Test, Namespace: namespace</dd>
+					</dlentry>
+					<dlentry id="p3v_hln_kx">
+						<dt ikd:key-type="Test" ikd:root="parent::*">KeyX</dt>
+						<dd>Typ: Test, Namespace: </dd>
+					</dlentry>
+				</dl>
+			</p>
+			<p><key-xref outputclass="key-name-braced" akr:ref="Test:namespace/*">KeyX</key-xref></p>
+			<p>TODO sollte funktionieren</p>
+		</section>
+		<section>
+			<title>same namespace, different type</title>
+			<p>
+				<dl>
+					<dlentry>
+						<dt id="yvg_hln_kx" ikd:key-type="Test" ikd:namespace="('name','space')"
+							>Key</dt>
+						<dd>Typ: Test, Namespace: name/space</dd>
+					</dlentry>
+					<dlentry id="k9s_hln_kx">
+						<dt ikd:key-type="Test2" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="('name','space')"
+							>KeyX</dt>
+						<dd>Typ: Test2, Namespace: name/space</dd>
+					</dlentry>
+				</dl>
+			</p>
+			<p><key-xref outputclass="key-name-braced" akr:ref="Test:name/space/*">KeyX</key-xref></p>
+			<p>TODO sollte funktionieren</p>
+		</section>
+	</body>
+</topic>

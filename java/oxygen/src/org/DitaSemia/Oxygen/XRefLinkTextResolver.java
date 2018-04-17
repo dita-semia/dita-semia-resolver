@@ -1,9 +1,7 @@
 package org.DitaSemia.Oxygen;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.DitaSemia.Base.DitaUtil;
+import org.DitaSemia.Base.Href;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
 import org.apache.log4j.Logger;
@@ -13,37 +11,22 @@ import ro.sync.ecss.extensions.api.node.AuthorNode;
 
 public class XRefLinkTextResolver {
 	
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(XRefLinkTextResolver.class.getName());
 
 	public static String resolveReference(AuthorNode authorNode, AuthorAccess authorAccess) {
 		String resolved = null;
 		final AuthorNodeWrapper node 		= new AuthorNodeWrapper(authorNode, authorAccess);
 		final String			attrClass	= node.getAttribute(DitaUtil.ATTR_CLASS, null);
-		final String			attrHref	= node.getAttribute(DitaUtil.ATTR_HREF, null);
-		if ((attrHref != null) && (!attrHref.isEmpty()) && (attrClass.contains(DitaUtil.CLASS_XREF)) && (attrHref.contains(DitaUtil.HREF_URL_ID_DELIMITER))) {
-			final int 		hrefSplitPos 	= attrHref.indexOf(DitaUtil.HREF_URL_ID_DELIMITER);
-			final String 	hrefUrl 		= attrHref.substring(0, hrefSplitPos);
-			final String 	hrefId 			= attrHref.substring(hrefSplitPos + 1);
-			//logger.info("hrefUrl: " + hrefUrl + ", hrefId: " + hrefId);
-			
-			URL refUrl;
-			if (hrefUrl.isEmpty()) {
-				refUrl = node.getBaseUrl();
-			} else {
-				try {
-					refUrl = new URL(node.getBaseUrl(), hrefUrl);
-				} catch (MalformedURLException e) {
-					logger.error(e, e);
-					refUrl = null;
-				}
-			}
-			
+		if ((attrClass != null) && (attrClass.contains(DitaUtil.CLASS_XREF))) {
+			final Href href = new Href(node.getAttribute(DitaUtil.ATTR_HREF, null), node.getBaseUrl());
+						
 			//logger.info("refUrl: " + refUrl);
-			if (refUrl != null) {
+			if (href.getRefUrl() != null) {
 				final BookCache	bookCache 	= BookCacheHandler.getInstance().getBookCache(node.getBaseUrl());
-				final FileCache	fileCache	= bookCache.getFile(refUrl);
+				final FileCache	fileCache	= (bookCache != null ? bookCache.getFile(href.getRefUrl()) : null);
 				if (fileCache != null) {
-					resolved = fileCache.getLinkText(hrefId, node);
+					resolved = fileCache.getLinkText(href.getRefId(), node);
 				}
 			}
 		}

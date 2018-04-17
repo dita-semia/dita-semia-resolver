@@ -164,6 +164,13 @@
 			<xs:attributeGroup ref="xcr:xslt-conref-atts"/>
 			<xs:anyAttribute namespace="http://www.dita-semia.org/xslt-conref/custom-parameter" processContents="skip"/>
 		</xs:attributeGroup>
+		<!-- allow nesting of dlentry for outputclass "tree" -->
+		<xs:group name="dlentry.content">
+			<xs:sequence>
+				<xs:group ref="dlentry.content"/>
+				<xs:element ref="dlentry" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:group>
 	</xs:redefine>
 	
 	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topicMod.xsd:1.3"/>
@@ -178,9 +185,6 @@
 			<xs:complexContent>
 				<xs:extension base="key-xref.class">
 					<xs:attribute ref="class" default="+ topic/ph akr-d/key-xref akr-d/filtered-key-xref "/>
-					<xs:attribute ref="akr:type"/>
-					<xs:attribute ref="akr:namespace"/>
-					<xs:attribute ref="akr:path-len"/>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

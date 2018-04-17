@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:sch		= "http://purl.oclc.org/dsdl/schematron"
+	xmlns:chk		= "http://www.dita-semia.org/checkbat"
+	targetNamespace	= "http://www.dita-semia.org/checkbat">
+	
+	
+	<xs:attribute name="regex" 		type="xs:string"/>
+	<xs:attribute name="regex-desc" type="xs:string"/>
+	<xs:attribute name="required" 	type="xs:string"/>
+	
+	<xs:attribute name="flags">
+		<xs:simpleType>
+			<xs:list>
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="text-xor-element"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:list>
+		</xs:simpleType>
+	</xs:attribute>
+	
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<sch:include href="checkbat.sch"/>
+		</xs:appinfo>
+	</xs:annotation>
+	
+</xs:schema>

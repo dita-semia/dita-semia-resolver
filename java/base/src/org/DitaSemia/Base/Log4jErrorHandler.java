@@ -25,6 +25,6 @@ public class Log4jErrorHandler implements ErrorHandler {
 
 	@Override
 	public void fatalError(SAXParseException exception) throws SAXException {
-		logger.fatal(exception.getMessage());
+		logger.error(exception.getMessage());	// don't log as fatal error since this would be displayed in an oXygen popup dialog.
 	}
 }

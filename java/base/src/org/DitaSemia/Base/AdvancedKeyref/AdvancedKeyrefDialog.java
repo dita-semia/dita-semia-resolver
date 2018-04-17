@@ -3,7 +3,6 @@ package org.DitaSemia.Base.AdvancedKeyref;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -58,9 +57,11 @@ import javax.swing.event.RowSorterListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.DitaSemia.Base.FilterProperties;
 import org.apache.log4j.Logger;
 
 
@@ -74,6 +75,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	JOptionPane 									optionPane;
 	private KeyDefInterface							contextKeyDef;
 	private KeyDefInterface							selectedKeyDef 			= null;
+	private FilterProperties						filterProperties;
 	private String									outputclass;
 	private	JComboBox<String> 						outputclassComboBox;
 	private boolean									accepted				= false;
@@ -88,6 +90,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	protected JTextField 							descField				= null;
 	protected JTextField 							urlField				= null;
 	protected JTextField 							defIdField				= null;
+	protected JTextField 							propertiesField			= null;
 
 	protected KeyRefInterface 						currentKeyRef;
 	private int 									fixedPathLen;
@@ -95,6 +98,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	protected JLabel 								contextKeyField			= null;
 	protected JLabel 								contextTypeField		= null;
 	protected JLabel 								contextNamespaceField	= null;
+	protected JLabel 								contextPropertiesField	= null;
 	protected JTextField							searchField				= null;
 	
 	private JButton									expand;
@@ -124,6 +128,8 @@ public class AdvancedKeyrefDialog extends JDialog {
 	
 	public AdvancedKeyrefDialog(Frame parentFrame, KeyDefListInterface keyDefList, KeyRefInterface currentKeyRef, KeyDefInterface contextKeyDef, KeyPrioritizer keyPrioritizer) {
 		super(parentFrame, true);
+		
+		this.filterProperties = FilterProperties.getFromNodeWithAncestors(currentKeyRef.getNode());
 		
 		this.setTitle("Edit KeyRef-Element");
 		
@@ -236,6 +242,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		this.add(optionPane);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		previewTextField.setBackground(Color.WHITE);
+		
 	}
 	
 	private void registerKeyBindings() {
@@ -301,6 +308,22 @@ public class AdvancedKeyrefDialog extends JDialog {
 			}
 		};
 		
+		Action outputclassAction = new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index = outputclassComboBox.getSelectedIndex();
+				int count = outputclassComboBox.getItemCount();
+				
+				if (index == count - 1) {
+					index = 0;
+				} else if (index < count) {
+					index ++;
+				}
+				outputclassComboBox.setSelectedIndex(index);
+			}
+		};
+		
 		Action scrollUp = keyTable.getActionMap().get("scrollUpChangeSelection");
 		Action scrollDown = keyTable.getActionMap().get("scrollDownChangeSelection");
 		
@@ -320,6 +343,9 @@ public class AdvancedKeyrefDialog extends JDialog {
 		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "reduce");
 		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0), "reduce");
 		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), "home");
+		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, 0), "outputclass");
+		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "outputclass");
+		keyTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "outputclass");
 		
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), "enter");
@@ -338,6 +364,9 @@ public class AdvancedKeyrefDialog extends JDialog {
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0), "reduce");
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "scrollDown");
 		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "scrollUp");
+		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, 0), "outputclass");
+		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "outputclass");
+		keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "outputclass");
 		
 		//logger.info("ohne alles: " + keyTable.getInputMap().get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
 		//logger.info("in focused window: " + keyTable.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)));
@@ -353,6 +382,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		keyTable.getActionMap().put("home", home);
 		keyTable.getActionMap().put("scrollUp", scrollUp);
 		keyTable.getActionMap().put("scrollDown", scrollDown);
+		keyTable.getActionMap().put("outputclass", outputclassAction);
 	}
 	
 	public boolean getResult() {
@@ -402,6 +432,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		previewPanel.setPreferredSize(new Dimension(200, 50));
 		
 		previewTextField = new JEditorPane("text/html", "");
+		previewTextField.setBorder(BorderFactory.createEmptyBorder());
 		previewTextField.setEditable(false);
 		previewTextField.setOpaque(false);
 		previewTextField.setBackground(Color.BLUE);
@@ -416,6 +447,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 			values.add("Key (Name)");
 			values.add("Key - Name");
 			values.add("Name");
+			values.add("Key: \"Name\"");
 			enabled = true;
 		}
 		
@@ -429,12 +461,14 @@ public class AdvancedKeyrefDialog extends JDialog {
 			case KeyRef.OC_KEY_NAME_BRACED:
 				outputclassComboBox.setSelectedIndex(1);
 				break;
-			case KeyRef.OC_KEY_NAME_DASHED:
+			case KeyRef.OC_KEY_DASH_NAME:
 				outputclassComboBox.setSelectedIndex(2);
 				break;
 			case KeyRef.OC_NAME:
 				outputclassComboBox.setSelectedIndex(3);
 				break;
+			case KeyRef.OC_KEY_COLON_NAME:
+				outputclassComboBox.setSelectedIndex(4);
 			default:
 				outputclassComboBox.setSelectedIndex(0);
 				break;
@@ -537,9 +571,10 @@ public class AdvancedKeyrefDialog extends JDialog {
         labelConstr.fill 		= GridBagConstraints.BOTH;
         labelConstr.anchor 		= GridBagConstraints.NORTHWEST;
         
-        contextKeyField 		= addLabelPair("Key", 		labelConstr, contextPanel);
-        contextTypeField 		= addLabelPair("Typ", 		labelConstr, contextPanel);
-        contextNamespaceField 	= addLabelPair("Namespace",	labelConstr, contextPanel);
+        contextKeyField 		= addLabelPair("Key", 				labelConstr, contextPanel);
+        contextTypeField 		= addLabelPair("Typ", 				labelConstr, contextPanel);
+        contextNamespaceField 	= addLabelPair("Namespace",			labelConstr, contextPanel);
+        contextPropertiesField	= addLabelPair("Filter Properties", labelConstr, contextPanel);
         
         if (contextKeyDef != null) {
 	        contextKeyField.setText(contextKeyDef.getKey());
@@ -550,8 +585,9 @@ public class AdvancedKeyrefDialog extends JDialog {
 	    	contextTypeField.setText("-");
 	    	contextNamespaceField.setText("-");
         }
+
+    	contextPropertiesField.setText(filterProperties.toString());
     	
-        
         panel.add(contextPanel, contextConstraints);
         panel.add(searchPanel, searchConstraints);
 	}
@@ -605,8 +641,20 @@ public class AdvancedKeyrefDialog extends JDialog {
 	private void createTablePanel(JPanel tablePanel) {
 		
 		tablePanel.setLayout(new GridBagLayout());
-		
-		keyTable 				= new JTable(keyDefTableModel);
+
+		keyTable = new JTable(keyDefTableModel) {
+			 @Override
+			    public java.awt.Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
+			        java.awt.Component comp = super.prepareRenderer(renderer, row, col);
+			        KeyDefInterface keyDef = keyDefTableModel.get(keyTable.convertRowIndexToModel(row)).getKeyDef();
+			        if (FilterProperties.isValidReference(filterProperties, keyDef.getFilterProperties())) {
+				        comp.setEnabled(true);
+			        } else {
+			        	comp.setEnabled(false);
+			        }
+			        return comp;
+			    }
+		};
 		JScrollPane scrollPane 	= new JScrollPane(keyTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		enableSorting(keyTable);
@@ -674,6 +722,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	
 	@SuppressWarnings("unchecked")
 	private void createFilter(int column, String filterText) {
+		//logger.info("createFilter: " + column + ", " + filterText + ", " + filters.size());
 		try {
 			if (column == 0 && filterText == null) {
 				// reset ComboBoxFilter
@@ -688,7 +737,6 @@ public class AdvancedKeyrefDialog extends JDialog {
 			if (filterText != null) {
 				if (column > 0) {
 		    		// ComboBoxFilter
-					filters = new ArrayList<RowFilter<KeyDefTableModel, Object>>();
 					comboBoxFilters[column-1] = null;
 					if (!filterText.startsWith("<")) {
 			    		comboBoxFilters[column-1] = RowFilter.regexFilter("(?i)" + filterText, column);
@@ -705,6 +753,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 		    		filters.add(searchFieldFilter);
 		    	}
 			}
+			//logger.info("filters.size: " + filters.size());
 	    	RowFilter<KeyDefTableModel, Object> rowf = RowFilter.andFilter(filters);
 	    	sorter.setRowFilter(rowf);
 	    	keyTable.scrollRectToVisible(new Rectangle(keyTable.getCellRect(keyTable.getSelectedRow(), 0, true)));
@@ -756,6 +805,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	        descField.setText(keyDef.getDesc());
 	        urlField.setText(keyDef.getDefUrl());
 	        defIdField.setText(keyDef.getDefId());
+	        propertiesField.setText(keyDef.getFilterProperties());
 	        
 	        namespaceList 			= keyDef.getNamespaceList();
 	        currentNamespaceList    = createCurrentNamespaceList();
@@ -767,6 +817,9 @@ public class AdvancedKeyrefDialog extends JDialog {
 	        typeField.setText("");
 	        namespaceField.setText("");
 	        descField.setText("");
+	        urlField.setText("");
+	        defIdField.setText("");
+	        propertiesField.setText("");
 	        
 	        previewTextField.setText("");
 		}		
@@ -830,6 +883,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 	}
 	
 	private void updatePreview() {
+		KeyTypeDef keyTypeDef = keyDefList.getKeyTypeDef(selectedKeyDef.getType());
 		StringBuilder 	sb 				= new StringBuilder();
 		if (previewLength == namespaceList.size() + 1) {
 			expand.setEnabled(false);
@@ -839,7 +893,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 			reduce.setEnabled(true);
 			for (String s : currentNamespaceList) {
 				sb.append(s);
-				sb.append(KeyspecInterface.PATH_DELIMITER);
+				sb.append(keyTypeDef.getPathDelimiter());
 			}
 			sb.append(currentKey);
 			currentPreview = sb.toString();
@@ -864,7 +918,7 @@ public class AdvancedKeyrefDialog extends JDialog {
 			} 
 			break;
 		case 2:
-			outputclass = KeyRef.OC_KEY_NAME_DASHED;
+			outputclass = KeyRef.OC_KEY_DASH_NAME;
 			if (name != null && !name.isEmpty()) {
 				nameSuffix = " - " + name;
 			} 
@@ -874,17 +928,21 @@ public class AdvancedKeyrefDialog extends JDialog {
 			if (name != null && !name.isEmpty()) {
 				nameSuffix = name;
 			} 
+		case 4:
+			outputclass = KeyRef.OC_KEY_COLON_NAME;
+			if (name != null && !name.isEmpty()) {
+				nameSuffix = ": " + name;
+			}
 			break;
 		}
-		String previewString = stylePreview(currentPreview, nameSuffix);
+		String previewString = stylePreview(currentPreview, nameSuffix, keyTypeDef);
 		previewTextField.setText(previewString);
 	}
 	
-	private String stylePreview(String preview, String nameSuffix) {
+	private String stylePreview(String preview, String nameSuffix, KeyTypeDef keyTypeDef) {
 		String text 	= "";
 		String style 	= " style=\"font-family:serif\"";
 		if (!outputclass.equals(KeyRef.OC_NAME)) {
-			KeyTypeDef keyTypeDef = keyDefList.getKeyTypeDef(selectedKeyDef.getType());
 			String 	fontFamily 	= "serif";
 			String 	prefix		= keyTypeDef.prefix;
 			String 	suffix		= keyTypeDef.suffix;
@@ -1012,13 +1070,14 @@ public class AdvancedKeyrefDialog extends JDialog {
         localConstr.fill 		= GridBagConstraints.BOTH;
         localConstr.anchor 		= GridBagConstraints.NORTHWEST;
         
-		keyField 		= addLabelFieldPair("Key", 			localConstr, selectionPanel);
-		nameField 		= addLabelFieldPair("Name", 		localConstr, selectionPanel);
-        typeField 		= addLabelFieldPair("Typ", 			localConstr, selectionPanel);
-        namespaceField 	= addLabelFieldPair("Namespace", 	localConstr, selectionPanel);
-        descField 		= addLabelFieldPair("Beschreibung", localConstr, selectionPanel);
-        urlField 		= addLabelFieldPair("URL", 			localConstr, selectionPanel);
-        defIdField 		= addLabelFieldPair("ID", 			localConstr, selectionPanel);
+		keyField 		= addLabelFieldPair("Key", 					localConstr, selectionPanel);
+		nameField 		= addLabelFieldPair("Name", 				localConstr, selectionPanel);
+        typeField 		= addLabelFieldPair("Typ", 					localConstr, selectionPanel);
+        namespaceField 	= addLabelFieldPair("Namespace", 			localConstr, selectionPanel);
+        descField 		= addLabelFieldPair("Beschreibung", 		localConstr, selectionPanel);
+        urlField 		= addLabelFieldPair("URL", 					localConstr, selectionPanel);
+        defIdField 		= addLabelFieldPair("ID", 					localConstr, selectionPanel);
+        propertiesField	= addLabelFieldPair("Filter Properties", 	localConstr, selectionPanel);
 	}
 	
 	private JLabel addLabelPair(String labelText, GridBagConstraints constr, JPanel mainPanel) {

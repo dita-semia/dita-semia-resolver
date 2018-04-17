@@ -37,15 +37,12 @@ public class ResolveXsltConrefCall extends ExtensionFunctionCall {
 			}
 			final NodeInfo 			node 		= (NodeInfo)argument;
 			final SaxonNodeWrapper	nodeWrapper	= new SaxonNodeWrapper(node, otResolver.getXPathCache());
-			final XsltConref 		xsltConref 	= XsltConref.fromNode(nodeWrapper, otResolver.getXsltConrefCache());
+			final XsltConref 		xsltConref 	= XsltConref.fromNode(nodeWrapper, otResolver.getXsltConrefCache(), false);
 			//logger.info("xsltConref: " + xsltConref);
 			if (xsltConref == null) {
 				throw new XPathException("Supplied node '" + node.getLocalPart() + "' is no xslt-conref element.");
 			}
-			
-			// set original URL as base URI to resolve relative URIs correctly
-			xsltConref.setBaseUrl(otResolver.getCurrentBaseUrl());
-			
+
 			final NodeInfo resolvedNode = xsltConref.resolveToNode(null);
 	
 			//logger.info("resolved: " + SaxonNodeWrapper.serializeNode(resolvedElement));

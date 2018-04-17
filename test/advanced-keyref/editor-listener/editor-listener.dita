@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd"
+	xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Editor-Listener</title>
+	<body>
+		<p>The Editor-Listener refreshes the file cache when a file is opened or saved. Test this by
+			manually adding an x to the KeyDef and then saving.</p>
+		<p id="YBF-4BS-S1B" ikd:key-type="test">Test</p>
+		<p id="W1K-4XS-S1B" ikd:key-type="test2" product="product1">Test2</p>
+		<p id="TDY-4BS-S1B"><key-xref outputclass="key-name-braced" akr:ref="test:Test"
+				>Test</key-xref></p>
+		<p id="WDP-RBS-S1B"><key-xref outputclass="key-name-braced" akr:ref="test:Testx"
+				>Test</key-xref></p>
+	</body>
+</topic>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
 	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:sch		= "http://purl.oclc.org/dsdl/schematron"
 	xmlns:akr		= "http://www.dita-semia.org/advanced-keyref"
 	targetNamespace	= "http://www.dita-semia.org/advanced-keyref">
 	
 	
-	<xs:attribute name="ref" 		type="xs:string" default=""/>	<!-- force the attribute to exists since this is the indicator for a keyref element -->
+	<xs:attribute name="ref" 		type="xs:string"/>	
+	<!-- 
+		Needs to be added with an empty default to force the attribute to exists since this is the indicator for a keyref element.
+		Setting a default here causes trouble when the attribute is set to a specific fixed value for a specici element (the empty default is not always beeing overwritten). 
+	-->
+	
 	<xs:attribute name="type" 		type="xs:string"/>
 	<xs:attribute name="namespace" 	type="xs:string"/>
 	<xs:attribute name="path-len" 	type="xs:string"/>
@@ -16,5 +22,12 @@
 		<xs:attribute ref="akr:namespace"/>
 		<xs:attribute ref="akr:path-len"/>
 	</xs:attributeGroup>
+	
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<sch:include href="keyref.sch"/>
+		</xs:appinfo>
+	</xs:annotation>
 	
 </xs:schema>

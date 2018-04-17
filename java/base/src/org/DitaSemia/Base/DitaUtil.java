@@ -15,8 +15,10 @@ public class DitaUtil {
 	public static final String	ATTR_NAME				= "name";
 	public static final String	ATTR_VALUE				= "value";
 	public static final String	ATTR_XTRF				= "xtrf";
+	public static final String	ATTR_URI				= "uri";
 
 	public static final String	CLASS_TOPIC_REF			= " map/topicref ";
+	public static final String	CLASS_MAP_REF			= " mapgroup-d/mapref ";
 	public static final String	CLASS_APPENDIX			= " bookmap/appendix ";
 	public static final String	CLASS_CHAPTER			= " bookmap/chapter ";
 	public static final String	CLASS_FRONTMATTER		= " bookmap/frontmatter ";
@@ -28,6 +30,7 @@ public class DitaUtil {
 	public static final String	CLASS_FIG				= " topic/fig ";
 	public static final String	CLASS_TABLE				= " topic/table ";
 	public static final String	CLASS_MAP				= " map/map ";
+	public static final String	CLASS_IMPORT			= " ds-d/import ";
 
 	public static final String	ROLE_RESOURCE_ONLY		= "resource-only";
 	
@@ -35,6 +38,9 @@ public class DitaUtil {
 	public static final String 	HREF_TOPIC_ID_DELIMITER	= "/";
 
 	public static final String	TOPIC_NUM_DELIMITER		= ".";
+	
+	public static final String 	NAMESPACE_URI		= "http://www.dita-semia.org";
+	public static final String 	NAMESPACE_PREFIX	= "ds";
 
 
 	public static String getNodeLocation(URL url, String refId) {

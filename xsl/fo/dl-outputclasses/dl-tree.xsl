@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<xsl:stylesheet exclude-result-prefixes="ditaarch opentopic ds" version="2.0"
-	xmlns:ditaarch="http://dita.oasis-open.org/architecture/2005/" xmlns:ds="org.dita-semia.resolver"
-	xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:opentopic="http://www.idiominc.com/opentopic"
-	xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+	xmlns:xs				= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsl				= "http://www.w3.org/1999/XSL/Transform" 
+	xmlns:fo				= "http://www.w3.org/1999/XSL/Format"
+	xmlns:ds				= "http://www.dita-semia.org"
+	exclude-result-prefixes	= "#all">
 	
 	
 	<xsl:variable name="DL_OUTPUTCLASS_TREE" 		as="xs:string">tree</xsl:variable>
@@ -12,7 +13,6 @@
 	<xsl:variable name="PAGE_WIDTH" 				as="xs:string">165mm</xsl:variable>
 	<xsl:variable name="DEFAULT_TREE_DT_WIDTH" 		as="xs:integer" select="40"/>
 	
-	<!-- outputclass "tree" -->
 	
 	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_TREE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-tree">
@@ -42,6 +42,8 @@
 		
 		<fo:block xsl:use-attribute-sets="ds:dlentry-tree">
 			
+			<xsl:copy-of select="@id"/>	<!-- explicitly copy it since for fop it is suppressed of dlentry -->
+			
 			<xsl:call-template name="commonattributes"/>
 			
 			<xsl:if test="not(contains(parent::*/@class, ' topic/dl '))">
@@ -63,7 +65,8 @@
 				<xsl:when test="exists(*[contains(@class, ' topic/dd ')]/node())">
 
 					<!-- formatting as table -->
-					<fo:table>
+					<fo:table table-layout="fixed" width="100%">
+						
 						<fo:table-column column-number="1" column-width="({$PAGE_WIDTH} * {$dt-width} div 100) - ({$level} * ({$DL_TREE_INDENT} + {$DL_TREE_BORDER_WIDTH}))"/>
 						<fo:table-column column-number="2" column-width="({$PAGE_WIDTH} * (100 - {$dt-width}) div 100)"/>
 						

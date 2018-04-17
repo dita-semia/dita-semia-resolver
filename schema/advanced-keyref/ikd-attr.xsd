@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
 	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:sch		= "http://purl.oclc.org/dsdl/schematron"
 	xmlns:ikd		= "http://www.dita-semia.org/implicit-keydef"
 	targetNamespace	= "http://www.dita-semia.org/implicit-keydef">
 	
@@ -18,8 +19,9 @@
 				<xs:simpleType>
 					<xs:restriction base="xs:token">
 						<xs:enumeration value="ref-expected"/>	<!-- OT publishing will generate a warning when the document contains no reference to a keydef with this flag.  -->
-						<xs:enumeration value="ref-by-id"/>		<!-- the reference string contains only of the type and the id attribute - without namesapce and key -->
+						<xs:enumeration value="ref-by-id"/>		<!-- the reference string consists only of the type and the id attribute - without namespace and key -->
 						<xs:enumeration value="filtered-key"/>	<!-- copy the filter attribute from the element referenced by ikd:key to the key part of the reference -->
+						<xs:enumeration value="dont-link"/>		<!-- when referencing this key don't create a link to the definition -->
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:list>
@@ -36,5 +38,12 @@
 		<xs:attribute ref="ikd:desc"/>
 		<xs:attribute ref="ikd:flags"/>
 	</xs:attributeGroup>
+	
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<sch:include href="keydef.sch"/>
+		</xs:appinfo>
+	</xs:annotation>
 	
 </xs:schema>

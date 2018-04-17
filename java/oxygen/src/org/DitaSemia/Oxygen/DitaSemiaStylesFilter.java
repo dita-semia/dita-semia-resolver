@@ -12,6 +12,8 @@ import ro.sync.ecss.css.LabelContent;
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.Styles;
 import ro.sync.ecss.css.URIContent;
+import ro.sync.ecss.extensions.api.node.AttrValue;
+import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 
 public class DitaSemiaStylesFilter {
@@ -49,6 +51,15 @@ public class DitaSemiaStylesFilter {
 		if (content instanceof LabelContent) {
 			final LabelContent label = ((LabelContent)content);
 			label.getProperties().put(PROPERTY_TEXT, text);
+		}
+	}
+
+	protected static String getAttribute(AuthorNode node, String name) {
+		if ((node != null) && (node.getType() == AuthorNode.NODE_TYPE_ELEMENT)) {
+			final AttrValue attrValue = ((AuthorElement)node).getAttribute(name);
+			return (attrValue == null) ? null : attrValue.getValue();
+		} else {
+			return null;
 		}
 	}
 

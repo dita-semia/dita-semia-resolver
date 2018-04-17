@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
 	xmlns:xs		= "http://www.w3.org/2001/XMLSchema"
+	xmlns:sch		= "http://purl.oclc.org/dsdl/schematron"
 	xmlns:xcr		= "http://www.dita-semia.org/xslt-conref"
 	targetNamespace	= "http://www.dita-semia.org/xslt-conref">
 	
@@ -22,6 +23,7 @@
 					<xs:restriction base="xs:token">
 						<xs:enumeration value="reparse"/>
 						<xs:enumeration value="single-source"/>
+						<xs:enumeration value="copy"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:list>
@@ -35,5 +37,12 @@
 		<xs:attribute ref="xcr:stage"/>
 		<xs:attribute ref="xcr:flags"/>
 	</xs:attributeGroup>
+	
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<sch:include href="xslt-conref.sch"/>
+		</xs:appinfo>
+	</xs:annotation>
 	
 </xs:schema>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ikd="http://www.dita-semia.org/implicit-keydef" xmlns:dxd="http://www.dita-semia.org/dynamic-xml-definition"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Definitions</title>
+	<body>
+		<dl>
+			<dlentry id="yvg_hln_kx">
+				<dt ikd:key-type="xml-simple" ikd:root="parent::*" dxd:type-name="concat(text(), '-Type')" dxd:type-xsl="urn:dita-semia:dxd-codeblock:xsl:SimpleTypeDef.xsl">Simple1</dt>
+				<dd>max length: <ph>10</ph></dd>
+			</dlentry>
+			<dlentry id="xvg_hln_kx">
+				<dt ikd:key-type="xml-simple" ikd:root="parent::*" dxd:type-xsl="urn:dita-semia:dxd-codeblock:xsl:SimpleTypeDef.xsl" dxd:type-name="concat(text(), '-Type')">Simple2</dt>
+				<dd>max length: <ph>2</ph></dd>
+			</dlentry>
+			<dlentry id="g5j_hln_kx">
+				<dt ikd:key-type="xml-complex" ikd:root="parent::*" dxd:type-xsl="urn:dita-semia:dxd-codeblock:xsl:ComplexTypeDef.xsl" dxd:type-name="concat(text(), '-Type')">Complex1</dt>
+				<dd>
+					<p>children:</p>
+					<sl compact="yes">
+						<sli><key-xref akr:ref="xml-simple:Simple1">Simple1</key-xref></sli>
+						<sli><key-xref akr:ref="xml-simple:Simple2">Simple2</key-xref></sli>
+					</sl>
+				</dd>
+			</dlentry>
+		</dl>
+	</body>
+</topic>

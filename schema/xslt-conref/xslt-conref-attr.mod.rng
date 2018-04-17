@@ -13,7 +13,21 @@
 			<attribute name="xcr:source"/>
 		</optional>
 		<optional>
+			<attribute name="xcr:source-type">
+				<choice>
+					<value>xml</value>
+					<value>text</value>
+					<value>excel</value>
+					<value>csv</value>
+					<value/>
+				</choice>
+			</attribute>
+		</optional>
+		<optional>
 			<attribute name="xcr:start-template"/>
+		</optional>
+		<optional>
+			<attribute name="xcr:flags"/>
 		</optional>
 		<zeroOrMore>
 			<attribute>

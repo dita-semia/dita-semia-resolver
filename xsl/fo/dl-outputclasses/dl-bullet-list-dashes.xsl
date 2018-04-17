@@ -1,14 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<xsl:stylesheet exclude-result-prefixes="#all" version="2.0"
-	xmlns:ditaarch="http://dita.oasis-open.org/architecture/2005/" xmlns:ds="org.dita-semia.resolver"
-	xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:opentopic="http://www.idiominc.com/opentopic"
-	xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+	xmlns:xs				= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsl				= "http://www.w3.org/1999/XSL/Transform" 
+	xmlns:fo				= "http://www.w3.org/1999/XSL/Format"
+	xmlns:ds				= "http://www.dita-semia.org"
+	exclude-result-prefixes	= "#all">
 	
 	
 	<xsl:variable name="DL_OUTPUTCLASS_BULLET_LIST_DASHES" as="xs:string">bullet-list-dashes</xsl:variable>
-	
-	<!-- outputclass "bullet-list-titles" -->
 	
 	
 	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_BULLET_LIST_DASHES]">

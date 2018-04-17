@@ -44,7 +44,7 @@ public class XslTransformerCache {
 	
 	protected final Configuration	configuration;
 	
-	protected HashMap<URL, ExecutableWithTimestamp> 	executableMap		= new HashMap<>();
+	protected HashMap<URL, ExecutableWithTimestamp> 	executableCache		= new HashMap<>();
 
 	public XslTransformerCache(Configuration configuration) {
 		this.configuration 	= configuration;
@@ -65,60 +65,58 @@ public class XslTransformerCache {
 	 * If the URL is invalid, a XPathException is thrown ("Script File could not be found").
 	 * If the Script is invalid, a XPathException is thrown ("XSLT compilation error").
 	 * 
-	 * @param 	url 			URL of the XSL script
-	 * @param 	uriResolver		URIResolver of the Node
 	 * @return	an existing XsltExecutable if present; a new XsltExecutable, if there is none or if the timestamp is different.
 	 * @throws 	XPathException	If the Script File could not be found or if the compilation led to an error.
 	 */
-	public XsltExecutable getExecutable(URL url, URIResolver uriResolver) throws XPathException {
+	public XsltExecutable getExecutable(Source source) throws XPathException {
+		URL				url			= null;
+		Timestamp 		timestamp 	= null;
+		XsltExecutable 	result		= null;
 		
-		final String decodedUrl		= FileUtil.decodeUrl(url);
-		Timestamp scriptTimestamp 	= new Timestamp(0);
-		if (!decodedUrl.startsWith("jar:")) {
-			try {
-				final URL 	urlDecoded 	= new URL(decodedUrl);
-				final File 	script 		= new File(urlDecoded.getFile());
-				if (!script.exists()) {
-					throw new XPathException("Script file could not be found. (URL: '" + urlDecoded + "')");
+		if (source instanceof SAXSource) {
+			final SAXSource saxSource = ((SAXSource)source);
+			
+			// check if cachable
+			InputSource inputSource = saxSource.getInputSource();
+			if ((inputSource.getCharacterStream() == null) && (inputSource.getByteStream() == null)) {
+				// check timestamp
+				try {
+					url			= new URL(source.getSystemId());
+					timestamp 	= new Timestamp(new File(url.getFile()).lastModified());
+					ExecutableWithTimestamp cacheEntry = executableCache.get(url);
+					if ((cacheEntry != null) && (cacheEntry.getTimestamp().equals(timestamp))) {
+						result = cacheEntry.getXsltExecutable();
+						//logger.info("from cache: " + url);
+					}
+					
+				} catch (MalformedURLException e) {
+					// just ignore it here - will be handled later
 				}
-				scriptTimestamp = new Timestamp(script.lastModified());
-				//logger.info("timestamp: " + scriptTimestamp + " (" + decodedUrl + ")");
-			} catch (MalformedURLException e) {
-				throw new XPathException("Script file could not be found. (URL: '" + decodedUrl + "')");
 			}
 		}
-		XsltExecutable xsltExecutable = null;
-		if (executableMap.containsKey(url) && executableMap.get(url).getTimestamp().equals(scriptTimestamp)) {
-			xsltExecutable = executableMap.get(url).getXsltExecutable(); 
-		} else {	
-			Source xslSource = null;
-			if (uriResolver != null) {
-				try {
-					xslSource = uriResolver.resolve(url.toExternalForm(), "");
-				} catch (TransformerException e) {
-					logger.error(e.getMessage());
-				}
-			}
-			if (xslSource == null) {
-				xslSource = new SAXSource(new InputSource(url.toExternalForm()));
-			} 
+
+		if (result == null) {
 			try
 			{
 				final Processor 	processor 	= new Processor(configuration);
 				final XsltCompiler 	compiler 	= processor.newXsltCompiler();
 				
-				xsltExecutable 	= compiler.compile(xslSource);		
-				//logger.info("compiled Executable: " + decodedUrl);
-				executableMap.put(url,  new ExecutableWithTimestamp(xsltExecutable, scriptTimestamp));
+				result 	= compiler.compile(source);		
+				//logger.info("compiled Executable: " + source.getSystemId());
+				
+				if (timestamp != null) {
+					executableCache.put(url, new ExecutableWithTimestamp(result, timestamp));
+					//logger.info("into cache: " + url);
+				}
 			} 
 			catch (SaxonApiException e) {
-				throw new XPathException("XSLT compilation error. (URL: '" + url + "'): " + e.getMessage());
+				throw new XPathException("XSLT compilation error. (URL: '" + source.getSystemId() + "'): " + e.getMessage());
 			}
 		}
-		//logger.info("getExecutable: " + xsltExecutable + ", url: " + url);
-		return xsltExecutable;
-		
+
+		return result;
 	}
+	
 	
 	/**
 	 * Returns an existing XsltExecutable for the specified URL. 
@@ -128,7 +126,7 @@ public class XslTransformerCache {
 	 * @return the XsltExecutable for this URL or null if there is none.
 	 */
 	public XsltExecutable getCachedExecutable(URL url) {
-		final ExecutableWithTimestamp exWithTime = executableMap.get(url);
+		final ExecutableWithTimestamp exWithTime = executableCache.get(url);
 		if (exWithTime != null) {
 //			logger.info("getCachedExecutable: " + exWithTime.getXsltExecutable() + ", url: " + url);
 			return exWithTime.getXsltExecutable(); 
@@ -142,12 +140,16 @@ public class XslTransformerCache {
 	 * Uses {@link XslTransformerCache#getTransformer(URL, URIResolver)} with the specified URL using the URIResolver from the configuration.
 	 * @see XslTransformerCache#getTransformer(URL, URIResolver)
 	 * 
-	 * @param url URL of the XSL script
+	 * @param uri URI of the XSL script
 	 * @return XsltTransformer
 	 * @throws XPathException If the Script File could not be found or if the compilation led to an error.
 	 */
-	public XsltExecutable getExecutable(URL url) throws XPathException {
-		return getExecutable(url, configuration.getURIResolver());
+	public XsltExecutable getExecutable(String uri) throws XPathException {
+		try {
+			return getExecutable(configuration.getURIResolver().resolve(uri, ""));
+		} catch (TransformerException e) {
+			throw new XPathException(e.getMessage(), e);
+		}
 	}
 	
 	/**
@@ -155,9 +157,8 @@ public class XslTransformerCache {
 	 * 
 	 * @param url URL of the XSL script
 	 */
-	public void removeFromCache(URL url)
-	{
-		executableMap.remove(url);
+	public void removeFromCache(URL url) {
+		executableCache.remove(url);
 	}
 
 	public Configuration getConfiguration() {
@@ -165,7 +166,7 @@ public class XslTransformerCache {
 	}
 
 	public void clear() {
-		executableMap.clear();
+		executableCache.clear();
 	}
 
 	private static class ExecutableWithTimestamp {
@@ -185,6 +186,10 @@ public class XslTransformerCache {
 		private Timestamp getTimestamp() {
 			return timestamp;
 		}
+	}
+
+	public boolean isCompatible(Configuration config) {
+		return configuration.isCompatible(config);
 	}
 	
 }

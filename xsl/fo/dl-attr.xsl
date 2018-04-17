@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<xsl:stylesheet exclude-result-prefixes="xs ditaarch opentopic ds" version="2.0"
-	xmlns:ditaarch="http://dita.oasis-open.org/architecture/2005/"  xmlns:ds="org.dita-semia.resolver"
-	xmlns:opentopic="http://www.idiominc.com/opentopic"
-	xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+	xmlns:xs				= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsl				= "http://www.w3.org/1999/XSL/Transform" 
+	xmlns:fo				= "http://www.w3.org/1999/XSL/Format"
+	xmlns:ds				= "http://www.dita-semia.org"
+	exclude-result-prefixes	= "#all">
 	
 	<xsl:variable name="KEEP_TABLE_ROW_VALUE" as="xs:string" select="'always'"/>	<!-- numeric values not supported by FOP -->
 	
@@ -54,13 +55,15 @@
 	</xsl:attribute-set>
 		
 	<xsl:attribute-set name="ds:dt-tree">
-		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
+		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
+		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
+		<xsl:attribute name="keep-together.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-tree">
-		<xsl:attribute name="margin-left"			>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-right"			>1.5mm</xsl:attribute>
+		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
+		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
+		<xsl:attribute name="keep-together.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
 	
@@ -183,9 +186,14 @@
 	
 	<!-- dl with outputclass "bullet-list-titles" -->
 	
+	
+	<xsl:attribute-set name="ds:dlentry-bullet-list-titles" use-attribute-sets="ul.li">
+		<xsl:attribute name="space-before"					>1.5mm</xsl:attribute>
+	</xsl:attribute-set>
+	
 	<xsl:attribute-set name="ds:dt-bullet-list-titles">
 		<xsl:attribute name="font-weight"					>bold</xsl:attribute>
-		<xsl:attribute name="space-after"					>1.5mm</xsl:attribute>
+		<xsl:attribute name="space-after"					>1.0mm</xsl:attribute>
 		<xsl:attribute name="keep-with-next.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
@@ -207,6 +215,10 @@
 	
 	<xsl:attribute-set name="ds:dl-numbered-list-titles" use-attribute-sets="ol">
 	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dlentry-numbered-list-titles" use-attribute-sets="ol.li">
+		<xsl:attribute name="space-before"					>1.5mm</xsl:attribute>
+	</xsl:attribute-set>
 
 	<xsl:attribute-set name="ds:dlentry-numbered-list-titles-label-content" use-attribute-sets="ol.li__label__content">
 		<xsl:attribute name="font-weight"	>bold</xsl:attribute>
@@ -214,7 +226,7 @@
 	
 	<xsl:attribute-set name="ds:dt-numbered-list-titles">
 		<xsl:attribute name="font-weight"					>bold</xsl:attribute>
-		<xsl:attribute name="space-after"					>1.5mm</xsl:attribute>
+		<xsl:attribute name="space-after"					>1.0mm</xsl:attribute>
 		<xsl:attribute name="keep-with-next.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	

@@ -2,40 +2,40 @@
 
 /* Hides the required content that is just needed for display on 
  xslt-conref for topic, ol/li, ul/li, table */
-*[class~="topic/topic"][*|xsl]:not([conaction]) > *[class~="topic/topic"],
-*[class~="topic/table"][*|xsl]:not([conaction]) > *[class~="topic/table"],
-*[class~="topic/ol"][*|xsl]:not([conaction]) > *[class~="topic/ol"],
-*[class~="topic/ul"][*|xsl]:not([conaction]) > *[class~="topic/ul"],
-*[class~="topic/dl"][*|xsl]:not([conaction]) > *[class~="topic/dl"],
-*[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *[class~="topic/prodinfo"],
-*[class~="topic/ph"][*|xsl]:not([conaction]) > *[class~="topic/ph"],
-*[class~="topic/dlentry"][*|xsl]:not([conaction]) > *[class~="topic/dlentry"] {
+*[class~="topic/topic"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/topic"],
+*[class~="topic/table"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/table"],
+*[class~="topic/ol"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/ol"],
+*[class~="topic/ul"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/ul"],
+*[class~="topic/dl"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/dl"],
+*[class~="topic/prodinfo"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/prodinfo"],
+*[class~="topic/ph"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/ph"],
+*[class~="topic/dlentry"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/dlentry"] {
     display : inherit;
 }
 
-*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *[class~="topic/simpletable"] {
+*[class~="topic/simpletable"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *[class~="topic/simpletable"] {
     display : table;
 }
 
-*[class~="topic/table"][*|xsl]:not([conaction]) > *,    
-*[class~="topic/simpletable"][*|xsl]:not([conaction]) > *,
-*[class~="topic/ol"][*|xsl]:not([conaction]) > *,
-*[class~="topic/ul"][*|xsl]:not([conaction]) > *, 
-*[class~="topic/topic"][*|xsl]:not([conaction]) > *,
-*[class~="topic/dl"][*|xsl]:not([conaction]) > *,
-*[class~="topic/prodinfo"][*|xsl]:not([conaction]) > *,
-*[class~="topic/ph"][*|xsl]:not([conaction]) > *,
-*[class~="topic/dlentry"][*|xsl]:not([conaction]) > * {
+*[class~="topic/table"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,    
+*[class~="topic/simpletable"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/ol"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/ul"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *, 
+*[class~="topic/topic"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/dl"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/prodinfo"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/ph"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > *,
+*[class~="topic/dlentry"][*|xsl]:not([conaction]):not([*|flags~="copy"]) > * {
     display : none;
 }
 
 /* avoid double border on conref reference table */
 *[class~="topic/simpletable"][conref]:not([conaction]),
 *[class~="topic/simpletable"][conkeyref]:not([conaction]),
-*[class~="topic/simpletable"][*|xsl]:not([conaction]),
+*[class~="topic/simpletable"][*|xsl]:not([conaction]):not([*|flags~="copy"]),
 *[class~="topic/tgroup"][conref]:not([conaction]),
 *[class~="topic/tgroup"][conkeyref]:not([conaction]),
-*[class~="topic/tgroup"][*|xsl]:not([conaction]) {
+*[class~="topic/tgroup"][*|xsl]:not([conaction]):not([*|flags~="copy"]) {
 	border: none;
 }
 
@@ -97,6 +97,17 @@
 			transparent, 				true,
 			showIcon, 					true,
 			enableInReadOnlyContext, 	true);
+			
+@XsltCopyConrefUpdateButton: 
+  		oxy_button(
+  			action, oxy_action(
+		            name, 			'Update', 
+		            description, 	'Update the XSLT-Copy-Conref', 
+		            icon, 			url('../img/refresh.gif'), 
+		            operation, 		'org.DitaSemia.Oxygen.XsltConref.UpdateXsltCopyConref'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true);
 
 *[*|xsl] > oxy|error:before,
 *[*|xsl] > oxy|reference:before {
@@ -117,9 +128,40 @@
   		!important; 
 }
 
+*[*|xsl][*|source=""] > oxy|error:before,
+*[*|xsl][*|source=""] > oxy|reference:before {
+  	content: 
+  		@OpenXsltConrefScriptButton
+  		@XsltConrefRefreshButton
+  		!important; 
+}
+
+*[*|xsl][*|flags~="copy"]:before {
+    content: 
+  		@OpenXsltConrefScriptButton
+        @XsltCopyConrefUpdateButton
+        !important;
+}
+
+*[*|xsl][*|flags~="copy"][*|source]:not([*|source=""]):before {
+    content: 
+  		@OpenXsltConrefScriptButton
+  		@OpenXsltConrefSourceButton
+        @XsltCopyConrefUpdateButton
+        !important;
+}
+
 *[*|xsl] > oxy|error:before,
-*[*|xsl][*|source] > oxy|error:before{
+*[*|xsl][*|source] > oxy|error:before {
 	-oxy-append-content: "[" !important;
+}
+
+*[*|xsl][*|flags~="copy"] {
+	background-color:	@conbat-background;
+}
+
+*[*|xsl][*|flags~="copy"] > * {
+	-oxy-editable: 		false;	/* Only the content is read-only. The element itself can be modified (esp. the attributes) */
 }
 
 /* support the no-content result element */
@@ -135,8 +177,14 @@ no-content {
 	/* Mark content to be invisible in output */
 	display		: inherit !important;
 	content: 	"<Refresh required>";
-	font-size: 	0.8em;
-	color:		#999999;
+	font-size: 	@edit-only-font-size-scale;
+	color:		@edit-only-text-color;
+}
+
+*[*|xsl][class~="topic/sli"] > *[class~="topic/sli"] {
+    display				: inline;
+    margin-left			: 0;
+    -oxy-display-tags	: none;
 }
 
 /* make topic/div work with oxygen 17.0 (before DITA 1.3 support) as well */

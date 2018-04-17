@@ -17,6 +17,7 @@
 		
 		<xsl:variable name="fieldRef" 	as="element()?"	select="$xcr:current/ancestor::row/entry[1]//key-xref"/>
 		<xsl:variable name="fieldDef" 	as="element()?" select="akr:getKeyDefRoot($fieldRef)"/>
+		<xsl:message select="$fieldDef"></xsl:message>
 		
 		<xsl:choose>
 			<xsl:when test="exists($fieldDef)">

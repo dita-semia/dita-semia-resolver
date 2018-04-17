@@ -217,13 +217,36 @@ public class AuthorNodeWrapper implements NodeWrapper
 	}
 
 	@Override
-	public List<String> evaluateXPathToStringList(String xPath) throws XPathException, XPathNotAvaliableException {
-	
+	public List<NodeWrapper> evaluateXPathToNodeList(String xPath) throws XPathException, XPathNotAvaliableException {
+
 		checkXPathAvailable();
 		
 		try {
-			Object[] result = authorAccess.getDocumentController().evaluateXPath(preprocessXPath(xPath), authorNode, false, false, false, false);
-			List<String> list = new LinkedList<>();
+			AuthorNode[] result = authorAccess.getDocumentController().findNodesByXPath(preprocessXPath(xPath), authorNode, true, true, false, false);
+			if (result.length > 0) {
+				final List<NodeWrapper> 	list 	= new LinkedList<>();
+				for (int i = 0; i < result.length; ++i) {
+					list.add(new AuthorNodeWrapper((AuthorNode)result[i], authorAccess));
+				}
+				return list;
+			} else {
+				return null;
+			}
+		} catch (AuthorOperationException e) {
+			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
+		}
+	}
+
+	@Override
+	public List<String> evaluateXPathToStringList(String xPath) throws XPathException, XPathNotAvaliableException {
+	
+		checkXPathAvailable();
+
+		final String preprocessed = preprocessXPath(xPath);
+		
+		try {
+			final Object[] 		result 	= authorAccess.getDocumentController().evaluateXPath(preprocessed, authorNode, false, false, false, false);
+			final List<String> 	list 	= new LinkedList<>();
 			for (int i = 0; i < result.length; ++i) {
 				if (result[i] instanceof Node) {
 					list.add(((Node)result[i]).getTextContent());
@@ -235,7 +258,7 @@ public class AuthorNodeWrapper implements NodeWrapper
 			//logger.info("array list to string: " + Arrays.toString(list.toArray()));
 			return list;
 		} catch (AuthorOperationException e){
-			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated.");
+			throw new XPathException("XPath expression ('" + xPath + "') failed to be evaluated." + (xPath.equals(preprocessed) ? "" : (" (preprocessed: '" + preprocessed + "')")));
 		}
 	}
 	
@@ -354,21 +377,27 @@ public class AuthorNodeWrapper implements NodeWrapper
 		}
 	}
 
-	private void checkXPathAvailable() throws XPathException, XPathNotAvaliableException {
+	public void checkXPathAvailable() throws XPathException, XPathNotAvaliableException {
 		if (authorAccess == null) {
-			throw new XPathException("AuthorNodeWrapper: Can't evaluate XPath without AuthorAccess.");
+			throw new XPathNotAvaliableException();
 		}
 		/*
 		 *  In  Oxygen author mode in some cases (right after changes) the node can't be used as context for evaluating an xpath expression.
 		 *  This can be noticed by checking if the xpath "." results in the node itself.
 		 */
-		try {
-			final AuthorNode[] results = authorAccess.getDocumentController().findNodesByXPath(".", authorNode, true, true, false, false);
-			if ((results.length != 1) || (results[0].getStartOffset() != authorNode.getStartOffset())) {
+		final int docEndOffset 	= authorAccess.getDocumentController().getAuthorDocumentNode().getEndOffset();
+		final int nodeEndOffset = authorNode.getStartOffset();
+		if (nodeEndOffset > docEndOffset) {
+			throw new XPathNotAvaliableException();
+		} else {
+			try {
+				final AuthorNode[] results = authorAccess.getDocumentController().findNodesByXPath(".", authorNode, true, true, false, false);
+				if ((results.length != 1) || (results[0].getStartOffset() != authorNode.getStartOffset())) {
+					throw new XPathNotAvaliableException();
+				}
+			} catch (Exception e) {
 				throw new XPathNotAvaliableException();
 			}
-		} catch (Exception e) {
-			throw new XPathNotAvaliableException();
 		}
 	}
 

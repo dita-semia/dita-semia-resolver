@@ -34,8 +34,6 @@
 
 		<jar jarfile="${archivename}.jar" manifest="MANIFEST.MF">
 			<fileset dir="bin"  		includes="**/*.class"/>
-			<fileset dir="../base/bin"  includes="**/*.class"/>
-			<fileset dir="../base/src"	includes="cfg/*"/>
 			<!--<fileset dir="${src.dir}"	includes="xsl/*"/>-->
 		</jar>
 

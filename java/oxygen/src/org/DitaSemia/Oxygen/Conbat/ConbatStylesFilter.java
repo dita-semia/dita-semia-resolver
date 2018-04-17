@@ -1,13 +1,17 @@
 package org.DitaSemia.Oxygen.Conbat;
 
+import java.util.List;
+
 import javax.swing.text.BadLocationException;
 
 import org.DitaSemia.Base.EmbeddedXPathResolver;
+import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.DitaSemiaStylesFilter;
 import org.apache.log4j.Logger;
 
 import net.sf.saxon.trans.XPathException;
+import ro.sync.ecss.css.RelativeLength;
 import ro.sync.ecss.css.StaticContent;
 import ro.sync.ecss.css.StringContent;
 import ro.sync.ecss.css.Styles;
@@ -40,7 +44,7 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 	public static final int		PSEUDO_LEVEL_DEFAULT	= 11;
 	public static final int		PSEUDO_LEVEL_TITLE		= 15;
 	//public static final int		PSEUDO_LEVEL_HEADER		= 16;	not handled yet
-	//public static final int		PSEUDO_LEVEL_DT			= 17;	not handled yet
+	public static final int		PSEUDO_LEVEL_DT			= 17;
 
 	public static final String 	ATTR_CONTENT			= "content";
 	public static final String 	ATTR_DEFAULT_CONTENT	= "default-content";
@@ -49,6 +53,8 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 	public static final String	ATTR_TITLE				= "title";
 	public static final String	ATTR_POPUP_EDIT			= "popup-edit";
 	public static final String	ATTR_PE_HIDE_VALUE		= "pe-hide-value";
+	public static final String	ATTR_HIDE_ON_CONTENT	= "hide-on-content";
+	public static final String	ATTR_FLAGS				= "flags";
 	
 	public static final String	VALUE_TRUE				= "true";
 	public static final String	POPUP_EDIT_TEXT			= "#text";
@@ -62,16 +68,18 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 		final int nodeType = authorNode.getType();
 		if (nodeType == AuthorNode.NODE_TYPE_PSEUDO_ELEMENT) {
 			final int pseudoLevel = styles.getPseudoLevel();
+			handled |= filterHideOnContent(styles, authorNode.getParent(), pseudoLevel);
+			
 			//logger.info("filter: " + authorNode.getType() + ", " + authorNode.getName() + ", " + pseudoLevel);
 			if ((pseudoLevel == PSEUDO_LEVEL_INLINE) || (pseudoLevel == PSEUDO_LEVEL_PARAGRAPH)) {
 				if (authorNode.getName().equals(BEFORE)) {
-					handled = resolve(styles, authorNode.getParent(), ATTR_PREFIX, true);
+					handled |= resolve(styles, authorNode.getParent(), ATTR_PREFIX, true);
 				} else if (authorNode.getName().equals(AFTER)) { 
-					handled = resolve(styles, authorNode.getParent(), ATTR_SUFFIX, true);
+					handled |= resolve(styles, authorNode.getParent(), ATTR_SUFFIX, true);
 				}
 			} else if (pseudoLevel == PSEUDO_LEVEL_TITLE) {
 				if (authorNode.getName().equals(BEFORE)) {
-					handled = resolve(styles, authorNode.getParent(), ATTR_TITLE, false);
+					handled |= resolve(styles, authorNode.getParent(), ATTR_TITLE, false);
 				}
 			} else if (pseudoLevel == PSEUDO_LEVEL_DEFAULT) {
 				final AuthorNode parentNode = authorNode.getParent();
@@ -79,20 +87,21 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 					final AuthorElement parent = (AuthorElement)parentNode;
 					try {
 						if ((parent.getContentNodes().isEmpty()) && (parent.getTextContent().isEmpty())) {
-							handled = resolve(styles, authorNode.getParent(), ATTR_DEFAULT_CONTENT, true);
+							handled |= resolve(styles, authorNode.getParent(), ATTR_DEFAULT_CONTENT, true);
 						}
 					} catch (BadLocationException e) {
 						logger.error(e, e);
 					}
 				}
 			} else if ((pseudoLevel >= PSEUDO_LEVEL_EDIT_MIN) && (pseudoLevel <= PSEUDO_LEVEL_EDIT_MAX)) {
-				handled = filterEdit(styles, authorNode.getParent());
+				handled |= filterEdit(styles, authorNode.getParent());
 			}
 		} else if (nodeType == AuthorNode.NODE_TYPE_ELEMENT) {
-			handled = resolve(styles, authorNode, ATTR_CONTENT, true);
+			handled |= filterHideOnContent(styles, authorNode, 0);
+			handled |= resolve(styles, authorNode, ATTR_CONTENT, true);
 			final AttrValue popupEdit = ((AuthorElement)authorNode).getAttribute(ATTR_POPUP_EDIT);
 			if ((popupEdit != null) && (POPUP_EDIT_TEXT.equals(popupEdit.getValue()))) {
-				handled = filterEdit(styles, authorNode);
+				handled |= filterEdit(styles, authorNode);
 			}
 		}
 		return handled;
@@ -133,21 +142,53 @@ public class ConbatStylesFilter extends DitaSemiaStylesFilter {
 			if ((hideValue != null) && (!hideValue.isEmpty())) {	
 				final String value = (popupEdit.equals(POPUP_EDIT_TEXT)) ? node.getTextContent() : node.getAttribute(popupEdit, null);
 				if (hideValue.equals(value)) {
-					styles.setProperty(Styles.KEY_FOREGROUND_COLOR, EDIT_ONLY_COLOR);
-					final Font originalFont = styles.getFont();
-					final Font newFont		= new Font(
-							originalFont.getName(), 
-							originalFont.getStyle(), 
-							(int)(originalFont.getSize() * EDIT_ONLY_FONT_SCALE),
-							originalFont.getLetterSpacing(),
-							originalFont.getFontNames());
-					styles.setProperty(Styles.KEY_FONT, newFont);
+					setEditOnly(styles, 0);
 				}
 			}
 			handled = true;
 		}
 		return handled;
 	}
+	
+	private static boolean filterHideOnContent(Styles styles, AuthorNode contextNode, int pseudoLevel) {
+		boolean handled = false;
+		final AuthorNodeWrapper node = new AuthorNodeWrapper(contextNode, null);
+		final String hideOnContent = node.getAttribute(ATTR_HIDE_ON_CONTENT, 	NAMESPACE_URI);
+		if ((hideOnContent != null) && (!hideOnContent.isEmpty())) {
+			final List<NodeWrapper> childNodes = node.getChildNodes();
+			if ((!childNodes.isEmpty()) && (childNodes.get(0).getName().equals(hideOnContent))) {
+				/*logger.info("filterHideOnContent : " + node.getName());
+				final RelativeLength originalMarginBottom = styles.getMarginBottom();
+				logger.info("originalMarginBottom: " + originalMarginBottom);
+				logger.info("originalMarginBottom.isRelative(): " + originalMarginBottom.isRelative());
+				logger.info("originalMarginBottom.getValue(): " + originalMarginBottom.getValue());*/
+				setEditOnly(styles, pseudoLevel);
+				handled = true;
+			}
+		}
+		return handled;
+	}
+	
+	private static void setEditOnly(Styles styles, int pseudoLevel) {
+		styles.setProperty(Styles.KEY_FOREGROUND_COLOR, EDIT_ONLY_COLOR);
+		
+		final Font originalFont = styles.getFont();
+		final Font newFont		= new Font(
+				originalFont.getName(), 
+				originalFont.getStyle(), 
+				(int)(originalFont.getSize() * EDIT_ONLY_FONT_SCALE),
+				originalFont.getLetterSpacing(),
+				originalFont.getFontNames());
+		styles.setProperty(Styles.KEY_FONT, newFont);
+		
+		if (pseudoLevel == PSEUDO_LEVEL_DT) {
+			final RelativeLength originalMarginBottom 	= styles.getMarginBottom();
+			final RelativeLength newMarginBottom		= RelativeLength.createAbsolute((int)Math.round(originalMarginBottom.getValue() * EDIT_ONLY_FONT_SCALE));
+			styles.setProperty(Styles.KEY_MARGIN_BOTTOM, newMarginBottom);	
+		}
+		
+	}
+	
 	
 	private static AuthorAccess getAuthorAccess() {
 		WSEditor editorAccess = PluginWorkspaceProvider.getPluginWorkspace().getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);

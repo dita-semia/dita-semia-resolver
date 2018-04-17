@@ -2,16 +2,30 @@
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	
-	<uri name="urn:dita-semia:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
-	<uri name="urn:dita-semia:xsl:class.xsl" 				uri="class.xsl"/>
-	<uri name="urn:dita-semia:xsl:cba-const.xsl" 			uri="cba-const.xsl"/>
-	<uri name="urn:dita-semia:xsl:csv-to-xml.xsl" 			uri="csv-to-xml.xsl"/>
-	<uri name="urn:dita-semia:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
+	<uri name="urn:dita-semia:xsl:xcr-extension-functions.xsl" 	uri="xcr-extension-functions.xsl"/>
 	
-	<system systemId="urn:dita-semia:xsl:check-xslt-conref.xsl" 	uri="check-xslt-conref.xsl"/>
-	<system systemId="urn:dita-semia:xsl:class.xsl" 				uri="class.xsl"/>
-	<system systemId="urn:dita-semia:xsl:cba-const.xsl" 			uri="cba-const.xsl"/>
-	<system systemId="urn:dita-semia:xsl:csv-to-xml.xsl" 			uri="csv-to-xml"/>
-	<system systemId="urn:dita-semia:xsl:svg-utility.xsl" 			uri="svg-utility.xsl"/>
+	<uri name="urn:dita-semia:xsl:check-xslt-conref.xsl" 		uri="check-xslt-conref.xsl"/>
+	<uri name="urn:dita-semia:xsl:class.xsl" 					uri="class.xsl"/>
+	<uri name="urn:dita-semia:xsl:cba-const.xsl" 				uri="cba-const.xsl"/>
+	<uri name="urn:dita-semia:xsl:csv-to-xml.xsl" 				uri="csv-to-xml.xsl"/>
+	<uri name="urn:dita-semia:xsl:svg-utility.xsl" 				uri="svg-utility.xsl"/>
+	
+	<uri name="urn:dita-semia:xsl:resolve-akr.xsl" 				uri="common/resolve-akr.xsl"/>
+	<uri name="urn:dita-semia:xsl:extract-text.xsl" 			uri="common/extract-text.xsl"/>
+	<uri name="urn:dita-semia:xsl:extract-text-standalone.xsl" 	uri="common/extract-text-standalone.xsl"/>
+	
+	
+	<system systemId="urn:dita-semia:xsl:xcr-extension-functions.xsl" 	uri="xcr-extension-functions.xsl"/>
+	
+	<system systemId="urn:dita-semia:xsl:check-xslt-conref.xsl" 		uri="check-xslt-conref.xsl"/>
+	<system systemId="urn:dita-semia:xsl:class.xsl" 					uri="class.xsl"/>
+	<system systemId="urn:dita-semia:xsl:cba-const.xsl" 				uri="cba-const.xsl"/>
+	<system systemId="urn:dita-semia:xsl:csv-to-xml.xsl" 				uri="csv-to-xml"/>
+	<system systemId="urn:dita-semia:xsl:svg-utility.xsl" 				uri="svg-utility.xsl"/>
+	
+	<system systemId="urn:dita-semia:xsl:resolve-akr.xsl" 				uri="common/resolve-akr.xsl"/>
+	<system systemId="urn:dita-semia:xsl:extract-text.xsl" 				uri="common/extract-text.xsl"/>
+	<system systemId="urn:dita-semia:xsl:extract-text-standalone.xsl" 	uri="common/extract-text-standalone.xsl"/>
+	
 	
 </catalog>

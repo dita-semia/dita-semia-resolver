@@ -8,6 +8,8 @@ public interface KeyspecInterface {
 	final static String PATH_DELIMITER 	= "/";
 	final static String ID_DELIMITER	= "#";
 	final static String ANY_NAMESPACE	= "*";
+	final static String TYPE_UNDEFINED	= "*";
+	
 	
 
 	String getKey();

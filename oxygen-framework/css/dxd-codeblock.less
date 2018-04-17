@@ -1,0 +1,84 @@
+
+/* Modify Header before dxd-codeblock  */
+
+*[class~="ds-d/dxd-codeblock"] > oxy|error:before,
+*[class~="ds-d/dxd-codeblock"] > oxy|reference:before {
+    background-color: rgb(240, 240, 240) !important;
+	display: block !important;
+  	content: 
+		oxy_button(
+  			action, oxy_action(
+		            name, 			'Open XML file', 
+		            description, 	'Open referenced xml file in oXygen text mode', 
+		            icon, 			url('../img/openSource.png'), 
+		            operation, 		'org.DitaSemia.Oxygen.DynamicXmlDefinition.OpenCodeblockFile'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true)
+		oxy_button(
+  			action, oxy_action(
+		            name, 			'Refresh', 
+		            description, 	'Refresh the DXD codeblock', 
+		            icon, 			url('../img/refreshReference.png'), 
+		            operation, 		'org.DitaSemia.Oxygen.DynamicXmlDefinition.RefreshCodeblock'),
+			transparent, 				true,
+			showIcon, 					true,
+			enableInReadOnlyContext, 	true)
+		"[" oxy_xpath("@coderef") "]"
+  		!important;
+  		font-size		: 0.8em;
+		text-decoration	: none !important;
+  		color			: #AAAAAA !important;
+}
+
+*[class~="ds-d/dxd-codeblock"] > oxy|reference {
+	display				: block !important;
+}
+
+*[class~="ds-d/dxd-codeblock"] * {
+	-oxy-display-tags	: none;
+}
+
+*[class~="ds-d/dxd-codeblock"][outputclass^='language-']:before {
+	content: none;
+}
+
+*[class~="ds-d/dxd-codeblock"][outputclass^='language-'] {
+	visibility : inherit;
+}
+
+
+/* support the ERROR element */
+*[class~="ds-d/dxd-codeblock"] ERROR {
+	display			: inherit !important;
+	font-weight		: bold;
+	color			: #C00000;
+}
+
+
+
+/* syntax highlighting */
+
+*[class~="ds-d/dxd-codeblock"] element {
+	color		: #000096;
+}
+
+*[class~="ds-d/dxd-codeblock"] attribute {
+	color	: #F5844C;
+}
+
+*[class~="ds-d/dxd-codeblock"] attribute-value {
+	color	: #993300;
+}
+
+*[class~="ds-d/dxd-codeblock"] text {
+	color	: #000000;
+}
+
+*[class~="ds-d/dxd-codeblock"] comment {
+	color	: #006400;
+}
+
+*[class~="ds-d/dxd-codeblock"] processing-instruction {
+	color	: #8B26C9;
+}

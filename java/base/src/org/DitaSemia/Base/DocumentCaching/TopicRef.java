@@ -23,19 +23,23 @@ public class TopicRef extends TopicRefContainer {
 	protected final TopicRefContainer 	parentContainer;
 	protected final NodeWrapper 		node;
 	protected final int					position;
+	protected final int					type;
 	
-	protected int						type;
 	protected String					localNum;
 
-	public TopicRef(FileCache containingFile, FileCache referencedFile, TopicRefContainer parentContainer, NodeWrapper node) {
+	public TopicRef(FileCache containingFile, FileCache referencedFile, TopicRefContainer parentContainer, boolean isResourceOnly, NodeWrapper node) {
+		super(isResourceOnly);
+
+		//logger.info("TopicRef " + node.getAttribute(DitaUtil.ATTR_HREF, null) + ", isResourceOnly: " + isResourceOnly);
+		
 		this.containingFile		= containingFile;
 		this.referencedFile 	= referencedFile;
 		this.parentContainer	= parentContainer;
 		this.node				= node;
+		this.type				= getType(node.getAttribute(DitaUtil.ATTR_CLASS, null)); 
 		this.position			= parentContainer.addChildTopicRef(this);
 
 		// Don't access the referencedFile here, since it is not initialized, yet.
-		this.type				= TYPE_UNDEFINED; 
 		this.localNum			= null;
 	}
 	
@@ -60,9 +64,6 @@ public class TopicRef extends TopicRefContainer {
 	}
 	
 	public int getType() {
-		if (type == TYPE_UNDEFINED) {
-			type = getType(node.getAttribute(DitaUtil.ATTR_CLASS, null));
-		}
 		return type;
 	}
 	

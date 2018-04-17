@@ -5,12 +5,18 @@
 
 package org.DitaSemia.Base;
 
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.transform.URIResolver;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 
 import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.NodeInfo;
@@ -18,6 +24,7 @@ import net.sf.saxon.pattern.NamespaceTest;
 import net.sf.saxon.pattern.NodeKindTest;
 import net.sf.saxon.pattern.NodeTest;
 import net.sf.saxon.query.QueryResult;
+import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmItem;
@@ -40,6 +47,8 @@ public class SaxonNodeWrapper implements NodeWrapper
 	private final NodeInfo 		saxonNode;
 	private final XPathCache 	xPathCache;
 	
+	private static final Properties serializationProperties = getSerializationProperties();
+	
 	/**
 	 * Creates a SaxonNodeWrapper with the specified NodeInfo.
 	 * 
@@ -52,6 +61,14 @@ public class SaxonNodeWrapper implements NodeWrapper
 	}
 
 	
+	private static Properties getSerializationProperties() {
+		Properties properties = new Properties();
+		properties.setProperty(OutputKeys.INDENT, 					"no");
+		properties.setProperty(OutputKeys.OMIT_XML_DECLARATION, 	"yes");
+		return properties;
+	}
+
+
 	/**
 	 * Returns the private Field NodeInfo
 	 * 
@@ -64,7 +81,20 @@ public class SaxonNodeWrapper implements NodeWrapper
 	@Override
 	public URL getBaseUrl() {
 		try {
-			return new URL(saxonNode.getBaseURI());
+			// workaround for bug with xinclude and subfolders by evaluating ancestor-or-self::*/@xml:base
+			NodeInfo 	ancestor			= saxonNode;
+			String 		xmlBaseAttribute 	= null;
+			do {
+				xmlBaseAttribute 	= ancestor.getAttributeValue("http://www.w3.org/XML/1998/namespace", "base");
+				ancestor 			= ancestor.getParent();
+			}
+			while ((ancestor != null) && (xmlBaseAttribute == null));
+			if (xmlBaseAttribute != null) {
+				//logger.info("getBaseUrl: " + ancestor.getBaseURI() + ", " + xmlBaseAttribute + " -> " + new URL(new URL(ancestor.getBaseURI()), xmlBaseAttribute));
+				return new URL(new URL(ancestor.getBaseURI()), xmlBaseAttribute);
+			} else {
+				return new URL(saxonNode.getBaseURI());
+			}
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -128,7 +158,7 @@ public class SaxonNodeWrapper implements NodeWrapper
 	public List<String> getAttributeNamesOfNamespace(String namespaceUri) {
 		final List<String> list = new LinkedList<String>();
 		if (isElement()) {
-			final NodeTest 		nodeTest	= new NamespaceTest(saxonNode.getNamePool(), Type.ATTRIBUTE, namespaceUri);
+			final NodeTest 		nodeTest	= new NamespaceTest(saxonNode.getConfiguration().getNamePool(), Type.ATTRIBUTE, namespaceUri);
 			final AxisIterator 	iterator 	= saxonNode.iterateAxis(AxisInfo.ATTRIBUTE, nodeTest);
 			NodeInfo 			attribute 	= iterator.next();
 			while (attribute != null) {
@@ -146,7 +176,10 @@ public class SaxonNodeWrapper implements NodeWrapper
 	 */
 	public static String serializeNode(NodeInfo node) {
 		try {
-			return QueryResult.serialize(node);
+			final StringWriter writer = new StringWriter();
+			final StreamResult result = new StreamResult(writer);
+			QueryResult.serialize(node, result, serializationProperties);
+			return writer.getBuffer().toString();
 		} catch (XPathException e) {
 			logger.error("Error serializing node (" + node.getDisplayName() + "): "+ e.getMessage());
 		}
@@ -155,7 +188,7 @@ public class SaxonNodeWrapper implements NodeWrapper
 
 	@Override
 	public String evaluateXPathToString(String xPath) throws XPathException {
-		final XdmItem resolvedItem = evaluateXPathToItem(xPath);
+		final XdmItem resolvedItem = evaluateXPathToItem(xPath, null);
 		if (resolvedItem != null) {
 			return  resolvedItem.getStringValue();	
 		} else {
@@ -165,7 +198,7 @@ public class SaxonNodeWrapper implements NodeWrapper
 
 	@Override
 	public NodeWrapper evaluateXPathToNode(String xPath) throws XPathException {
-		final XdmItem resolvedItem = evaluateXPathToItem(xPath);
+		final XdmItem resolvedItem = evaluateXPathToItem(xPath, null);
 		if (resolvedItem != null) {
 			if (resolvedItem instanceof XdmNode) {
 				return new SaxonNodeWrapper(((XdmNode)resolvedItem).getUnderlyingNode(), xPathCache);	
@@ -177,9 +210,31 @@ public class SaxonNodeWrapper implements NodeWrapper
 		}
 	}
 
+
+	@Override
+	public List<NodeWrapper> evaluateXPathToNodeList(String xPath) throws XPathException, XPathNotAvaliableException {
+		final XdmValue resolvedValue = evaluateXPathToValue(xPath, null);
+		if ((resolvedValue != null) && (resolvedValue.size() > 0)) {
+			List<NodeWrapper> list = new LinkedList<>();
+			for (XdmItem item : resolvedValue) {
+				//logger.info("item: " + item);
+				if (item instanceof XdmNode) {
+					list.add(new SaxonNodeWrapper(((XdmNode)item).getUnderlyingNode(), xPathCache));
+				}
+			}
+			return list;
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public List<String> evaluateXPathToStringList(String xPath) throws XPathException {
-		final XdmValue resolvedValue = evaluateXPathToValue(xPath);
+		return evaluateXPathToStringList(xPath, null);
+	}
+	
+	public List<String> evaluateXPathToStringList(String xPath, Map<QName, XdmValue> variableMap) throws XPathException {
+		final XdmValue resolvedValue = evaluateXPathToValue(xPath, variableMap);
 		if (resolvedValue != null) {
 			List<String> list = new LinkedList<>();
 			for (XdmItem item : resolvedValue) {
@@ -190,28 +245,28 @@ public class SaxonNodeWrapper implements NodeWrapper
 			return null;
 		}
 	}
-
-	private XdmItem evaluateXPathToItem(String xPath) throws XPathException {
+	
+	private XdmItem evaluateXPathToItem(String xPath, Map<QName, XdmValue> variableMap) throws XPathException {
 		try {
-			return getXPathSelector(xPath).evaluateSingle();	
+			return getXPathSelector(xPath, variableMap).evaluateSingle();	
 		} catch (SaxonApiException e) {
 			throw new XPathException("Failed to evaluate XPath expression: '" + xPath + "'): " + e.getMessage());
 		}
 	}
 
-	private XdmValue evaluateXPathToValue(String xPath) throws XPathException {
+	private XdmValue evaluateXPathToValue(String xPath, Map<QName, XdmValue> variableMap) throws XPathException {
 		try {
-			return getXPathSelector(xPath).evaluate();	
+			return getXPathSelector(xPath, variableMap).evaluate();
 		} catch (SaxonApiException e) {
 			throw new XPathException("Failed to evaluate XPath expression: '" + xPath + "'): " + e.getMessage());
 		}
 	}
 	
-	private XPathSelector getXPathSelector(String xPath) throws XPathException, SaxonApiException {
+	private XPathSelector getXPathSelector(String xPath, Map<QName, XdmValue> variableMap) throws XPathException, SaxonApiException {
 		if (xPathCache == null) {
 			throw new XPathException("SaxonNodeWrapper: Can't evaluate XPath ('" + xPath + "') without XPathCache.");
 		} else {
-			return xPathCache.getXPathSelector(xPath, new XdmNode(saxonNode));
+			return xPathCache.getXPathSelector(xPath, new XdmNode(saxonNode), variableMap);
 		}
 	}
 

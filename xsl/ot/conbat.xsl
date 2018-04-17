@@ -10,17 +10,20 @@
 	<xsl:template name="cba-marker" as="processing-instruction()?">
 		<xsl:processing-instruction name="CBA"/>
 	</xsl:template>
+	
+	<!-- resolve xpath expressions in first stage with unmodified xml structure -->
+	<xsl:template match="@cba:title | @cba:prefix | @cba:code-prefix | @cba:suffix | @cba:code-suffix | @cba:content | @cba:default-content | @cba:dt | @cba:header" mode="resolve-xcr">
+		<xsl:variable name="attribute" as="attribute()" select="."/>
+		<xsl:for-each select="parent::*">	<!-- set context -->
+			<xsl:attribute name="{name($attribute)}" select="ds:resolveEmbeddedXPath($attribute, .)"/>
+		</xsl:for-each>
+	</xsl:template>
 
 
 	<!-- @cba:hide-empty -->
-	<xsl:template match="*[ds:isHidden(.)]" priority="9">
+	<xsl:template match="*[ds:isHidden(.)]" priority="9" mode="resolve-cba">
 		<!-- remove -->
 	</xsl:template>
-	
-	<!-- @cba:hide-empty -->
-	<!--<xsl:template match="*[() and (@cba:pe-hide-value) and ][empty(node())]" priority="9">
-		<!-\- remove -\->
-	</xsl:template>-->
 	
 	<xsl:function name="ds:isHidden" as="xs:boolean">
 		<xsl:param name="node" as="node()"/>
@@ -28,6 +31,9 @@
 		<xsl:variable name="flags" as="xs:string*" select="ds:getCbaFlags($node)"/>
 		<xsl:choose>
 			<xsl:when test="$flags = $CBA_FLAG_HIDE">
+				<xsl:sequence select="true()"/>
+			</xsl:when>
+			<xsl:when test="(name($node/*[1]) = $node/@cba:hide-on-content)">
 				<xsl:sequence select="true()"/>
 			</xsl:when>
 			<xsl:when test="empty($node/(text()[not(matches(., '^\s+$'))] | element()[not(ds:isHidden(.))])) and 
@@ -44,45 +50,17 @@
 		</xsl:choose>
 	</xsl:function>
 	
-	<xsl:function name="ds:getCbaFlags" as="xs:string*">
-		<xsl:param name="node" as="node()?"/>
-		<xsl:sequence select="tokenize($node/@cba:flags, '\s+')"/>
-	</xsl:function>
-
-	<!-- paragraph-prefix -->
-	<xsl:template match="*[@cba:prefix][contains(@class, $C_UL) or contains(@class, $C_OL) or contains(@class, $C_SL) or contains(@class, $C_CODEBLOCK)]" priority="8">
-		<p class="{$CP_P}">
-			<xsl:call-template name="copy-filter-attr"/>
-			<xsl:call-template name="cba-marker"/>
-			<xsl:value-of select="cba:resolveEmbeddedXPath(@cba:prefix)"/>
-		</p>
-		<xsl:next-match/>
-	</xsl:template>
-	
-	<!-- paragraph-suffix -->
-	<xsl:template match="*[@cba:suffix][contains(@class, $C_UL) or contains(@class, $C_OL) or contains(@class, $C_SL)]" priority="7">
-		<xsl:next-match/>
-		<p class="{$CP_P}">
-			<xsl:call-template name="copy-filter-attr"/>
-			<xsl:call-template name="cba-marker"/>
-			<xsl:value-of select="cba:resolveEmbeddedXPath(@cba:suffix)"/>
-		</p>
-	</xsl:template>
-	
 	
 	<!-- title -->
-	<xsl:template match="*[@cba:title]" priority="6">
-		<xsl:variable name="resolved" as="node()*">
-			<!-- combination of different resolving-features (e.g. xslt-conref) needs to be supported. -->
-			<xsl:next-match/>
-		</xsl:variable>
+	<xsl:template match="*[@cba:title]" priority="8" mode="resolve-cba">
 		<xsl:variable name="title" as="element()">
 			<title class="{$CP_TITLE}">
 				<xsl:call-template name="cba-marker"/>
-				<ph class="{$CP_PH}">
-					<xsl:call-template name="cba-marker"/>
-					<xsl:value-of select="cba:resolveEmbeddedXPath(@cba:title)"/>
-				</ph>
+				<xsl:call-template name="cba-ph">
+					<xsl:with-param name="content" as="node()">
+						<xsl:value-of select="@cba:title"/>
+					</xsl:with-param>
+				</xsl:call-template>
 			</title>
 		</xsl:variable>
 		<xsl:choose>
@@ -90,27 +68,54 @@
 				<!-- within a body create a section wrapper -->
 				<section class="{$CP_SECTION}">
 					<xsl:sequence select="$title"/>
-					<xsl:sequence select="$resolved"/>
+					<xsl:copy>
+						<xsl:apply-templates select="attribute() | node()" mode="#current"/>
+					</xsl:copy>
 				</section>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:for-each select="$resolved">
-					<xsl:copy>
-						<xsl:sequence select="attribute(), $title, node()"/>
-					</xsl:copy>
-				</xsl:for-each>
+				<xsl:copy>
+					<xsl:apply-templates select="attribute()" mode="#current"/>
+					<xsl:sequence select="$title"/>
+					<xsl:apply-templates select="node()" mode="#current"/>
+				</xsl:copy>
 			</xsl:otherwise>
 		</xsl:choose>
 		
 	</xsl:template>
+	
+	<xsl:function name="ds:getCbaFlags" as="xs:string*">
+		<xsl:param name="node" as="node()?"/>
+		<xsl:sequence select="tokenize($node/@cba:flags, '\s+')"/>
+	</xsl:function>
+
+	<!-- paragraph-prefix -->
+	<xsl:template match="*[@cba:prefix][contains(@class, $C_UL) or contains(@class, $C_OL) or contains(@class, $C_SL) or contains(@class, $C_DL) or contains(@class, $C_CODEBLOCK)]" priority="8" mode="resolve-cba">
+		<p class="{$CP_P}">
+			<xsl:call-template name="copy-filter-attr"/>
+			<xsl:call-template name="cba-marker"/>
+			<xsl:value-of select="@cba:prefix"/>
+		</p>
+		<xsl:next-match/>
+	</xsl:template>
+	
+	<!-- paragraph-suffix -->
+	<xsl:template match="*[@cba:suffix][contains(@class, $C_UL) or contains(@class, $C_OL) or contains(@class, $C_SL)]" priority="7" mode="resolve-cba">
+		<xsl:next-match/>
+		<p class="{$CP_P}">
+			<xsl:call-template name="copy-filter-attr"/>
+			<xsl:call-template name="cba-marker"/>
+			<xsl:value-of select="@cba:suffix"/>
+		</p>
+	</xsl:template>
 
 
 	<!-- inline-codeph-content -->
-	<xsl:template match="*[contains(@class, $C_CODEPH)]" priority="6">
+	<xsl:template match="*[contains(@class, $C_CODEPH)]" priority="6" mode="resolve-cba">
+		<xsl:call-template name="insert-csli-prefix"/>
 		<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
 		<xsl:copy>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
-			<xsl:call-template name="insert-csli-prefix"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:code-prefix)"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:content)"/>
 			<xsl:choose>
@@ -128,11 +133,11 @@
 	
 
 	<!-- dd-term -->
-	<xsl:template match="*[@cba:dt][contains(@class, $C_DD)]" priority="6">
+	<xsl:template match="*[@cba:dt][contains(@class, $C_DD)]" priority="6" mode="resolve-cba">
 		<dlentry class="- topic/dlentry ">
-			<xsl:apply-templates select="attribute() except @class" mode="#current"/>
+			<xsl:apply-templates select="@audience | @product | @platform | @props | @otherprops" mode="#current"/>
 			<dt class="- topic/dt ">
-				<xsl:value-of select="cba:resolveEmbeddedXPath(@cba:dt)"/>
+				<xsl:value-of select="@cba:dt"/>
 				<xsl:call-template name="cba-marker"/>
 			</dt>
 			<xsl:next-match/>
@@ -146,40 +151,30 @@
 							contains(@class, $C_PH) or 
 							contains(@class, $C_SLI) or 
 							contains(@class, $C_STENTRY) or 
-							contains(@class, $C_TITLE)]" priority="5">
-		<xsl:copy>
-			<xsl:apply-templates select="attribute()" mode="#current"/>
-			<xsl:call-template name="insert-csli-prefix"/>
-			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
+							contains(@class, $C_TITLE)]" priority="5" mode="resolve-cba">
+		<xsl:call-template name="insert-csli-prefix"/>
+		
+		<xsl:variable name="flags" as="xs:string*" select="ds:getCbaFlags(.)"/>
+		<xsl:variable name="content" as="node()*">
+			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix, ($flags = $CBA_FLAG_PREFIX_ITALIC))"/>
 			<xsl:choose>
 				<xsl:when test="@cba:content">
 					<xsl:call-template name="handle-style-flags">
-						<xsl:with-param name="content" as="node()*">
-							<xsl:call-template name="CreateKeyRefContent">
-								<xsl:with-param name="keyRef"	select="."/>
-								<xsl:with-param name="content"	select="ds:createCbaPhrase(@cba:content)"/>
-							</xsl:call-template>
-						</xsl:with-param>
+						<xsl:with-param name="content" select="ds:createCbaPhrase(@cba:content)"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="empty(node()) and exists(@cba:default-content)">
 					<xsl:call-template name="handle-style-flags">
-						<xsl:with-param name="content" as="node()*">
-							<xsl:call-template name="CreateKeyRefContent">
-								<xsl:with-param name="keyRef"	select="."/>
-								<xsl:with-param name="content"	select="ds:createCbaPhrase(@cba:default-content)"/>
-							</xsl:call-template>
-						</xsl:with-param>
+						<xsl:with-param name="flags"	select="$flags"/>
+						<xsl:with-param name="content" select="ds:createCbaPhrase(@cba:default-content)"/>
 						<xsl:with-param name="isDefaultContent" select="true()"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="handle-style-flags">
+						<xsl:with-param name="flags"	select="$flags"/>
 						<xsl:with-param name="content" as="node()*">
-							<xsl:call-template name="CreateKeyRefContent">
-								<xsl:with-param name="keyRef"	select="."/>
-								<xsl:with-param name="content"	select="node()"/>
-							</xsl:call-template>
+							<xsl:apply-templates select="node()" mode="#current"/>
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:otherwise>
@@ -187,12 +182,24 @@
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix)"/>
 			<xsl:call-template name="add-popup-edit-content"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:suffix2)"/>
-		</xsl:copy>
+		</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="($flags = $CBA_FLAG_UNWRAP) and empty(@audience | @product | @platform | @props | @otherprops)">
+				<xsl:sequence select="$content"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:apply-templates select="attribute()" mode="#current"/>
+					<xsl:sequence select="$content"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose> 
 	</xsl:template>
 	
 	
 	<!-- dd -->
-	<xsl:template match="*[contains(@class, $C_DD)]" priority="5">
+	<xsl:template match="*[contains(@class, $C_DD)]" priority="5" mode="resolve-cba">
 		<xsl:copy>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:sequence select="ds:createCbaPhrase(@cba:prefix)"/>
@@ -218,16 +225,16 @@
 						<xsl:choose>
 							<xsl:when test="current-grouping-key() = 'topic/sli'">
 								<sl class="+ topic/sl ">
-									<xsl:apply-templates select="current-group()"/>
+									<xsl:apply-templates select="current-group()" mode="#current"/>
 								</sl>
 							</xsl:when>
 							<xsl:when test="current-grouping-key() = 'topic/li'">
 								<ul class="+ topic/ul ">
-									<xsl:apply-templates select="current-group()"/>
+									<xsl:apply-templates select="current-group()" mode="#current"/>
 								</ul>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:apply-templates select="current-group()"/>
+								<xsl:apply-templates select="current-group()" mode="#current"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each-group>
@@ -245,11 +252,10 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	
 	<!-- dl-header -->
-	<xsl:template match="*[@cba:header][contains(@class, $C_DL)]" priority="5">
+	<xsl:template match="*[@cba:header][contains(@class, $C_DL)]" priority="5" mode="resolve-cba">
 		<xsl:copy>
-			<xsl:variable name="resolvedHeader" as="xs:string" select="cba:resolveEmbeddedXPath(@cba:header)"/>
+			<xsl:variable name="resolvedHeader" as="xs:string" select="@cba:header"/>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:apply-templates select="*[contains(@class, $C_COLSPEC)]" mode="#current"/>
 			<dlhead class="{$CP_DLHEAD}">
@@ -270,9 +276,9 @@
 
 
 	<!-- table-header -->
-	<xsl:template match="*[@cba:header][contains(@class, $C_TGROUP)]" priority="5">
+	<xsl:template match="*[@cba:header][contains(@class, $C_TGROUP)]" priority="5" mode="resolve-cba">
 		<xsl:copy>
-			<xsl:variable name="resolvedHeader" as="xs:string" select="cba:resolveEmbeddedXPath(@cba:header)"/>
+			<xsl:variable name="resolvedHeader" as="xs:string" select="@cba:header"/>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:apply-templates select="*[contains(@class, $C_COLSPEC)]" mode="#current"/>
 			<thead class="{$CP_THEAD}">
@@ -293,9 +299,9 @@
 	
 	
 	<!-- simpletable-header -->
-	<xsl:template match="*[@cba:header][contains(@class, $C_SIMPLETABLE)]" priority="5">
+	<xsl:template match="*[@cba:header][contains(@class, $C_SIMPLETABLE)]" priority="5" mode="resolve-cba">
 		<xsl:copy>
-			<xsl:variable name="resolvedHeader" as="xs:string" select="cba:resolveEmbeddedXPath(@cba:header)"/>
+			<xsl:variable name="resolvedHeader" as="xs:string" select="@cba:header"/>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<sthead class="{$CP_STHEAD}">
 				<xsl:call-template name="cba-marker"/>
@@ -310,7 +316,7 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="*[@cba:popup-edit = '#text']/text()">
+	<xsl:template match="*[@cba:popup-edit = '#text']/text()" mode="resolve-cba">
 		<xsl:call-template name="create-popup-content">
 			<xsl:with-param name="value" 	select="string(.)"/>
 			<xsl:with-param name="node"		select="parent::*"/>
@@ -334,41 +340,42 @@
 		<xsl:variable name="hideValue" 	as="xs:string?" select="$node/@cba:pe-hide-value"/>
 			
 		<xsl:if test="not($hideValue = $value)">
-			<ph class="{$CP_PH}">
-				<xsl:call-template name="cba-marker"/>
-				<xsl:variable name="flags" 	as="xs:string*" select="ds:getCbaFlags($node)"/>
-				<xsl:if test="$flags = $CBA_FLAG_PE_BRACED">
-					<xsl:text> (</xsl:text>
-				</xsl:if>
-				<xsl:value-of select="$node/@cba:pe-prefix"/>
-				
-				<xsl:variable name="values"		as="xs:string*"		select="tokenize($node/@cba:pe-values, ',')"/>
-				<xsl:variable name="labels"		as="xs:string*"		select="tokenize($node/@cba:pe-labels, ',')"/>
-				<xsl:variable name="valueIndex"	as="xs:integer?"	select="index-of($values, $value)"/>
-				<xsl:variable name="label"		as="xs:string?"		select="$labels[$valueIndex]"/>
-				<xsl:variable name="output"		as="xs:string?"		select="if ($label) then $label else $value"/>
-				
-				<xsl:choose>
-					<xsl:when test="$flags = $CBA_FLAG_PE_ITALIC">
-						<i class="{$CP_I}">
+			<xsl:call-template name="cba-ph">
+				<xsl:with-param name="content" as="node()*">
+					<xsl:variable name="flags" 	as="xs:string*" select="ds:getCbaFlags($node)"/>
+					<xsl:if test="$flags = $CBA_FLAG_PE_BRACED">
+						<xsl:text> (</xsl:text>
+					</xsl:if>
+					<xsl:value-of select="$node/@cba:pe-prefix"/>
+					
+					<xsl:variable name="values"		as="xs:string*"		select="tokenize($node/@cba:pe-values, ',')"/>
+					<xsl:variable name="labels"		as="xs:string*"		select="tokenize($node/@cba:pe-labels, ',')"/>
+					<xsl:variable name="valueIndex"	as="xs:integer?"	select="index-of($values, $value)"/>
+					<xsl:variable name="label"		as="xs:string?"		select="$labels[$valueIndex]"/>
+					<xsl:variable name="output"		as="xs:string?"		select="if ($label) then $label else $value"/>
+					
+					<xsl:choose>
+						<xsl:when test="$flags = $CBA_FLAG_PE_ITALIC">
+							<i class="{$CP_I}">
+								<xsl:value-of select="$output"/>
+							</i>
+						</xsl:when>
+						<xsl:otherwise>
 							<xsl:value-of select="$output"/>
-						</i>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="$output"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:if test="$flags = $CBA_FLAG_PE_BRACED">
-					<xsl:text>)</xsl:text>
-				</xsl:if>
-			</ph>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:if test="$flags = $CBA_FLAG_PE_BRACED">
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:if>
 		
 	</xsl:template>
 
 
 	<!-- remove whitespaces next to content generated by attributes -->
-	<xsl:template match="text()[matches(., '^\s+$')]">
+	<xsl:template match="text()[matches(., '^\s+$')]" mode="resolve-cba">
 		<xsl:variable name="flags" as="xs:string*" select="ds:getCbaFlags(.)"/>
 		<xsl:choose>
 			<xsl:when test="empty(preceding-sibling::node()) and exists(parent::*/@cba:prefix)">
@@ -406,10 +413,10 @@
 	
 	
 	<xsl:template name="handle-style-flags">
+		<xsl:param name="flags" 			as="xs:string*" select="ds:getCbaFlags(.)"/>
 		<xsl:param name="content" 			as="node()*"/>
 		<xsl:param name="isDefaultContent"	as="xs:boolean"	select="false()"/>
 		
-		<xsl:variable name="flags" as="xs:string*" select="ds:getCbaFlags(.)"/>
 		<xsl:choose>
 			<xsl:when test="($isDefaultContent) and ($flags = $CBA_FLAG_DEFAULT_ITALIC)">
 				<i class="{$CP_I}">
@@ -436,10 +443,11 @@
 	<xsl:template name="insert-csli-prefix">
 		<xsl:variable name="pre" as="node()?" select="preceding-sibling::node()[not(self::text()[matches(., '^\s+$')])][not(ds:isHidden(.))][1]"/>
 		<xsl:if test="(ds:getCbaFlags(.) = $CBA_FLAG_CSLI) and (ds:getCbaFlags($pre) = $CBA_FLAG_CSLI)">
-			<ph class="{$CP_PH}">
-				<xsl:call-template name="cba-marker"/>
-				<xsl:text>, </xsl:text>
-			</ph>
+			<xsl:call-template name="cba-ph">
+				<xsl:with-param name="content" as="node()">
+					<xsl:text>, </xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
 	
@@ -448,28 +456,54 @@
 	</xsl:template>
 	
 
-	<xsl:template match="@cba:*">
+	<xsl:template match="@cba:*" mode="resolve-cba">
 		<!-- remove these attributes -->
 	</xsl:template>
-
+	
 
 	<xsl:function name="ds:createCbaPhrase">
 		<xsl:param name="attribute" as="attribute()?"/>
+
+		<xsl:sequence select="ds:createCbaPhrase($attribute, false())"/>
+	</xsl:function>
+	
+	<xsl:function name="ds:createCbaPhrase">
+		<xsl:param name="attribute" as="attribute()?"/>
+		<xsl:param name="italic" 	as="xs:boolean"/>
 		
 		<xsl:if test="exists($attribute)">
-			<ph class="{$CP_PH}">
-				<xsl:call-template name="cba-marker"/>
-				<xsl:for-each select="$attribute/parent::*">	<!-- set context -->
-					<xsl:value-of select="cba:resolveEmbeddedXPath($attribute)"/>
-				</xsl:for-each>
-			</ph>
+			<xsl:call-template name="cba-ph">
+				<xsl:with-param name="content" as="node()*">
+					<xsl:for-each select="$attribute/parent::*">	<!-- set context -->
+						<xsl:value-of select="$attribute"/>
+					</xsl:for-each>
+				</xsl:with-param>
+				<xsl:with-param name="italic" select="$italic"/>
+			</xsl:call-template>
 		</xsl:if>
 	</xsl:function>
 
-
-	<xsl:function name="cba:resolveEmbeddedXPath" use-when="not(function-available('cba:resolveEmbeddedXPath'))">
-		<xsl:param name="xpath" as="xs:string"/>
-		<xsl:value-of select="$xpath"/>
-	</xsl:function>
-	
+	<xsl:template name="cba-ph">
+		<xsl:param name="content" 	as="node()*"/>
+		<xsl:param name="italic" 	as="xs:boolean" select="false()"/>
+		
+		<xsl:choose>
+			<xsl:when test="$italic">
+				<i class="{$CP_I}">
+					<xsl:call-template name="cba-marker"/>
+					<xsl:sequence select="$content"/>
+				</i>
+			</xsl:when>
+			<xsl:when test="$wrap-cba-ph">
+				<ph class="{$CP_PH}">
+					<xsl:call-template name="cba-marker"/>
+					<xsl:sequence select="$content"/>
+				</ph>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="$content"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+		
 </xsl:stylesheet>

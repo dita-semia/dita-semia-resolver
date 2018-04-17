@@ -56,7 +56,7 @@ public class KeyPrioritizer {
 						  (relationship == KeyRelationship.CONTEXT_REF)		? CONTEXT_REF_COEFFICIENT	: 
 						  (relationship == KeyRelationship.LINKED_REF)		? LINKED_REF_COEFFICIENT	: 0;
 			
-			//logger.info("new ContextKey: '" + key + "', '" + type + "', '" + keyspec.getNamespace() + "', " + relationship);
+//			logger.info("new ContextKey: '" + key + "', '" + type + "', '" + keyspec + "', " + relationship);
 		}
 
 		int getPriority(KeyspecInterface keyspec) {

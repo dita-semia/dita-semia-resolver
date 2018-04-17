@@ -28,7 +28,7 @@ public class AncestorPath implements OxyXPathHandler.CustomFunction {
 		KeyDefInterface keyDef = null;
 		if (context != null) {
 			final BookCache bookCache = BookCacheHandler.getInstance().getBookCache(context.getBaseUrl());
-			keyDef = bookCache.getAncestorKeyDef(context, arguments.get(0));
+			keyDef = (bookCache != null ? bookCache.getAncestorKeyDef(context, arguments.get(0)) : null);
 		} 
 
 		if (keyDef == null) {

@@ -14,7 +14,9 @@
 			<title>Definitions</title>
 			<dl>
 				<dlentry id="ad4_nc1_by">
-					<dt ikd:key-type="Test1" ikd:name="dd" ikd:root="parent::dlentry">Key1</dt>
+					<dt ikd:key-type="Test1" ikd:name="dd" ikd:root="parent::dlentry"
+						ikd:namespace="'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'"
+						>Key1</dt>
 					<dd>Name1</dd>
 				</dlentry>
 				<dlentry id="hnp_kl1_by">
@@ -32,8 +34,9 @@
 					<dd>&lt;no name&gt;</dd>
 				</dlentry>
 			</dl>
+			<p>(<key-xref akr:ref="Test2:Key2" outputclass="key">Key2</key-xref>-Test)</p>
 		</section>
-		<section id="vsc_vc1_by">
+		<!--<section id="vsc_vc1_by">
 			<title>References</title>
 			<dl outputclass="bullet-list-titles">
 				<dlentry id="xyy_4v1_5y">
@@ -81,16 +84,16 @@
 					</dd>
 				</dlentry>
 				<dlentry>
-					<dt>outputclass "key-name-dashed"</dt>
+					<dt>outputclass "key-dash-name"</dt>
 					<dd>
 						<ul compact="yes" id="b4c_dd1_by">
-							<li id="c4c_dd1_by"><key-xref outputclass="key-name-dashed"
+							<li id="c4c_dd1_by"><key-xref outputclass="key-dash-name"
 								akr:ref="Test1:Key1">Key1</key-xref></li>
-							<li id="d4c_dd1_by"><key-xref outputclass="key-name-dashed"
+							<li id="d4c_dd1_by"><key-xref outputclass="key-dash-name"
 								akr:ref="Test2:Key2">Key2</key-xref></li>
-							<li id="e4c_dd1_by"><key-xref outputclass="key-name-dashed" akr:ref="Test3:Key3"
+							<li id="e4c_dd1_by"><key-xref outputclass="key-dash-name" akr:ref="Test3:Key3"
 									>Key3</key-xref></li>
-							<li id="bkd_mgb_by"><key-xref outputclass="key-name-dashed"
+							<li id="bkd_mgb_by"><key-xref outputclass="key-dash-name"
 								akr:ref="Test4:Key4">Key4</key-xref></li>
 						</ul>
 					</dd>
@@ -109,21 +112,21 @@
 					</dd>
 				</dlentry>
 				<dlentry id="rdk_vt1_5y">
-					<dt>outputclass "key-colon-name-quoted"</dt>
+					<dt>outputclass "key-colon-name"</dt>
 					<dd>
 						<ul compact="yes" id="sdk_vt1_5y">
-							<li id="tdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test1:Key1"
+							<li id="tdk_vt1_5y"><key-xref outputclass="key-colon-name" akr:ref="Test1:Key1"
 									>Key1</key-xref></li>
-							<li id="udk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test2:Key2"
+							<li id="udk_vt1_5y"><key-xref outputclass="key-colon-name" akr:ref="Test2:Key2"
 									>Key2</key-xref></li>
-							<li id="vdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test3:Key3"
+							<li id="vdk_vt1_5y"><key-xref outputclass="key-colon-name" akr:ref="Test3:Key3"
 									>Key3</key-xref></li>
-							<li id="wdk_vt1_5y"><key-xref outputclass="key-colon-name-quoted" akr:ref="Test4:Key4"
+							<li id="wdk_vt1_5y"><key-xref outputclass="key-colon-name" akr:ref="Test4:Key4"
 									>Key4</key-xref></li>
 						</ul>
 					</dd>
 				</dlentry>
 			</dl>
-		</section>
+		</section>-->
 	</body>
 </topic>

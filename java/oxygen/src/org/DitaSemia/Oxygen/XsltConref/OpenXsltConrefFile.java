@@ -1,5 +1,7 @@
 package org.DitaSemia.Oxygen.XsltConref;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.net.URL;
 
 import org.DitaSemia.Base.XsltConref.XsltConref;
@@ -25,7 +27,7 @@ public class OpenXsltConrefFile implements AuthorOperation {
 
 	@Override
 	public String getDescription() {
-		return "Opens a file for the of current XSLT-Conref";
+		return "Open the source file of current XSLT-Conref";
 	}
 	
 
@@ -36,17 +38,23 @@ public class OpenXsltConrefFile implements AuthorOperation {
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
 			//logger.info("nodeAtCaret: " + nodeAtCaret.getDisplayName());
 			
-			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret, authorAccess);
+			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret, authorAccess, true);
 			if (xsltConref == null) {
 				// check if the parent node is an XSLT-Conref
-				xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret.getParent(), authorAccess);
+				xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(nodeAtCaret.getParent(), authorAccess, true);
 				//logger.info("nodeAtCaret.getParent(): " + nodeAtCaret.getParent().getDisplayName());
 			}
 			if (xsltConref != null) {
 				final String 	filetype 	= (String)args.getArgumentValue(ARG_FILETYPE);
-				//logger.info("filetype: " + filetype);
 				final URL 		url 		= ((filetype != null) && (filetype.equalsIgnoreCase(FILETYPE_SOURCE))) ? xsltConref.getXmlSourceUrl() : xsltConref.getScriptUrl();
-				PluginWorkspaceProvider.getPluginWorkspace().open(url, EditorPageConstants.PAGE_TEXT);
+				//logger.info(xsltConref.getSourceType());
+				if (xsltConref.getSourceType().equals(XsltConref.SOURCE_TYPE_EXCEL)) {
+					Desktop desktop = Desktop.getDesktop();
+					desktop.open(new File(url.toURI()));
+				} else {
+					PluginWorkspaceProvider.getPluginWorkspace().open(url, EditorPageConstants.PAGE_TEXT);
+				} 
+				
 			}
 		} catch (Exception e) {
 			logger.error(e, e);

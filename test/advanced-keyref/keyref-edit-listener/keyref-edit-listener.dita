@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>KeyRef-Edit-Listener</title>
+	<prolog>
+		<metadata>
+			<data value="KeyTypeDefList.xml" name="ikd:TypeDefUri"/>
+		</metadata>
+	</prolog>
+	<body>
+		<p>The KeyRef-Edit-Listener adapts the akr:ref attribute and the matching KeyDef while
+			editing the text content of the key-xref-element.</p>
+		<section>
+			<title>Valid Examples</title>
+			<p>All of the following examples will adapt the akr:ref attribute to the matching unique
+				KeyDef. This can be tested by manually adding an 'x' to the key-xref.</p>
+			<dl>
+				<dlentry>
+					<dt>same namespace and type</dt>
+					<dd id="fa0_8bx_2nv" ikd:key-type="Test1"
+						ikd:namespace="for $i in (1 to 4) return $i">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test1, Namespace: 1/2/3/4</li>
+						</ul>
+					</dd>
+					<dd id="a9d_10v_s7" ikd:key-type="Test1"
+						ikd:namespace="for $i in (1 to 4) return $i">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test1, Namespace: 1/2/3/4</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test1:1/2/3/4/Key">Key</key-xref></dd>
+					<dd>Type and namespace are the same.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>same namespace at a higher level</dt>
+					<dd id="a9f_s7c_2n" ikd:key-type="Test2" ikd:namespace="('test','x','y')"
+						>Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test2, Namespace: test/x/y</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test2" ikd:namespace="'test'" id="f8e_a9x_4m">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test2, Namespace: test</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test2:test/x/y/Key">Key</key-xref></dd>
+					<dd>Matching type and one matching namespace element.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>multiple matches at a higher level, one at a lower level</dt>
+					<dd ikd:key-type="Test3" ikd:namespace="('w','x','y','z')" id="a9v_öx78_2f"
+						>Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test3, Namespace: w/x/y/z</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test3" ikd:namespace="('w','x','y')" id="2lc_x02_b8">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test3, Namespace: w/x/y</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test3" ikd:namespace="('w','x')" id="10x_h73_sa">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test3, Namespace: w/x</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test3:w/x/y/z/Key">Key</key-xref></dd>
+					<dd>First KeyDef has three matching namespace elements, second one has only
+						two.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>no match in namespace, matching type</dt>
+					<dd ikd:key-type="Test4" ikd:namespace="'namespace'" id="f81_b76a_4gb">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test4, Namespace: namespace</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test4" id="n8q_h7s_3n">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test4, Namespace: </li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test4:namespace/Key">Key</key-xref></dd>
+					<dd>Although the namespace does not match, this KeyDef is a unique match within
+						this type.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>same namespace, different type</dt>
+					<dd ikd:key-type="Test5" ikd:namespace="('name','space')" id="a9f_e8v_8fd">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test5, Namespace: name/space</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test5x" ikd:namespace="('name','space')" id="9db_a83_65">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test5x, Namespace: name/space</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test5:name/space/Key">Key</key-xref></dd>
+					<dd>If no match with this type is found, the next best unique match within the
+						namespace is chosen.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Invalid examples</title>
+			<p>All of the following examples will adapt the akr:ref attribute, although there is no matching
+				unique KeyDef. The broken link symbol shows the invalidity of the key-xref after
+				editing it. Hereby any later changes, updates or refreshs could make the akr:ref
+				valid. This can be tested by manually adding an 'x' to the key-xref.</p>
+			<dl>
+				<dlentry>
+					<dt>type-filter</dt>
+					<dd ikd:key-type="Test6" ikd:namespace="'x'" id="k8s_hln_ke">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test6, Namespace: x</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test6x" ikd:namespace="'x'" id="k8s_hln_kt">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test6x, Namespace: x</li>
+						</ul>
+					</dd>
+					<dd><key-xref akr:type="Test6" outputclass="key-name-braced" akr:ref="Test6:x/Key"
+							>Key</key-xref></dd>
+					<dd>No matching KeyDef for type-filter "Test6"</dd>
+				</dlentry>
+				<dlentry>
+					<dt>namespace-filter</dt>
+					<dd ikd:key-type="Test7" ikd:namespace="('namespace','filter')" id="dg_seth_125"
+						>Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test7, Namespace: namespace/filter</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test7" ikd:namespace="('namespace', 'test')" id="kr_346_st"
+						>Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test7, Namespace: namespace/test</li>
+						</ul>
+					</dd>
+					<dd><key-xref akr:namespace="('namespace','filter')" outputclass="key-name-braced"
+							akr:ref="Test7:namespace/filter/Key">Key</key-xref></dd>
+					<dd>matching type, but not matching namespace-filter</dd>
+				</dlentry>
+				<dlentry>
+					<dt>multiple matches at the same leve</dt>
+					<dd ikd:key-type="Test8" ikd:namespace="('w','x','y','z')" id="neo_73n_f7"
+						>Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test8, Namespace: w/x/y/z</li>
+						</ul>
+					</dd>
+					<dd id="9fm_s6d_h8" ikd:key-type="Test8" ikd:namespace="'a'">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test8, Namespace: a</li>
+						</ul>
+					</dd>
+					<dd ikd:key-type="Test8" ikd:namespace="'b'" id="gig_s7d_7v">Keyx</dd>
+					<dd>
+						<ul>
+							<li>Type: Test8, Namespace: b</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test8:w/x/y/z/Key">Key</key-xref></dd>
+					<dd>multiple possible matches, not definite</dd>
+				</dlentry>
+				<dlentry>
+					<dt>change key / namespace, merge key &amp; namespace, undo merge, ... </dt>
+					<dd id="jgö_24g_25" ikd:key-type="Test1" ikd:namespace="('n1', 'n2', 'n3')">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test1, Namespace: n1/n2/n3</li>
+						</ul>
+					</dd>
+					<dd><key-xref outputclass="key-name-braced" akr:ref="Test1:n1/n2/n3/Key"
+						>n2/n3/Key</key-xref></dd>
+					<dd>No unique matching KeyDef (yet). akr:ref ist adapted for future changes. Test the
+						functionality of the adaption by changing / merging elements. </dd>
+				</dlentry>
+				<dlentry>
+					<dt>initial new namespace</dt>
+					<dd id="jgx_24g_25" ikd:key-type="Test" ikd:namespace="('n1', 'n2', 'n3')"
+						>Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test, Namespace: n1/n2/n3, path-delimiter through KeyTypeDef: '.'</li>
+						</ul>
+					</dd>
+					<dd><key-xref akr:type="Test"/></dd>
+					<dd>akr:ref adapts depending on the written text and the type-filter. Test this by typing
+						'n1.n2.Key' (expected akr:ref: 'Test:n1/n2/Key')</dd>
+				</dlentry>
+				<dlentry>
+					<dt>initial text with escaping</dt>
+					<dd ikd:key-type="Test9" id="kg0_s6_3hm" ikd:namespace="('n1','n2','n3')">Key</dd>
+					<dd>
+						<ul>
+							<li>Type: Test9, Namespace: n1/n2/n3, path-delimiter not defined
+								(default: '/')</li>
+						</ul>
+					</dd>
+					<dd><key-xref/></dd>
+					<dd>Any '.', '/', ':' is automatically escaped when it's not the defined path
+						delimiter. When typing 'n1.n2.Key' here, the expected akr:ref is:
+						'n1\.n2\.Key'</dd>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

@@ -8,10 +8,14 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
+import org.DitaSemia.Oxygen.AuthorOperations.ProfilingOptionsDialog;
 import org.apache.log4j.Logger;
 
+import ro.sync.ecss.extensions.api.AuthorExtensionStateListener;
 import ro.sync.ecss.extensions.api.AuthorReferenceResolver;
 import ro.sync.ecss.extensions.api.StylesFilter;
+import ro.sync.ecss.extensions.api.UniqueAttributesRecognizer;
+import ro.sync.ecss.extensions.api.content.ClipboardFragmentProcessor;
 import ro.sync.ecss.extensions.api.link.LinkTextResolver;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 import ro.sync.ecss.extensions.dita.DITAExtensionsBundle;
@@ -20,8 +24,14 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 
 	private static final String KEY_TYPE_DEF_LIST_URL			= "KeyTypeDefList.xml";
 	
+	private boolean active 		= true;
+	
+	private static ProfilingOptionsDialog dialog = null;
+	//private static boolean dialogInit 	= false;
+	
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(DitaSemiaExtensionBundle.class.getName());
+	
 	
 	public static void initDocumentCacheHandler() {
 		final BookCacheHandler cacheHandler = BookCacheHandler.getInstance();
@@ -30,8 +40,10 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 		}
 	}
 	
+	
 	public DitaSemiaExtensionBundle() {
 		initDocumentCacheHandler();
+		getDialog().setExtensionBundle(this);
 	}
 	
 	@Override
@@ -39,33 +51,77 @@ public class DitaSemiaExtensionBundle extends DITAExtensionsBundle {
 		return "DITA-SEMIA extension bundle";
 	}
 	
-	
 	@Override
 	public boolean isContentReference(AuthorNode node) {
-		boolean isContentReference = false;
-		if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null))) {
-			isContentReference = true;
+		if (active) {
+			boolean isContentReference = false;
+			if (XsltConref.isXsltConref(new AuthorNodeWrapper(node, null), false)) {
+				isContentReference = true;
+			} else {
+				isContentReference = super.isContentReference(node);
+			}
+			//logger.info("isContentReference(" + node.getDisplayName() + "): " + isContentReference);
+			return isContentReference;
 		} else {
-			isContentReference = super.isContentReference(node);
+			return false;
 		}
-		return isContentReference;
+
 	}
 	
 	
 	@Override
 	public AuthorReferenceResolver createAuthorReferenceResolver() {
-		return new DitaSemiaReferenceResolver();
+		DitaSemiaReferenceResolver resolver = new DitaSemiaReferenceResolver();
+		dialog.setReferenceResolver(resolver);
+		return resolver;
 	}
 	
 	@Override
 	public LinkTextResolver createLinkTextResolver() {
-		return new DitaSemiaLinkTextResolver();
+		DitaSemiaLinkTextResolver resolver = new DitaSemiaLinkTextResolver();
+		dialog.setLinkTextResolver(resolver);
+		return resolver;
 	}
 	
 	
 	@Override
 	public StylesFilter createAuthorStylesFilter() {
-		return new DitaSemiaStylesFilter();
+		DitaSemiaStylesFilter filter = new DitaSemiaStylesFilter();
+		dialog.setStylesFilter(filter);
+		return filter;
 	}
 
+	private DitaSemiaUniqueAttributesRecognizer uniqueAttributesRecognizer;
+
+	@Override
+	public AuthorExtensionStateListener createAuthorExtensionStateListener() {
+		uniqueAttributesRecognizer = new DitaSemiaUniqueAttributesRecognizer();
+		dialog.setUniqueAttributesRecognizer(uniqueAttributesRecognizer);
+		return uniqueAttributesRecognizer;
+	}
+
+	@Override
+	public ClipboardFragmentProcessor getClipboardFragmentProcessor() {
+		return uniqueAttributesRecognizer;
+	}
+	
+	@Override
+	public UniqueAttributesRecognizer getUniqueAttributesIdentifier() {
+		return uniqueAttributesRecognizer;
+	}
+	
+	public static ProfilingOptionsDialog getDialog() {
+		if (dialog == null) {
+			dialog = new ProfilingOptionsDialog();
+		} 
+		return dialog;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
 }

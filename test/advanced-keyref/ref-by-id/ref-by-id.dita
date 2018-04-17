@@ -43,12 +43,12 @@
 				</dlentry>
 				<dlentry id="jcw_bkd_5y">
 					<dt>With Filtered Key</dt>
-					<dd><key-xref outputclass="key-colon-name-quoted" akr:ref="Test:#aml_5jd_5y"
+					<dd><key-xref outputclass="key-colon-name" akr:ref="Test:#aml_5jd_5y"
 							>Key2</key-xref></dd>
 				</dlentry>
 				<dlentry id="brs_f42_5y">
 					<dt>With Hidden Key</dt>
-					<dd><key-xref outputclass="key-colon-name-quoted" akr:ref="Test:#lhg_c42_5y"
+					<dd><key-xref outputclass="key-colon-name" akr:ref="Test:#lhg_c42_5y"
 							>Key3</key-xref></dd>
 				</dlentry>
 			</dl>

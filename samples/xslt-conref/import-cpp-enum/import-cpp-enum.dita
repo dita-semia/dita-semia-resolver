@@ -7,8 +7,8 @@
   <title>Import C++ Enumerations</title>
 	<refbody>
 		<section>
-			<ul id="p4w_cr4_5t" xcr:xsl="import-cpp-enum.xsl" xcr:start-template="ImportCpp"
-				xcrcp:cppFile="EnumTest.cpp">
+			<ul id="p4w_cr4_5t" xcr:xsl="import-cpp-enum.xsl" xcr:source="EnumTest.cpp"
+				xcr:source-type="text">
 				<li/>
 			</ul>
 		</section>
@@ -17,9 +17,9 @@
 		<title>Description</title>
 		<refbody>
 			<section>
-				<p id="oqv_zp2_f5">The use-case is that you need to import some data from source
-					code – in this case the definitions of enumerations.  The URI of the C++ file to
-					be parsed is passes as custom parameter.</p>
+				<p id="oqv_zp2_f5">The use-case is that you need to import some data from source code – in this
+					case the definitions of enumerations. The URI of the C++ file to be parsed is
+					passed as custom parameter.</p>
 				<p id="ilh_dq2_f5">The XSLT script is kept quite simple and can't handle all potential
 					scenarios. E.g. it can handle only decimal constants being assigned to entries
 					and no other formats or constants. Though, it automatically calculates the

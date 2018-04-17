@@ -3,6 +3,7 @@
     xmlns:xsl	= "http://www.w3.org/1999/XSL/Transform"
     xmlns:xs	= "http://www.w3.org/2001/XMLSchema"
     xmlns:xlink	= "http://www.w3.org/1999/xlink"
+    xmlns:xcr	= "http://www.dita-semia.org/xslt-conref"
     xmlns:ds	= "http://www.dita-semia.org"
     exclude-result-prefixes	= "#all">
 
@@ -87,6 +88,17 @@
 			<xsl:sequence select="$content"/>
 		</svg>
 	</xsl:template>
+	
+	
+	<!-- ========== Template: SvgScale ========== -->
+	<xsl:template name="SvgScale" as="element()">
+		<xsl:param name="scale"		as="xs:double"	select="1.0"/>
+		<xsl:param name="content" 	as="item()*"/>
+		
+		<g transform="scale({$scale})" xmlns="http://www.w3.org/2000/svg">
+			<xsl:sequence select="$content"/>
+		</g>
+	</xsl:template>
 
 
 	<!-- ========== Template: SvgText ========== -->
@@ -97,10 +109,11 @@
 		<xsl:param name="textAnchor"	as="xs:string?"	select="$SVG.TEXT_ANCHOR_START"/>
 		<xsl:param name="fontWeight"	as="xs:string?"	select="$SVG.FONT_NORMAL"/>
 		<xsl:param name="fontFamily"	as="xs:string?"/>
-		<xsl:param name="fontSizeInPt"	as="xs:double?"/>
+		<xsl:param name="fontSizeInMm"	as="xs:double?"/>
 		<xsl:param name="fontSize"		as="item()?"/>
 		<xsl:param name="color"			as="xs:string?"/>
 		<xsl:param name="text"			as="xs:string?"/>
+		<xsl:param name="maxWidthInMm"	as="xs:double?"/>
 
 		<text xmlns="http://www.w3.org/2000/svg">
 			<xsl:copy-of select="$XML.SPACE_PRESERVE"/>
@@ -125,8 +138,18 @@
 				<xsl:attribute name="font-family" select="$fontFamily"/>
 			</xsl:if>
 			<xsl:choose>
-				<xsl:when test="$fontSizeInPt">
-					<xsl:attribute name="font-size" select="concat($fontSizeInPt, 'pt')"/>	
+				<xsl:when test="$fontSizeInMm">
+					<xsl:variable name="scaling" as="xs:double">
+						<xsl:choose use-when="function-available('ds:getTextWidth')">
+							<xsl:when test="($maxWidthInMm) and ($maxWidthInMm > 0) and exists($text)">
+								<xsl:variable name="widthInMm" as="xs:double" select="ds:getTextWidth($text, $fontFamily, ($fontWeight > $SVG.FONT_NORMAL), xs:integer($fontSizeInMm * 100)) div 100.0"/>
+								<xsl:sequence select="if ($widthInMm > $maxWidthInMm) then ($maxWidthInMm div $widthInMm) else 1.0"/>
+							</xsl:when>
+							<xsl:otherwise>1.0</xsl:otherwise>
+						</xsl:choose>
+						<xsl:sequence select="1.0"  use-when="not(function-available('ds:getTextWidth'))"/>
+					</xsl:variable>
+					<xsl:attribute name="font-size" select="concat($fontSizeInMm * $scaling, 'mm')"/>	
 				</xsl:when>
 				<xsl:when test="$fontSize">
 					<xsl:attribute name="font-size" select="$fontSize"/>
@@ -150,10 +173,11 @@
 		<xsl:param name="radiusYInMm"		as="xs:double"	select="$radiusXInMm"/>
 		<xsl:param name="fillColor"			as="xs:string?"/>
 		<xsl:param name="fillUrl"			as="xs:string?"/>
-		<xsl:param name="strokeWidth"		as="xs:double?"/>
+		<xsl:param name="strokeWidth"		as="xs:double?"	select="0"/>
 		<xsl:param name="strokeColor"		as="xs:string?"/>
 		<xsl:param name="strokeUrl"			as="xs:string?"/>
 		<xsl:param name="strokeDasharray"	as="xs:string?"/>
+		<xsl:param name="strokeDashLen"		as="xs:double*"/>
 		
 		
 		<rect xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +204,7 @@
 					<xsl:attribute name="stroke" select="$strokeColor"/>
 				</xsl:when>
 				<xsl:when test="exists($strokeUrl)">
-					<xsl:attribute name="stroke" select="'url(#', $strokeUrl, ')'"/>
+					<xsl:attribute name="stroke" select="concat('url(#', $strokeUrl, ')')"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:attribute name="stroke" select="$SVG.COLOR_TRANSPARENT"/>
@@ -189,9 +213,17 @@
 			<xsl:if test="exists($strokeWidth)">
 				<xsl:attribute name="stroke-width" select="concat($strokeWidth, 'mm')"/>
 			</xsl:if>
-			<xsl:if test="exists($strokeDasharray)">
-				<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="exists($strokeDasharray)">
+					<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
+				</xsl:when>
+				<xsl:when test="count($strokeDashLen) = 1">
+					<xsl:attribute name="stroke-dasharray" select="concat($strokeDashLen, ' ', $strokeDashLen)"/>
+				</xsl:when>
+				<xsl:when test="count($strokeDashLen) > 1">
+					<xsl:attribute name="stroke-dasharray" select="string-join(for $i in $strokeDashLen return string($i), ' ')"/>
+				</xsl:when>
+			</xsl:choose>
 		</rect>
 	</xsl:template>
 	
@@ -206,6 +238,7 @@
 		<xsl:param name="strokeColor"		as="xs:string?"/>
 		<xsl:param name="strokeWidth"		as="xs:double?"/>
 		<xsl:param name="strokeDasharray"	as="xs:string?"/>
+		<xsl:param name="markerStartUrl"	as="xs:string?"/>
 		<xsl:param name="markerEndUrl"		as="xs:string?"/>
 
 		<line xmlns="http://www.w3.org/2000/svg"
@@ -223,6 +256,9 @@
 			<xsl:if test="exists($strokeDasharray)">
 				<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
 			</xsl:if>
+			<xsl:if test="exists($markerStartUrl)">
+				<xsl:attribute name="marker-start" select="concat('url(#', $markerStartUrl, ')')"/>
+			</xsl:if>
 			<xsl:if test="exists($markerEndUrl)">
 				<xsl:attribute name="marker-end" select="concat('url(#', $markerEndUrl, ')')"/>
 			</xsl:if>
@@ -239,6 +275,9 @@
 		<xsl:param name="fillUrl"			as="xs:string?"/>
 		<xsl:param name="dInMm"				as="xs:string+"/>
 		<xsl:param name="strokeDasharray"	as="xs:string?"/>
+		<xsl:param name="strokeDashLen"		as="xs:double*"/>
+		<xsl:param name="markerStartUrl"	as="xs:string?"/>
+		<xsl:param name="markerEndUrl"		as="xs:string?"/>
 		
 		<svg x="0" y="0" width="1mm" height="1mm" viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
 			<path>
@@ -262,8 +301,22 @@
 				<xsl:if test="exists($strokeLinejoin)">
 					<xsl:attribute name="stroke-linejoin" select="$strokeLinejoin"/>
 				</xsl:if>
-				<xsl:if test="exists($strokeDasharray)">
-					<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
+				<xsl:choose>
+					<xsl:when test="exists($strokeDasharray)">
+						<xsl:attribute name="stroke-dasharray" select="$strokeDasharray"/>
+					</xsl:when>
+					<xsl:when test="count($strokeDashLen) = 1">
+						<xsl:attribute name="stroke-dasharray" select="concat($strokeDashLen, ' ', $strokeDashLen)"/>
+					</xsl:when>
+					<xsl:when test="count($strokeDashLen) > 1">
+						<xsl:attribute name="stroke-dasharray" select="string-join(for $i in $strokeDashLen return string($i), ' ')"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:if test="exists($markerStartUrl)">
+					<xsl:attribute name="marker-start" select="concat('url(#', $markerStartUrl, ')')"/>
+				</xsl:if>
+				<xsl:if test="exists($markerEndUrl)">
+					<xsl:attribute name="marker-end" select="concat('url(#', $markerEndUrl, ')')"/>
 				</xsl:if>
 				<xsl:attribute name="d" select="$dInMm"/>
 			</path>
@@ -494,6 +547,196 @@
 		</linearGradient>
 	</xsl:template>
 
-
+	<!-- ========== Template: SvgMaxWidthTextMetric ========== -->
+	<xsl:template name="SvgMaxWidthTextMetric" as="element()*">
+		<xsl:param name="text"			as="xs:string"/>
+		<xsl:param name="fontFamily"	as="xs:string"/>
+		<xsl:param name="fontSizeInMm"	as="xs:double"/>
+		<xsl:param name="isBold"		as="xs:boolean"/>
+		<xsl:param name="maxWidthInMm"	as="xs:double"/>
+		<xsl:param name="hyphenation"	as="xs:boolean?" select="false()"/>
+		<xsl:param name="hyphLang" 		as="xs:string?"/>
+		<xsl:param name="hyphCountry"	as="xs:string?"/>
+		
+		<xsl:variable name="lines" 			as="xs:string*" select="ds:_splitTextForMaxWidth($text, $fontFamily, $fontSizeInMm, $isBold, $maxWidthInMm, $hyphLang, $hyphCountry)"/>
+		<xsl:variable name="textWidth"		as="xs:double"	select="max(for $i in $lines return ds:getTextWidth($i, $fontFamily, $isBold, $fontSizeInMm * 10)) div 10"/>
+		<xsl:variable name="scaling" 		as="xs:double" 	select="if ($textWidth > $maxWidthInMm) then ($maxWidthInMm div $textWidth) else 1.0"/>
+		<xsl:variable name="heightOffset"	as="xs:double"	select="max((0, ($scaling * count($lines) - 1) * $fontSizeInMm))"></xsl:variable>
+		
+		<xsl:for-each select="$lines">
+			<Line><xsl:value-of select="."/></Line>
+		</xsl:for-each>
+		<FontFamily><xsl:value-of select="$fontFamily"/></FontFamily>
+		<FontSize><xsl:value-of select="$scaling * $fontSizeInMm"/></FontSize>
+		<IsBold><xsl:value-of select="$isBold"/></IsBold>
+		<HeightOffset><xsl:value-of select="$heightOffset"/></HeightOffset>
+		<Scaling><xsl:value-of select="$scaling"/></Scaling>
+	</xsl:template>
+	
+	
+	<!-- ========== Template: SvgDrawTextMetric ========== -->
+	<xsl:template name="SvgDrawTextMetric">
+		<xsl:param name="textMetric"	as="element()*"/>
+		<xsl:param name="color"			as="xs:string?"/>
+		<xsl:param name="xInMm"			as="xs:double"	select="0"/>
+		<xsl:param name="yInMm"			as="xs:double"	select="0"/>
+		<xsl:param name="widthInMm"		as="xs:double"	select="0"/>
+		<xsl:param name="heightInMm"	as="xs:double"	select="0"/>
+		<xsl:param name="centerX"		as="xs:boolean"	select="true()"/>
+		<xsl:param name="centerY"		as="xs:boolean"	select="true()"/>
+		
+		<xsl:variable name="x" 			as="xs:double" select="$xInMm + (if ($centerX) then $widthInMm div 2 else 0)"/>
+		<xsl:variable name="yOffset" 	as="xs:double" select="$textMetric/self::FontSize"/>
+		<xsl:variable name="textHeight" as="xs:double" select="count($textMetric/self::Line) * $yOffset"/>
+		<xsl:variable name="yStart" 	as="xs:double" select="$yInMm + (if ($centerY) then (($heightInMm + $yOffset - $textHeight) div 2) else 0)"/>
+		
+		<xsl:for-each select="$textMetric/self::Line">
+			<text xmlns="http://www.w3.org/2000/svg"
+				x					= "{$x}mm"
+				y					= "{$yStart + ((position() - 1) * $yOffset)}mm"
+				dy					= "{if ($centerY) then $SVG.DY_CENTER else $SVG.DY_TOP}"
+				style				= "text-anchor: {if ($centerX) then $SVG.TEXT_ANCHOR_MIDDLE else $SVG.TEXT_ANCHOR_START};"
+				font-family			= "{$textMetric/self::FontFamily}" 
+				font-size			= "{$textMetric/self::FontSize}mm"
+				font-weight			= "{if ($textMetric/self::IsBold = true()) then $SVG.FONT_BOLD else $SVG.FONT_NORMAL}">
+				<xsl:if test="exists($color)">
+					<xsl:attribute name="fill" select="$color"/>
+				</xsl:if>
+				<xsl:value-of select="."/>
+			</text>
+		</xsl:for-each>
+		
+	</xsl:template>
+	
+	
+	<!-- ============================================================================ -->
+	<!-- ==                          internal functions                            == -->
+	<!-- ============================================================================ -->
+	
+	<!-- ========== Function: ds:_splitTextForMaxWidth ========== -->
+	<xsl:function name="ds:_splitTextForMaxWidth" as="xs:string*">
+		<xsl:param name="text"			as="xs:string?"/>
+		<xsl:param name="fontFamily"	as="xs:string"/>
+		<xsl:param name="fontSizeInMm"	as="xs:double"/>
+		<xsl:param name="isBold"		as="xs:boolean"/>
+		<xsl:param name="maxWidthInMm"	as="xs:double"/>
+		<xsl:param name="hyphLang" 		as="xs:string?"/>
+		<xsl:param name="hyphCountry"	as="xs:string?"/>
+		
+		<xsl:variable name="lines" as="xs:string*" select="if ($text = '') then $text else tokenize($text, '&#x0A;')"/>
+		<xsl:for-each select="$lines">
+			<xsl:variable name="tokens" as="xs:string*" select="ds:_splitText(., 1, $hyphLang, $hyphCountry)"/>
+			<xsl:sequence select="ds:_mergeText($tokens, $fontFamily, $fontSizeInMm, $isBold, $maxWidthInMm)"/>
+		</xsl:for-each>
+	</xsl:function>
+	
+	
+	<!-- ========== Funktion: ds:_splitText ========== -->
+	<xsl:function name="ds:_splitText" as="xs:string*">
+		<xsl:param name="text" 			as="xs:string?"/>
+		<xsl:param name="pos"			as="xs:integer"/>
+		<xsl:param name="hyphLang" 		as="xs:string?"/>
+		<xsl:param name="hyphCountry"	as="xs:string?"/>
+		
+		<xsl:variable name="c1" as="xs:string?" select="substring($text, $pos, 	   1)"/>
+		<xsl:variable name="c2" as="xs:string?" select="substring($text, $pos + 1, 1)"/>
+		
+		<!-- 
+			split possible:
+				- after whitespace before non-whitespace
+				- after small letter before capital letter
+				- after minuns, underscore or dot before non-whitespace
+		-->
+		<xsl:variable name="splitOk" as="xs:boolean" select="
+			(matches($c1, '[\s]') 		and matches($c2, '[^\s]')) or
+			(matches($c1, '[a-zäöü]') 	and matches($c2, '[A-ZÄÖÜ]')) or
+			(matches($c1, '[_\-\.]') 	and matches($c2, '[^\s]'))"/>
+		
+		<xsl:choose>
+			<xsl:when test="string($c2) = ''">
+				<!-- abort -->
+				<xsl:variable name="split" as="xs:string" select="$text"/>
+				<!--<xsl:message>Split: '<xsl:value-of select="$Split"/>'</xsl:message>-->
+				<xsl:sequence select="if ($hyphLang) then ds:_hyphenate($split, $hyphLang, $hyphCountry) else $split"/>
+			</xsl:when>
+			<xsl:when test="$splitOk">
+				<xsl:variable name="split" as="xs:string" select="substring($text, 1, $pos)"/>
+				<!--<xsl:message>Split: '<xsl:value-of select="$Split"/>'</xsl:message>-->
+				<xsl:sequence select="if ($hyphLang) then ds:_hyphenate($split, $hyphLang, $hyphCountry) else $split"/>
+				<xsl:sequence select="ds:_splitText(substring($text, $pos + 1), 1, $hyphLang, $hyphCountry)"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:sequence select="ds:_splitText($text, $pos + 1, $hyphLang, $hyphCountry)"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:function>
+	
+	
+	<!-- ========== Funktion: ds:_hyphenate ========== -->
+	<xsl:function name="ds:_hyphenate" as="xs:string*">
+		<xsl:param name="word" 		as="xs:string"/>
+		<xsl:param name="lang" 		as="xs:string"/>
+		<xsl:param name="country" 	as="xs:string?"/>
+		
+		<xsl:variable name="DELIMITER" as="xs:string" select="'~'"/>
+		<xsl:sequence select="tokenize(ds:hyphenateWord($word, $DELIMITER, $lang, $country), $DELIMITER)"/>
+	</xsl:function>
+	
+	<!-- ========== Funktion: ds:_mergeText ========== -->
+	<xsl:function name="ds:_mergeText" as="xs:string*">
+		<xsl:param name="tokens"			as="xs:string*"/>
+		<xsl:param name="fontFamily"	as="xs:string"/>
+		<xsl:param name="fontSizeInMm"	as="xs:double"/>
+		<xsl:param name="isBold"		as="xs:boolean"/>
+		<xsl:param name="maxWidthInMm"	as="xs:double"/>
+		
+		<xsl:choose>
+			<xsl:when test="count($tokens) > 1">
+				<!-- check if another token can be taken into line -->
+				<xsl:variable name="candidate" 	as="xs:string" 	select="ds:_correctBeforeLinebreak(concat($tokens[1], $tokens[2]), $tokens[3])"/>
+				<xsl:variable name="width" 		as="xs:double" 	select="ds:getTextWidth($candidate, $fontFamily, $isBold, $fontSizeInMm)"/>
+				
+				<xsl:choose>
+					<xsl:when test="$width  >= $maxWidthInMm">
+						<!-- Too wide -> take only 1st element. -->
+						<xsl:value-of select="ds:_correctBeforeLinebreak($tokens[1], $tokens[2])"/>
+						<xsl:sequence select="ds:_mergeText($tokens[position() > 1], $fontFamily, $fontSizeInMm, $isBold, $maxWidthInMm)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- candidate fits -> merge and continue -->
+						<xsl:sequence select="ds:_mergeText((concat($tokens[1], $tokens[2]), $tokens[position() > 2]), $fontFamily, $fontSizeInMm, $isBold, $maxWidthInMm)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- only a single token -> no check required --> 
+				<xsl:value-of select="$tokens[1]"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:function>
+	
+	<xsl:function name="ds:_correctBeforeLinebreak" as="xs:string">
+		<xsl:param name="Text" 				as="xs:string"/>
+		<xsl:param name="NachfolgenderText" as="xs:string?"/>
+		
+		<xsl:choose>
+			<xsl:when test="matches($Text, '\s$')">
+				<!-- Text endet auf Whitespaces, also einfach nur diese entfernen -->
+				<xsl:value-of select="replace($Text, '\s+$', '')"/>
+			</xsl:when>
+			<xsl:when test="matches($Text, '[a-zA-ZäöüÄÖÜ0-9]$') and (string($NachfolgenderText) != '')">
+				<!-- Text endet auf ein nicht-Sonderzeichen und es folgt weiterer Text, also Bindestrich ergänzen -->
+				<xsl:value-of select="concat($Text, '-')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- sonst keine Sonderbehandlung -->
+				<xsl:value-of select="$Text"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	
 </xsl:transform>
 

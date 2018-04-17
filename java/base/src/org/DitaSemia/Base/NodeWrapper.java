@@ -113,6 +113,8 @@ public interface NodeWrapper
 
 	NodeWrapper evaluateXPathToNode(String xPath) throws XPathException, XPathNotAvaliableException;
 
+	List<NodeWrapper> evaluateXPathToNodeList(String xPath) throws XPathException, XPathNotAvaliableException;
+
 	public String getName();
 
 	boolean isSameNode(NodeWrapper node);

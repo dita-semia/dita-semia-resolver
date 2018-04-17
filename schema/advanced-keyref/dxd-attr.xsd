@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:sch		= "http://purl.oclc.org/dsdl/schematron"
+	xmlns:dxd		= "http://www.dita-semia.org/dynamic-xml-definition"
+	targetNamespace	= "http://www.dita-semia.org/dynamic-xml-definition">
+	
+	<xs:attribute name="type-xsl" 	type="xs:anyURI"/>
+	<xs:attribute name="type-name" 	type="xs:string"/>
+	<xs:attribute name="root-name" 	type="xs:string"/>
+	<xs:attribute name="root-type" 	type="xs:string"/>
+	
+	<xs:attributeGroup name="dxd-atts">
+		<xs:attribute ref="dxd:type-xsl"/>
+		<xs:attribute ref="dxd:type-name"/>
+	</xs:attributeGroup>
+
+
+	<xs:annotation>
+		<xs:appinfo>
+			<sch:include href="dxd-codeblock.sch"/>
+		</xs:appinfo>
+	</xs:annotation>
+
+</xs:schema>

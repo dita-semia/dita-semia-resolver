@@ -7,5 +7,16 @@
 	<classpathentry kind="var" path="OXYGENXML/lib/saxon9ee.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/xercesImpl.jar"/>
 	<classpathentry kind="var" path="OXYGENXML/lib/commons-io-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache-poi/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache-poi/poi-3.10-FINAL-20140208.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/NissenJ/Downloads/poi-3.10-FINAL/docs/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/apache-poi/poi-ooxml-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="lib/apache-poi/poi-ooxml-schemas-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="lib/apache-poi/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-csv-1.4.jar"/>
+	<classpathentry kind="var" path="OXYGENXML/lib/fop.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

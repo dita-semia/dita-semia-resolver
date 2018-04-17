@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,9 +49,9 @@ public class SaxonDocumentBuilder {
 	protected final Configuration 	configuration;
 	protected final DocumentBuilder documentBuilder;
 	
-	protected final XMLGrammarPool	xmlGrammarPool;
+	protected final XMLGrammarPool	xmlGrammarPool	= new XMLGrammarPoolImplDS();;
     
-    public final Map<URL, NodeWithTimestamp> nodeCache	= new HashMap<>();
+    public final Map<String, NodeWithTimestamp> nodeCache	= new HashMap<>();
     
 	public SaxonDocumentBuilder(EntityResolver entityResolver, URIResolver uriResolver) {
 		this.entityResolver	= entityResolver;
@@ -64,39 +63,41 @@ public class SaxonDocumentBuilder {
 
 		final Processor processor = new Processor(configuration);
 		documentBuilder = processor.newDocumentBuilder();
-		
-		xmlGrammarPool = new XMLGrammarPoolImplDS();
+	}
+	
+	public SaxonDocumentBuilder(EntityResolver entityResolver, Configuration configuration) {
+		this.entityResolver	= entityResolver;
+		this.uriResolver	= configuration.getURIResolver();
+		this.configuration	= configuration;
+
+		final Processor processor = new Processor(configuration);
+		documentBuilder = processor.newDocumentBuilder();
 	}
 
-	public XdmNode build(Source source, boolean expandAttributeDefaults) throws SaxonApiException{
-		URL			url			= null;
-		Timestamp 	timestamp 	= null;
-		XdmNode 	result		= null;
+	public XdmNode build(Source source, boolean expandAttributeDefaults, boolean useCache) throws SaxonApiException{
+		final String systemId	= source.getSystemId();
+		long 	timestamp 		= -1;
+		XdmNode result			= null;
 		
 		if (source instanceof SAXSource) {
 			final SAXSource saxSource = ((SAXSource)source);
 			
 			// check if cachable
 			InputSource inputSource = saxSource.getInputSource();
-			if ((inputSource.getCharacterStream() == null) && (inputSource.getByteStream() == null)) {
+			if ((useCache) && (inputSource.getCharacterStream() == null) && (inputSource.getByteStream() == null)) {
 				// check timestamp
-				try {
-					url			= new URL(source.getSystemId());
-					timestamp 	= new Timestamp(new File(url.getFile()).lastModified());
-					NodeWithTimestamp cacheEntry = nodeCache.get(url);
-					if ((cacheEntry != null) && (cacheEntry.getTimestamp().equals(timestamp))) {
-						result = cacheEntry.getNode();
-						//logger.info("from cache: " + url);
-					}
-					
-				} catch (MalformedURLException e) {
-					// just ignore it here - will be handled by documentBuilder
+				timestamp = FileUtil.getLastModified(systemId);
+				//logger.info("url: " + source.getSystemId() + ", timestamp: " + FileUtil.TIMESTAMP_FORMAT.format(timestamp));
+				NodeWithTimestamp cacheEntry = nodeCache.get(source.getSystemId());
+				if ((cacheEntry != null) && (cacheEntry.getTimestamp() == timestamp)) {
+					result = cacheEntry.getNode();
+					//logger.info("from cache: " + source.getSystemId());
 				}
 			}
 
 			if (result == null) {
 				// 	set reader
-				saxSource.setXMLReader(getXmlReader(expandAttributeDefaults));
+				saxSource.setXMLReader(getXmlReader(expandAttributeDefaults, useCache));
 			}
 			//logger.info("CharacterStream: " + inputSource.getCharacterStream());
 			//logger.info("ByteStream: " + inputSource.getByteStream());
@@ -106,9 +107,9 @@ public class SaxonDocumentBuilder {
 			//logger.info("building document: " + source.getSystemId());
 			result = documentBuilder.build(source);
 			
-			if (timestamp != null) {
-				nodeCache.put(url, new NodeWithTimestamp(result, timestamp));
-				//logger.info("into cache: " + url);
+			if (timestamp > 0) {
+				nodeCache.put(systemId, new NodeWithTimestamp(result, timestamp));
+				//logger.info("into cache: " + systemId);
 			}
 		}
 		//logger.info("result (" + source.getSystemId() + ") :");
@@ -116,8 +117,8 @@ public class SaxonDocumentBuilder {
 		return result;
 	}
 
-	public XdmNode buildFromString(String sourceString, boolean expandAttributeDefaults) throws SaxonApiException{
-		final SAXSource source = new SAXSource(getXmlReader(expandAttributeDefaults), new InputSource(new StringReader(sourceString)));
+	public XdmNode buildFromString(String sourceString, boolean expandAttributeDefaults, boolean useCache) throws SaxonApiException{
+		final SAXSource source = new SAXSource(getXmlReader(expandAttributeDefaults, useCache), new InputSource(new StringReader(sourceString)));
 		final XdmNode result = documentBuilder.build(source);
 		//logger.info("result from String :");
 		//logger.info(SaxonNodeWrapper.serializeNode(result.getUnderlyingNode()));
@@ -129,18 +130,19 @@ public class SaxonDocumentBuilder {
 		xmlGrammarPool.clear();
 	}
 	
-	private XMLReader getXmlReader(boolean expandAttributeDefaults) {
+	private XMLReader getXmlReader(boolean expandAttributeDefaults, boolean useCache) {
 		// always create a new instance to avoid having the schema being bound to the namespace (not the case for DITA)
 		try {
 			final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 			xmlReader.setFeature(FEATURE_NAMESPACE, true);
 			xmlReader.setErrorHandler(new Log4jErrorHandler(logger));
 			xmlReader.setEntityResolver(entityResolver);
-			//logger.info("XMLReader: " + xmlReader.getClass());
 			if (expandAttributeDefaults) {
-				xmlReader.setFeature(FEATURE_VALIDATION, 			true);
-				xmlReader.setFeature(FEATURE_VALIDATION_SCHEMA, 	true);
-				xmlReader.setProperty(PROPERTY_GRAMMAR_POOL,		xmlGrammarPool);
+				xmlReader.setFeature(FEATURE_VALIDATION,	 	true);
+				xmlReader.setFeature(FEATURE_VALIDATION_SCHEMA,	true);
+				if (useCache) {
+					xmlReader.setProperty(PROPERTY_GRAMMAR_POOL,		xmlGrammarPool);
+				}
 			}
 			return xmlReader;
 		} catch (SAXException e) {
@@ -171,10 +173,10 @@ public class SaxonDocumentBuilder {
 
 	private static class NodeWithTimestamp {
 		
-		private XdmNode 	xdmNode;
-		private Timestamp 	timestamp;
+		private XdmNode xdmNode;
+		private long 	timestamp;
 		
-		private NodeWithTimestamp(XdmNode xdmNode, Timestamp timestamp) {
+		private NodeWithTimestamp(XdmNode xdmNode, long timestamp) {
 			this.xdmNode 	= xdmNode;
 			this.timestamp	= timestamp;
 		}
@@ -183,9 +185,17 @@ public class SaxonDocumentBuilder {
 			return xdmNode;
 		}
 
-		private Timestamp getTimestamp() {
+		private long getTimestamp() {
 			return timestamp;
 		}
+	}
+
+	public boolean isCompatible(Configuration configuration) {
+		return this.configuration.isCompatible(configuration);
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 	
 }

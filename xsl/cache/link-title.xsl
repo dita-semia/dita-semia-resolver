@@ -43,16 +43,22 @@
 	
 	
 	<xsl:template match="*[@cba:title]" priority="1">
-		<xsl:value-of select="normalize-space(cba:resolveEmbeddedXPath(@cba:title))"/>
+		<xsl:value-of select="normalize-space(ds:resolveEmbeddedXPath(@cba:title, .))"/>
 	</xsl:template>
 	
 	
 	<xsl:template match="*[@cba:dt]" priority="1">
-		<xsl:value-of select="normalize-space(cba:resolveEmbeddedXPath(@cba:dt))"/>
+		<xsl:value-of select="normalize-space(ds:resolveEmbeddedXPath(@cba:dt, .))"/>
 	</xsl:template>
 	
 	<xsl:template match="*">
 		<!-- default: no title -->
 	</xsl:template>
-
+	
+	<xsl:function name="ds:resolveEmbeddedXPath" as="xs:string" use-when="not(function-available('ds:resolveEmbeddedXPath'))">
+		<xsl:param name="text" 		as="xs:string"/>
+		<xsl:param name="context" 	as="node()"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:resolveEmbeddedXPath' not registered.</xsl:message>
+	</xsl:function>
+	
 </xsl:stylesheet>

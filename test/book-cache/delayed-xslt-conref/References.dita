@@ -4,7 +4,7 @@
 	xmlns:xcr="http://www.dita-semia.org/xslt-conref"
 	xmlns:akr="http://www.dita-semia.org/advanced-keyref"
 	xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
-	xsi:noNamespaceSchemaLocation="urn:dita-semia:conbat:schema:dita-semia-topic.xsd">
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:schema:dita-semia-topic.xsd">
 	<title>References</title>
 	<body>
 		<p id="ddl_p54_vy"><key-xref outputclass="key-name-braced" akr:ref="Test-Child:Key1/Child"

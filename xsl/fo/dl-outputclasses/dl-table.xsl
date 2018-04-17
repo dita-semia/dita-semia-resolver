@@ -1,24 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
-<xsl:stylesheet exclude-result-prefixes="ditaarch opentopic ds" version="2.0"
-	xmlns:ditaarch="http://dita.oasis-open.org/architecture/2005/" xmlns:ds="org.dita-semia.resolver"
-	xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:opentopic="http://www.idiominc.com/opentopic"
-	xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+	xmlns:xs				= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsl				= "http://www.w3.org/1999/XSL/Transform" 
+	xmlns:fo				= "http://www.w3.org/1999/XSL/Format"
+	xmlns:ds				= "http://www.dita-semia.org"
+	exclude-result-prefixes	= "#all">
 	
 	
 	<xsl:variable name="DL_OUTPUTCLASS_TABLE" 		as="xs:string">table</xsl:variable>
 	
-	<!-- outputclass "tree" -->
 	
 	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_TABLE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-table">
 			
 			<xsl:call-template name="commonattributes"/>
 			
-			<fo:table>
+			<fo:table table-layout="fixed" width="100%">
 				
-				<fo:table-column column-number	= "1" column-width	= "35%"/>
-				<fo:table-column column-number	= "2" column-width	= "65%"/>
+				<fo:table-column column-number	= "1" column-width	= "proportional-column-width(35)"/>
+				<fo:table-column column-number	= "2" column-width	= "proportional-column-width(65)"/>
 				
 				<xsl:variable name="dlhead" as="element()*" select="*[contains(@class, ' topic/dlhead ')]"/>
 				<xsl:if test="exists($dlhead)">
@@ -95,7 +95,7 @@
 		
 		<fo:block xsl:use-attribute-sets="ds:dt-table">
 			<xsl:call-template name="commonattributes"/>
-			<xsl:apply-templates select="parent::*/@id" mode="dlentry-id-for-fop"/>
+			<xsl:call-template name="ds:dt-toc-id"/>
 			<xsl:apply-templates mode="#default"/>
 		</fo:block>
 		

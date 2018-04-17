@@ -4,14 +4,14 @@
 	
 	<group><!-- System ID (URL) catalog entries -->
 		
-		<system systemId="urn:dita-semia:conbat:schema:dita-semia-topic.xsd" 		uri="dita-semia-topic.xsd"/>
+		<system systemId="urn:dita-semia:schema:dita-semia-topic.xsd" 		uri="dita-semia-topic.xsd"/>
 		
 	</group>
 	
 	
 	<group><!-- Public ID (URN) catalog entries -->
 	
-		<uri name="urn:dita-semia:conbat:schema:dita-semia-topic.xsd" 		uri="dita-semia-topic.xsd"/>
+		<uri name="urn:dita-semia:schema:dita-semia-topic.xsd" 		uri="dita-semia-topic.xsd"/>
 		
 	</group>
 	

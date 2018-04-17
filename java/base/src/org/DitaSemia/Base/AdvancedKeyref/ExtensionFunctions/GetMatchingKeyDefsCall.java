@@ -60,12 +60,13 @@ public class GetMatchingKeyDefsCall extends ExtensionFunctionCall {
 			final BookCache	bookCache	= bookCacheProvider.getBookCache(refUrl);
 
 			//logger.info(" url: " + refUrl);
-			
-			final Collection<KeyDefInterface> 	keyDefs = bookCache.getMatchingKeyDefs(typeFilter, namespaceFilter);
-			final List<Item> 					list 	= new LinkedList<>();
-			for (KeyDefInterface keyDef : keyDefs) {
-				//logger.info(" KeyDef: " + keyDef.getRefString());
-				list.add(new StringValue(keyDef.getRefString()));
+			final List<Item> list = new LinkedList<>();
+			if (bookCache != null) {
+				final Collection<KeyDefInterface> 	keyDefs = bookCache.getMatchingKeyDefs(typeFilter, namespaceFilter);
+				for (KeyDefInterface keyDef : keyDefs) {
+					//logger.info(" KeyDef: " + keyDef.getRefString());
+					list.add(new StringValue(keyDef.getRefString()));
+				}
 			}
 			return new SequenceExtent(list);
 		} catch (XPathException e) {

@@ -34,8 +34,8 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 	//private final static String IMG_LINK_EXTERN = "link_extern.png";
 	private final static String IMG_LINK_BROKEN = "link_broken.png";
 	
-	private final static String 	CODE_FONT_NAME	= "Monospaced";
-	private final static String[] 	CODE_FONT_NAMES	= {"Monospaced"};
+	private final static String 	CODE_FONT_NAME	= "Consolas";
+	private final static String[] 	CODE_FONT_NAMES	= {"Consolas", "Courier New", "monospace"};
 	private final static double 	CODE_FONT_SCALE	= 0.9;
 
 	private final static int	PSEUDO_LEVEL_LINK	= 2;
@@ -47,10 +47,13 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 		boolean handled = false;
 		//logger.info("filter for node: " + authorNode.getName() + ", parent-node: " + (authorNode.getParent() == null ? "-" : authorNode.getParent().getName()) + ", pseudo-level: " + styles.getPseudoLevel());
 		if (authorNode.getType() == AuthorNode.NODE_TYPE_PSEUDO_ELEMENT) {
-			final boolean isBefore 	= (authorNode.getName().equals(BEFORE));
-			final boolean isAfter 	= (!isBefore) && (authorNode.getName().equals(AFTER));
+			final boolean isBefore 			= (authorNode.getName().equals(BEFORE));
+			final boolean isAfter 			= (!isBefore) && (authorNode.getName().equals(AFTER));
+			final boolean isSvgOutputclass 	= KeyRef.OC_SVG.equals(getAttribute(authorNode.getParent(), "outputclass"));
 			
-			if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_LINK)) {
+			if (isSvgOutputclass) {
+				// no filtering
+			} else if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_LINK)) {
 				handled = filterLink(styles, authorNode.getParent());
 			} else if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_PREFIX)) {
 				handled = filterPrefix(styles, authorNode.getParent());
@@ -59,12 +62,16 @@ public class AdvancedKeyRefStylesFilter extends DitaSemiaStylesFilter {
 			}
 			
 		} else if (authorNode.getType() == AuthorNode.NODE_TYPE_ELEMENT) {
-			filterFont(styles, authorNode);
+			if (KeyRef.OC_SVG.equals(getAttribute(authorNode, "outputclass"))) {
+				handled = filterLink(styles, authorNode);
+			} else { 
+				filterFont(styles, authorNode);
+			}
 			// don't return true to support combination of KeyDef + Conbat
 		}
 		return handled;
 	}
-	
+
 
 	private static KeyRef getKeyRefFromNode(AuthorNode authorNode) {
 		return KeyRef.fromNode(new AuthorNodeWrapper(authorNode, null));

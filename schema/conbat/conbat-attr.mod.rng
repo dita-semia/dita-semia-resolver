@@ -257,6 +257,7 @@
 		<ref name="conbat-dt"/>
 		<ref name="conbat-default-content"/>
 		<ref name="conbat-content"/>
+		<ref name="conbat-flags"/>
 	</define>
 	
 	<!-- allow dd elements as alternative to dlentry elements in dl -->

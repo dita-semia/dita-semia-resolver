@@ -20,7 +20,9 @@ public interface KeyDefListInterface {
 	public XPathCache getXPathCache();
 
 	public KeyTypeDef getKeyTypeDef(String type);
-	
+
 	public Collection<KeyDefInterface> getMatchingKeyDefs(Set<String> typeFilter, List<String> namespaceFilter);
-	
+
+	public Collection<KeyDefInterface> getAmbiguousKeyDefs(String refString);
+
 }

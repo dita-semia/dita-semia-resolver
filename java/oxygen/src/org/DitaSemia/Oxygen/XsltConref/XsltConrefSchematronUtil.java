@@ -24,12 +24,12 @@ public class XsltConrefSchematronUtil {
 	/**
 	 * Checks whether the specified URL represents a well-formed XSL File.
 	 * 
-	 * @param url of the XSL File
+	 * @param uri of the XSL File
 	 * @return true if the compilation of the File worked, false otherwise.
 	 */
-	public static boolean isValidXsl(URL url) {
+	public static boolean isValidXsl(String uri) {
 		try {
-			return (XsltConrefResolver.getInstance().getTransformerCache().getExecutable(url) != null);
+			return (XsltConrefResolver.getInstance().getTransformerCache().getExecutable(uri) != null);
 		} catch (XPathException e) {
 			return false;
 		} catch (Exception e) {

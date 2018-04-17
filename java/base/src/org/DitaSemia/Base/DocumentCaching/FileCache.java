@@ -23,8 +23,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -33,10 +36,12 @@ import javax.xml.transform.TransformerException;
 
 import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.FileUtil;
+import org.DitaSemia.Base.FilterProperties;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
+import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
@@ -50,24 +55,35 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class FileCache extends TopicRefContainer implements NeedsInit {
-
+	
 	private static final Logger logger = Logger.getLogger(FileCache.class.getName());
+
+	public static final String		FRAMEWORK_ID			= "4";	
 	
 	public static final String		LINK_TITLE_UNKNOWN		= "???";
 	public static final String		LINK_NUM_DELIMITER		= " ";
 	private final static String		APPENDIX_NUM_DELIMITER	= ":"; 
 	
-	protected static final String	LINK_TITLE_XSL		= "plugins/org.dita-semia.resolver/xsl/cache/link-title.xsl";
-	protected static final String	LOCAL_TOPIC_NUM_XSL	= "plugins/org.dita-semia.resolver/xsl/cache/local-topic-num.xsl";
+	protected static final String	LINK_TITLE_XSL			= "plugin:org.dita-semia.resolver:xsl/cache/link-title.xsl";
+	protected static final String	LOCAL_TOPIC_NUM_XSL		= "plugin:org.dita-semia.resolver:xsl/cache/local-topic-num.xsl";
 
-	protected static final String	HC_ROOT				= "hdd-cache";
-	protected static final String	HC_DEPENDENCY		= "dependency";
+	protected static final String	HC_ROOT					= "hdd-cache";
+	protected static final String	HC_DEPENDENCY			= "dependency";
+	protected static final String	HC_TOPIC				= "topic";
+
+	protected static final String	HC_ATTR_FRAMEWORK_ID	= "framework-id";
+	protected static final String	HC_ATTR_SYSTEM_ID		= "system-id";
+	protected static final String	HC_ATTR_TIMESTAMP		= "timestamp";
+	protected static final String	HC_ATTR_ROOT_DOC		= "root-doc";
+	protected static final String	HC_ATTR_ROOT_NAME		= "root-name";
+	protected static final String	HC_ATTR_ROOT_CLASS		= "root-class";
+	protected static final String	HC_ATTR_ROOT_TITLE		= "root-title";
 	
-	protected static final String	HC_ATTR_SYSTEM_ID	= "system-id";
-	protected static final String	HC_ATTR_TIMESTAMP	= "timestamp";
-	protected static final String	HC_ATTR_ROOT_NAME	= "root-name";
-	protected static final String	HC_ATTR_ROOT_CLASS	= "root-class";
-	protected static final String	HC_ATTR_ROOT_TITLE	= "root-title";
+	private static final int 		INIT_PRIORITY_RESOURCE_ONLY_MAP		= 0;
+	private static final int 		INIT_PRIORITY_RESOURCE_ONLY_TOPIC	= 1;
+	private static final int		INIT_PRIORITY_MAP					= 2;
+	private static final int		INIT_PRIORITY_TOPIC					= 3;
+	private static final int 		INIT_PRIORITY_OFFSET_XSLT_CONREF 	= 4;
 
 	protected final Source 				source;
 	protected final boolean				expandAttributeDefaults;
@@ -83,21 +99,32 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	protected boolean				rootTopicNumInitialized	= false;
 	protected String 				rootTopicNum 			= null;
 	protected String 				rootTopicNumPrefix 		= null;
+	protected FilterProperties		rootFilterProperties	= null;
 
+	
 	protected final Collection<KeyDefInterface>		keyDefList 				= new LinkedList<>();
 	protected final Map<String, SaxonNodeWrapper>	nodeByRefId				= new HashMap<>();
 	protected final Map<String, String>				linkTitleByRefId		= new HashMap<>();
 	protected final Map<String, String>				linkTextByRefId			= new HashMap<>();
 	protected final Map<String, String>				localNumByTopicId		= new HashMap<>();
-	protected final Collection<FileCache>			refFileList				= new LinkedList<>();
+	protected final Map<String, FileCache>			refFileByHref			= new HashMap<>();
 	protected final Collection<ContainedXsltConref>	containedXsltConrefs	= new ArrayList<>();
-	
+	protected final Map<String, Set<NodeInfo>>		keyRefsByRefString		= new HashMap<>();
+	protected final Set<String>						topicIds				= new HashSet<>();
+
 	protected String 	fileTimestamp;
 	protected boolean	isFileParsed;
 	protected boolean	containsUncachableXsltConref;
+	protected boolean	isKeyRegistrationDone;
+	protected boolean	isInitFromCache;
+	protected boolean	isRefreshing;
 	
 
-	public FileCache(Source source, boolean expandAttributeDefaults, String topicrefClass, BookCache bookCache) {
+	public FileCache(Source source, boolean expandAttributeDefaults, String topicrefClass, boolean isResourceOnly, BookCache bookCache) {
+		super(isResourceOnly);
+		
+		//logger.info("FileCache " + source.getSystemId() + ", isResourceOnly: " + isResourceOnly);
+		
 		this.source						= source;
 		this.expandAttributeDefaults	= expandAttributeDefaults;
 		this.decodedUrl 				= FileUtil.decodeUrl(source.getSystemId());
@@ -109,12 +136,15 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		fileTimestamp 					= FileUtil.getLastModifiedAsString(source.getSystemId());
 		isFileParsed					= false;
 		containsUncachableXsltConref	= false;
+		isKeyRegistrationDone			= false;
+		isInitFromCache					= false;
+		isRefreshing					= false;
 	}
 
 	public String getDecodedUrl() {
 		return decodedUrl;
 	}
-	
+
 	public String getRootName() {
 		return rootName;
 	}
@@ -127,7 +157,36 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	public Collection<KeyDefInterface> getKeyDefList() {
 		return keyDefList;
 	}
+
+	public Collection<String> getTopicIds() {
+		return topicIds;
+	}
+
+	public Map<String, Set<NodeInfo>> getKeyRefs() {
+		return keyRefsByRefString;
+	}
 	
+	@Override
+	public int getPriority() {
+		if (this.topicrefClass != null) {
+			if (isResourceOnly) {
+				if (this.topicrefClass.contains(DitaUtil.CLASS_MAP_REF)) {
+					return INIT_PRIORITY_RESOURCE_ONLY_MAP;
+				} else {
+					return INIT_PRIORITY_RESOURCE_ONLY_TOPIC;
+				}
+			} else {
+				if (this.topicrefClass.contains(DitaUtil.CLASS_MAP_REF)) {
+					return INIT_PRIORITY_MAP;
+				} else {
+					return INIT_PRIORITY_TOPIC;
+				}
+			}
+		} else {
+			return 0;
+		}
+	}
+
 	public boolean isMap() {
 		if (rootClass != null) {
 			return rootClass.contains(DitaUtil.CLASS_MAP);
@@ -138,17 +197,19 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	
 	public void mapPosChanged() {
 		rootTopicNumInitialized = false;
-		for (FileCache refFile : refFileList) {
+		for (FileCache refFile : refFileByHref.values()) {
 			refFile.mapPosChanged();
 		}
 	}
 
+	@Override
 	public String toString() {
-		return "FileCache - url: " + decodedUrl + ", rootElement: " + rootElement.getName(); 
+		return "FileCache - url: " + decodedUrl + ", rootElement: " + ((rootElement == null) ? null : rootElement.getName()); 
 	}
-	
-	public void init() {
 
+	@Override
+	public void init() {
+		//logger.info("init: '" + decodedUrl + "'");
 		final long startTime = Calendar.getInstance().getTimeInMillis();
 		String initType = "";
 		
@@ -159,7 +220,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			final boolean success = parseHddCache(fileHddCachePath);
 			if (!success) {
 				parseFile(fileHddCachePath);
-				if (isHddCachable()) {
+				if ((isHddCachable()) && (!isInitFromCache)) {
 					initType = ", complete parsing + write HDD cache";
 				} else {
 					initType = ", complete parsing";
@@ -171,9 +232,13 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			parseFile(fileHddCachePath);
 		}
 
-		
-		final long time = Calendar.getInstance().getTimeInMillis() - startTime;
-		logger.info("init (" + decodedUrl + ") done: " + time + "ms" + initType);
+		 
+		//final long time = Calendar.getInstance().getTimeInMillis() - startTime;
+		//logger.info("init (" + decodedUrl + ") done: " + time + "ms" + initType);
+	}
+	
+	public boolean isFileParsed() {
+		return isFileParsed;
 	}
 
 	private boolean parseHddCache(String fileHddCachePath) {
@@ -181,7 +246,9 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			
 			final InputSource 	inputSource = new InputSource(new FileReader(fileHddCachePath));
 			final XMLReader 	xmlReader 	= XMLReaderFactory.createXMLReader();
-
+			
+			rootFilterProperties = FilterProperties.createUnrestricted();
+			
 			xmlReader.setContentHandler(new HddCacheReader(new URL(source.getSystemId())));
 			xmlReader.parse(inputSource);
 			
@@ -194,16 +261,19 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			logger.error(e, e);
 			return false;
 		}
+		isKeyRegistrationDone 	= true;
+		isInitFromCache 		= true;
 		return true;
 	}
 
 	private void parseFile(String fileHddCachePath) {
-		//logger.info("parseFile: " + decodedUrl);
 		try {
+			//logger.info("parseFile: " + decodedUrl + "(isResourceOnly: " + isResourceOnly + ")");
+			
 			containsUncachableXsltConref	= false;
 			isFileParsed 					= true;	// on failure the value remains true since a reparsing makes no sense.
 			
-			final XdmNode 				rootNode 		= bookCache.getDocumentBuilder().build(source, expandAttributeDefaults);
+			final XdmNode 				rootNode 		= bookCache.getDocumentBuilder().build(source, expandAttributeDefaults, true);
 			final XdmSequenceIterator 	iterator 		= rootNode.axisIterator(Axis.CHILD);
 			
 			//logger.info(SaxonNodeWrapper.serializeNode(rootNode.getUnderlyingNode()));
@@ -223,10 +293,15 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 				rootClass 	= rootElement.getAttribute(DitaUtil.ATTR_CLASS, null);
 				rootTitle	= extractString(rootElement, LINK_TITLE_XSL);
 				rootName	= rootElement.getName();
+				
+				rootFilterProperties = FilterProperties.getFromNode(rootElement);
 
-				if ((fileHddCachePath != null) && (isHddCachable())) {
+				if ((fileHddCachePath != null) && (isHddCachable()) && (!isInitFromCache) && (fileTimestamp != null)) {
+					// don't write cache again, when initialization has already been done from cache.
 					writeHddCache(fileHddCachePath, fileTimestamp);
 				}
+				
+				isKeyRegistrationDone = true;
 			}
 			
 		} catch(SaxonApiException | TransformerException e) {
@@ -241,7 +316,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	 * 	- not containing uncachable XSLT-Conrefs
 	 */
 	private boolean isHddCachable() {
-		return ((refFileList.isEmpty()) && (!containsUncachableXsltConref));
+		return ((refFileByHref.isEmpty()) && (!containsUncachableXsltConref));
 	}
 
 	private String getFileHddCachePath() {
@@ -260,10 +335,13 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		try {
 			final XMLOutputFactory 	factory = bookCache.getXmlOutputFactory();
 	        final XMLStreamWriter 	writer	= factory.createXMLStreamWriter(new FileWriter(fileHddCachePath));
-	        
+
 			writer.writeStartElement(HC_ROOT);
+			writer.writeAttribute(HC_ATTR_FRAMEWORK_ID,	FRAMEWORK_ID);
 			writer.writeAttribute(HC_ATTR_SYSTEM_ID, 	source.getSystemId());
 			writer.writeAttribute(HC_ATTR_TIMESTAMP, 	fileTimestamp);
+			writer.writeAttribute(HC_ATTR_ROOT_DOC, 	bookCache.getRootDocumentUrl().getPath());
+
 			writer.writeAttribute(HC_ATTR_ROOT_NAME, 	rootName);
 			if (rootClass != null) {
 				writer.writeAttribute(HC_ATTR_ROOT_CLASS, 	rootClass);	
@@ -272,12 +350,20 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 				writer.writeAttribute(HC_ATTR_ROOT_TITLE, 	rootTitle);
 			}
 			
+			rootFilterProperties.writeToHddCache(writer);
+			
 			for (ContainedXsltConref containedXsltConref : containedXsltConrefs) {
 				containedXsltConref.writeDependencyToHddCache(writer);
 			}
 			
 			for (KeyDefInterface keyDef : keyDefList) {
 				keyDef.writeToHddCache(writer);
+			}
+			
+			for (String topicId : topicIds) {
+				writer.writeStartElement(HC_TOPIC);
+				writer.writeAttribute(DitaUtil.ATTR_ID, topicId);	
+				writer.writeEndElement();
 			}
 			
 			writer.writeCharacters("\n");
@@ -382,12 +468,35 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		}
 	}
 
-	private void ensureFileIsParsed() {
+	public void ensureFileIsParsed() {
 		if (!isFileParsed) {
 			parseFile(getFileHddCachePath());
 		}
 	}
+	
+	public boolean isUpdated() {
+		final String currTimestamp = FileUtil.getLastModifiedAsString(source.getSystemId());
+		return ((fileTimestamp != null) && (fileTimestamp.equals(currTimestamp)));
+	}
+	
+	public void refresh() {
+		isRefreshing = true;
+		
+		keyDefList.clear();
+		keyRefsByRefString.clear();
+		topicIds.clear();
+		isKeyRegistrationDone 	= false;
+		isFileParsed 			= false;
+		isInitFromCache 		= false;
+		fileTimestamp 			= FileUtil.getLastModifiedAsString(source.getSystemId());
+		
+		parseFile(getFileHddCachePath());
+		
+		// TODO: handle the case when a filereference has been removed
 
+		isRefreshing = false;
+	}
+	
 	private void initRootTopicNum() {
 		if (!rootTopicNumInitialized) {
 			rootTopicNumInitialized = true;
@@ -431,6 +540,16 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		}
 	}
 	
+	public StringBuffer getTopicNum(String topicId) {
+		ensureFileIsParsed();
+		final SaxonNodeWrapper topicNode = nodeByRefId.get(topicId);
+		if (topicNode != null) {
+			return getTopicNum(topicId, topicNode);
+		} else {
+			return null;
+		}
+	}
+	
 	private StringBuffer getTopicNum(String topicId, SaxonNodeWrapper topicNode) {
 		initRootTopicNum();
 		if (rootTopicNum != null) {
@@ -455,9 +574,9 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		return localNum;
 	}
 	
-	private String extractString(SaxonNodeWrapper node, String xslUrl) {
+	private String extractString(SaxonNodeWrapper node, String xslUri) {
 		try {
-			final XsltExecutable 	executable 		= bookCache.getExtractTransformerCache().getExecutable(new URL(bookCache.getDitaOtUrl(), xslUrl));
+			final XsltExecutable 	executable 		= bookCache.getExtractTransformerCache().getExecutable(xslUri);
 			final XsltTransformer 	xsltTransformer = executable.load();
 			xsltTransformer.setInitialContextNode(new XdmNode(node.getNodeInfo()));
 			
@@ -474,21 +593,34 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	
 
 	private void parseNode(NodeInfo node, TopicRefContainer parentTopicRefContainer, String parentTopicId) throws TransformerException {
-		//logger.info("parseNode: " + node/*.getUnderlyingNode()*/.getDisplayName() + ", " + node.getNodeKind());
+		//logger.info("parseNode: " + node.getDisplayName() + ", " + node.getNodeKind());
 		//if (node.getNodeKind() == XdmNodeKind.ELEMENT) {
 		if (node.getNodeKind() == Type.ELEMENT) {
 			
-			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node/*.getUnderlyingNode()*/, bookCache.getXPathCache());
+			final SaxonNodeWrapper nodeWrapper = new SaxonNodeWrapper(node, bookCache.getXPathCache());
 			
-			final KeyDef keyDef = KeyDef.fromNode(nodeWrapper, parentTopicId);
-			if (keyDef != null) {
-				keyDefList.add(keyDef);
-				bookCache.addKeyDef(keyDef);
+			if (!isKeyRegistrationDone) {
+				final KeyDef keyDef = KeyDef.fromNode(nodeWrapper, isResourceOnly, parentTopicId);
+				if (keyDef != null) {
+					keyDefList.add(keyDef);
+					bookCache.addKeyDef(keyDef);
+				}
 			}
 			
-			final XsltConref xsltConref = XsltConref.fromNode(nodeWrapper, xsltConrefCache);
+			final XsltConref xsltConref = XsltConref.fromNode(nodeWrapper, xsltConrefCache, false);
 			if (xsltConref != null) {
 				processXsltConref(xsltConref, parentTopicRefContainer, parentTopicId);
+			}
+			
+			final String refAttr = nodeWrapper.getAttribute(KeyRef.ATTR_REF, KeyRef.NAMESPACE_URI);
+			if (refAttr != null) {
+				Set<NodeInfo> keyRefs = keyRefsByRefString.get(refAttr);
+				if (keyRefs == null) {
+					keyRefs = new HashSet<NodeInfo>();
+					keyRefsByRefString.put(refAttr, keyRefs);
+				}
+				keyRefs.add(node);
+				bookCache.addKeyRef(refAttr, node);
 			}
 			
 			final String classAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_CLASS, null);
@@ -507,6 +639,8 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 					if (classAttr.contains(DitaUtil.CLASS_TOPIC)) {
 						addElementId(nodeWrapper, null, id);
 						parentTopicId = id;
+						topicIds.add(id);
+						bookCache.addTopicId(id, this);
 					} else {
 						addElementId(nodeWrapper, parentTopicId, id);
 					}
@@ -548,20 +682,24 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	private TopicRef parseTopicRef(NodeWrapper nodeWrapper, String classAttr, TopicRefContainer parentTopicRefContainer) throws TransformerException {
 		//logger.info("parseTopicRef");
 		TopicRef topicRef = null;
-		if (classAttr.contains(DitaUtil.CLASS_TOPIC_REF)) {
+		if ((classAttr.contains(DitaUtil.CLASS_TOPIC_REF)) || (classAttr.contains(DitaUtil.CLASS_IMPORT))) {
 			FileCache refFile = null;
-			final String processingRoleAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_PROCESSING_ROLE, null);
-			if ((processingRoleAttr == null) || (!processingRoleAttr.equals(DitaUtil.ROLE_RESOURCE_ONLY))) {
-				final String href = nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null);
-				if ((href != null) && (!href.isEmpty())) {
-					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href), classAttr);
+			final String 	processingRoleAttr = nodeWrapper.getAttribute(DitaUtil.ATTR_PROCESSING_ROLE, null);
+			final boolean 	fileIsResourceOnly = 
+					(classAttr.contains(DitaUtil.CLASS_IMPORT)) || 
+					(parentTopicRefContainer.isResourceOnly() || 
+					((processingRoleAttr != null) && (processingRoleAttr.equals(DitaUtil.ROLE_RESOURCE_ONLY))));
+			final String href = nodeWrapper.getAttribute((classAttr.contains(DitaUtil.CLASS_IMPORT) ? DitaUtil.ATTR_URI : DitaUtil.ATTR_HREF), null);
+			if ((href != null) && (!href.isEmpty())) {
+				refFile = refFileByHref.get(href);
+				if (refFile == null) {
+					refFile = bookCache.createFileCache(nodeWrapper.resolveUri(href), classAttr, fileIsResourceOnly);
 					if (refFile != null) {
-						refFileList.add(refFile);
+						refFileByHref.put(href, refFile);
 					}
 				}
 			}
-
-			topicRef = bookCache.createTopicRef(this, refFile, parentTopicRefContainer, nodeWrapper);
+	 		topicRef = bookCache.createTopicRef(this, refFile, parentTopicRefContainer, fileIsResourceOnly, nodeWrapper);
 		}
 		return topicRef;
 	}
@@ -605,8 +743,13 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 			case HC_DEPENDENCY:
 				checkDependency(attributes);
 				break;
+			case HC_TOPIC:
+				final String id = attributes.getValue(DitaUtil.ATTR_ID);
+				topicIds.add(id);
+				bookCache.addTopicId(id, FileCache.this);
+				break;
 			case KeyDef.HC_KEYDEF:
-				final KeyDef keyDef = KeyDef.fromHddCache(defUrl, attributes);
+				final KeyDef keyDef = KeyDef.fromHddCache(defUrl, attributes, isResourceOnly);
 				lastKeydef = keyDef;
 				keyDefList.add(keyDef);
 				bookCache.addKeyDef(keyDef);
@@ -625,7 +768,10 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		}
 
 		private void checkRoot(Attributes attributes) throws SAXException {
-			for (int i = 0; i < attributes.getLength(); ++i) {
+			if ((attributes.getLength() < 1) ||  (!attributes.getQName(0).equals(HC_ATTR_FRAMEWORK_ID)) || (!attributes.getValue(0).equals(FRAMEWORK_ID))) {
+				throw new CacheOutOfDate("framework-id");
+			}
+			for (int i = 1; i < attributes.getLength(); ++i) {
 				switch (attributes.getQName(i)) {
 				case HC_ATTR_SYSTEM_ID:
 					//logger.info(HC_ATTR_SYSTEM_ID + ": " + source.getSystemId() + " / " + attributes.getValue(i));
@@ -635,8 +781,13 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 					break;
 				case HC_ATTR_TIMESTAMP:
 					//logger.info(HC_ATTR_TIMESTAMP + ": " + fileTimestamp + " / " + attributes.getValue(i));
-					if (!fileTimestamp.equals(attributes.getValue(i))) {
+					if ((fileTimestamp == null) || (!fileTimestamp.equals(attributes.getValue(i)))) {
 						throw new CacheOutOfDate("root-timestamp");
+					}
+					break;
+				case HC_ATTR_ROOT_DOC:
+					if (!bookCache.getRootDocumentUrl().getPath().equals(attributes.getValue(i))) {
+						throw new CacheOutOfDate("root-doc");
 					}
 					break;
 				case HC_ATTR_ROOT_NAME:
@@ -649,7 +800,11 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 					rootTitle = attributes.getValue(i);
 					break;
 				default:
-					throw new SAXException("Unexpected attribute '" + attributes.getQName(i) + "' on root element.");
+					if (FilterProperties.isFilterAttribute(attributes.getQName(i))) {
+						rootFilterProperties.set(attributes.getQName(i), attributes.getValue(i));
+					} else {
+						throw new SAXException("Unexpected attribute '" + attributes.getQName(i) + "' on root element.");
+					}
 				}
 			}
 			
@@ -747,7 +902,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 
 		@Override
 		public void init() {
-			logger.info("init XSLT-Conref: " + xsltConref.getScriptName());
+			//logger.info("init XSLT-Conref: " + xsltConref.getScriptName());
 			try {
 				final NodeInfo resolved = xsltConref.resolveToNode(null);
 				//logger.info(SaxonNodeWrapper.serializeNode(resolved));
@@ -761,9 +916,14 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 		
 		@Override
 		public int getPriority() {
-			return stage;
+			return stage + INIT_PRIORITY_OFFSET_XSLT_CONREF;
 		}
-		
 	}
 
+	public String getFileTimestamp() {
+		return fileTimestamp;
+	}
+	public FilterProperties getRootFilterProperites() {
+		return rootFilterProperties;
+	}
 }

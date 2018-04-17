@@ -3,11 +3,14 @@ package org.DitaSemia.Oxygen.AuthorOperations;
 import java.awt.Component;
 import java.awt.Frame;
 
+import javax.swing.JOptionPane;
+
 import org.DitaSemia.Oxygen.BookCacheHandler;
+import org.DitaSemia.Oxygen.OxyUtil;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
-import org.DitaSemia.Base.AdvancedKeyref.KeyDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyPrioritizer;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.OxyAdvancedKeyrefDialog;
 import org.apache.log4j.Logger;
@@ -20,7 +23,6 @@ import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.ecss.extensions.api.node.NamespaceContext;
 
 public class EditKeyRef implements AuthorOperation {
 
@@ -37,54 +39,53 @@ public class EditKeyRef implements AuthorOperation {
 			final int 						caretOffset 		= authorAccess.getEditorAccess().getCaretOffset();
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				nodeAtCaret 		= documentController.getNodeAtOffset(caretOffset);
-			final KeyDefListInterface 		keyDefList 			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
-			final KeyRef 					keyRef 				= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
-			// contextKeyDef?
-			// ancestorKeyDef, keyrefFactory fÃ¼r keyPrioritizer?
-			final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(keyDefList, keyRef, null, null);
-			final OxyAdvancedKeyrefDialog 	editKeyRefDialog 	= new OxyAdvancedKeyrefDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), keyDefList, keyRef, null, keyPrioritizer);
-
-			editKeyRefDialog.setLocationRelativeTo((Component)authorAccess.getWorkspaceAccess().getParentFrame());
-
-			KeyDefInterface keyDef;
+			final BookCache					bookCache			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
 			
-			if (editKeyRefDialog.showDialog()) {
-				keyDef = editKeyRefDialog.getSelectedKeyDef();
-			} else {
-				keyDef = null;
-			}
+			if (bookCache == null) {
+				JOptionPane.showMessageDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), "This operation can not be done while the BookCache is being refreshed. Please wait until the refresh is done and try again!", "Information", JOptionPane.INFORMATION_MESSAGE);
+			} else {	
+				//final KeyDefListInterface 		keyDefList 			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
+				final KeyRef 					keyRef 				= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
+				final KeyDefInterface			contextKeyDef		= bookCache.getAncestorKeyDef(new AuthorNodeWrapper(nodeAtCaret, authorAccess), null);
+				final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(bookCache, keyRef, null, null);
+			
+				final OxyAdvancedKeyrefDialog 	editKeyRefDialog 	= new OxyAdvancedKeyrefDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), bookCache, keyRef, contextKeyDef, keyPrioritizer);
+	
+				editKeyRefDialog.setLocationRelativeTo((Component)authorAccess.getWorkspaceAccess().getParentFrame());
+	
+				KeyDefInterface keyDef;
+				
+				if (editKeyRefDialog.showDialog()) {
+					keyDef = editKeyRefDialog.getSelectedKeyDef();
+				} else {
+					keyDef = null;
+				}
+	
+				if (keyDef != null) {
+					String keyValue = editKeyRefDialog.getKeyText();
+					
+					documentController.beginCompoundEdit();
+					
+					AuthorElement keyRefElement = (AuthorElement)nodeAtCaret;
+					if (keyRefElement.getEndOffset() > keyRefElement.getStartOffset() + 1) {
+						documentController.delete(keyRefElement.getStartOffset() + 1, keyRefElement.getEndOffset() - 1);
+					}
+					OxyUtil.setAttribute(documentController, keyRefElement, KeyRef.NAMESPACE_URI, KeyRef.NAMESPACE_PREFIX, KeyRef.ATTR_REF, keyDef.getRefString());
+			        
+			        if (!keyRef.isOutputclassFixed()) {
+			        	documentController.setAttribute(KeyRef.ATTR_OUTPUTCLASS, new AttrValue(editKeyRefDialog.getOutputclass()), keyRefElement);
+			        }
 
-			if (keyDef != null) {
-				String keyValue = editKeyRefDialog.getKeyText();
-				
-				documentController.beginCompoundEdit();
-				
-				AuthorElement keyRefElement = (AuthorElement)nodeAtCaret;
-				if (keyRefElement.getEndOffset() > keyRefElement.getStartOffset() + 1) {
-					//logger.info("Lösche bestehenden Inhalt.");
-					documentController.delete(keyRefElement.getStartOffset() + 1, keyRefElement.getEndOffset() - 1);
+			        // set text content as last step so the edit listener uses the new attributes
+					documentController.insertText(keyRefElement.getStartOffset() + 1, keyValue);
+					
+					documentController.endCompoundEdit();
+					
+					authorAccess.getEditorAccess().refresh(nodeAtCaret);
 				}
-				//logger.info("Setze Key = " + keyValue);
-				documentController.insertText(keyRefElement.getStartOffset() + 1, keyValue);
-				final NamespaceContext namespaceContext = nodeAtCaret.getNamespaceContext();
-				String namespacePrefix	= namespaceContext.getPrefixForNamespace(KeyRef.NAMESPACE_URI);
-				if (namespacePrefix == null) {
-					namespacePrefix = KeyRef.NAMESPACE_PREFIX;
-					documentController.setAttribute(
-							"xmlns:" + KeyRef.NAMESPACE_PREFIX, 
-							new AttrValue(KeyRef.NAMESPACE_URI), 
-							documentController.getAuthorDocumentNode().getRootElement());
-				}
-		        documentController.setAttribute(namespacePrefix + ":" + KeyRef.ATTR_REF, new AttrValue(keyDef.getRefString()), keyRefElement);
-		        
-		        if (!keyRef.isOutputclassFixed()) {
-		        	documentController.setAttribute(KeyRef.ATTR_OUTPUTCLASS, new AttrValue(editKeyRefDialog.getOutputclass()), keyRefElement);
-		        }
-				
-				documentController.endCompoundEdit();
-				
-				authorAccess.getEditorAccess().refresh(nodeAtCaret);
 			}
+			
+			
 		} catch (Exception e) {
 			logger.error(e, e);
 		}

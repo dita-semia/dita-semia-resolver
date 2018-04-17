@@ -114,4 +114,9 @@ public class AuthorTextNodeWrapper implements NodeWrapper {
 		return false;
 	}
 
+	@Override
+	public List<NodeWrapper> evaluateXPathToNodeList(String xPath) throws XPathException, XPathNotAvaliableException {
+		throw new RuntimeException("Not implemented.");
+	}
+
 }

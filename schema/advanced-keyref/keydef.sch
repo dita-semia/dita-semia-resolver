@@ -8,7 +8,7 @@
 	<sch:ns uri="java:org.DitaSemia.Oxygen.SchematronUtil" 								prefix="jsu"/>
 	<sch:ns uri="java:org.DitaSemia.Oxygen.AdvancedKeyRef.ImplicitKeyDefSchematronUtil" prefix="jikd"/>
 
-	<sch:pattern>
+	<sch:pattern id="implicit-keydef">
 		<sch:rule context="*[@ikd:key-type]">
 
 			<sch:let name="keyAttr"			value="@ikd:key"/>
@@ -17,28 +17,38 @@
 			<sch:let name="refNodeAttr"		value="@ikd:ref-node"/>
 			<sch:let name="nameAttr"		value="@ikd:name"/>
 			<sch:let name="descAttr"		value="@ikd:desc"/>
+			<sch:let name="flags"			value="tokenize(@ikd:flags, '\s+')"/>
 
 			<sch:let name="jKeyDef"			value="jikd:createKeyDef(.)"/>
 
 			<sch:let name="keyValue"		value="if (exists($jKeyDef)) 		then jkd:getKey($jKeyDef) else ''"/>
+			<sch:let name="refString"		value="if (exists($jKeyDef)) 		then jkd:getRefString($jKeyDef) else ''"/>
 			<sch:let name="namespaceValue"	value="if (exists($jKeyDef)) 		then jkd:getNamespaceList($jKeyDef) else ()"/>
 			<sch:let name="rootNode"		value="if (exists($rootAttr)) 		then jsu:evaluateXPathToNode(., $rootAttr) else ."/>
 			<sch:let name="refNode"			value="if (exists($refNodeAttr)) 	then jsu:evaluateXPathToNode($rootNode, $refNodeAttr) else $rootNode"/>
+			<sch:let name="defError"		value="if (exists($jKeyDef)) 		then jikd:getDefErrorMessage($jKeyDef) else ()"/>
 
-			<sch:let name="namespaceError"	value="if (empty($jKeyDef)) then jikd:getXPathListErrorMessage(., $namespaceAttr) else ()"/>
-			<sch:let name="rootError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., $rootAttr) else ()"/>
-			<sch:let name="nameError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., $nameAttr) else ()"/>
-			<sch:let name="descError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., $descAttr) else ()"/>
-			<sch:let name="keyError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., $keyAttr) else ()"/>
-
+			<sch:let name="namespaceError"	value="if (empty($jKeyDef)) then jikd:getXPathListErrorMessage(., $namespaceAttr) 		else ()"/>
+			<sch:let name="rootError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., 			$rootAttr) 		else ()"/>
+			<sch:let name="refNodeError"	value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($rootNode, 	$refNodeAttr) 	else ()"/>
+			<sch:let name="nameError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode,	$nameAttr) 		else ()"/>
+			<sch:let name="descError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode, 	$descAttr) 		else ()"/>
+			<sch:let name="keyError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode, 	$keyAttr) 		else ()"/>
+			
 			<sch:report test="exists($rootError)">
 				Invalid value for @ikd:root. It must be empty or a valid XPath: <sch:value-of select="$rootError"/> 
 			</sch:report>
 			<sch:report test="exists($rootAttr) and empty($rootNode intersect ancestor-or-self::*)">
 				Invalid value for @ikd:root. It must identify an ancestor or the element itself. 
 			</sch:report>
-			<sch:report test="exists($jKeyDef) and exists($refNode) and empty($refNode/@id) and empty(processing-instruction('SuppressWarnings')[tokenize(., '\s+') = 'ikd:missingId'])" role="warn">
-				The referenced element ('<sch:value-of select="name($refNode)"/>') has no id attribute. Referencing elements won't create a link.
+			<sch:report test="exists($refNodeError)">
+				Invalid value for @ikd:ref-node. It must be empty or a valid XPath: <sch:value-of select="$refNodeError"/> 
+			</sch:report>
+			<sch:report test="exists($jKeyDef) and exists($refNode) and empty($refNode/@id) and empty(processing-instruction('SuppressWarnings')[tokenize(., '\s+') = 'ikd:missingId']) and not($flags = 'dont-link')" role="warn">
+				The root element ('<sch:value-of select="name($refNode)"/>') of the keydef has no id attribute. Referencing elements won't create a link.
+			</sch:report>
+			<sch:report test="exists($defError)">
+				Invalid implicit key definition: <sch:value-of select="$defError"/>
 			</sch:report>
 			<sch:report test="exists($keyError)">
 				Invalid value for @ikd:key. It must be empty or a valid XPath: <sch:value-of select="$keyError"/> 
@@ -60,7 +70,6 @@
 				Invalid value for the namespace ('<sch:value-of select="string-join($namespaceValue, ', ')"/>').
 				It must not contain elements with ".", ":" or "/".
 			</sch:report>
-			<!-- TODO: dublicated keyDef -->
 		</sch:rule>
 	</sch:pattern>
 

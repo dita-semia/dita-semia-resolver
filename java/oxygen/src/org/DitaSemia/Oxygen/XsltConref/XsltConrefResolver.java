@@ -6,8 +6,8 @@
 package org.DitaSemia.Oxygen.XsltConref;
 
 import java.io.StringReader;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.sax.SAXSource;
 
@@ -15,6 +15,7 @@ import net.sf.saxon.om.Sequence;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.trans.XPathException;
 
+import org.DitaSemia.Base.XPathNotAvaliableException;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.XsltConref.TempContextException;
 import org.DitaSemia.Base.XsltConref.XsltConref;
@@ -42,8 +43,9 @@ public class XsltConrefResolver {
 
 	private static XsltConrefResolver instance			= null;
 
-	protected final XsltConrefCache 	xsltConrefCache;
-	protected final List<Parameter> 	frameworkParameters	= new LinkedList<>();
+	protected final XsltConrefCache 		xsltConrefCache;
+	protected final Map<QName, Parameter> 	frameworkParameters	= new HashMap<>();
+	
 	
 
 	public static final String	NAME_TEMP_CONTEXT 	= "temp-context";
@@ -59,21 +61,26 @@ public class XsltConrefResolver {
 	public XsltConrefResolver() {
 		xsltConrefCache = BookCacheHandler.getInstance().getXsltConrefCache();
 	}
+	
+	public XsltConrefResolver(XsltConrefCache xsltConrefCache) {
+		this.xsltConrefCache = xsltConrefCache;
+	}
 
 	public void addFrameworkParameter(QName name, Sequence value) {
-		frameworkParameters.add(new Parameter(name, value));
+		frameworkParameters.put(name, new Parameter(name, value));
 	}
 	
-	public XsltConref xsltConrefFromNode(AuthorNode node, AuthorAccess authorAccess) {
-		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess), xsltConrefCache);
+	public XsltConref xsltConrefFromNode(AuthorNode node, AuthorAccess authorAccess, boolean acceptCopy) {
+		final XsltConref xsltConref = XsltConref.fromNode(new AuthorNodeWrapper(node, authorAccess), xsltConrefCache, acceptCopy);
 		return xsltConref;
 	}
 
 	public static boolean isXsltConrefAttr(AuthorNode node, String attributeName) {
 		final String customParameterPrefix = node.getNamespaceContext().getPrefixForNamespace(XsltConref.NAMESPACE_PARAMETER_URI);
 		return (attributeName.equals(XsltConref.ATTR_URI)) ||
-				(attributeName.equals(XsltConref.ATTR_XML_SOURCE_URI)) ||
+				(attributeName.equals(XsltConref.ATTR_SOURCE_URI)) ||
 				(attributeName.equals(XsltConref.ATTR_START_TEMPLATE)) ||
+				(attributeName.equals(XsltConref.ATTR_FLAGS)) ||
 				(attributeName.startsWith(customParameterPrefix + ":"));
 	}
 
@@ -121,12 +128,15 @@ public class XsltConrefResolver {
 	public SAXSource resolveXsltConref(XsltConref xsltConref, AuthorAccess authorAccess) throws ReferenceResolverException {
 		String resolvedString;
 		try {
-			resolvedString = xsltConref.resolveToString(frameworkParameters);
+			final AuthorNodeWrapper node = (AuthorNodeWrapper)xsltConref.getNode();
+			node.checkXPathAvailable();
+
+			resolvedString = xsltConref.resolveToString(frameworkParameters.values());
 			//logger.info("resolvedString: " + resolvedString);
 		} catch (XPathException e) {
 			logger.error(e.getMessage(), e);
 			throw new ReferenceResolverException(e.getMessage(), true, true);
-		} catch (TempContextException e) {
+		} catch (TempContextException | XPathNotAvaliableException e) {
 			resolvedString = "<" + NAME_TEMP_CONTEXT + "/>";
 		}
 		final XMLReader xmlReader = authorAccess.getXMLUtilAccess().newNonValidatingXMLReader();

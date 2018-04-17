@@ -9,7 +9,10 @@
 	<xsl:variable name="C_BOOKMAP"			as="xs:string"> bookmap/bookmap </xsl:variable>
 	<xsl:variable name="C_MAINBOOKTITLE"	as="xs:string"> bookmap/mainbooktitle </xsl:variable>
 	
+	<xsl:variable name="C_TOPICREF"			as="xs:string"> map/topicref </xsl:variable>
+	
 	<xsl:variable name="C_TOPIC"			as="xs:string"> topic/topic </xsl:variable>
+	<xsl:variable name="C_SHORTDESC"		as="xs:string"> topic/shortdesc </xsl:variable>
 	<xsl:variable name="C_PROLOG"			as="xs:string"> topic/prolog </xsl:variable>
 	<xsl:variable name="C_BODY"				as="xs:string"> topic/body </xsl:variable>
 	<xsl:variable name="C_SECTION"			as="xs:string"> topic/section </xsl:variable>
@@ -25,6 +28,7 @@
 	<xsl:variable name="C_FOREIGN"			as="xs:string"> topic/foreign </xsl:variable>
 	<xsl:variable name="C_PH"				as="xs:string"> topic/ph </xsl:variable>
 	<xsl:variable name="C_I"				as="xs:string"> hi-d/i </xsl:variable>
+	<xsl:variable name="C_B"				as="xs:string"> hi-d/b </xsl:variable>
 	
 	<xsl:variable name="C_UL"				as="xs:string"> topic/ul </xsl:variable>
 	<xsl:variable name="C_OL"				as="xs:string"> topic/ol </xsl:variable>
@@ -57,14 +61,18 @@
 	<xsl:variable name="C_CODEBLOCK"		as="xs:string"> pr-d/codeblock </xsl:variable>
 	<xsl:variable name="C_CODEPH"			as="xs:string"> pr-d/codeph </xsl:variable>
 	
+	<xsl:variable name="C_FILEPATH"			as="xs:string"> sw-d/filepath </xsl:variable>
+	
 	<xsl:variable name="C_SVG_CONTAINER"	as="xs:string"> svg-d/svg-container </xsl:variable>
 	
 	<xsl:variable name="C_KEY_XREF"			as="xs:string"> akr-d/key-xref </xsl:variable>
+	<xsl:variable name="C_TOPIC_CONTAINER"	as="xs:string"> ds-d/topic-container </xsl:variable>
 	
 	
 	<!-- classpaths to be used for creating elements with class="{$CP_xxx}" -->
 	
 	<xsl:variable name="CP_TOPIC"			as="xs:string"	select="concat('-', $C_TOPIC)"/>
+	<xsl:variable name="CP_SHORTDESC"		as="xs:string"	select="concat('-', $C_SHORTDESC)"/>
 	<xsl:variable name="CP_PROLOG"			as="xs:string"	select="concat('-', $C_PROLOG)"/>
 	<xsl:variable name="CP_BODY"			as="xs:string"	select="concat('-', $C_BODY)"/>
 	<xsl:variable name="CP_SECTION"			as="xs:string"	select="concat('-', $C_SECTION)"/>
@@ -80,6 +88,7 @@
 	<xsl:variable name="CP_FOREIGN"			as="xs:string"	select="concat('-', $C_FOREIGN)"/>
 	<xsl:variable name="CP_PH"				as="xs:string"	select="concat('-', $C_PH)"/>
 	<xsl:variable name="CP_I"				as="xs:string"	select="concat('+ topic/ph', $C_I)"/>
+	<xsl:variable name="CP_B"				as="xs:string"	select="concat('+ topic/ph', $C_B)"/>
 	
 	<xsl:variable name="CP_UL"				as="xs:string"	select="concat('-', $C_UL)"/>
 	<xsl:variable name="CP_OL"				as="xs:string"	select="concat('-', $C_OL)"/>

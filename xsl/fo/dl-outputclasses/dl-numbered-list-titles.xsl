@@ -1,14 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<xsl:stylesheet exclude-result-prefixes="#all" version="2.0"
-	xmlns:ditaarch="http://dita.oasis-open.org/architecture/2005/" xmlns:ds="org.dita-semia.resolver"
-	xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:opentopic="http://www.idiominc.com/opentopic"
-	xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+	xmlns:xs				= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsl				= "http://www.w3.org/1999/XSL/Transform" 
+	xmlns:fo				= "http://www.w3.org/1999/XSL/Format"
+	xmlns:ds				= "http://www.dita-semia.org"
+	exclude-result-prefixes	= "#all">
 	
 	
 	<xsl:variable name="DL_OUTPUTCLASS_NUMBERED_LIST_TITLES" as="xs:string">numbered-list-titles</xsl:variable>
-	
-	<!-- outputclass "numbered-list-titles" -->
 	
 	
 	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_NUMBERED_LIST_TITLES]">
@@ -51,11 +50,11 @@
 			<xsl:if test="exists(following-sibling::*)">
 				<xsl:attribute name="keep-with-next.within-column">100</xsl:attribute>
 			</xsl:if>
-			
 			<xsl:call-template name="commonattributes"/>
-			
+			<xsl:call-template name="ds:dt-toc-id">
+				<xsl:with-param name="inline" select="true()"/>	<!-- fo:block mght mess up the keep-together with the item label -->
+			</xsl:call-template>
 			<xsl:apply-templates mode="#default"/>
-			
 		</fo:block>
 		
 	</xsl:template>
@@ -64,11 +63,8 @@
 	<xsl:template match="*[contains(@class, ' topic/dd ')]" mode="dl-numbered-list-titles">
 		
 		<fo:block xsl:use-attribute-sets="ds:dd-numbered-list-titles">
-			
 			<xsl:call-template name="commonattributes"/>
-			
 			<xsl:apply-templates mode="#default"/>
-			
 		</fo:block>
 		
 	</xsl:template>

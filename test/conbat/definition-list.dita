@@ -2,9 +2,9 @@
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="urn:dita-semia:conbat:schema:conbat-topic.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <topic xmlns:cba="http://www.dita-semia.org/conbat" id="gh2_vhd_xt">
-  <title>Definition List</title>
-  <body>
-  	<p>Predefined definition terms with different output classes.</p>
+	<title>Definition List</title>
+	<body>
+		<p>Predefined definition terms with different output classes.</p>
 		<section>
 			<title>Standard Layout</title>
 			<p>Outputclass: &lt;empty></p>
@@ -138,7 +138,9 @@
 				</dlentry>
 				<dlentry>
 					<dt>Term 2</dt>
-					<dd><p>Description of 2nd term.</p></dd>
+					<dd>
+						<p>Description of 2nd term.</p>
+					</dd>
 				</dlentry>
 				<dlentry>
 					<dt>Term 3</dt>
@@ -154,7 +156,7 @@
 				<dd cba:dt="Term 2">
 					<p id="l1x_cjx_gy">Description of 2nd term.</p>
 				</dd>
-				<dd cba:dt="Term 3">Description of 3rd term.</dd>
+				<dd cba:dt="Term 3" cba:default-content="xxx"/>
 			</dl>
 			<p id="r4p_2ht_1y">Reference <codeph>dl</codeph> element without Conbat:</p>
 			<dl outputclass="header-table">

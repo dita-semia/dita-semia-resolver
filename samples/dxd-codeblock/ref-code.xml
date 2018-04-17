@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:ds-dxd;rootType=Complex1-Type;rootName=Complex1!/urn:dxd-dummy">
+	<codeblock id="cb1">
+		<Complex1>
+			<Simple1>12345678901</Simple1>
+			<Simple2/>
+		</Complex1>
+	</codeblock>
+	<codeblock id="cb2">
+		<Complex1>
+			<Simple1/>
+			<Simple2/>
+		</Complex1>
+	</codeblock>
+	
+</list>

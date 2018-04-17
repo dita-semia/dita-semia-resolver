@@ -14,6 +14,8 @@ public class DitaSemiaLinkTextResolver extends DitaLinkTextResolver {
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(DitaSemiaLinkTextResolver.class.getName());
 	
+	private boolean active = true;
+	
 	AuthorAccess authorAccess = null;
 	
 	@Override
@@ -24,13 +26,25 @@ public class DitaSemiaLinkTextResolver extends DitaLinkTextResolver {
 
 	@Override
 	public String resolveReference(AuthorNode node) throws InvalidLinkException {
-		String resolved = XRefLinkTextResolver.resolveReference(node, authorAccess);
-		if (resolved == null) {
-			resolved = AdvancedKeyRefContentResolver.resolveContent(node, authorAccess);
+		if (active) {
+			String resolved = XRefLinkTextResolver.resolveReference(node, authorAccess);
 			if (resolved == null) {
-				resolved = super.resolveReference(node);
+				resolved = AdvancedKeyRefContentResolver.resolveContent(node, authorAccess);
+				if (resolved == null) {
+					resolved = super.resolveReference(node);
+				}
 			}
-		}
-		return resolved;
+			return resolved;
+		} else {
+			return "";
+		}		
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 }

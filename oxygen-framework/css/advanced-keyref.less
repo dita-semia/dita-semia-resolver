@@ -1,5 +1,5 @@
 
-*[*|key-type] {
+*[*|key-type]:not([*|content]) {
 	-oxy-show-placeholder:	always;
 }
 
@@ -12,14 +12,13 @@
 	This is the case for all with text content (= when there is no key-xpath specified), 
 	and for specific other clases (list not necessarily complete). */
 	content:
-		oxy_editor(
-			rendererClassName, 		"org.DitaSemia.Oxygen.NoBorderButtonEditor",
-        	swingEditorClassName, 	"org.DitaSemia.Oxygen.NoBorderButtonEditor",
+		oxy_button(
 			action, 					oxy_action(
 				name,       '',
 				operation,  'org.DitaSemia.Oxygen.AuthorOperations.ShowKeyDefInformation',
 				icon,       url('../img/key.png')),
 			transparent,    			true,
+			showIcon, 					true,
 			enableInReadOnlyContext,	true);
 	vertical-align: middle;
 }
@@ -31,19 +30,21 @@
 }*/
 
 
-*[*|ref]:before(@{keyref-link-prefix-index}) {
+*[*|ref]:not([outputclass='svg']):before(@{keyref-link-prefix-index}) {
     content: url("../img/link.png");
     vertical-align: middle;
 	background-color:	@keyref-autotext-background-color;
 }
 
 *[*|ref]:before(@{keyref-type-prefix-index}),
-*[*|ref]:after(@{keyref-type-suffix-index}) {
+*[*|ref]:after(@{keyref-type-suffix-index}),
+*[*|key-type]:before(@{keyref-type-prefix-index}),
+*[*|key-type]:after(@{keyref-type-suffix-index}) {
     content: "";
 	background-color:	@keyref-autotext-background-color;
 }
 
-*[*|ref] {
+*[*|ref]:not([*|content]) {
 	-oxy-show-placeholder:	always;
 }
 
@@ -69,15 +70,14 @@
 	content: "";	/* Hide the button when the key is set by cba:content. */
 }
 
-*[*|ref][outputclass='key-name-braced']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='key-name-braced!']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='key-name-dashed']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='key-name-dashed!']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='name']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='name!']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='key-colon-name-quoted']:after(@{keyref-name-suffix-index}),
-*[*|ref][outputclass='key-colon-name-quoted!']:after(@{keyref-name-suffix-index}) {
+*[*|ref]:after(@{keyref-name-suffix-index}) {
 	content: 			oxy_link-text();
+	background-color:	@keyref-autotext-background-color;
+}
+
+*[*|ref][outputclass='key']:after(@{keyref-name-suffix-index}),
+*[*|ref][outputclass='key!']:after(@{keyref-name-suffix-index}) {
+	content: 			"";
 	background-color:	@keyref-autotext-background-color;
 }
 
@@ -98,4 +98,11 @@
 	/* undo changes for edit-only content */
 	color: 		black;
 	font-size: 	(1em / @edit-only-font-size-scale);
+}
+
+*[*|ref][outputclass='svg'] {
+	display: block;
+}
+*[*|ref][outputclass='svg']:after(@{keyref-name-suffix-index}) {
+	content: "";
 }

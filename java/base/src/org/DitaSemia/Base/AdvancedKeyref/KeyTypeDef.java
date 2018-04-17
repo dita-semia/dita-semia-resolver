@@ -17,6 +17,7 @@ public class KeyTypeDef {
 	protected final String 			prefix;
 	protected final String 			suffix;
 	protected final int 			selectPriority;
+	protected final String			pathDelimiter;
 	protected final HashSet<String>	ancestorTypes;
 
 	public static final String ELEMENT				= "KeyTypeDef";
@@ -26,8 +27,9 @@ public class KeyTypeDef {
 	public static final String ATTR_PREFIX			= "prefix";
 	public static final String ATTR_SUFFIX			= "suffix";
 	public static final String ATTR_SELECT_PRIORITY	= "selectPriority";
+	public static final String ATTR_PATH_DELIMITER	= "path-delimiter";
 	
-	public static final KeyTypeDef DEFAULT = new KeyTypeDef(null, false, true, "", "", 1, null);
+	public static final KeyTypeDef DEFAULT = new KeyTypeDef(null, false, true, "", "", 1, "/", null);
 
 	public static KeyTypeDef fromNode(SaxonNodeWrapper saxonNodeWrapper, KeyTypeDef parent) {
 		final String 			name 			= saxonNodeWrapper.getAttribute(ATTR_NAME, null);
@@ -36,13 +38,14 @@ public class KeyTypeDef {
 		final String 			prefix			= getString		(saxonNodeWrapper, ATTR_PREFIX, 			parent.getPrefix());
 		final String 			suffix			= getString		(saxonNodeWrapper, ATTR_SUFFIX, 			parent.getSuffix());
 		final int 				selectPriority	= getInt		(saxonNodeWrapper, ATTR_SELECT_PRIORITY, 	parent.getSelectPriority());
-		
+		final String 			pathDelimiter	= getString		(saxonNodeWrapper, ATTR_PATH_DELIMITER, 	parent.getPathDelimiter());
+
 		final HashSet<String>	ancestorTypes	= parent.getAncestorTypes();
 		if (parent.getName() != null) {
 			ancestorTypes.add(parent.getName());
 		}
 		
-		return new KeyTypeDef(name, isCodeFont, isItalicFont, prefix, suffix, selectPriority, ancestorTypes);
+		return new KeyTypeDef(name, isCodeFont, isItalicFont, prefix, suffix, selectPriority, pathDelimiter, ancestorTypes);
 	}
 
 	private static boolean getBoolean(NodeWrapper node, String attrName, boolean defaultValue) {
@@ -72,13 +75,14 @@ public class KeyTypeDef {
 		}
 	}
 
-	public KeyTypeDef(String name, boolean isCodeFont, boolean isItalicFont, String prefix, String suffix, int selectPriority, Collection<String> ancestorTypes) {
+	public KeyTypeDef(String name, boolean isCodeFont, boolean isItalicFont, String prefix, String suffix, int selectPriority, String pathDelimiter, Collection<String> ancestorTypes) {
 		this.name			= name;
 		this.isCodeFont		= isCodeFont;
 		this.isItalicFont	= isItalicFont;
 		this.prefix			= prefix;
 		this.suffix			= suffix;
 		this.selectPriority	= selectPriority;
+		this.pathDelimiter	= pathDelimiter;
 		this.ancestorTypes	= (ancestorTypes == null) ? new HashSet<>() : new HashSet<>(ancestorTypes);
 
 		//logger.info("new KeyTypeDef: " + toString());
@@ -108,6 +112,10 @@ public class KeyTypeDef {
 		return selectPriority;
 	}
 
+	public String getPathDelimiter() {
+		return pathDelimiter;
+	}
+	
 	public HashSet<String> getAncestorTypes() {
 		return new HashSet<String>(ancestorTypes);
 	}
@@ -121,6 +129,7 @@ public class KeyTypeDef {
 			", prefix: '" + prefix + "'" + 
 			", suffix: '" + suffix + "'" + 
 			", selectPriority: " + selectPriority +
+			", pathDelimiter: " + pathDelimiter + 
 			", ancestorTypes: " + (((ancestorTypes == null) || (ancestorTypes.isEmpty())) ? '-' : String.join("/", ancestorTypes));
 	}
 }

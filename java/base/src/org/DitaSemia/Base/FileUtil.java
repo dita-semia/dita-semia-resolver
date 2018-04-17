@@ -5,17 +5,19 @@
 
 package org.DitaSemia.Base;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 
 import javax.xml.transform.TransformerException;
-
 import org.apache.log4j.Logger;
-
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.trans.XPathException;
 
 /**
  * The FileUtil class is a utility class for handling URLs that should represent Files.
@@ -24,6 +26,9 @@ public class FileUtil {
 	
 	public static final String 				TIMESTAMP_FORMAT_PATTERN 	= "yyyy-MM-dd HH:mm:ss.SSS";
 	public static final SimpleDateFormat	TIMESTAMP_FORMAT			= new SimpleDateFormat(TIMESTAMP_FORMAT_PATTERN);
+	
+
+	public static final String TEMP_DIR_MARKER = "t1/t2/t3/t4/t5";
 
 	private static final Logger logger = Logger.getLogger(FileUtil.class.getName());
 
@@ -94,7 +99,11 @@ public class FileUtil {
 	 * @return the decoded URL or null if an error occurred.
 	 */
 	public static String decodeUrl(URL url) {
-		return decodeUrl(url.toExternalForm());
+		if (url != null) {
+			return decodeUrl(url.toExternalForm());
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -106,21 +115,76 @@ public class FileUtil {
 	 * @return the decoded URL or null if an error occurred.
 	 */
 	public static String decodeUrl(String url) {
-		try {
-			return URLDecoder.decode(url, "UTF-8");
-		} catch (Exception e) {
+		if (url != null) {
+			try {
+				return URLDecoder.decode(url, "UTF-8");
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
 			return null;
 		}
 	}
-
-	public static String getLastModifiedAsString(String systemId) {
+	
+	public static long getLastModified(String systemId) {
 		try {
 			final URL 	url 		= new URL(systemId);
-			final long 	timestamp 	= (new File(url.getFile())).lastModified();
-			return TIMESTAMP_FORMAT.format(timestamp);
+			final File	file		= new File(decodeUrl(url.getFile())); 
+			return file.lastModified();
 		} catch (MalformedURLException e) {
+			return 0;
+		}
+	}
+	
+	public static String getLastModifiedAsString(String systemId) {
+		final long 	timestamp 	= getLastModified(systemId);
+		if (timestamp > 0) {
+			return TIMESTAMP_FORMAT.format(timestamp);
+		} else {
 			return null;
 		}
 	}
+	
+	public static String readFileToString(File file) throws XPathException {
 
+	    try (BufferedReader reader = new BufferedReader(new FileReader(file));) {
+		    String         line 			= null;
+		    StringBuilder  stringBuilder 	= new StringBuilder();
+		    String         ls 				= System.getProperty("line.separator");
+	        while((line = reader.readLine()) != null) {
+	            stringBuilder.append(line);
+	            stringBuilder.append(ls);
+	        }
+
+	        return stringBuilder.toString();
+	    } catch (IOException e) {
+			logger.error(e, e);
+	    	throw new XPathException("Unable to read file: '" + file.getAbsolutePath() + "'. (" + e.getMessage() + ")");
+		} 
+	}
+
+
+
+	public static URL getFixedBaseUrl(NodeWrapper node, String baseDir) {
+		
+		// set original base-url of file when processed by DITA-OT
+		final String xtrfString = node.getAttribute("xtrf", null);
+		if (xtrfString != null) {
+			String url;
+			if (xtrfString.contains(TEMP_DIR_MARKER)) {
+				// handle fix.external.refs.com.oxygenxml
+				url = "file:/" + baseDir + xtrfString.substring(xtrfString.indexOf(TEMP_DIR_MARKER) + TEMP_DIR_MARKER.length());
+			} else {
+				url = xtrfString;
+			}
+			try {
+				return new URL(url);
+			} catch (MalformedURLException e) {
+				logger.error(e, e);
+				return null;
+			}
+		} else {
+			return node.getBaseUrl();
+		}
+	}
 }

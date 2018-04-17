@@ -36,11 +36,11 @@ public class RefreshXsltConref implements AuthorOperation {
 			final AuthorNode	nodeAtCaret = authorAccess.getDocumentController().getNodeAtOffset(caretOffset);
 			
 			AuthorNode 	xsltConrefNode 	= nodeAtCaret;
-			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess);
+			XsltConref	xsltConref 	= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess, false);
 			if (xsltConref == null) {
 				// check if the parent node is an XSLT-Conref
 				xsltConrefNode 	= nodeAtCaret.getParent();
-				xsltConref 		= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess);
+				xsltConref 		= XsltConrefResolver.getInstance().xsltConrefFromNode(xsltConrefNode, authorAccess, false);
 			}
 
 			if (xsltConref != null) {

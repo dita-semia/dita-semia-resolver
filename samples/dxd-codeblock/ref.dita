@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ikd="http://www.dita-semia.org/implicit-keydef" xmlns:dxd="http://www.dita-semia.org/dynamic-xml-definition"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:dynamic-xml-definition:schema:dynamic-xml-definition-topic.xsd" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Reference</title>
+	<body>
+		<p>Sample for <key-xref akr:ref="xml-complex:Complex1">Complex1</key-xref>:</p>
+		<dxd-codeblock dxd:root-name="preceding::p/key-xref" dxd:root-type="concat(preceding::p/key-xref, '-Type')" coderef="ref-code.xml#cb1"/>
+		<dxd-codeblock dxd:root-name="preceding::p/key-xref" dxd:root-type="concat(preceding::p/key-xref, '-Type')" coderef="ref-code.xml#cb2"/>
+	</body>
+</topic>

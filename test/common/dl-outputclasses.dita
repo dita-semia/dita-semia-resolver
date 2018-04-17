@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:dita-semia:schema:dita-semia-topic.xsd" id="gh2_vhd_xt">
+	<title><codeph>dl</codeph> Outputclasses</title>
+	<body>
+		<section>
+			<title>Standard Layout</title>
+			<p>Outputclass: &lt;empty></p>
+			<dl>
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p>Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Bullet List With Titles</title>
+			<p>Outputclass: <codeph>bullet-list-titles</codeph></p>
+			<dl outputclass="bullet-list-titles">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p>Description of 2nd term.</p>
+						<p>More Text</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="bjp_j3x_gy">
+			<title>Numbered List With Titles</title>
+			<p id="cjp_j3x_gy">Outputclass: <codeph>numbered-list-titles</codeph></p>
+			<dl outputclass="numbered-list-titles">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p>Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="vk1_hhr_zt">
+			<title>Bullet List With Dashes</title>
+			<p>Outputclass: <codeph>bullet-list-dashes</codeph></p>
+			<dl outputclass="bullet-list-dashes">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>Description of 2nd term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Table</title>
+			<p>Outputclass: <codeph>table</codeph></p>
+			<dl outputclass="table">
+				<dlhead>
+					<dthd>Term</dthd>
+					<ddhd>Data</ddhd>
+				</dlhead>
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p>Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+			<p>Reference table</p>
+			<table frame="all" rowsep="1" colsep="1">
+				<tgroup cols="2">
+					<colspec colname="c1" colnum="1" colwidth="3.5*"/>
+					<colspec colname="c2" colnum="2" colwidth="6.5*"/>
+					<thead>
+						<row>
+							<entry>Term</entry>
+							<entry>Data</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><b>Term 1</b></entry>
+							<entry>Description of 1st term.</entry>
+						</row>
+						<row>
+							<entry><b>Term 2</b></entry>
+							<entry>
+								<p>Description of 2nd term.</p>
+							</entry>
+						</row>
+						<row>
+							<entry><b>Term 3</b></entry>
+							<entry>Description of 3rd term.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>
+		<section id="p4p_2ht_1y">
+			<title>Header Table</title>
+			<p id="q4p_2ht_1y">Outputclass: <codeph>header-table</codeph></p>
+			<dl outputclass="header-table">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 2</dt>
+					<dd>
+						<p id="cjc_trc_2y">Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section id="zxk_zm2_hy">
+			<title>Parameter Table</title>
+			<p id="ayk_zm2_hy">Outputclass: <codeph>parameter-table</codeph></p>
+			<dl outputclass="parameter-table">
+				<dlentry>
+					<dt>Term 1</dt>
+					<dd>Description of 1st term.</dd>
+				</dlentry>
+				<dlentry id="parameter-table-term2">
+					<dt>Term 2</dt>
+					<dd>
+						<p id="gyk_zm2_hy">Description of 2nd term.</p>
+					</dd>
+				</dlentry>
+				<dlentry>
+					<dt>Term 3</dt>
+					<dd>Description of 3rd term.</dd>
+				</dlentry>
+			</dl>
+		</section>
+		<section>
+			<title>Tree</title>
+			<p>Outputclass: <codeph>tree</codeph></p>
+			<dl outputclass="tree">
+				<dlentry>
+					<dt>root</dt>
+					<dd>Description of root</dd>
+					<dlentry id="tree-child1">
+						<dt>child1xxx</dt>
+						<dd>Description of 1st child</dd>
+						<dlentry>
+							<dt>sub-child1</dt>
+							<dd>Description of sub-child 1.1</dd>
+						</dlentry>
+						<dlentry>
+							<dt>sub-child2</dt>
+							<dd>
+								<p>Description of sub-child 1.2</p>
+							</dd>
+						</dlentry>
+						<dlentry>
+							<dt>sub-child3</dt>
+							<dd>Description of sub-child 1.3</dd>
+						</dlentry>
+					</dlentry>
+					<dlentry>
+						<dt>child2</dt>
+						<dd>Description of 2nd child</dd>
+					</dlentry>
+					<dlentry>
+						<dt>child 3 with a very long definition term with plenty of text text text text text text </dt>
+						<dd/>
+					</dlentry>
+				</dlentry>
+			</dl>
+		</section>
+	</body>
+</topic>

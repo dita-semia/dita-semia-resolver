@@ -5,8 +5,10 @@
 	<property name="src.dir" 				value="src"/>
 
 	<path id="classpath">
+		<fileset dir="lib/apache-poi" 		includes="**/*.jar"/>
 		<fileset dir="lib" 					includes="log4j.jar"/>
 		<fileset dir="lib" 					includes="saxonHE-9.6.0.7.jar"/>
+		<fileset dir="lib" 					includes="commons-csv-1.4.jar"/>
 		<fileset dir="${OXYGENXML}/lib" 	includes="**/*.jar"/>
 	</path>
 			

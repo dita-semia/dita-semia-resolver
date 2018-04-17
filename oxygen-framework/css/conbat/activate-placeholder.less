@@ -8,8 +8,12 @@
     -oxy-show-placeholder	: always;
 }
 
-/* don't show placeholder when content or default-content is set */
+/* 
+ * don't show placeholder content when content or default-content is set 
+ * (hiding the placeholder completely messes up the cursor positioning within dl>dd with default content) 
+ * */
 *[*|content],
 *[*|default-content] {
-    -oxy-show-placeholder	: inherit !important;
+	-oxy-placeholder-content	: "";
+    /*-oxy-show-placeholder	: inherit !important;*/
 }

@@ -4,6 +4,7 @@ import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
+import org.DitaSemia.Oxygen.Conbat.ConbatStylesFilter;
 import org.apache.log4j.Logger;
 
 import ro.sync.ecss.css.StaticContent;
@@ -24,10 +25,15 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 		//logger.info("filter for node: " + authorNode.getName() + ", parent-node: " + (authorNode.getParent() == null ? "-" : authorNode.getParent().getName()) + ", pseudo-level: " + styles.getPseudoLevel());
 		if (authorNode.getType() == AuthorNode.NODE_TYPE_PSEUDO_ELEMENT) {
 			
-			final boolean isBefore 	= (authorNode.getName().equals(BEFORE));
+			final boolean isBefore 		= (authorNode.getName().equals(BEFORE));
+			final int		pseudoLevel	= styles.getPseudoLevel();
 			
-			if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_TOPIC_NUM)) {
-				handled = filterTopicNum(styles, authorNode.getParent());
+			if (isBefore) {
+				if (pseudoLevel == PSEUDO_LEVEL_TOPIC_NUM) {
+					handled = filterTopicNum(styles, authorNode.getParent());
+				} else if (pseudoLevel == ConbatStylesFilter.PSEUDO_LEVEL_TITLE) {
+					handled = filterCbaTitleTopicNum(styles, authorNode.getParent());
+				}
 			}
 		}
 		return handled;
@@ -41,7 +47,6 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 		logger.info("  parent-class: " + node.getParent().getAttribute(DitaUtil.ATTR_CLASS, null));*/
 		if (isTopicTitle(node)) {
 			handled = true;
-			
 			final BookCache cache 	= getBookCache(authorNode);
 			//logger.info("  cache: " + cache);
 			
@@ -74,6 +79,48 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 			return false;
 		}
 	}
+
+	private static boolean filterCbaTitleTopicNum(Styles styles, AuthorNode authorNode) {
+		final NodeWrapper node = new AuthorNodeWrapper(authorNode, null);
+		//logger.info("filterTopicNum: " + authorNode.getDisplayName());
+		//logger.info("  class: " + node.getAttribute(DitaUtil.ATTR_CLASS, null));
+		//logger.info("  cba-title: " + node.getParent().getAttribute(ConbatStylesFilter.ATTR_TITLE, ConbatStylesFilter.NAMESPACE_URI));
+		if (isCbaTopicTitle(node)) {
+			final BookCache cache 	= getBookCache(authorNode);
+			//logger.info("  cache: " + cache);
+			
+			if (cache != null) {
+				final String topicNum = getTopicNum(node, cache);
+				//logger.info("  topicNum: " + topicNum);
+				if (topicNum != null) {
+					StaticContent[] content = styles.getMixedContent();
+					if ((content != null) && (content.length > 0)) {
+						content[0] = new StringContent(topicNum.toString()); //change the first content element to the global topic number
+					}
+				} else {
+					// no numbering -> set topic num and seperator to empty string
+					StaticContent[] content = styles.getMixedContent();
+					if ((content != null) && (content.length > 1)) {
+						content[0] = new StringContent("");
+						content[1] = new StringContent("");
+					}
+				}
+			} else {
+				// don't modify anything
+			}
+		}
+		return false; // handle CBA as well
+	}
+
+	private static boolean isCbaTopicTitle(NodeWrapper node) {
+		final String classAttr	= node.getAttribute(DitaUtil.ATTR_CLASS, null);
+		if ((classAttr != null) && (classAttr.contains(DitaUtil.CLASS_TOPIC))) {
+			final String titleAttr	= node.getAttribute(ConbatStylesFilter.ATTR_TITLE, ConbatStylesFilter.NAMESPACE_URI);
+			return ((titleAttr != null) && (!titleAttr.isEmpty()));
+		} else {
+			return false;
+		}
+	}
 	
 	private static boolean isLocalRootTopic(NodeWrapper node) {
 		//logger.info("node " + node.getName() + ", " + node);
@@ -82,7 +129,7 @@ public class TopicNumStylesFilter extends DitaSemiaStylesFilter {
 	}
 	
 	private static String getTopicNum(NodeWrapper node, BookCache bookCache) {
-		final FileCache	fileCache	= bookCache.getFile(node.getBaseUrl());
+		final FileCache	fileCache	= (bookCache != null ? bookCache.getFile(node.getBaseUrl()) : null);
 		if (fileCache == null) {
 			return null;
 		} else if (isLocalRootTopic(node.getParent())) {

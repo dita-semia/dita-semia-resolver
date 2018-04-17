@@ -19,6 +19,7 @@
 		<xs:attribute name="prefix" 		type="xs:string"/>
 		<xs:attribute name="suffix" 		type="xs:string"/>
 		<xs:attribute name="selectPriority" type="xs:int"/>
+		<xs:attribute name="path-delimiter" type="xs:string"/>
 	</xs:complexType>
 	
 </xs:schema>

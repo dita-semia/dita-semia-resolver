@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
@@ -38,7 +39,7 @@ public class RefreshBookCache implements AuthorOperation {
 			final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			final AuthorNode				rootNode			= documentController.getNodeAtOffset(0);
 	
-			final Frame parentFrame = (Frame)authorAccess.getWorkspaceAccess().getParentFrame();
+			/*final Frame parentFrame = (Frame)authorAccess.getWorkspaceAccess().getParentFrame();
 
 		    final JDialog dialog = new JDialog(parentFrame, "Refreshing Book Cache...", true);
 		    JPanel barPanel = new JPanel();
@@ -78,8 +79,9 @@ public class RefreshBookCache implements AuthorOperation {
 		    });
 
 		    workerThread.start();
-		    dialog.setVisible(true);
-
+		    dialog.setVisible(true);*/
+			BookCacheHandler.getInstance().refreshBookCache(rootNode.getXMLBaseURL());
+			
 		} catch (Exception e) {
 			logger.error(e, e);
 		}

@@ -27,22 +27,26 @@
 
 *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
 	display	: block;
-    content	: attr("*|title");
+    content	: "?" " " attr("*|title");
     .topic-title-style();
 }
 
-* *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+*[class~="topic/topic"] *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+    content	: "?" "." counter(topic1) " " attr("*|title");
     .topic-title-lvl2-style();
 }
 
-* * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+*[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+    content	: "?" "." counter(topic1) "." counter(topic2) " " attr("*|title");
     .topic-title-lvl3-style();
 }
 
-* * * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+*[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+    content	: "?" "." counter(topic1) "." counter(topic2) "." counter(topic3) " " attr("*|title");
     .topic-title-lvl4-style();
 }
 
-* * * * *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+*[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"] *[class~="topic/topic"][*|title]:before(@{conbat-title-index}) {
+    content	: "?" "." counter(topic1) "." counter(topic2) "." counter(topic3) "." counter(topic4) " " attr("*|title");
     .topic-title-lvl5-style();
 }

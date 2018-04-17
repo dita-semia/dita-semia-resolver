@@ -30,18 +30,21 @@ public class MapContextStylesFilter extends DitaSemiaStylesFilter {
 		if (authorNode.getType() == AuthorNode.NODE_TYPE_PSEUDO_ELEMENT) {
 
 			final boolean isBefore 	= (authorNode.getName().equals(BEFORE));
-			
-			if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_ROOT)) {
-				handled = filterMapContext(styles, getBookCache(authorNode).getRootFile());
-			} else if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_PARENT)) {
-				final BookCache bookCache = getBookCache(authorNode);
-				TopicRef parentTopicRef = bookCache.getParentTopicRef(bookCache.getTopicRef(FileUtil.decodeUrl(authorNode.getXMLBaseURL())));
-				while ((parentTopicRef != null) && ((parentTopicRef.getReferencedFile() == null) || (parentTopicRef.getReferencedFile().isMap()))) {
-					parentTopicRef = bookCache.getParentTopicRef(parentTopicRef);
+			//TODO 
+			final BookCache bookCache = getBookCache(authorNode);
+			if (bookCache != null) {
+				if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_ROOT)) {
+					handled = filterMapContext(styles, bookCache.getRootFile());
+				} else if ((isBefore) && (styles.getPseudoLevel() == PSEUDO_LEVEL_PARENT)) {
+					TopicRef parentTopicRef = bookCache.getParentTopicRef(bookCache.getTopicRef(FileUtil.decodeUrl(authorNode.getXMLBaseURL())));
+					while ((parentTopicRef != null) && ((parentTopicRef.getReferencedFile() == null) || (parentTopicRef.getReferencedFile().isMap()))) {
+						parentTopicRef = bookCache.getParentTopicRef(parentTopicRef);
+					}
+					final FileCache parentTopic = (parentTopicRef == null) ? null : parentTopicRef.getReferencedFile();
+					handled = filterMapContext(styles, parentTopic);
 				}
-				final FileCache parentTopic = (parentTopicRef == null) ? null : parentTopicRef.getReferencedFile();
-				handled = filterMapContext(styles, parentTopic);
 			}
+			
 		}
 		return handled;
 	}

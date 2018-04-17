@@ -23,7 +23,7 @@ public class Common {
 				throw new XPathException("Context item '" + contextItem + "' is no compatible node.");
 			}
 			
-			final String			keyType			= ((StringValue)arguments[0].head()).asString();
+			final String			keyType			= ((StringValue)arguments[0].head()).getPrimitiveStringValue().toString();
 			final NodeInfo			contextNode		= (NodeInfo)contextItem;
 			final SaxonNodeWrapper	contextWrapper	= new SaxonNodeWrapper(contextNode, keyDefList.getXPathCache());
 

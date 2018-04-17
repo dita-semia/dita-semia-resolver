@@ -2,7 +2,7 @@ package org.DitaSemia.Base.DocumentCaching;
 
 import java.net.URL;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
-import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathCall;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetPathCall;
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.apache.log4j.Logger;
 
@@ -32,10 +32,13 @@ public class GetAncestorPathCall extends ExtensionFunctionCall {
 			final String	keyType	= ((StringValue)arguments[1].head()).asString();
 			
 			final BookCache			bookCache		= bookCacheProvider.getBookCache(new URL(node.getBaseURI()));
-			final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, bookCache.getXPathCache());
-			final KeyDefInterface 	keyDef 			= bookCache.getAncestorKeyDef(nodeWrapper, keyType);
+			KeyDefInterface 		keyDef 			= null;
+			if (bookCache != null) {
+				final SaxonNodeWrapper	nodeWrapper		= new SaxonNodeWrapper(node, bookCache.getXPathCache());
+				keyDef = bookCache.getAncestorKeyDef(nodeWrapper, keyType);
+			}
 			
-			return AncestorPathCall.getPath(keyDef);
+			return GetPathCall.getPath(keyDef);
 			
 		} catch (XPathException e) {
 			throw e;
