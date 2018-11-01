@@ -309,10 +309,10 @@ public class XsltConref {
 		} else {
 			boolean xmlSourceIsBaseUrl	= false;
 			if (xmlSource == null) {
-				//logger.info("Source is base uri.");
-				
 				// 	use current base uri as input
 				final String baseUrl = node.getBaseUrl().toExternalForm();
+				//logger.info("Source is base uri: '" + baseUrl + "'");
+				
 				try {
 					xmlSource 			= xsltConrefCache.getUriResolver().resolve(baseUrl, "");
 					xmlSourceIsBaseUrl 	= true;
@@ -688,7 +688,7 @@ public class XsltConref {
 		}
 	}
 	
-	private static String createXPathToElement(NodeWrapper node) throws TempContextException {
+	public static String createXPathToElement(NodeWrapper node) throws TempContextException {
 		final URL baseUrl = node.getBaseUrl();
 		String createXPathToElement = "";
 		

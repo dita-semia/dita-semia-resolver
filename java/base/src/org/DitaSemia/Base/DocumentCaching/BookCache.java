@@ -6,10 +6,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,11 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyspecInterface;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetDisplaySuffixDef;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefByRefStringDef;
 import org.DitaSemia.Base.ExtensionFunctions.ExtractTextDef;
+import org.DitaSemia.Base.ExtensionFunctions.GetElementByHrefDef;
+import org.DitaSemia.Base.ExtensionFunctions.ResolveEmbeddedXPathDef;
 import org.DitaSemia.Base.XsltConref.XsltConref;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.apache.log4j.Logger;
@@ -55,10 +62,7 @@ import org.apache.log4j.Logger;
 public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	private static final Logger logger = Logger.getLogger(BookCache.class.getName());
-	
-	public static final String 	NAMESPACE_URI			= "http://www.dita-semia.org/book-cache";
-	public static final String 	NAMESPACE_PREFIX		= "bc";
-	
+
 	public static final String	DATA_NAME_TYPE_DEF_URI	= "ikd:TypeDefUri";
 	public static final QName	NAME_KEY_TYPE_DEF_LIST	= new QName("KeyTypeDefList");
 	public static final QName	NAME_KEY_TYPE_DEF		= new QName(KeyTypeDef.ELEMENT);
@@ -68,19 +72,20 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	public static final String 	CONFIG_FILE_URL 		= "/cfg/book-cache-saxon-config.xml";
 	
 	
-	private HashMap<String, KeyDefInterface> 		keyDefByRefString 	= new HashMap<>();
-	private HashMap<String, Set<KeyDefInterface>> 	keyDefByTexts 		= new HashMap<>();
-	private HashMap<String, KeyDefInterface> 		keyDefByTypeName	= new HashMap<>();
-	private HashMap<String, Set<KeyDefInterface>> 	ambiguousKeyDefs	= new HashMap<>();
-	private HashMap<String, Stack<KeyDefInterface>> overwrittenKeyDefs	= new HashMap<>();
-	private HashMap<String, KeyDefInterface> 		keyDefByUrlAndId	= new HashMap<>();
-	private HashMap<String, KeyTypeDef> 			keyTypeDefByName	= new HashMap<>();
-	private HashMap<String, FileCache> 				fileByUrl			= new HashMap<>();
-	private HashMap<String, TopicRef> 				topicRefByUrl		= new HashMap<>();
-	private HashMap<String, Set<FileCache>> 		filesByTopicId		= new HashMap<>();	// to identify ambiguous topic ids
-	private Map<String, Set<NodeInfo>>				keyRefsByRefString	= new HashMap<>();
-	private Set<FileCache>							unparsedFiles		= new HashSet<>();
-
+	private HashMap<String, KeyDefInterface> 		keyDefByRefString 		= new HashMap<>();
+	private HashMap<String, Set<KeyDefInterface>> 	keyDefByTexts 			= new HashMap<>();
+	private HashMap<String, KeyDefInterface> 		keyDefByTypeName		= new HashMap<>();
+	private HashMap<String, Set<KeyDefInterface>> 	ambiguousKeyDefs		= new HashMap<>();
+	private HashMap<String, Stack<KeyDefInterface>> overwrittenKeyDefs		= new HashMap<>();
+	private HashMap<String, List<KeyDefInterface>> 	keyDefByUrlAndId		= new HashMap<>();
+	private HashMap<String, KeyTypeDef> 			keyTypeDefByName		= new HashMap<>();
+	private HashMap<String, FileCache> 				fileByUrl				= new HashMap<>();
+	private HashMap<String, TopicRef> 				topicRefByUrl			= new HashMap<>();
+	private HashMap<String, Set<FileCache>> 		filesByTopicId			= new HashMap<>();	// to identify ambiguous topic ids
+	private Map<String, Set<NodeInfo>>				keyRefsByRefString		= new HashMap<>();
+	private Set<FileCache>							unparsedFiles			= new HashSet<>();	
+	private Set<String>								referencedKeyDefRefList	= null;
+	
 	private final URL 						rootDocumentUrl;
 	private final Initializer				configurationInitializer;
 	private final XsltConrefCache 			xsltConrefCache;
@@ -111,6 +116,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			SaxonDocumentBuilder	documentBuilder,
 			XslTransformerCache		extractTransformerCache,
 			boolean					expandAttributeDefaults,
+			boolean					trackKeyDefReferences,
 			URL 					ditaOtUrl,
 			URL 					globalKeyTypeDefUrl, 
 			String					hddCachePath,
@@ -136,11 +142,15 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 			final File hddCacheFolder = new File(hddCachePath);
 			hddCacheFolder.mkdirs();
 		}
+		
+		if (trackKeyDefReferences) {
+			referencedKeyDefRefList = new HashSet<>();
+		}
 	}
 
 	public void fillCache(ProgressListener progressListener) {
-//		logger.info("fillCache");
-//		cacheProgressListener 	= progressListener;
+		//logger.info("fillCache");
+		//cacheProgressListener 	= progressListener;
 		if (cachedProgressListener == null) {
 			cachedProgressListener = progressListener;
 		}
@@ -279,7 +289,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		final String 	decodedUrl	= FileUtil.decodeUrl(source.getSystemId());
 		FileCache 		fileCache	= null;
 		
-		//logger.info("Source: " + decodedUrl + ", " + source.getSystemId() + ", " + source.getClass());
+		//logger.info("createFileCache Source: " + decodedUrl + ", " + source.getSystemId() + ", " + source.getClass());
 
 		if (fileByUrl.containsKey(decodedUrl)) {
 			logger.error("ERROR: File included twice: '" + decodedUrl + "' - ignored second one.");
@@ -301,7 +311,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	
 	
 	public void fullRefresh(ProgressListener progressListener) {
-//		logger.info("fullRefresh");
+		//logger.info("fullRefresh");
 		
 		keyDefByRefString.clear();
 		keyDefByTypeName.clear();
@@ -403,7 +413,7 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		final URL 		defUrl 	= keyDef.getDefUrl();
 		final String	defId 	= keyDef.getDefId();
 		if ((defUrl != null) && (defId != null)) {
-			keyDefByUrlAndId.remove(FileUtil.decodeUrl(defUrl) + DitaUtil.HREF_URL_ID_DELIMITER + keyDef.getDefId(), keyDef);
+			keyDefByUrlAndId.remove(DitaUtil.getNodeLocation(defUrl, defId), keyDef);
 		}
 	}
 
@@ -411,7 +421,14 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		final URL 		defUrl 	= keyDef.getDefUrl();
 		final String	defId 	= keyDef.getDefId();
 		if ((defUrl != null) && (defId != null)) {
-			keyDefByUrlAndId.put(FileUtil.decodeUrl(defUrl) + DitaUtil.HREF_URL_ID_DELIMITER + keyDef.getDefId(), keyDef);
+			final String location = DitaUtil.getNodeLocation(defUrl, defId);
+			List<KeyDefInterface> list = keyDefByUrlAndId.get(location);
+			if (list == null) {
+				list = new ArrayList<KeyDefInterface>();
+				keyDefByUrlAndId.put(location, list);
+			}
+			list.add(keyDef);
+			//logger.info("addKeyDefByUrlAndId: " + location + " - " + keyDef);
 		}
 	}
 
@@ -489,9 +506,9 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	}
 
 	private void addKeyByTexts(KeyDefInterface keyDef) {
-		List<String> 	namespace 	= keyDef.getNamespaceList();
-		String 			key 		= keyDef.getKey();
-		String 			text		= key;
+		final List<String> 	namespace 	= keyDef.getNamespaceList();
+		final String 		key 		= keyDef.getKey();
+		String 				text		= key;
 		addKeyByText(text, keyDef);
 		while(!namespace.isEmpty()) {
 			text = normalizeKeyText(namespace.remove(namespace.size() - 1)) + KeyDef.PATH_DELIMITER + text;
@@ -504,19 +521,22 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	}
 
 	private void addKeyByText(String text, KeyDefInterface keyDef) {
-		Set<KeyDefInterface> list = keyDefByTexts.get(text);
+		final String normalizedText = normalizeKeyText(text);
+		//logger.info("addKeyByText: " + text + ", " + keyDef);
+		Set<KeyDefInterface> list = keyDefByTexts.get(normalizedText);
 		if (list != null) {
 			list.add(keyDef);
 		} else {
 			list = new HashSet<>();
 			list.add(keyDef);
+			keyDefByTexts.put(normalizedText, list);
 		}
-		keyDefByTexts.put(text, list);
 	}
 	
 	public Collection<NodeInfo> getKeyRefs(String refString) {
 		ensureAllFilesParsed();
-		return keyRefsByRefString.get(refString);
+		final Set<NodeInfo> result = keyRefsByRefString.get(refString);
+		return (result != null) ? Collections.unmodifiableCollection(result) : null;
 	}
 	
 	public void ensureAllFilesParsed() {
@@ -543,12 +563,13 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	}
 	
 	public Collection<KeyDefInterface> getKeyDefListByText(String text) {
-		return keyDefByTexts.get(normalizeKeyText(text));
+		final Collection<KeyDefInterface> result = keyDefByTexts.get(normalizeKeyText(text));
+		return (result != null) ? Collections.unmodifiableCollection(result) : null;
 	}
 	
 	@Override
 	public Collection<KeyDefInterface> getKeyDefs() {
-		return keyDefByRefString.values();
+		return Collections.unmodifiableCollection(keyDefByRefString.values());
 	}
 
 	@Override
@@ -558,6 +579,9 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	@Override
 	public KeyDefInterface getExactMatch(String refString) {
+		if (referencedKeyDefRefList != null) {
+			referencedKeyDefRefList.add(refString);
+		}
 		return keyDefByRefString.get(refString);
 	}
 
@@ -584,31 +608,38 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 	}
 
 	@Override
-	public KeyDefInterface getAncestorKeyDef(NodeWrapper node, String keyType) {
-		//logger.info("getAncestorKeyDef (" + ((node.isSameNode(node.getRootNode())) ? "#document" : node.getName()) + ", " + keyType + ")");
+	public KeyDefInterface getAncestorKeyDef(NodeWrapper node, Set<String> keyTypes) {
+		//logger.info("getAncestorKeyDef (" + ((node.isSameNode(node.getRootNode())) ? "#document" : node.getName()) + ", " + String.join(", ", keyTypes) + ")");
 		final NodeWrapper parent = getParentNode(node);
 		if (parent != null) {
 			final String		id		= parent.getAttribute(DitaUtil.ATTR_ID, null);
 			KeyDefInterface 	keyDef 	= null; 
 			if ((id != null) && (!id.isEmpty())) {
-				final String location = DitaUtil.getNodeLocation(parent.getBaseUrl(), id);
-				keyDef = keyDefByUrlAndId.get(location);
-				//logger.info("  location: '" + location + "', keyDef: " + keyDef + ", KeyType: " + ((keyDef == null) ? null : keyDef.getType()));
-				if ((keyDef != null) && (keyType != null)) {
-					//logger.info("keyType: '" + keyType + "', keyDef.getType(): '" + keyDef.getType() + "', equals: " + keyType.equals(keyDef.getType()));
-				}
-				if ((keyDef != null) && 
-						(keyType != null) && 
-						(!keyType.equals(ANY_KEY_TYPE)) && 
-						(!keyType.equals(keyDef.getType()))){
-					keyDef = null;	// type is not matching
+				final String 				location 	= DitaUtil.getNodeLocation(parent.getBaseUrl(), id);
+				final List<KeyDefInterface>	list		= keyDefByUrlAndId.get(location);
+				if (list != null) {
+					Iterator<KeyDefInterface> it = list.iterator();
+					while ((it.hasNext()) && (keyDef == null)) {
+						keyDef = it.next();
+						//logger.info("  location: '" + location + "', keyDef: " + keyDef + ", KeyType: " + ((keyDef == null) ? null : keyDef.getType()));
+						//if ((keyDef != null) && (keyType != null)) {
+						//	logger.info("keyType: '" + keyType + "', keyDef.getType(): '" + keyDef.getType() + "', equals: " + keyType.equals(keyDef.getType()));
+						//}
+						if ((keyDef != null) && 
+								(keyTypes != null) && 
+								(!keyTypes.contains(ANY_KEY_TYPE)) && 
+								(!keyTypes.contains(keyDef.getType()))){
+							keyDef = null;	// type is not matching
+							//logger.info("  -> type not matching");
+						}
+					}
 				}
 			}
 			if (keyDef != null) {
 				//logger.info("  keyDef: " + keyDef);
 				return keyDef;
 			} else {
-				return getAncestorKeyDef(parent, keyType);
+				return getAncestorKeyDef(parent, keyTypes);
 			}
 		} else {
 			//logger.info("  keyDef: " + null);
@@ -622,7 +653,8 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 		final TopicRef	topicRef	= topicRefByUrl.get(decodedUrl);
 		//logger.info("topicRef: " + topicRef);
 		if (topicRef != null) {
-			return topicRef.getChildTopics();
+			final Collection<FileCache> result = topicRef.getChildTopics();
+			return (result != null) ? Collections.unmodifiableCollection(result) : null;
 		} else {
 			return null;
 		}
@@ -812,7 +844,8 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	@Override
 	public Collection<KeyDefInterface> getAmbiguousKeyDefs(String refString) {
-		return ambiguousKeyDefs.get(refString);
+		final Set<KeyDefInterface> list = ambiguousKeyDefs.get(refString);
+		return (list != null) ? Collections.unmodifiableCollection(list) : null;
 	}
 
 	public XsltConrefCache getXsltConrefCache() {
@@ -862,6 +895,17 @@ public class BookCache implements KeyDefListInterface, KeyTypeDefListInterface {
 
 	public Collection<FileCache> getFilesByTopicId(String topicId) {
 		return filesByTopicId.get(topicId);
+	}
+
+	public Set<String> getReferencedKeyDefRefList() {
+		return Collections.unmodifiableSet(referencedKeyDefRefList);
+	}
+
+	public static void registerExtractTextExtensionFunctions(Configuration extractConfiguration, BookCacheProvider bookCacheProvider) {
+		extractConfiguration.registerExtensionFunction(new ResolveEmbeddedXPathDef());
+		extractConfiguration.registerExtensionFunction(new GetElementByHrefDef(bookCacheProvider));
+		extractConfiguration.registerExtensionFunction(new GetKeyDefByRefStringDef(bookCacheProvider));
+		extractConfiguration.registerExtensionFunction(new GetDisplaySuffixDef(bookCacheProvider));
 	}
 
 }

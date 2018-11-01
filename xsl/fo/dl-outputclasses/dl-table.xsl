@@ -10,7 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_TABLE" 		as="xs:string">table</xsl:variable>
 	
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_TABLE]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_TABLE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-table">
 			
 			<xsl:call-template name="commonattributes"/>
@@ -92,7 +92,6 @@
 	
 	
 	<xsl:template match="*[contains(@class, ' topic/dt ')]" mode="dl-table">
-		
 		<fo:block xsl:use-attribute-sets="ds:dt-table">
 			<xsl:call-template name="commonattributes"/>
 			<xsl:call-template name="ds:dt-toc-id"/>

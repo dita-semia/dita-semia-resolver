@@ -4,7 +4,9 @@ import net.sf.saxon.dom.ElementOverNodeInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
@@ -29,22 +31,27 @@ public class ImplicitKeyDefSchematronUtil extends SchematronUtil {
 
 	
 	public static String getDefErrorMessage(KeyDefInterface keyDef) {
-		Collection<KeyDefInterface> ambiguousKeyDefs = null;
-		BookCache bookCache = BookCacheHandler.getInstance().getBookCache(keyDef.getDefUrl());
-		if (bookCache != null) {
-			ambiguousKeyDefs = bookCache.getAmbiguousKeyDefs(keyDef.getRefString());
-		}
-		if (ambiguousKeyDefs != null) {
-			final String 		currLocation	= keyDef.getDefLocation();
-			final List<String> 	locations 		= new ArrayList<>();
-			for (KeyDefInterface ambigousKeyDef : ambiguousKeyDefs) {
-				final String location = ambigousKeyDef.getDefLocation();
-				if (!location.equals(currLocation)) {
-					locations.add(location);
-				}
+		try {
+			Collection<KeyDefInterface> ambiguousKeyDefs = null;
+			BookCache bookCache = BookCacheHandler.getInstance().getBookCache(keyDef.getDefUrl());
+			if (bookCache != null) {
+				ambiguousKeyDefs = bookCache.getAmbiguousKeyDefs(keyDef.getRefString());
 			}
-			return "Ambigous keydef. Other locations: " + String.join(", ", locations);
-		} else {
+			if (ambiguousKeyDefs != null) {
+				final String 		currLocation	= keyDef.getDefLocation();
+				final List<String> 	locations 		= new ArrayList<>();
+				for (KeyDefInterface ambigousKeyDef : ambiguousKeyDefs) {
+					final String location = ambigousKeyDef.getDefLocation();
+					if (!location.equals(currLocation)) {
+						locations.add("'" + location + "'");
+					}
+				}
+				return "Ambigous keydef. Other locations: " + String.join(", ", locations);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			logger.error(e, e);
 			return null;
 		}
 	}
@@ -85,10 +92,10 @@ public class ImplicitKeyDefSchematronUtil extends SchematronUtil {
 	}
 
 	
-	public static KeyDefInterface getAncestorKeyDef(ElementOverNodeInfo element, String keyType) {
+	public static KeyDefInterface getAncestorKeyDef(ElementOverNodeInfo element, HashSet<String> keyTypes) {
 		final SaxonNodeWrapper node = new SaxonNodeWrapper(element.getUnderlyingNodeInfo(), null);
 		final BookCache 		bookCache 	= BookCacheHandler.getInstance().getBookCache(node.getBaseUrl());
-		return bookCache.getAncestorKeyDef(node, keyType);
+		return bookCache.getAncestorKeyDef(node, keyTypes);
 	}
 	
 }

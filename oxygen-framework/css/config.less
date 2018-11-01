@@ -14,6 +14,7 @@
 @conbat-title-index						: 15;	/* used in :before(n) for generated titles */
 @conbat-header-index					: 16;	/* used in :before(n) for generated table header - needs to be greater than @conbat-inline-index */
 @conbat-dt-index						: 17;	/* used in :before(n) for generated dts */
+@status-marker-index					: 18;
 
 @conbat-default-content-marker-index	: 13;	/* used in :after(n) for default content marker */
 @csli-comma-index						: 19;	/* used in :before(n) for generated commas in comma separated lists */
@@ -63,7 +64,7 @@
 @dt-outputclass-suffix-index	: 20;
 @dd-default-margin-left			: 4ex;
 @dl-tree-dd-offset				: 200pt;
-@dl-tree-dd-indent				: 24pt;
+@dl-tree-dd-indent				: 15pt;
 @dd-header-table-indent			: 240px;	/* px required */
 
 /* author-only text */
@@ -147,4 +148,12 @@
     font-weight			: bold;
 	font-style			: inherit;
 	color				: inherit;
+}
+
+.status-marker-style() {
+	font-family	: @body-font-family; 
+	font-size	: 0.8em; 
+	font-weight	: normal; 
+	font-style	: italic; 
+	color		: #7070B2;
 }

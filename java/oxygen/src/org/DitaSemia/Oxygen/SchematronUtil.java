@@ -220,7 +220,7 @@ public class SchematronUtil {
 			final FileCache	fileCache 	= bookCache.getFile(url);
 			String id;
 			do {
-				id = GenerateIDElementsInfo.generateID("${id}", "");
+				id = GenerateIDElementsInfo.generateID("${id}", "").toUpperCase().replace('_',  '-');
 			} while ((bookCache.getFilesByTopicId(id) != null) || (fileCache.getElementByRefId(id) != null));
 			return id;
 		} catch (Exception e) {

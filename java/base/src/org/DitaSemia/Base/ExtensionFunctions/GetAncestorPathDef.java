@@ -1,6 +1,8 @@
-package org.DitaSemia.Base.DocumentCaching;
+package org.DitaSemia.Base.ExtensionFunctions;
 
+import org.DitaSemia.Base.DitaUtil;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -25,7 +27,7 @@ public class GetAncestorPathDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public StructuredQName getFunctionQName() {
-		return new StructuredQName(KeyDef.NAMESPACE_PREFIX, KeyDef.NAMESPACE_URI, LOCAL_NAME);
+		return new StructuredQName(DitaUtil.NAMESPACE_PREFIX, DitaUtil.NAMESPACE_URI, LOCAL_NAME);
 	}
 
 	@Override

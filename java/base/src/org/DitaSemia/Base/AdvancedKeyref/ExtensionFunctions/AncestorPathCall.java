@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
+import net.sf.saxon.om.Item;
+import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.trans.XPathException;
 
@@ -24,8 +26,14 @@ public class AncestorPathCall extends ExtensionFunctionCall {
 	public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
 		
 		try {
+			final Item contextItem = context.getContextItem();
+			if (!(contextItem instanceof NodeInfo)) {
+				throw new XPathException("Context item '" + contextItem + "' is no compatible node.");
+			}
 			
-			final KeyDefInterface keyDef = Common.GetAncestorKeyDef(context, arguments, keyDefList);
+			final NodeInfo			contextNode	= (NodeInfo)contextItem;
+			final KeyDefInterface 	keyDef 		= Common.GetAncestorKeyDef(contextNode, arguments[0], keyDefList);
+			
 			return GetPathCall.getPath(keyDef);
 			
 		} catch (XPathException e) {

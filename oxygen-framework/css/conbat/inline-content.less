@@ -8,7 +8,8 @@
 *[class~="topic/stentry"][*|prefix]:before(@{conbat-inline-index}),
 *[class~="topic/title"	][*|prefix]:before(@{conbat-inline-index}),
 *[class~="topic/xref"	][*|prefix]:before(@{conbat-inline-index}),
-*[class~="topic/dt"		][*|prefix]:before(@{conbat-inline-index}) {
+*[class~="topic/dt"		][*|prefix]:before(@{conbat-inline-index}),
+*[class~="topic/dd"		][*|prefix]:before(@{conbat-inline-index}) {
 	content	: attr("*|prefix");
 }
 
@@ -43,7 +44,8 @@
 *[class~="topic/stentry"][*|suffix]:after(@{conbat-inline-index}),
 *[class~="topic/title"	][*|suffix]:after(@{conbat-inline-index}),
 *[class~="topic/xref"	][*|suffix]:after(@{conbat-inline-index}),
-*[class~="topic/dt"		][*|suffix]:after(@{conbat-inline-index}) {
+*[class~="topic/dt"		][*|suffix]:after(@{conbat-inline-index}),
+*[class~="topic/dd"		][*|suffix]:after(@{conbat-inline-index}) {
 	content	: attr("*|suffix");
 }
 
@@ -66,7 +68,7 @@
 	/* content is already generated for base class topic/ph */
 }
 
-*[class~="pr-d/codeph"	][*|code-suffix]:after(@{conbat-inline-index})
+*[class~="pr-d/codeph"	][*|code-suffix]:after(@{conbat-inline-index}),
 *[class~="topic/ph"		][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
 *[class~="topic/sli"	][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}),
 *[class~="topic/dt"		][*|flags~="code"][*|code-suffix]:after(@{conbat-inline-index}) {

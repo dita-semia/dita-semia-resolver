@@ -63,12 +63,28 @@
 		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:loadXmlFile' not registered.</xsl:message>
 	</xsl:function>
 	
+	<xsl:function name="ds:getElementByHref" as="document-node()?" use-when="not(function-available('ds:getElementByHref'))">
+		<xsl:param name="href" 		as="xs:string"/>
+		<xsl:param name="baseUrl" 	as="xs:anyURI"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:getElementByHref' not registered.</xsl:message>
+	</xsl:function>
+	
+	<xsl:function name="ds:extractText" as="xs:string" use-when="not(function-available('ds:extractText'))">
+		<xsl:param name="node" 		as="node()?"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:extractText' not registered.</xsl:message>
+	</xsl:function>
+	
+	<xsl:function name="ds:extractContentText" as="xs:string" use-when="not(function-available('ds:extractContentText'))">
+		<xsl:param name="node" 		as="node()?"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:extractContentText' not registered.</xsl:message>
+	</xsl:function>
+	
 	
 	<!--	advanced-keyref -->
 	
 	<xsl:function name="akr:getAncestorKeyDef" as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface?" use-when="not(function-available('akr:getAncestorKeyDef'))">
 		<xsl:param name="node" 		as="node()"/>
-		<xsl:param name="keyType" 	as="xs:string"/>
+		<xsl:param name="keyTypes" 	as="xs:string*"/>
 		<xsl:message terminate="yes">ERROR: Custom extension function 'akr:getAncestorKeyDef' not registered.</xsl:message>
 	</xsl:function>
 	
@@ -77,6 +93,11 @@
 		<xsl:param name="namespaceFilter" 	as="xs:string*"/>
 		<xsl:param name="baseUri" 			as="xs:anyURI"/>
 		<xsl:message terminate="yes">ERROR: Custom extension function 'akr:getMatchingKeyDefs' not registered.</xsl:message>
+	</xsl:function>
+	
+	<xsl:function name="akr:getKeyDefFromNode" as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface?" use-when="not(function-available('akr:getKeyDefFromNode'))">
+		<xsl:param name="node" as="element()?"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'akr:getKeyDefFromNode' not registered.</xsl:message>
 	</xsl:function>
 	
 	<xsl:function name="akr:getKeyDefByRefString" as="jt:org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface?" use-when="not(function-available('akr:getKeyDefByRefString'))">

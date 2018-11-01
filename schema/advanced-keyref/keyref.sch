@@ -44,7 +44,7 @@
 			<sch:report test="exists($namespaceError)"> 
 				Invalid value for @akr:namespace. It must be empty or a valid XPath: <sch:value-of select="$namespaceError"/>
 			</sch:report>
-			<sch:assert test="empty($keyDef) or exists(@cba:content) or empty($keyPath) or (jakr:textMatchesPath(text(), $keyPath))">
+			<sch:assert test="empty($keyDef) or exists(@cba:content) or empty($keyPath) or (jakr:textMatchesPath(normalize-space(text()), $keyPath))">
 				<!-- 
 					don't validate the text content when:
 						- there is no keydef linked
@@ -65,7 +65,7 @@
 			<sch:report test="exists($typeList) and not($refType = $typeList)">
 				Invalid keyref '<sch:value-of select="."/>': The referenced type ('<sch:value-of select="$refType"/>') is none of the allowed types: <sch:value-of select="string-join($typeList, ', ')"/>!
 			</sch:report> 
-			<sch:report test="not(ancestor-or-self::*/@props = 'no-link-filter-check') and not(jfp:contains($refFilter, 'audience', 'GDV_DL')) and exists($keyDef) and not(jfp:isValidReference($refFilter, $destFilter))">
+			<sch:report test="not(ancestor-or-self::*[tokenize(@ikd:flags, '\s+') = 'no-filter-check']) and not(jfp:contains($refFilter, 'audience', 'GDV_DL')) and exists($keyDef) and not(jfp:isValidReference($refFilter, $destFilter))">
 				Invalid keyref '<sch:value-of select="."/>': The filter properties of the reference (<sch:value-of select="$refFilter"/>) are less restrictive than those of the referenced key (<sch:value-of select="$destFilter"/>)!
 			</sch:report>
 		</sch:rule>

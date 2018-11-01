@@ -17,12 +17,17 @@ public class OxygenSaxonInitializer implements Initializer {
 	public void initialize(Configuration configuration) throws TransformerException {
 		SaxonDocumentBuilder.makeConfigurationCompatible(configuration);
 		
+		/*final PluginWorkspace 	pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+		final WSEditor 			wsEditor 		= pluginWorkspace.getCurrentEditorAccess(PluginWorkspace.MAIN_EDITING_AREA);
+		final URL 				currUrl 		= wsEditor.getEditorLocation();*/
+		
 		final BookCacheHandler bookCacheHandler = BookCacheHandler.getInstance();
 		XsltConrefCache.registerExtensionFunctions(
 				configuration, 
 				bookCacheHandler, 
 				bookCacheHandler.getXsltConrefCache(), 
 				bookCacheHandler.getDocumentBuilder());
+		//configuration.registerExtensionFunction(new AncestorPathDef(bookCacheHandler.getBookCache(currUrl)));
 	}
 
 }

@@ -2,9 +2,6 @@ package org.DitaSemia.Oxygen;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.xml.transform.URIResolver;
 
 import net.sf.saxon.Configuration;
@@ -18,20 +15,16 @@ import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
 import org.DitaSemia.Base.DocumentCaching.FileCache;
-import org.DitaSemia.Base.ExtensionFunctions.ResolveEmbeddedXPathDef;
 import org.DitaSemia.Base.XsltConref.XsltConrefCache;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.AncestorPath;
+import org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions.ExtractText;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.EntityResolver;
 
-import ro.sync.ecss.extensions.api.node.AuthorNode;
-import ro.sync.ecss.extensions.api.node.AuthorParentNode;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
-import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
-import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 import ro.sync.util.editorvars.EditorVariables;
 
 public class BookCacheHandler implements BookCacheProvider, Initializer {
@@ -71,7 +64,7 @@ public class BookCacheHandler implements BookCacheProvider, Initializer {
 		final Configuration extractConfiguration = new Configuration();
 		SaxonDocumentBuilder.makeConfigurationCompatible(extractConfiguration);
 		extractConfiguration.setURIResolver(uriResolver);
-		extractConfiguration.registerExtensionFunction(new ResolveEmbeddedXPathDef());
+		BookCache.registerExtractTextExtensionFunctions(extractConfiguration, this);
 		
 		extractTransformerCache	= new XslTransformerCache(extractConfiguration);
 		documentBuilder			= new SaxonDocumentBuilder(entityResolver, uriResolver);
@@ -84,6 +77,7 @@ public class BookCacheHandler implements BookCacheProvider, Initializer {
 		refreshThread 		= new Thread();
 		
 		OxyXPathHandler.getInstance().registerCustomFunction(new AncestorPath());
+		OxyXPathHandler.getInstance().registerCustomFunction(new ExtractText(extractTransformerCache, documentBuilder));
 	}
 
 	public URL getGlobalKeyTypeDefUrl() {
@@ -103,6 +97,7 @@ public class BookCacheHandler implements BookCacheProvider, Initializer {
 					documentBuilder, 
 					extractTransformerCache, 
 					true, 
+					false, 
 					ditaOtUrl, 
 					globalKeyTypeDefUrl,
 					hddCachePath,
@@ -212,18 +207,18 @@ public class BookCacheHandler implements BookCacheProvider, Initializer {
 			final FileCache	fileCache	= bookCache.getFile(url);
 			if (!fileCache.isUpdated()) {
 				bookCache.partialRefresh(url);
-				refreshDisplay(url);
+				//refreshDisplay(url);
 			}
 		}
 	}
 	
-	private void refreshAllDisplays() {
+	/*private void refreshAllDisplays() {
 		URL[] openFiles = PluginWorkspaceProvider.getPluginWorkspace().getAllEditorLocations(PluginWorkspace.MAIN_EDITING_AREA);
 		for (URL file : openFiles) {
 			refreshDisplay(file);
 		}
-	}
-	
+	}*/
+	/*
 	private void refreshDisplay(URL fileUrl) {
 //		final long startTime = Calendar.getInstance().getTimeInMillis();
 //		logger.info("refreshDisplay " + fileUrl);
@@ -248,7 +243,7 @@ public class BookCacheHandler implements BookCacheProvider, Initializer {
 		    }
 		}
 //		logger.info("refresh done in " + String.valueOf(Calendar.getInstance().getTimeInMillis() - startTime) + " ms");
-	}
+	}*/
 
 	public URL getCurrMapUrl() {
 		final WSEditor 	editor 		= PluginWorkspaceProvider.getPluginWorkspace().getCurrentEditorAccess(PluginWorkspace.DITA_MAPS_EDITING_AREA);

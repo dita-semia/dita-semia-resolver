@@ -1,0 +1,25 @@
+
+/********************************************/
+/* outputclass: numbered-list-titles 		*/
+
+
+
+*[class~='topic/dl'][outputclass~='numbered-list-titles'] {
+	list-style-type : decimal;
+	margin-left 	: 0;
+}
+
+*[class~='topic/dl'][outputclass~='numbered-list-titles'] *[class~='topic/dlentry'] {
+	display 	: list-item;
+	margin-left : 1.5em;
+	font-weight	: bold;	/* make the number bold */
+}
+
+*[class~='topic/dl'][outputclass~='numbered-list-titles'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass~='numbered-list-titles'] *[class~='topic/dlentry'] > *:not([class~='topic/dt']) {
+	margin-left	: 0ex;
+	font-weight	: normal;	/* undo changes for dlentry */
+}

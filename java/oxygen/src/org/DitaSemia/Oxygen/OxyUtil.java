@@ -1,10 +1,5 @@
 package org.DitaSemia.Oxygen;
 
-import java.net.URL;
-
-import org.DitaSemia.Base.DocumentCaching.BookCache;
-import org.DitaSemia.Base.XsltConref.XsltConref;
-
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorElement;

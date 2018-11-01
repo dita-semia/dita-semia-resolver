@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
 import javax.xml.transform.TransformerException;
@@ -118,6 +119,21 @@ public class FileUtil {
 		if (url != null) {
 			try {
 				return URLDecoder.decode(url, "UTF-8");
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	
+	public static String encodeUrl(String url) {
+		if (url != null) {
+			try {
+				final String normalized = url.replace('\\', '/');
+				final String encoded 	= URLEncoder.encode(normalized, "UTF-8");
+				return encoded.replace("+", "%20").replace("%3A", ":").replace("%2F", "/");
 			} catch (Exception e) {
 				return null;
 			}

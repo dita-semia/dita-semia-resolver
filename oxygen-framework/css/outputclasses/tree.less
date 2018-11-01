@@ -1,0 +1,157 @@
+
+/********************************************/
+/* outputclass: tree 						*/
+
+
+
+*[class~='topic/dl'][outputclass~='tree'] {
+    display: block;
+    margin: 6pt;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] {
+    display: 				block;
+    border-color: 			#AAAAAA;
+    border-style:			solid none solid solid;
+    border-bottom-color: 	#FFFFFF;	/* Hide the bottom line by color since otherwise the left line won't always by long enough.. */
+    border-width:			1pt;
+    padding-left: 			2pt;
+}
+
+*[class~='topic/dl'][outputclass~='tree'][outputclass~='table-frame'] *[class~="topic/dlentry"] {
+    border-top-color: 		@table-border;
+    border-left-color: 		@table-border;
+    border-right-color: 	@table-border;
+}
+
+*[class~='topic/dl'][outputclass~='tree'][outputclass~='table-frame'] *[class~="topic/dd"] {
+    border-left: 		1pt solid @table-border;
+    padding-left:		2pt;
+}
+
+/*
+messes up the alignment of the dd elements so it's deactivated for now... 
+*[class~='topic/dl'][outputclass~='tree']:not([outputclass~='table-frame']) *[class~="topic/dlentry"]:has(*[class~='topic/dlentry']) {
+    -oxy-foldable: 				true;
+	-oxy-not-foldable-child:	dt;
+}
+*/
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dlentry"] {
+    margin-left: 12pt;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] {
+	border-right-style: solid;		/* make right line visible */
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"]:last-child {
+    border-bottom-color		: #AAAAAA;	/* make last closing line visible */
+}
+
+*[class~='topic/dl'][outputclass~='tree'][outputclass~='table-frame'] > *[class~="topic/dlentry"]:last-child {
+    border-bottom-color		: @table-border;	/* make last closing line visible */
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dt"] {
+    display: 		block;
+    font-weight : 	normal;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dt"][*|flags~="code"] {
+    margin-top	: 0.5em;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-top: -1.4em;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dt"] + *[class~="topic/dt"] + *[class~="topic/dd"] {
+	margin-top: -2.8em;
+	min-height: 2.8em;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *:first-child,
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:first-child > *:first-child,
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:first-child > *[class~="topic/div"]:first-child > *:first-child {
+	margin-top: 0;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *:last-child,
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:last-child > *:last-child,
+*[class~='topic/dl'][outputclass~='tree'] *[class~="topic/dlentry"] *[class~="topic/dd"] > *[class~="topic/div"]:last-child > *[class~="topic/div"]:last-child > *:last-child {
+	margin-bottom: 0;
+}
+
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+    display: block;
+	margin-left: @dl-tree-dd-offset;
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (1 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (2 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (3 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (4 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (5 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (6 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (7 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (8 * @dl-tree-dd-indent);
+}
+
+*[class~='topic/dl'][outputclass~='tree'] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dlentry"] > *[class~="topic/dd"] {
+	margin-left: @dl-tree-dd-offset - (9 * @dl-tree-dd-indent);
+}
+
+
+*[class~='topic/dl'][outputclass~='tree'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dt']:before(@{conbat-header-index}),
+*[class~='topic/dl'][outputclass~='tree'][*|header] > *[class~='topic/dlentry']:first-child > *[class~='topic/dd']:before(@{conbat-header-index}) {
+    display	: block;
+    
+    /* Get text from header attribute of tgroup element */
+    content	: oxy_xpath(oxy_concat("tokenize(ancestor::*[contains(@class, ' topic/dl ')]/@*:header, '[|]')[", oxy_xpath("count(preceding-sibling::*) + 1"), "]"));
+    
+    /* Same settings as the real table header */
+    .table-header;
+    
+    /* draw a line to seperate header from row */
+    border-bottom	: @table-border;
+    
+    /* Undo the padding of the entry to avoid a white gap */
+    margin-left:    -3px;
+}
+
+
+*[class~='topic/dl'][outputclass~='tree'][*|header] *[class~="topic/dlentry"]:first-child > *[class~="topic/dd"] {
+	margin-top: -3.1em;
+}
+
+*[class~='topic/dl'][outputclass~='tree'][*|header] > *[class~='topic/dlentry']:first-child > [class~='topic/dt']:before(@{conbat-header-index}) {
+  	width: @dl-tree-dd-offset;
+}
+
+*[class~='topic/dl'][outputclass~='tree'][*|header] > *[class~='topic/dlentry']:first-child > *:not([*|xsl]):empty:before(1) {
+	content: "\200B";	/* add zero-width-space to fix display of cursor in 1st row below header */
+}

@@ -90,8 +90,13 @@ public class SaxonNodeWrapper implements NodeWrapper
 			}
 			while ((ancestor != null) && (xmlBaseAttribute == null));
 			if (xmlBaseAttribute != null) {
-				//logger.info("getBaseUrl: " + ancestor.getBaseURI() + ", " + xmlBaseAttribute + " -> " + new URL(new URL(ancestor.getBaseURI()), xmlBaseAttribute));
-				return new URL(new URL(ancestor.getBaseURI()), xmlBaseAttribute);
+				if (xmlBaseAttribute.startsWith("file:")) {
+					return new URL(xmlBaseAttribute);	
+				} else {
+					final SaxonNodeWrapper ancestorNode = new SaxonNodeWrapper(ancestor, xPathCache); 
+					//logger.info("getBaseUrl: " + ancestorNode.getBaseUrl() + ", " + xmlBaseAttribute + " -> " + new URL(ancestorNode.getBaseUrl(), xmlBaseAttribute));
+					return new URL(ancestorNode.getBaseUrl(), xmlBaseAttribute);
+				}
 			} else {
 				return new URL(saxonNode.getBaseURI());
 			}

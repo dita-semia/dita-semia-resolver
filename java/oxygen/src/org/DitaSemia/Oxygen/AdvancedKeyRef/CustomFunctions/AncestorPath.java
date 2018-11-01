@@ -1,6 +1,8 @@
 package org.DitaSemia.Oxygen.AdvancedKeyRef.CustomFunctions;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
@@ -8,6 +10,8 @@ import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.OxyXPathHandler;
+import org.DitaSemia.Oxygen.OxyXPathHandler.Argument;
+import org.DitaSemia.Oxygen.OxyXPathHandler.ArgumentType;
 import org.apache.log4j.Logger;
 
 
@@ -15,8 +19,6 @@ public class AncestorPath implements OxyXPathHandler.CustomFunction {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(AncestorPath.class.getName());
-
-	private static final int ARG_COUNT = 1;
 	
 	@Override
 	public String getName() {
@@ -24,11 +26,13 @@ public class AncestorPath implements OxyXPathHandler.CustomFunction {
 	}
 
 	@Override
-	public String evaluate(List<String> arguments, AuthorNodeWrapper context) {
+	public String evaluate(List<Argument> arguments, AuthorNodeWrapper context) {
 		KeyDefInterface keyDef = null;
 		if (context != null) {
 			final BookCache bookCache = BookCacheHandler.getInstance().getBookCache(context.getBaseUrl());
-			keyDef = (bookCache != null ? bookCache.getAncestorKeyDef(context, arguments.get(0)) : null);
+			final Set<String> keyTypes = new HashSet<>();
+			keyTypes.addAll(arguments.get(0).stringList);
+			keyDef = (bookCache != null ? bookCache.getAncestorKeyDef(context, keyTypes) : null);
 		} 
 
 		if (keyDef == null) {
@@ -47,7 +51,9 @@ public class AncestorPath implements OxyXPathHandler.CustomFunction {
 	}
 
 	@Override
-	public int getArgCount() {
-		return ARG_COUNT;
+	public ArgumentType[] getArgumentTypes() {
+		final ArgumentType[] argumentTypes = {ArgumentType.STRING_LIST};
+		return argumentTypes;
 	}
+
 }

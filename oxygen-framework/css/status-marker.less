@@ -1,0 +1,89 @@
+
+*[class~="topic/strow"	][status = 'new'] > *[class~="topic/stentry"]:first-child:after(@{status-marker-index}),
+*[class~="topic/section"][status = 'new'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/topic"	][status = 'new'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/dlentry"][status = 'new'] > *[class~="topic/dt"		]:after(@{status-marker-index}) {
+	content: " (neu)";
+	.status-marker-style()
+}
+
+*[class~="topic/strow"	][status = 'changed'] > *[class~="topic/stentry"]:first-child:after(@{status-marker-index}),
+*[class~="topic/section"][status = 'changed'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/topic"	][status = 'changed'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/dlentry"][status = 'changed'] > *[class~="topic/dt"		]:after(@{status-marker-index}) {
+	content: " (geändert)";
+	.status-marker-style()
+}
+
+*[class~="topic/strow"	][status = 'deleted'] > *[class~="topic/stentry"]:first-child:after(@{status-marker-index}),
+*[class~="topic/section"][status = 'deleted'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/topic"	][status = 'deleted'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/dlentry"][status = 'deleted'] > *[class~="topic/dt"		]:after(@{status-marker-index}) {
+	content: " (entfallen)";
+	.status-marker-style()
+}
+
+*[class~="topic/strow"	][status = 'unchanged'] > *[class~="topic/stentry"	]:first-child:after(@{status-marker-index}),
+*[class~="topic/section"][status = 'unchanged'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/topic"	][status = 'unchanged'] > *[class~="topic/title"	]:after(@{status-marker-index}),
+*[class~="topic/dlentry"][status = 'unchanged'] > *[class~="topic/dt"		]:after(@{status-marker-index}) {
+	content: " (unverändert)";
+	.status-marker-style()
+}
+
+
+
+*[class~="topic/p"			][status = 'new']:before(@{status-marker-index}),
+*[class~="topic/shortdesc"	][status = 'new']:before(@{status-marker-index}),
+*[class~="topic/ul"			][status = 'new']:before(@{status-marker-index}),
+*[class~="topic/sli"		][status = 'new']:before(@{status-marker-index}),
+*[class~="topic/li"			][status = 'new']:before(@{status-marker-index}) {
+	content: "(neu:) ";
+	.status-marker-style()
+}
+
+*[class~="topic/p"			][status = 'changed']:before(@{status-marker-index}),
+*[class~="topic/shortdesc"	][status = 'changed']:before(@{status-marker-index}),
+*[class~="topic/ul"			][status = 'changed']:before(@{status-marker-index}),
+*[class~="topic/sli"		][status = 'changed']:before(@{status-marker-index}),
+*[class~="topic/li"			][status = 'changed']:before(@{status-marker-index}) {
+	content: "(geändert:) ";
+	.status-marker-style()
+}
+
+*[class~="topic/p"			][status = 'deleted']:before(@{status-marker-index}),
+*[class~="topic/shortdesc"	][status = 'deleted']:before(@{status-marker-index}),
+*[class~="topic/ul"			][status = 'deleted']:before(@{status-marker-index}),
+*[class~="topic/sli"		][status = 'deleted']:before(@{status-marker-index}),
+*[class~="topic/li"			][status = 'deleted']:before(@{status-marker-index}) {
+	content: "(entfallen:) ";
+	.status-marker-style()
+}
+
+*[class~="topic/p"			][status = 'unchanged']:before(@{status-marker-index}),
+*[class~="topic/shortdesc"	][status = 'unchanged']:before(@{status-marker-index}),
+*[class~="topic/ul"			][status = 'unchanged']:before(@{status-marker-index}),
+*[class~="topic/sli"		][status = 'unchanged']:before(@{status-marker-index}),
+*[class~="topic/li"			][status = 'unchanged']:before(@{status-marker-index}) {
+	content: "(unverändert:) ";
+	.status-marker-style()
+}
+
+
+*[class~="topic/note"][status]:before(4) {
+	display: block;
+	margin-left: (-6em / 0.8);
+	.status-marker-style()
+}
+
+*[class~="topic/note"][status = 'new']:before(4) {
+	content: "(neu)";
+}
+
+*[class~="topic/note"][status = 'deleted']:before(4) {
+	content: "(entfallen)";
+}
+
+*[class~="topic/note"][status = 'unchanged']:before(4) {
+	content: "(unverändert)";
+}

@@ -39,14 +39,25 @@
 		<xsl:attribute name="border-style"		>solid</xsl:attribute>
 	</xsl:attribute-set>
 	
+	
+	<xsl:attribute-set name="ds:dlhead-tree" use-attribute-sets="ds:dlentry-tree">
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:dthd-tree" use-attribute-sets="ds:dt-tree">
+	</xsl:attribute-set>
+	
+	<xsl:attribute-set name="ds:ddhd-tree" use-attribute-sets="ds:dd-tree">
+	</xsl:attribute-set>
+	
 	<xsl:attribute-set name="ds:dlentry-tree">
 		<xsl:attribute name="background-color"		>transparent</xsl:attribute>
 		<xsl:attribute name="border-color"			>rgb(128,128,128)</xsl:attribute>
 		<xsl:attribute name="border-width"			><xsl:value-of select="$DL_TREE_BORDER_WIDTH"/></xsl:attribute>
 		<!-- the bottom line is required for page breaks and should overlap with the top line of the following entry. -->
 		<xsl:attribute name="margin-bottom"			>-<xsl:value-of select="$DL_TREE_BORDER_WIDTH"/></xsl:attribute>
-		<xsl:attribute name="padding-top"			>0.5mm</xsl:attribute>
 		<xsl:attribute name="border-bottom-style"	>solid</xsl:attribute>
+		<!-- no padding-top here since it would mess up the middle border with outputclass 'table-frame' -->
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dl-tree-cell">
@@ -55,14 +66,17 @@
 	</xsl:attribute-set>
 		
 	<xsl:attribute-set name="ds:dt-tree">
-		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
+		
+		<xsl:attribute name="margin-left"					>1.0mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
+		<xsl:attribute name="padding-right"					>1.0mm</xsl:attribute>
+		<xsl:attribute name="padding-top"					>0.5mm</xsl:attribute>
 		<xsl:attribute name="keep-together.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	
 	<xsl:attribute-set name="ds:dd-tree">
-		<xsl:attribute name="margin-left"					>1.5mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
-		<xsl:attribute name="padding-right"					>1.5mm</xsl:attribute>
+		<xsl:attribute name="margin-left"					>1.0mm</xsl:attribute>	<!-- padding-left doesn't work!? -->
+		<xsl:attribute name="padding-right"					>1.0mm</xsl:attribute>
+		<xsl:attribute name="padding-top"					>0.5mm</xsl:attribute>
 		<xsl:attribute name="keep-together.within-column"	>always</xsl:attribute>
 	</xsl:attribute-set>
 	

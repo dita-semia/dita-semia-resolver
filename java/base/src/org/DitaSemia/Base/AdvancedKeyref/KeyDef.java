@@ -108,7 +108,12 @@ public class KeyDef implements KeyDefInterface {
 		final String type = getTypeFromNode(node);
 		if ((type != null) && (!type.isEmpty())) {
 			try {
-				return new KeyDef(node, type, isResourceOnly, parentTopicId);
+				final KeyDef keyDef = new KeyDef(node, type, isResourceOnly, parentTopicId);
+				if ((keyDef.getKey() != null) && (keyDef.getType() != null)) {
+					return keyDef;
+				} else {
+					return null;
+				}
 			} catch (XPathException | XPathNotAvaliableException e) {
 				logger.error(e, e);
 				return null;
@@ -166,6 +171,8 @@ public class KeyDef implements KeyDefInterface {
 		this.type			= type;
 		this.isResourceOnly	= isResourceOnly;
 		this.isOverwritable	= isResourceOnly;
+		
+		//logger.info("new KeyDef: " + node);
 		
 		//logger.info("parentTopicId: " + parentTopicId);
 
@@ -252,6 +259,7 @@ public class KeyDef implements KeyDefInterface {
 		this.isResourceOnly		= isResourceOnly;
 		this.isOverwritable		= isResourceOnly;
 		this.filterProperties 	= FilterProperties.createUnrestricted();
+		this.keyFilterAttrSet 	= new FilterAttrSet();	// key will always be visible
 		
 		String	key					= null;
 		String	type				= null;
@@ -567,7 +575,7 @@ public class KeyDef implements KeyDefInterface {
 
 	@Override
 	public Sequence getDxdTypeDef(XslTransformerCacheProvider xslTransformerCacheProvider, BookCacheProvider bookCacheProvider) throws XPathException {
-		if ((dxdTypeDef == null) && (dxdTypeXsl != null)) {
+		if ((dxdTypeDef == null) && (dxdTypeXsl != null) && (defId != null)) {
 			//logger.info("getDxdTypeDef: " + toString());
 			final XslTransformerCache 	transformerCache 	= xslTransformerCacheProvider.getXslTransformerCache();
 			//logger.info("  transformerCache: " + transformerCache);
@@ -614,4 +622,12 @@ public class KeyDef implements KeyDefInterface {
 		return filterProperties;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof KeyspecInterface) {
+			return (getRefString().equals(((KeyspecInterface)o).getRefString()));
+		} else {
+			return false;
+		}
+	}
 }

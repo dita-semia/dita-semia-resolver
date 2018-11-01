@@ -4,5 +4,6 @@
 
 	<nextCatalog catalog="xslt-conref/catalog.xml"/>
 	<nextCatalog catalog="dxd-codeblock/catalog.xml"/>
+	<nextCatalog catalog="structure-with-conditions/catalog.xml"/>
 	
 </catalog>

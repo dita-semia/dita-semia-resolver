@@ -56,14 +56,14 @@
 					<xsl:message>no keydef: <xsl:sequence select="$keyRef"/></xsl:message>
 				</xsl:if>
 				
-				<xsl:variable name="displaySuffix" 	as="xs:string*" select="akr:getDisplaySuffix($keyRef, $jKeyDef)"/>
-				<xsl:variable name="isKeyFiltered" 	as="xs:boolean" select="ikd:getIsFilteredKey($jKeyDef)"/>
-				<xsl:variable name="isKeyHidden" 	as="xs:boolean" select="ikd:getIsKeyHidden($jKeyDef)"/>
-				<xsl:variable name="isKeyNoLink" 	as="xs:boolean" select="ikd:getIsDontLink($jKeyDef)"/>
-				<xsl:variable name="isResourceOnly"	as="xs:boolean" select="ikd:getIsResourceOnly($jKeyDef)"/>
+				<xsl:variable name="displaySuffix" 	as="xs:string*" 	select="akr:getDisplaySuffix($keyRef, $jKeyDef)"/>
+				<xsl:variable name="isKeyFiltered" 	as="xs:boolean?" 	select="ikd:getIsFilteredKey($jKeyDef)"/>
+				<xsl:variable name="isKeyHidden" 	as="xs:boolean?" 	select="ikd:getIsKeyHidden($jKeyDef)"/>
+				<xsl:variable name="isKeyNoLink" 	as="xs:boolean?" 	select="ikd:getIsDontLink($jKeyDef)"/>
+				<xsl:variable name="isResourceOnly"	as="xs:boolean?" 	select="ikd:getIsResourceOnly($jKeyDef)"/>
 
 				<!--<xsl:message>ref: <xsl:value-of select="@akr:ref"/>, isResourceOnly: <xsl:value-of select="$isResourceOnly"/>, isKeyNoLink: <xsl:value-of select="$isKeyNoLink"/><!-\-, isKeyHidden: <xsl:value-of select="$isKeyHidden"/>-\-></xsl:message>-->
-
+				
 				<xsl:variable name="refContent" as="node()*">
 					<xsl:choose>
 						<xsl:when test="($outputclass = $OUTPUTCLASS_NAME) or ($isKeyHidden)">
@@ -128,7 +128,7 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="$content"/>
+				<xsl:copy-of select="$content"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

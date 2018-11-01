@@ -10,7 +10,7 @@ import net.sf.saxon.value.SequenceType;
 
 public class GetKeyDefByRefStringDef extends ExtensionFunctionDefinition {
 	
-	public static final String LOCAL_NAME	= "getKeyDefByRefString"; 
+	public static final String LOCAL_NAME	= "getKeyDefByRefString";
 
 	protected final BookCacheProvider bookCacheProvider;
 	

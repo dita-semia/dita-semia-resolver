@@ -15,6 +15,7 @@
 	<xsl:variable name="CBA_FLAG_PE_ITALIC"			as="xs:string"	select="'pe-italic'"/>
 	<xsl:variable name="CBA_FLAG_DEFAULT_ITALIC"	as="xs:string"	select="'default-italic'"/>
 	<xsl:variable name="CBA_FLAG_UNWRAP"			as="xs:string"	select="'unwrap'"/>
+	<xsl:variable name="CBA_NO_TEXT"				as="xs:string"	select="'no-text'"/>
 
 
 </xsl:stylesheet>

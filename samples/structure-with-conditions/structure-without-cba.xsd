@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs		= "http://www.w3.org/2001/XMLSchema" 
+	xmlns:ditaarch	= "http://dita.oasis-open.org/architecture/2005/"
+	xmlns:cba		= "http://www.dita-semia.org/conbat"
+	xmlns:xcr		= "http://www.dita-semia.org/xslt-conref"
+	xmlns:ikd		= "http://www.dita-semia.org/implicit-keydef"
+	elementFormDefault="qualified">
+	
+	<xs:import namespace="http://dita.oasis-open.org/architecture/2005/"
+		schemaLocation="urn:oasis:names:tc:dita:xsd:ditaarch.xsd:1.3"/>
+	
+	<xs:import namespace="http://www.dita-semia.org/conbat"				schemaLocation="urn:dita-semia:conbat:schema:conbat-attr.xsd"/>
+	<xs:import namespace="http://www.dita-semia.org/xslt-conref"		schemaLocation="urn:dita-semia:xslt-conref:schema:xslt-conref-attr.xsd"/>
+	<xs:import namespace="http://www.dita-semia.org/implicit-keydef" 	schemaLocation="urn:dita-semia:advanced-keyref:schema:ikd-attr.xsd"/>
+	
+	<!-- ================ TOPIC DOMAINS ===================== -->
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:abbreviateDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:deliveryTargetAttDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:equationDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:hazardDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:highlightDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:indexingDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:markupDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:mathmlDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:programmingDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:releaseManagementDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:softwareDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:svgDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:uiDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:utilitiesDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:xmlDomain.xsd:1.3"/>
+	<xs:include schemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-domain.xsd"/>
+	
+	<!-- ================ GROUP DEFINITIONS ===================== -->
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:tblDeclGrp.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topicGrp.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:referenceGrp.xsd:1.3"/>
+	
+	<!-- =================  MODULE INCLUDE DEFINITION  ================== -->
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:commonElementMod.xsd:1.3"/>
+	
+	<!-- ======== Table elements ======== -->
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:tblDeclMod.xsd:1.3"/>
+	
+	<!-- ======= MetaData elements, plus keyword and indexterm ======= -->
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:metaDeclMod.xsd:1.3"/>
+	
+	<xs:redefine schemaLocation="urn:oasis:names:tc:dita:xsd:commonElementGrp.xsd:1.3">
+		<xs:group name="data">
+			<xs:choice>
+				<xs:group ref="data"/>
+				<xs:group ref="ut-d-data"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="foreign">
+			<xs:choice>
+				<xs:group ref="foreign"/>
+				<xs:group ref="mathml-d-foreign"/>
+				<xs:group ref="svg-d-foreign"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="note">
+			<xs:choice>
+				<xs:group ref="note"/>
+				<xs:group ref="hazard-d-note"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="dl">
+			<xs:choice>
+				<xs:group ref="dl"/>
+				<xs:group ref="pr-d-dl"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="fig">
+			<xs:choice>
+				<xs:group ref="fig"/>
+				<xs:group ref="equation-d-fig"/>
+				<xs:group ref="pr-d-fig"/>
+				<xs:group ref="ut-d-fig"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="pre">
+			<xs:choice>
+				<xs:group ref="pre"/>
+				<xs:group ref="pr-d-pre"/>
+				<xs:group ref="sw-d-pre"/>
+				<xs:group ref="ui-d-pre"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="div">
+			<xs:choice>
+				<xs:group ref="div"/>
+				<xs:group ref="equation-d-div"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="keyword">
+			<xs:choice>
+				<xs:group ref="keyword"/>
+				<xs:group ref="markup-d-keyword"/>
+				<xs:group ref="pr-d-keyword"/>
+				<xs:group ref="sw-d-keyword"/>
+				<xs:group ref="ui-d-keyword"/>
+				<xs:group ref="xml-d-keyword"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="term">
+			<xs:choice>
+				<xs:group ref="term"/>
+				<xs:group ref="abbrev-d-term"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="ph">
+			<xs:choice>
+				<xs:group ref="ph"/>
+				<xs:group ref="equation-d-ph"/>
+				<xs:group ref="hi-d-ph"/>
+				<xs:group ref="pr-d-ph"/>
+				<xs:group ref="sw-d-ph"/>
+				<xs:group ref="ui-d-ph"/>
+				<xs:group ref="akr-d-ph"/>
+			</xs:choice>
+		</xs:group>
+		<xs:group name="index-base">
+			<xs:choice>
+				<xs:group ref="index-base"/>
+				<xs:group ref="indexing-d-index-base"/>
+			</xs:choice>
+		</xs:group>
+		<xs:attributeGroup name="props-attribute-extensions">
+			<xs:attributeGroup ref="props-attribute-extensions"/>
+			<xs:attributeGroup ref="deliveryTargetAtt-d-attribute"/>
+		</xs:attributeGroup>
+	</xs:redefine>
+	
+	<xs:redefine schemaLocation="urn:oasis:names:tc:dita:xsd:metaDeclGrp.xsd:1.3">
+		<xs:group name="metadata">
+			<xs:choice>
+				<xs:group ref="metadata"/>
+				<xs:group ref="relmgmt-d-metadata"/>
+			</xs:choice>
+		</xs:group>
+	</xs:redefine>
+	
+	<xs:redefine schemaLocation="urn:oasis:names:tc:dita:xsd:commonElementMod.xsd:1.3">
+		<xs:attributeGroup name="conref-atts">
+			<xs:attributeGroup ref="conref-atts"/>
+			<xs:attributeGroup ref="ikd:ikd-atts"/>
+			<xs:attributeGroup ref="xcr:xslt-conref-atts"/>
+		</xs:attributeGroup>
+	</xs:redefine>
+	
+	
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:topicMod.xsd:1.3"/>
+	<xs:include schemaLocation="urn:oasis:names:tc:dita:xsd:referenceMod.xsd:1.3"/>
+	<!--  ================ INFO-TYPES DEFINITION =====================  -->
+	<xs:group name="info-types">
+		<xs:annotation>
+			<xs:documentation>
+				This group is referenced in all topic modules but not defined there.
+				It must be declared in topic-type shells.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element ref="structure"/>
+			<!--<xs:element ref="topic"/>-->
+			<!--<xs:group ref="reference"/>
+			<xs:group ref="info-types"/>-->
+			<!--<xs:element ref="no-topic-nesting" maxOccurs="0" minOccurs="0"/>-->
+		</xs:choice>
+	</xs:group>
+	
+	<xs:attributeGroup name="domains-att">
+		<xs:attribute name="domains"
+			type="xs:string"
+			default="(topic abbrev-d) (topic equation-d) (topic hazard-d) (topic hi-d) (topic indexing-d) (topic markup-d xml-d) (topic markup-d) (topic mathml-d) (topic pr-d) (topic reference) (topic relmgmt-d) (topic svg-d) (topic sw-d) (topic ui-d) (topic ut-d) (topic software-component-d) a(props deliveryTarget)"/>
+	</xs:attributeGroup>
+	
+	
+	<!--  ================ Specialization =====================  -->
+	
+	<xs:element name="structure">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" 	type="structureTitleType"/>
+				<xs:element name="body"		type="structureBodyType"/>
+			</xs:sequence>
+			<xs:attribute ref="class" default="- topic/topic reference/reference ds-d/structure "/>
+			<xs:attributeGroup ref="topic.attributes"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="structureTitleType">
+		<xs:sequence>
+			<xs:element name="key">
+				<xs:complexType mixed="true">
+					<xs:attribute ref="class"			fixed="+ topic/ph ds-d/structure/title/key "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 			fixed="+ topic/title ds-d/structure/title "/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureBodyType">
+		<xs:sequence>
+			<xs:element ref="shortdesc" 	minOccurs="0"/>
+			<xs:element name="elements" 	type="structureElementsType"/>
+			<xs:element name="conditions" 	type="structureConditionsType"/>
+			<xs:element ref="section" 		minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute ref="class" fixed="+ topic/body ds-d/structure/body "/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureElementsType">
+		<xs:sequence>
+			<xs:element name="elementList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="element" type="structureElementType" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute ref="class" 			fixed="+ topic/dl ds-d/structure/elementList "/>
+					<xs:attributeGroup ref="id-atts"/>
+					<xs:attribute name="outputclass"	fixed="table"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 		fixed="+ topic/section ds-d/structure/elements "/>
+	</xs:complexType>
+
+	<xs:complexType name="structureElementType">
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:choice minOccurs="0">
+						<xs:element name="field">
+							<xs:complexType mixed="true">
+								<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/element/field "/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+					<xs:attribute ref="class" fixed="+ topic/dt ds-d/structure/element/name "/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="description">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="p"/>
+						<xs:element name="enumList" type="enumListType" minOccurs="0"/>
+						<xs:group ref="entry.content"/>
+					</xs:sequence>
+					<xs:attribute ref="class" fixed="+ topic/dd ds-d/structure/element/description "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" fixed="+ topic/dlentry ds-d/structure/element "/>
+		<xs:attributeGroup ref="id-atts"/>
+		<xs:attributeGroup ref="select-atts"/>
+	</xs:complexType>
+	
+	<xs:complexType name="enumListType">
+		<xs:sequence>
+			<xs:element name="enum" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="key">
+							<xs:complexType mixed="true">
+								<xs:attribute ref="class"	fixed="+ topic/dt ds-d/enumList/key "/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="name">
+							<xs:complexType mixed="true">
+								<xs:attribute ref="class"	fixed="+ topic/dd ds-d/enumList/name "/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute ref="class" 		fixed="+ topic/dlentry ds-d/enumListe/enum "/>
+					<xs:attributeGroup ref="id-atts"/>
+					<xs:attributeGroup ref="select-atts"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 			fixed="+ topic/dl ds-d/enumList "/>
+		<xs:attribute name="outputclass" 	fixed="bullet-list-dashes"/>
+		<xs:attributeGroup ref="id-atts"/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureConditionsType">
+		<xs:sequence>
+			<xs:element name="conditionList">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="condition"	type="structureConditionType"	maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute ref="class" 			fixed="+ topic/dl ds-d/structure/conditionList "/>
+					<xs:attribute name="outputclass" 	fixed="table"/>
+					<xs:attributeGroup ref="id-atts"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 		fixed="+ topic/section ds-d/structure/conditions "/>
+		<xs:attributeGroup ref="id-atts"/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureConditionType">
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType mixed="true">
+					<xs:attribute ref="class"		fixed="+ topic/dt ds-d/structure/condition/name "/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="description" 	type="structureConditionDescriptionType"/>
+		</xs:sequence>
+		<xs:attribute ref="class" fixed="+ topic/dlentry ds-d/structure/condition "/>
+		<xs:attributeGroup ref="id-atts"/>
+		<xs:attributeGroup ref="select-atts"/>
+	</xs:complexType>
+
+	<xs:complexType name="structureConditionDescriptionType">
+		<xs:sequence>
+			<xs:group ref="entry.content" minOccurs="0"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="fieldDefinition"	type="structureConditionFieldDefinitionType"/>
+				<xs:element name="ifThen"			type="structureConditionIfThenType"/>
+				<xs:group ref="entry.content"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute ref="class" fixed="+ topic/dd ds-d/structure/condition/description "/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureConditionFieldDefinitionType">
+		<xs:sequence>
+			<xs:element name="field">
+				<xs:complexType mixed="true">
+					<xs:attribute ref="class" 			fixed="+ topic/ph ds-d/structure/condition/fieldDefinition/field "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 		fixed="+ topic/p ds-d/structure/condition/fieldDefinition "/>
+		<xs:attributeGroup ref="id-atts"/>
+		<xs:attribute ref="status"/>
+		
+	</xs:complexType>
+	
+	<xs:complexType name="structureConditionIfThenType">
+		<xs:sequence>
+			<xs:element name="if">
+				<xs:complexType>
+					<xs:choice minOccurs="0">
+						<xs:element name="fieldValue" 			type="structureConditionIfFieldValueType"/>
+						<xs:element name="fieldNotValue"/>
+						<xs:element name="elementEmpty"/>
+						<xs:element name="elementNotEmpty"/>
+						<xs:element name="and"/>
+						<xs:element name="or"/>
+					</xs:choice>
+					<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/ifThen/if "/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="then">
+				<xs:complexType>
+					<xs:choice minOccurs="0">
+						<xs:element name="elementNotEmpty" type="structureConditionThenElementNotEmptyType"/>
+						<xs:element name="elementEmpty"/>
+						<xs:element name="fielValue"/>
+						<xs:element name="fieldValueList"/>
+						<xs:element name="freeText"/>
+					</xs:choice>
+					<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/ifThen/then "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 		fixed="+ topic/p ds-d/structure/condition/ifThen "/>
+		<xs:attributeGroup ref="id-atts"/>
+		<xs:attribute ref="status"/>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="structureConditionIfFieldValueType">
+		<xs:sequence>
+			<xs:element name="field">
+				<xs:complexType mixed="true">
+					<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/field "/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="value">
+				<xs:complexType mixed="true">
+					<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/then/fieldValue/value "/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/if/fieldValue "/>
+	</xs:complexType>
+	
+	<xs:complexType name="structureConditionThenElementNotEmptyType" mixed="true">
+		<xs:attribute ref="class" 		fixed="+ topic/ph ds-d/structure/condition/then/elementNotEmpty "/>
+	</xs:complexType>
+	
+</xs:schema>

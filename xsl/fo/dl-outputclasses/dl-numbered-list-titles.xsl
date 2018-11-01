@@ -10,7 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_NUMBERED_LIST_TITLES" as="xs:string">numbered-list-titles</xsl:variable>
 	
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_NUMBERED_LIST_TITLES]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_NUMBERED_LIST_TITLES]">
 		<fo:list-block xsl:use-attribute-sets="ds:dl-numbered-list-titles">
 			<xsl:call-template name="commonattributes"/>
 			<xsl:apply-templates mode="dl-numbered-list-titles"/>

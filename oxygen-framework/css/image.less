@@ -1,0 +1,13 @@
+
+*[class~="topic/image"][href=""],
+*[class~="topic/image"]:not([href]) {
+	content: 
+		oxy_button(
+  			action, oxy_action(
+  					name,			'Edit image',
+		            description, 	'Edit or insert image reference',
+		            icon, 			url('../img/image20.png'),   
+		            operation, 		'org.DitaSemia.Oxygen.AuthorOperations.EditOrInsertImageRef',),
+			showText, 	false,
+			showIcon,	true)
+}

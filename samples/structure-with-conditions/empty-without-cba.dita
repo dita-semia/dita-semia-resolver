@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<structure xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cba="http://www.dita-semia.org/conbat"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:structure-with-conditions:structure-without-cba.xsd" id="SVT-FRR-GFB">
+	<title>
+		<key>Person</key>
+	</title>
+	<body>
+		<elements>
+			<elementList>
+				<element>
+					<name>
+						<field>Name</field>
+					</name>
+					<description>
+						<p>Name of the person</p>
+					</description>
+				</element>
+				<element>
+					<name>
+						<field>TypeOfPerson</field>
+					</name>
+					<description>
+						<p>Type of the person:</p>
+						<enumList>
+							<enum>
+								<key>1</key>
+								<name>Natural person</name>
+							</enum>
+							<enum>
+								<key>2</key>
+								<name>Juristic person</name>
+							</enum>
+						</enumList>
+					</description>
+				</element>
+				<element>
+					<name>
+						<field>DateOfBirth</field>
+					</name>
+					<description>
+						<p>Date of birth of a natural person</p>
+					</description>
+				</element>
+			</elementList>
+		</elements>
+		<conditions class="+ topic/section ds-d/structure/conditions ">
+			<conditionList class="+ topic/dl ds-d/structure/conditionList ">
+				<condition class="+ topic/dlentry ds-d/structure/condition ">
+					<name class="+ topic/dt ds-d/structure/condition/name ">Person.001</name>
+					<description class="+ topic/dd ds-d/structure/condition/description "/>
+				</condition>
+			</conditionList>
+		</conditions>
+	</body>
+</structure>

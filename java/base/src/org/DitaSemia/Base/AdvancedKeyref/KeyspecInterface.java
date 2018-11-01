@@ -25,8 +25,4 @@ public interface KeyspecInterface {
 	List<String> getNamespaceList();
 	
 	String getRefString();
-
-	default public boolean equals(KeyspecInterface keyspec) {
-		return (getRefString().equals(keyspec.getRefString()));
-	}
 }

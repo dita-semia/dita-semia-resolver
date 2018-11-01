@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.SaxonApiException;
@@ -21,6 +22,7 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.BookCacheHandler;
 import org.DitaSemia.Oxygen.SchematronUtil;
@@ -30,9 +32,26 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 
 	private static final Logger logger = Logger.getLogger(AdvancedKeyRefSchematronUtil.class.getName());
 	
+	protected static XPathCache xPathCache = null;
+	
+	protected static XPathCache getXPathCache(NodeInfo node) {
+		if ((xPathCache == null) || (!xPathCache.isCompatible(node.getConfiguration()))) {
+			final Configuration configuration 	= node.getConfiguration();
+			try {
+				final URL			url				= new URL(node.getBaseURI());
+				final BookCache		bookCache		= BookCacheHandler.getInstance().getBookCache(url);
+				configuration.registerExtensionFunction(new AncestorPathDef(bookCache));
+			} catch (Exception e) {
+				logger.error(e, e);
+			}
+			xPathCache = new XPathCache(configuration);
+		}
+		return xPathCache;
+	}
+	
 	public static KeyRef createKeyRef(ElementOverNodeInfo element) {
 		NodeInfo 			node 		= element.getUnderlyingNodeInfo();
-		SaxonNodeWrapper 	nodeWrapper = new SaxonNodeWrapper(node, new XPathCache(node.getConfiguration()));
+		SaxonNodeWrapper 	nodeWrapper = new SaxonNodeWrapper(node, getXPathCache(node));
 		return KeyRef.fromNode(nodeWrapper);
 	}
 	
@@ -96,7 +115,8 @@ public class AdvancedKeyRefSchematronUtil extends SchematronUtil {
 				return true;
 			} else if (pathLen == -1) {
 				//namespace elements + 1 key
-				int fullLength = keyRef.getNamespaceList().size() + 1;
+				final List<String> 	namespaceList 	= keyRef.getNamespaceList();
+				final int 			fullLength 		= (namespaceList == null) ? 1 : namespaceList.size() + 1;
 				//logger.info("fullLength: " + fullLength + "pathLen: " + keyRef.getPathLen());
 				return (keyRef.getPathLen() == fullLength);
 			} else {

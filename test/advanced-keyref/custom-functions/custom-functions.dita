@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Custom Functions</title>
+	<body>
+		<p/>
+		<p id="YBF-4BS-S1B" ikd:key-type="test" ikd:namespace="('a', 'b')" ikd:name="ds:extractText(.)">Test</p>
+	</body>
+</topic>

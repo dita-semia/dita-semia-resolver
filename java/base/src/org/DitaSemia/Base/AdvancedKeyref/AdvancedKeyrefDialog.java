@@ -662,9 +662,9 @@ public class AdvancedKeyrefDialog extends JDialog {
 		keyTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		keyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		keyTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-		keyTable.getColumnModel().getColumn(0).setMaxWidth(30);
-		keyTable.getColumnModel().getColumn(0).setResizable(false);
+		keyTable.getColumnModel().getColumn(0).setPreferredWidth(35);
+		keyTable.getColumnModel().getColumn(0).setMaxWidth(35);
+		//keyTable.getColumnModel().getColumn(0).setResizable(false);
 		keyTable.getColumnModel().getColumn(1).setPreferredWidth(150);
 		keyTable.getColumnModel().getColumn(2).setPreferredWidth(150);
 		keyTable.getColumnModel().getColumn(3).setPreferredWidth(150);

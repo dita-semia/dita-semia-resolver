@@ -7,8 +7,10 @@
 	xmlns:akr	= "http://www.dita-semia.org/advanced-keyref"
 	xmlns:ikd	= "http://www.dita-semia.org/implicit-keydef"
 	xmlns:dxd	= "http://www.dita-semia.org/dynamic-xml-definition"
-	exclude-result-prefixes="xs"
+	exclude-result-prefixes="#all"
 	version="2.0">
+	
+	<xsl:include href="urn:dita-semia:xsl:xcr-extension-functions.xsl"/>
 
 	<xsl:param name="dxd:rootType"	as="xs:string"/>
 	<xsl:param name="dxd:rootName"	as="xs:string"/>
@@ -52,7 +54,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="empty($keyDef)">
-				<!--<xsl:message>ERROR: undefined type name '<xsl:value-of select="$currentTypeName"/>' (unknown key).</xsl:message>-->
+				<xsl:message>ERROR: undefined type name '<xsl:value-of select="$currentTypeName"/>'.</xsl:message>
 				<!--<xs:complexType name="{$currentTypeName}" mixed="true">
 					<xs:sequence>
 						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
@@ -64,7 +66,7 @@
 				<xs:complexType name="{$currentTypeName}"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:copy-of select="$typeDef"></xsl:copy-of>
+				<xsl:copy-of select="$typeDef"/>
 			</xsl:otherwise>
 		</xsl:choose>
 

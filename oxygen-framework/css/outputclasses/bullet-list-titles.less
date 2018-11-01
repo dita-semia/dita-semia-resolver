@@ -1,0 +1,30 @@
+
+/********************************************/
+/* outputclass: bullet-list-titles 			*/
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] {
+	list-style	: disc;
+	margin-left : 0;
+}
+
+*[class~='topic/ul'] *[class~='topic/dl'][outputclass~='bullet-list-titles'],
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dl'][outputclass~='bullet-list-titles'] {
+	list-style		: circle;
+}
+
+dl[class~='topic/dl'][outputclass~='bullet-list-titles'] dlentry[class~='topic/dlentry'] {
+	-oxy-foldable 			: true;
+	-oxy-not-foldable-child : dt;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dlentry'] {
+	display : list-item;
+	margin-left : 1.5em;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	margin-left	: 0ex;
+}

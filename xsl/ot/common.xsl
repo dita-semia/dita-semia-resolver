@@ -16,9 +16,9 @@
 	<xsl:template match="*[contains(@class, $C_DLENTRY)][*[not(contains(@class, $C_DLENTRY) or contains(@class, $C_DT) or contains(@class, $C_DD))]]" priority="5" mode="resolve-cba">
 		<xsl:copy>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
-			<xsl:for-each-group select="element()" group-adjacent="string(tokenize(@class, '\s+')[2])">
+			<xsl:for-each-group select="element()" group-adjacent="tokenize(@class, '\s+') = ('topic/dt', 'topic/dd')">
 				<xsl:choose>
-					<xsl:when test="current-grouping-key() = ('topic/dt', 'topic/dd')">
+					<xsl:when test="current-grouping-key() = true()">
 						<xsl:apply-templates select="current-group()" mode="#current"/>
 					</xsl:when>
 					<xsl:otherwise>

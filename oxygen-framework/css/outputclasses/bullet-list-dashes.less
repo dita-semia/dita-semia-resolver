@@ -1,0 +1,37 @@
+
+/********************************************/
+/* outputclass: bullet-list-dashes 			*/
+
+
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] {
+	list-style		: disc;
+	margin-top		: 0;
+	margin-bottom	: 0;
+}
+
+*[class~='topic/ul'] *[class~='topic/dl'][outputclass~='bullet-list-dashes'],
+*[class~='topic/dl'][outputclass~='bullet-list-titles'] *[class~='topic/dl'][outputclass~='bullet-list-dashes'] {
+	list-style		: circle;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] {
+	display		: list-item;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] *[class~='topic/dlentry'] {
+	margin-left	: 1em;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt'] {
+	display		: inline;
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dt']:after(@{dt-outputclass-suffix-index}) {
+	content		: " – ";
+}
+
+*[class~='topic/dl'][outputclass~='bullet-list-dashes'] *[class~='topic/dlentry'] > *[class~='topic/dd'] {
+	display		: inline;
+	margin-left	: 0ex;
+}

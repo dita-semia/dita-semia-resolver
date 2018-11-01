@@ -10,6 +10,8 @@
 	<xsl:variable name="SVG.FONT_NORMAL" 				as="xs:string" select="'normal'"/>
 	<xsl:variable name="SVG.FONT_BOLD" 					as="xs:string" select="'bold'"/>
 	
+	<xsl:variable name="SVG.FONT_ITALIC" 				as="xs:string" select="'italic'"/>
+	
 	<xsl:variable name="SVG.TEXT_ANCHOR_START" 			as="xs:string" select="'start'"/>
 	<xsl:variable name="SVG.TEXT_ANCHOR_MIDDLE"			as="xs:string" select="'middle'"/>
 	<xsl:variable name="SVG.TEXT_ANCHOR_END"			as="xs:string" select="'end'"/>
@@ -111,6 +113,7 @@
 		<xsl:param name="fontFamily"	as="xs:string?"/>
 		<xsl:param name="fontSizeInMm"	as="xs:double?"/>
 		<xsl:param name="fontSize"		as="item()?"/>
+		<xsl:param name="fontStyle"		as="xs:string?"/>
 		<xsl:param name="color"			as="xs:string?"/>
 		<xsl:param name="text"			as="xs:string?"/>
 		<xsl:param name="maxWidthInMm"	as="xs:double?"/>
@@ -155,6 +158,9 @@
 					<xsl:attribute name="font-size" select="$fontSize"/>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:if test="exists($fontStyle)">
+				<xsl:attribute name="font-style" select="$fontStyle"/>
+			</xsl:if>
 			<xsl:if test="exists($color)">
 				<xsl:attribute name="fill" select="$color"/>
 			</xsl:if>

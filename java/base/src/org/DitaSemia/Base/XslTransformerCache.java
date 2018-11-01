@@ -38,7 +38,7 @@ import org.xml.sax.InputSource;
  * Every XsltTransformer is connected to the timestamp of the xsl Source. 
  *
  */
-public class XslTransformerCache {
+public class XslTransformerCache implements XslTransformerCacheProvider {
 
 	private static final Logger logger = Logger.getLogger(XslTransformerCache.class.getName());
 	
@@ -190,6 +190,11 @@ public class XslTransformerCache {
 
 	public boolean isCompatible(Configuration config) {
 		return configuration.isCompatible(config);
+	}
+
+	@Override
+	public XslTransformerCache getXslTransformerCache() {
+		return this;
 	}
 	
 }

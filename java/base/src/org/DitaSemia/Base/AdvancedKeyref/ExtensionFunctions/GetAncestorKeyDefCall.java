@@ -1,7 +1,6 @@
 package org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions;
 
 import java.net.URL;
-import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
@@ -14,7 +13,6 @@ import net.sf.saxon.om.Sequence;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.EmptySequence;
 import net.sf.saxon.value.ObjectValue;
-import net.sf.saxon.value.StringValue;
 
 public class GetAncestorKeyDefCall extends ExtensionFunctionCall {
 	
@@ -34,15 +32,13 @@ public class GetAncestorKeyDefCall extends ExtensionFunctionCall {
 			if (!(nodeArgument instanceof NodeInfo)) {
 				throw new XPathException("Supplied 1st parameter '" + nodeArgument + "' is no compatible node.");
 			}
-
-			final NodeInfo 			node 		= (NodeInfo)nodeArgument;
-			final String 			keyType		= ((StringValue)arguments[1].head()).getStringValue();
-			final BookCache			bookCache	= bookCacheProvider.getBookCache(new URL(node.getBaseURI()));
 			
-			if (bookCache != null) {
-				final SaxonNodeWrapper	nodeWrapper	= new SaxonNodeWrapper(node, bookCache.getXPathCache());
-				final KeyDefInterface 	keyDef 		= bookCache.getAncestorKeyDef(nodeWrapper, keyType);
+			final NodeInfo 	node 		= (NodeInfo)nodeArgument;
+			final BookCache	bookCache	= bookCacheProvider.getBookCache(new URL(node.getBaseURI()));
 
+			if (bookCache != null) {
+				final KeyDefInterface keyDef = Common.GetAncestorKeyDef(node, arguments[1], bookCache);
+				//logger.info("GetAncestorKeyDef: " + keyDef);
 				if (keyDef != null) {
 					return new ObjectValue<KeyDefInterface>(keyDef);
 				} else {

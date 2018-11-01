@@ -15,7 +15,7 @@ public interface KeyDefListInterface {
 	
 	public KeyDefInterface getExactMatch(String refString);
 
-	public KeyDefInterface getAncestorKeyDef(NodeWrapper node, String keyType);
+	public KeyDefInterface getAncestorKeyDef(NodeWrapper node, Set<String> keyTypes);
 
 	public XPathCache getXPathCache();
 

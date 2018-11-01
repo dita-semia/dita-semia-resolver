@@ -1,10 +1,13 @@
-package org.DitaSemia.Base.DocumentCaching;
+package org.DitaSemia.Base.ExtensionFunctions;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.DitaSemia.Base.SaxonNodeWrapper;
+import org.DitaSemia.Base.DocumentCaching.BookCache;
+import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
+import org.DitaSemia.Base.DocumentCaching.FileCache;
 import org.apache.log4j.Logger;
 
 import net.sf.saxon.expr.XPathContext;

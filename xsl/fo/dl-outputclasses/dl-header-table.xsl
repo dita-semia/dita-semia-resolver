@@ -10,7 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_HEADER_TABLE" 		as="xs:string">header-table</xsl:variable>
 	
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_HEADER_TABLE]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_HEADER_TABLE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-header-table">
 			
 			<xsl:call-template name="commonattributes"/>

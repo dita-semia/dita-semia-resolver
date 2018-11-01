@@ -61,6 +61,7 @@
 	
 	<xsl:template match="*[contains(@class, ' ds-d/dxd-codeblock ')]" mode="resolve-cba">
 		<xsl:copy>
+			<xsl:attribute name="xml:space" select="'preserve'"/>
 			<xsl:apply-templates select="attribute()" mode="#current"/>
 			<xsl:variable name="resolved" as="element()?">
 				<xsl:call-template name="resolve-codeblock">

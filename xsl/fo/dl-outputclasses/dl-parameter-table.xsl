@@ -10,7 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_PARAMETER_TABLE" 		as="xs:string">parameter-table</xsl:variable>
 	
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_PARAMETER_TABLE]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_PARAMETER_TABLE]">
 		<fo:block xsl:use-attribute-sets="ds:dl-parameter-table">
 			
 			<xsl:copy-of select="@id"/>	<!-- explicitly copy it since for fop it is suppressed of dlentry -->

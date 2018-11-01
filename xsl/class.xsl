@@ -20,6 +20,7 @@
 	<xsl:variable name="C_NOTE"				as="xs:string"> topic/note </xsl:variable>
 	<xsl:variable name="C_TITLE"			as="xs:string"> topic/title </xsl:variable>
 	<xsl:variable name="C_P"				as="xs:string"> topic/p </xsl:variable>
+	<xsl:variable name="C_DATA"				as="xs:string"> topic/data </xsl:variable>
 	<xsl:variable name="C_IMAGE"			as="xs:string"> topic/image </xsl:variable>
 	<xsl:variable name="C_DRAFT_COMMENT"	as="xs:string"> topic/draft-comment </xsl:variable>
 	<xsl:variable name="C_RELATED_LINKS"	as="xs:string"> topic/related-links </xsl:variable>

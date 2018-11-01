@@ -4,8 +4,12 @@ import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.om.Item;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.Sequence;
+import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.StringValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.DitaSemia.Base.SaxonNodeWrapper;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
@@ -16,21 +20,22 @@ public class Common {
 	
 	private static final Logger logger = Logger.getLogger(Common.class.getName());
 
-	public static KeyDefInterface GetAncestorKeyDef(XPathContext context, Sequence[] arguments, KeyDefListInterface keyDefList) throws XPathException {
+	public static KeyDefInterface GetAncestorKeyDef(NodeInfo contextNode, Sequence keyType, KeyDefListInterface keyDefList) throws XPathException {
 		try {
-			final Item contextItem = context.getContextItem();
-			if (!(contextItem instanceof NodeInfo)) {
-				throw new XPathException("Context item '" + contextItem + "' is no compatible node.");
+			final Set<String> 		keyTypes = new HashSet<>();
+			final SequenceIterator 	iterator = keyType.iterate();
+			Item keyTypeItem = iterator.next();
+			while (keyTypeItem != null) {
+				keyTypes.add(((StringValue)keyTypeItem).getPrimitiveStringValue().toString());
+				keyTypeItem = iterator.next();
 			}
-			
-			final String			keyType			= ((StringValue)arguments[0].head()).getPrimitiveStringValue().toString();
-			final NodeInfo			contextNode		= (NodeInfo)contextItem;
+
 			final SaxonNodeWrapper	contextWrapper	= new SaxonNodeWrapper(contextNode, keyDefList.getXPathCache());
 
 			//logger.info("Context Node: " + contextNode.getDisplayName());
 			//logger.info("Context URL: " + contextNode.getBaseURI());
 
-			return keyDefList.getAncestorKeyDef(contextWrapper, keyType);
+			return keyDefList.getAncestorKeyDef(contextWrapper, keyTypes);
 		} catch (XPathException e) {
 			throw e;
 		} catch (Exception e) {

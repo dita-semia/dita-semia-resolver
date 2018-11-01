@@ -24,6 +24,10 @@
 				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd" ikd:namespace="for $i in (1 to 3) return $i">KeyX</dt>
 				<dd>dynamic namespace by xpath: <codeph>name#space</codeph></dd>
 			</dlentry>
+			<dlentry id="KLZ-3YD-2FB">
+				<dt ikd:key-type="Test" ikd:root="parent::*" ikd:desc="dd">Key.001</dt>
+				<dd>No additional properties</dd>
+			</dlentry>
 			<dlentry id="hnp_kl1_by">
 				<dt ikd:key-type="Test" ikd:name="dd/dl/dlentry[dt='Name']/dd" ikd:root="parent::dlentry" ikd:desc="string(dd/dl/dlentry[dt='Description']/dd)"
 					ikd:namespace="dd/dl/dlentry[dt='Namespace']/dd">Complete</dt>
@@ -69,7 +73,7 @@
 		<section id="mp1_wkn_1y">
 			<title>Types</title>
 			<dl>
-				<dlentry>
+				<dlentry id="y2y_zhw_qfb">
 					<dt ikd:key-type="Test" ikd:root="parent::*" ikd:name="'Test'">Key</dt>
 					<dd>Type &amp; Name: "Test"</dd>
 				</dlentry>

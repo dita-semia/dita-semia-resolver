@@ -2,6 +2,7 @@ package org.DitaSemia.Oxygen.ExtensionBundle;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -13,7 +14,6 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefListInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
-import org.DitaSemia.Base.AdvancedKeyref.KeyTypeDef;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
@@ -25,7 +25,6 @@ import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorDocumentFilter;
 import ro.sync.ecss.extensions.api.AuthorDocumentFilterBypass;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
-import ro.sync.ecss.extensions.api.node.AttrValue;
 import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
@@ -59,6 +58,7 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 	
 	@Override
 	public boolean delete(AuthorDocumentFilterBypass filterBypass, int startOffset, int endOffset, boolean backspace) {
+		documentController.beginCompoundEdit();
 		try {
 			AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
 			AuthorNode					nodeAtOffset		= documentController.getNodeAtOffset(startOffset);
@@ -67,7 +67,6 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			if (keyRef != null) {
 				previousText = keyRef.getText();
 			}
-			documentController.beginCompoundEdit();
 			boolean result = super.delete(filterBypass, startOffset, endOffset, backspace);
 			
 			if(result){
@@ -77,16 +76,18 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 				}
 				reset();
 			}
-			documentController.endCompoundEdit();
 			return true;
 		} catch (Exception e) {
 			logger.error(e, e);
 			return false;
+		} finally {
+			documentController.endCompoundEdit();
 		}
 	}
 
 	@Override
 	public void insertFragment(AuthorDocumentFilterBypass filterBypass, int offset, AuthorDocumentFragment frag) {
+		documentController.beginCompoundEdit();
 		// for copy & paste 
 		try {
 			String toInsert	= frag.getContent().getString(0, frag.getContent().getLength());
@@ -97,12 +98,15 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			updateKeyRef(toInsert);
 		} catch (BadLocationException e) {
 			logger.error(e, e);
+		} finally {
+			documentController.endCompoundEdit();
 		}
 	}
 	
 	@Override
 	public void surroundInFragment(AuthorDocumentFilterBypass filterBypass, AuthorDocumentFragment frag, int startOffset, int endOffset)
 			throws AuthorOperationException {
+		documentController.beginCompoundEdit();
 		//for wrapping selected text with key-xref element
 		try {
 			String toInsert	= frag.getContent().getString(0, frag.getContent().getLength());
@@ -115,15 +119,17 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			if (keyRef!= null) {
 				previousText = keyRef.getText();
 			}
-			documentController.beginCompoundEdit();
 			updateKeyRef(toInsert);
 		} catch (Exception e) {
 			logger.error(e, e);
+		} finally {
+			documentController.endCompoundEdit();
 		}
 	}
 	
 	@Override
 	public void insertText(AuthorDocumentFilterBypass filterBypass, int offset, String toInsert) {
+		documentController.beginCompoundEdit();
 		try {
 			checkConditions(offset);
 			
@@ -132,6 +138,8 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			updateKeyRef(toInsert);
 		} catch (Exception e) {
 			logger.error(e, e);
+		} finally {
+			documentController.endCompoundEdit();
 		}
 	}
 	
@@ -145,7 +153,6 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			if (keyRef!= null) {
 				previousText = keyRef.getText();
 			}
-			documentController.beginCompoundEdit();
 		} catch (Exception e) {
 			logger.error(e, e);
 		}
@@ -156,14 +163,14 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 			updateKeyRef(keyRef, keyRefElement, true, toInsert);			
 		}
 		reset();
-		documentController.endCompoundEdit();
 	}
 	
 	private void updateKeyRef(KeyRef keyRef, AuthorElement keyRefElement, boolean isInserted, String fragment) {
-		final KeyDefInterface 	keyDef 	= findUniqueKeyDef(keyRef, keyRefElement);
+		final List<KeyDefInterface> keyDefs = findMatchingKeyDefs(keyRef, keyRefElement);
 		String ref = null;
-		if (keyDef != null) {
-			ref = keyDef.getRefString();
+		//logger.info("matching keyDefs: " + keyDefs.size());
+		if (keyDefs.size() == 1) {
+			ref = keyDefs.get(0).getRefString();
 		} else {
 			String type = keyRef.getType();
 
@@ -179,18 +186,15 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 				delimiter = keyDefList.getKeyTypeDef(type).getPathDelimiter();
 			} 
 			
-			List<String>	invisibleNS = saveInvisibleNamespace(keyRef.getNamespaceList(), previousText);
-			List<String>	splitText	= splitText(keyRef.getText());
-			List<String> 	namespace 	= handleNamespace(invisibleNS, splitText);
-			String			key			= (splitText.isEmpty() ? "" : splitText.get(splitText.size() - 1));
+			final List<String>	invisibleNS = saveInvisibleNamespace(keyRef.getNamespaceList(), previousText);
+			final List<String>	splitText	= splitText(keyRef.getText());
+			final List<String> 	namespace 	= handleNamespace(invisibleNS, splitText);
+			final String		key			= "*";//(splitText.isEmpty() ? "" : splitText.get(splitText.size() - 1));
 			ref = KeyDef.createRefString(type, namespace, key);
 		}
 		
 		final AuthorDocumentController 	documentController 	= authorAccess.getDocumentController();
-		
-		documentController.beginCompoundEdit();
 		OxyUtil.setAttribute(documentController, keyRefElement, KeyRef.NAMESPACE_URI, KeyRef.NAMESPACE_PREFIX, KeyRef.ATTR_REF, ref);
-		documentController.endCompoundEdit();
 	}
 	
 	private List<String> splitText(String text) {
@@ -259,10 +263,10 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 		return namespace;
 	}
 
-	private KeyDefInterface findUniqueKeyDef(KeyRef keyRef, AuthorNode node) {
-		final BookCacheHandler 	cacheHandler 	= BookCacheHandler.getInstance();
-		final BookCache 		bookCache 		= cacheHandler.getBookCache(node.getXMLBaseURL());
-		KeyDefInterface 		matchingDef 	= null;
+	private List<KeyDefInterface> findMatchingKeyDefs(KeyRef keyRef, AuthorNode node) {
+		final BookCacheHandler 				cacheHandler 	= BookCacheHandler.getInstance();
+		final BookCache 					bookCache 		= cacheHandler.getBookCache(node.getXMLBaseURL());
+		final LinkedList<KeyDefInterface> 	matchingList	= new LinkedList<>();
 		
 		final List<String> 					namespace 	= keyRef.getNamespaceList();
 		final String						type		= keyRef.getType();
@@ -270,6 +274,7 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 		Collection<KeyDefInterface> 		keyDefList 	= null;
 		if (bookCache != null) {
 			keyDefList 	= bookCache.getKeyDefListByText(keyRef.getText());
+			//logger.info("findMatchingKeyDefs keyDefList-size: " + ((keyDefList != null) ? keyDefList.size() : 0));
 		}
 		
 		if ((keyDefList != null) && (!keyDefList.isEmpty())) {
@@ -289,17 +294,18 @@ public class DitaSemiaKeyRefEditListener extends AuthorDocumentFilter {
 					priority += (i * PRIORITY_MATCHING_NAMESPACE_ELEMENT);
 					
 					if (priority > maxPriority) {
-						matchingDef = k;
+						matchingList.clear();
+						matchingList.add(k);
 						maxPriority = priority;
 					} else if (priority == maxPriority) {
 						// ambiguous
-						matchingDef = null;
+						matchingList.add(k);
 					}
 					
 				}
 			}
 		}
-		return matchingDef;
+		return matchingList;
 	}
 	
 	private void reset() {

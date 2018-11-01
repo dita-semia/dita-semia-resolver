@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +27,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
 import org.DitaSemia.Base.ConbatResolver;
+import org.DitaSemia.Base.FileUtil;
 import org.DitaSemia.Base.Log4jErrorListener;
 import org.DitaSemia.Base.NodeWrapper;
 import org.DitaSemia.Base.SaxonDocumentBuilder;
@@ -129,8 +129,6 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	
 	protected URL					currentBaseUrl				= null;
 	
-	protected Set<String>			referencedKeyDefRefList		= new HashSet<>();
-	
 	protected URI					outDirUri					= null;
 	protected URI					tempDirUri					= null;
 	protected String				basedir						= null;
@@ -148,7 +146,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		//logger.info("job.getOutputDir(): " + job.getOutputDir());
 		outDirUri		= job.getOutputDir().toURI();
 		tempDirUri		= job.tempDir.toURI();
-		basedir			= input.getAttribute(ANT_INVOKER_PARAM_BASEDIR);
+		basedir			= FileUtil.encodeUrl(input.getAttribute(ANT_INVOKER_PARAM_BASEDIR));
 		outsourceSvg 	= (TRUE.equals(input.getAttribute(ANT_INVOKER_PARAM_OUTSOURCE_SVG)));
 		wrapCbaPh 		= (TRUE.equals(input.getAttribute(ANT_INVOKER_PARAM_WRAP_CBA_PH)));
 		
@@ -235,7 +233,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 		final Configuration extractConfiguration = new Configuration();
 		SaxonDocumentBuilder.makeConfigurationCompatible(extractConfiguration);
 		extractConfiguration.setURIResolver(CatalogUtils.getCatalogResolver());
-		extractConfiguration.registerExtensionFunction(new ResolveEmbeddedXPathDef());
+		BookCache.registerExtractTextExtensionFunctions(extractConfiguration, this);
 		final XslTransformerCache	extractTransformerCache = new XslTransformerCache(extractConfiguration);
 		
 		try {
@@ -265,7 +263,8 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 			
 			//logger.info("ditaOtUrl: " + ditaOtUrl);
 			//logger.info("Build bookCache for file: " + rootUrl);
-			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, documentBuilder, extractTransformerCache, false, ditaOtUrl, keyTypeDefListUrl, null, language);
+			//logger.info("rootUrl: " + rootUrl);
+			bookCache = new BookCache(rootUrl, configurationInitializer, xsltConrefCache, documentBuilder, extractTransformerCache, false, true, ditaOtUrl, keyTypeDefListUrl, null, language);
 			
 			//logger.info("  done! KeyDefs: " + documentCache.getKeyDefs().size());
 		} catch (MalformedURLException e) {
@@ -397,7 +396,9 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	}
 	
 	public void checkKeyRefExpected() {
-		Collection<KeyDefInterface> keyDefs = bookCache.getKeyDefs();
+		final Collection<KeyDefInterface> 	keyDefs 				= bookCache.getKeyDefs();
+		final Set<String>					referencedKeyDefRefList	= bookCache.getReferencedKeyDefRefList();
+		//logger.info("referencedKeyDefRefList size: " + referencedKeyDefRefList.size());
 		for (KeyDefInterface keyDef : keyDefs) {
 			if ((keyDef.isRefExpected()) && (!referencedKeyDefRefList.contains(keyDef.getRefString()))) {
 				final NodeWrapper 	node 	= bookCache.getNodeByLocation(keyDef.getDefLocation());
@@ -461,7 +462,7 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	@Override
 	public URL getBookCacheRootUrl(URL url) {
 		final String inputFileName 	= job.getInputFile().toString().replace(job.getInputDir().toString(), "");
-		final String inputPath		= basedir + "/" + inputFileName;
+		final String inputPath		= FileUtil.decodeUrl(basedir) + "/" + inputFileName;
 		try {
 			return new File(inputPath).toURI().toURL();
 		} catch (MalformedURLException e) {
@@ -483,12 +484,6 @@ public class DitaSemiaOtResolver extends AbstractPipelineModuleImpl implements B
 	public XsltConrefCache getXsltConrefCache() {
 		return xsltConrefCache;
 	}
-
-
-	public void notifyKeyDefReferenced(KeyDefInterface keyDef) {
-		referencedKeyDefRefList.add(keyDef.getRefString());
-	}
-
 
 	public URI getOutsourcedSvgUri(String filename) {
 		try {

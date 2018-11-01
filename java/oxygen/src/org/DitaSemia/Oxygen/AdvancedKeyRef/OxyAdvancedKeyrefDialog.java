@@ -52,11 +52,7 @@ public class OxyAdvancedKeyrefDialog extends AdvancedKeyrefDialog{
 		int[] colwidth = new int[5];
 		if (colwidthStr.length == 5) {
 			for (int i = 0; i < 5; i++) {
-				if (i == 0) {
-					colwidth[i] = 25;
-				} else {
-					colwidth[i] = Integer.parseInt(colwidthStr[i]);
-				}
+				colwidth[i] = Integer.parseInt(colwidthStr[i]);
 			}
 			return colwidth;
 		} else {

@@ -1,5 +1,5 @@
 <table xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="Table-DITA-conbat.xsd">
+	xsi:noNamespaceSchemaLocation="Table-DITA-conbat.xsd" xmlns:cba	= "http://www.dita-semia.org/conbat">
 	<name>Person</name>
 	<desc>List of all people.</desc>
 	<def>

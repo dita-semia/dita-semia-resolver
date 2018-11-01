@@ -22,6 +22,8 @@
 		<xsl:param name="indent"	as="xs:string"	select="$dxd:indent"/>
 		<xsl:param name="maxWidth"	as="xs:integer"	select="$dxd:maxWidth"/>
 		<xsl:param name="markup"	as="xs:boolean" select="$dxd:markup"/>
+		
+		<!--<xsl:message>resolve-codeblock base-uri: "<xsl:value-of select="$baseUri"/>"</xsl:message>-->
 
 		<xsl:variable name="uri"			as="xs:string?"			select="tokenize($coderef, '#')[1]"/>
 		<xsl:variable name="id"				as="xs:string?" 		select="tokenize($coderef, '#')[2]"/>
@@ -45,7 +47,8 @@
 			<xsl:otherwise>
 				<xsl:variable name="resolved" as="node()*">
 					<xsl:apply-templates select="$codeblock" mode="serialize">
-						<xsl:with-param name="single-indent"	select="$indent"/>
+						<xsl:with-param name="single-indent"	select="$indent"	tunnel="yes"/>
+						<xsl:with-param name="maxWidth"			select="$maxWidth"	tunnel="yes"/>
 					</xsl:apply-templates>
 				</xsl:variable>
 				<codeblock>
@@ -64,21 +67,18 @@
 	
 	
 	<xsl:template match="/list/codeblock" mode="serialize" as="node()*">
-		<xsl:param name="single-indent"	as="xs:string"/>
-		
 		<xsl:for-each select="*">
 			<xsl:if test="position() > 1">
 				<xsl:text>&#x0A;</xsl:text>
 			</xsl:if>
-			<xsl:apply-templates select="." mode="#current">
-				<xsl:with-param name="single-indent"	select="$single-indent"/>
-			</xsl:apply-templates>
+			<xsl:apply-templates select="." mode="#current"/>
 		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template match="element()" mode="serialize" as="node()*">
 		<xsl:param name="indent" 		as="xs:string?"/>
-		<xsl:param name="single-indent"	as="xs:string"/>
+		<xsl:param name="single-indent"	as="xs:string"	tunnel="yes"/>
+		<xsl:param name="maxWidth"		as="xs:integer"	tunnel="yes"/>
 		
 		<xsl:variable name="attributes" as="node()*">
 			<xsl:apply-templates select="attribute()" mode="#current"/> <!-- TODO: handle line breaks -->
@@ -87,14 +87,16 @@
 		<xsl:variable name="content" as="node()*">
 			<xsl:apply-templates select="node()" mode="#current">
 				<xsl:with-param name="indent" 			select="concat($indent, $single-indent)"/>
-				<xsl:with-param name="single-indent"	select="$single-indent"/>
 			</xsl:apply-templates>
 		</xsl:variable>	
 		
+		<xsl:variable name="indentLen" 		as="xs:integer" select="string-length($indent)"/>
 		<xsl:variable name="attributesLen" 	as="xs:integer" select="string-length(string-join($attributes//text(), ''))"/>
 		<xsl:variable name="contentLen" 	as="xs:integer" select="string-length(string-join($content//text(), ''))"/>
 
-		<xsl:variable name="singleLineWidth" as="xs:integer" select="(2 * string-length(name(.))) + 5 +  $attributesLen + $contentLen"/>
+		<xsl:variable name="singleLineWidth" as="xs:integer" select="$indentLen + (2 * string-length(name(.))) + 5 +  $attributesLen + $contentLen "/>
+		
+		<!--<xsl:message><xsl:value-of select="name()"/> - maxWidth: <xsl:value-of select="$maxWidth"/>, singleLineWidth: <xsl:value-of select="$singleLineWidth"/></xsl:message>-->
 		
 		<xsl:choose>
 			<xsl:when test="empty($content)">
@@ -107,8 +109,8 @@
 				</element>
 				
 			</xsl:when>
-			<xsl:when test="exists(element()) or exists($content/descendant-or-self::text()[contains(., '&#x0A;')]) or ($singleLineWidth gt $dxd:maxWidth)">
-				
+			<xsl:when test="exists(element()) or exists($content/descendant-or-self::text()[contains(., '&#x0A;')]) or ($singleLineWidth gt $maxWidth)">
+
 				<!-- content in seperate line(s) -->
 				
 				<element>

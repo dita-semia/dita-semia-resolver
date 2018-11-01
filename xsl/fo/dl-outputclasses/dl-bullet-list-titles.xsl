@@ -10,7 +10,7 @@
 	<xsl:variable name="DL_OUTPUTCLASS_BULLET_LIST_TITLES" as="xs:string">bullet-list-titles</xsl:variable>
 	
 	
-	<xsl:template match="*[contains(@class, ' topic/dl ')][@outputclass = $DL_OUTPUTCLASS_BULLET_LIST_TITLES]">
+	<xsl:template match="*[contains(@class, ' topic/dl ')][tokenize(@outputclass, '\s+') = $DL_OUTPUTCLASS_BULLET_LIST_TITLES]">
 		<fo:list-block xsl:use-attribute-sets="ul">
 			<xsl:call-template name="commonattributes"/>
 			<xsl:apply-templates mode="dl-bullet-list-titles"/>

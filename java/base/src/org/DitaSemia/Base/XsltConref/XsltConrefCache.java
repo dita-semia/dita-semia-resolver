@@ -14,6 +14,7 @@ import org.DitaSemia.Base.XPathCache;
 import org.DitaSemia.Base.XslTransformerCache;
 import org.DitaSemia.Base.XslTransformerCacheProvider;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetTypeNameDef;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.AncestorPathDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetAncestorKeyDefDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetDisplaySuffixDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetIsDontLinkDef;
@@ -24,6 +25,7 @@ import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetIsResourceOnlyDef
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefByRefStringDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefByTypeNameDef;
+import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyDefFromNodeDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyFilterAttrDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetKeyTypeDefDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetLocationDef;
@@ -34,9 +36,12 @@ import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetRefStringDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetRootDef;
 import org.DitaSemia.Base.AdvancedKeyref.ExtensionFunctions.GetTypeDefDef;
 import org.DitaSemia.Base.DocumentCaching.BookCacheProvider;
-import org.DitaSemia.Base.DocumentCaching.GetChildTopicsDef;
 import org.DitaSemia.Base.ExtensionFunctions.EvaluateXPathDef;
 import org.DitaSemia.Base.ExtensionFunctions.ExecuteXsltDef;
+import org.DitaSemia.Base.ExtensionFunctions.ExtractContentTextDef;
+import org.DitaSemia.Base.ExtensionFunctions.ExtractTextDef;
+import org.DitaSemia.Base.ExtensionFunctions.GetChildTopicsDef;
+import org.DitaSemia.Base.ExtensionFunctions.GetElementByHrefDef;
 import org.DitaSemia.Base.ExtensionFunctions.GetTextWidthDef;
 import org.DitaSemia.Base.ExtensionFunctions.GetTopicNumDef;
 import org.DitaSemia.Base.ExtensionFunctions.HyphenateWordDef;
@@ -112,11 +117,15 @@ public class XsltConrefCache implements XslTransformerCacheProvider {
 		configuration.registerExtensionFunction(new ResolveEmbeddedXPathDef());
 		configuration.registerExtensionFunction(new ExecuteXsltDef(documentBuilder));
 		configuration.registerExtensionFunction(new LoadXmlFileDef(documentBuilder));
+		configuration.registerExtensionFunction(new GetElementByHrefDef(bookCacheProvider));
+		configuration.registerExtensionFunction(new ExtractTextDef(xslTransformerCacheProvider));
+		configuration.registerExtensionFunction(new ExtractContentTextDef(xslTransformerCacheProvider));
 		
 		// advanced-keyref
 		configuration.registerExtensionFunction(new GetAncestorKeyDefDef(bookCacheProvider));
 		configuration.registerExtensionFunction(new GetMatchingKeyDefsDef(bookCacheProvider));
 		configuration.registerExtensionFunction(new GetKeyDefByRefStringDef(bookCacheProvider));
+		//configuration.registerExtensionFunction(new GetKeyDefFromNodeDef(bookCacheProvider));
 		configuration.registerExtensionFunction(new GetKeyTypeDefDef(bookCacheProvider));
 		configuration.registerExtensionFunction(new GetDisplaySuffixDef(bookCacheProvider));
 		

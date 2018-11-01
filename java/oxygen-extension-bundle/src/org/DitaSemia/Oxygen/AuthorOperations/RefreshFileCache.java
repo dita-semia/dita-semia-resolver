@@ -31,7 +31,7 @@ public class RefreshFileCache implements AuthorOperation {
 			final AuthorNode				rootNode			= documentController.getNodeAtOffset(0);
 			final URL						fileUrl				= rootNode.getXMLBaseURL();
 	
-			BookCacheHandler.getInstance().refreshFileCache(fileUrl);;
+			BookCacheHandler.getInstance().refreshFileCache(fileUrl);
 
 		} catch (Exception e) {
 			logger.error(e, e);

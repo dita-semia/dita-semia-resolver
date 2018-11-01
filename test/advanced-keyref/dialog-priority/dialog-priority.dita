@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic id="topic_qrs_rb1_ww" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ikd="http://www.dita-semia.org/implicit-keydef"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:advanced-keyref:schema:advanced-keyref-topic.xsd" xmlns:akr="http://www.dita-semia.org/advanced-keyref">
+	<title>Dialog Priority</title>
+	<body>
+		<section id="ONY-JNY-B2B">
+			<title>Definitions</title>
+			<p ikd:key-type="test" ikd:namespace="('a', 'b')" id="YVV-22D-B2B">Test</p>
+			<p id="W1K-4XS-S1B" ikd:key-type="test" ikd:namespace="('a', 'b', 'c')">Test</p>
+			<p ikd:key-type="test" ikd:namespace="('a', 'c')" id="UWG-KJC-B2B">Test</p>
+			<p ikd:key-type="test" ikd:namespace="('a', 'b')" id="LYR-LNY-B2B">1</p>
+			<p ikd:key-type="test" ikd:namespace="('a', 'b')" id="ERV-MNY-B2B">2</p>
+			<p ikd:key-type="test" ikd:namespace="('x', 'y')" id="M5C-NNY-B2B">1</p>
+			<p ikd:key-type="test" ikd:namespace="('x', 'y')" id="IJM-4NY-B2B">2</p>
+		</section>
+		<section id="RQW-KNY-B2B">
+			<title>References</title>
+			<p id="TDY-4BS-S1B"><key-xref akr:ref="*:c/Test">c/Test</key-xref></p>
+			<p id="NGH-PNY-B2B"><key-xref akr:ref="*:*">1</key-xref></p>
+		</section>
+	</body>
+</topic>

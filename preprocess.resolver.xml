@@ -21,6 +21,7 @@
 						<param name="basedir" 				expression="${basedir}"/>
 					</module>
 				</pipeline>
+				<!--<fail>abort for debugging</fail>-->
 			</then>
 			<else>
 				<echo message="skipped (needs to be activated by parameter dita-semia.resolver.activate)"/>

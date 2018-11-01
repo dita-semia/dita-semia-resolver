@@ -2,6 +2,8 @@ package org.DitaSemia.Oxygen.AuthorOperations;
 
 import java.awt.Component;
 import java.awt.Frame;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -10,6 +12,9 @@ import org.DitaSemia.Oxygen.OxyUtil;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Base.AdvancedKeyref.KeyPrioritizer;
 import org.DitaSemia.Base.AdvancedKeyref.KeyRef;
+import org.DitaSemia.Base.AdvancedKeyref.KeyRefInterface;
+import org.DitaSemia.Base.AdvancedKeyref.KeyspecInterface;
+import org.DitaSemia.Base.AdvancedKeyref.RefBasedKeyspec;
 import org.DitaSemia.Base.DocumentCaching.BookCache;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.AdvancedKeyRef.OxyAdvancedKeyrefDialog;
@@ -27,6 +32,9 @@ import ro.sync.ecss.extensions.api.node.AuthorNode;
 public class EditKeyRef implements AuthorOperation {
 
 	private static final Logger logger = Logger.getLogger(EditKeyRef.class.getName());
+	
+	public static final int MAX_HISTORY_SIZE	= 10;
+	protected static LinkedList<KeyspecInterface> historyList = new LinkedList<>();
 	
 	@Override
 	public String getDescription() {
@@ -47,7 +55,7 @@ public class EditKeyRef implements AuthorOperation {
 				//final KeyDefListInterface 		keyDefList 			= BookCacheHandler.getInstance().getBookCache(nodeAtCaret.getXMLBaseURL());
 				final KeyRef 					keyRef 				= KeyRef.fromNode(new AuthorNodeWrapper(nodeAtCaret, authorAccess));
 				final KeyDefInterface			contextKeyDef		= bookCache.getAncestorKeyDef(new AuthorNodeWrapper(nodeAtCaret, authorAccess), null);
-				final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(bookCache, keyRef, null, null);
+				final KeyPrioritizer			keyPrioritizer		= new KeyPrioritizer(bookCache, keyRef, null, null, historyList);
 			
 				final OxyAdvancedKeyrefDialog 	editKeyRefDialog 	= new OxyAdvancedKeyrefDialog((Frame)authorAccess.getWorkspaceAccess().getParentFrame(), bookCache, keyRef, contextKeyDef, keyPrioritizer);
 	
@@ -82,6 +90,17 @@ public class EditKeyRef implements AuthorOperation {
 					documentController.endCompoundEdit();
 					
 					authorAccess.getEditorAccess().refresh(nodeAtCaret);
+					
+					final RefBasedKeyspec keyspec = new RefBasedKeyspec(keyDef.getRefString());
+					historyList.remove(keyspec);
+					historyList.addFirst(keyspec);
+					if (historyList.size() > MAX_HISTORY_SIZE) {
+						historyList.removeLast();
+					}
+					//logger.info("historyList: ");
+					//for (KeyspecInterface key : historyList) {
+					//	logger.info("  - " + key.getRefString());
+					//}
 				}
 			}
 			

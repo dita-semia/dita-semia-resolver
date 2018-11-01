@@ -2,7 +2,7 @@ package org.DitaSemia.Base.ExtensionFunctions;
 
 
 import org.DitaSemia.Base.DitaUtil;
-import org.DitaSemia.Base.XslTransformerCache;
+import org.DitaSemia.Base.XslTransformerCacheProvider;
 
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -13,10 +13,10 @@ public class ExtractTextDef extends ExtensionFunctionDefinition {
 	
 	public static final String LOCAL_NAME	= "extractText"; 
 
-	protected final XslTransformerCache transformerCache;
+	protected final XslTransformerCacheProvider xslTransformerCacheProvider;
 	
-	public ExtractTextDef(XslTransformerCache transformerCache) {
-		this.transformerCache = transformerCache;
+	public ExtractTextDef(XslTransformerCacheProvider xslTransformerCacheProvider) {
+		this.xslTransformerCacheProvider = xslTransformerCacheProvider;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class ExtractTextDef extends ExtensionFunctionDefinition {
 
 	@Override
 	public ExtensionFunctionCall makeCallExpression() {
-		return new ExtractTextCall(transformerCache);
+		return new ExtractTextCall(xslTransformerCacheProvider);
 	}
 
 }

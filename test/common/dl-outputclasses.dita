@@ -2,7 +2,7 @@
 <topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:dita-semia:schema:dita-semia-topic.xsd" id="gh2_vhd_xt">
 	<title><codeph>dl</codeph> Outputclasses</title>
 	<body>
-		<section>
+		<!--<section>
 			<title>Standard Layout</title>
 			<p>Outputclass: &lt;empty></p>
 			<dl>
@@ -80,7 +80,7 @@
 					<dd>Description of 3rd term.</dd>
 				</dlentry>
 			</dl>
-		</section>
+		</section>-->
 		<section>
 			<title>Table</title>
 			<p>Outputclass: <codeph>table</codeph></p>
@@ -89,7 +89,7 @@
 					<dthd>Term</dthd>
 					<ddhd>Data</ddhd>
 				</dlhead>
-				<dlentry>
+				<dlentry status="new">
 					<dt>Term 1</dt>
 					<dd>Description of 1st term.</dd>
 				</dlentry>
@@ -134,7 +134,7 @@
 				</tgroup>
 			</table>
 		</section>
-		<section id="p4p_2ht_1y">
+		<!--<section id="p4p_2ht_1y">
 			<title>Header Table</title>
 			<p id="q4p_2ht_1y">Outputclass: <codeph>header-table</codeph></p>
 			<dl outputclass="header-table">
@@ -209,6 +209,6 @@
 					</dlentry>
 				</dlentry>
 			</dl>
-		</section>
+		</section>-->
 	</body>
 </topic>

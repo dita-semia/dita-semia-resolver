@@ -204,17 +204,50 @@ public class OxyXPathHandler {
 				String funcName = xPath.get(0).toString();
 				CustomFunction customFunction = customFunctionMap.get(funcName);
 				if (customFunction != null) {
-					final List<String> arguments = new ArrayList<>();
+					final ArgumentType[] argumentTypes = customFunction.getArgumentTypes();
+					
+					final List<Argument> arguments = new ArrayList<>();
+					int index = 0;
 					for (XPathToken t : xPath) {
-						if (t.getType() == XPathToken.Type.STRING_CONSTANT) {
-							arguments.add(((StringConstant)t).getStringValue());
-						} else if (t.getType() == XPathToken.Type.EXPRESSION) {
-							arguments.add(context.evaluateXPathToString(t.toString()));
+						if ((t.getType() == XPathToken.Type.IDENTIFIER) || 
+								  (t.getType() == XPathToken.Type.COMMA) || 
+								  (t.getType() == XPathToken.Type.LEFT_BRACE) ||
+								  (t.getType() == XPathToken.Type.RIGHT_BRACE)) {
+							// ignore
+						} else {
+							if (index >= argumentTypes.length) {
+								throw new XPathException("Too many arguments for custom Function '" + funcName + "'. " + 
+										"Expected " + argumentTypes.length + " argument(s).");
+							}
+							final ArgumentType argumentType = argumentTypes[index];
+							if (t.getType() == XPathToken.Type.STRING_CONSTANT) {
+								final String string = ((StringConstant)t).getStringValue();
+								if (argumentType == ArgumentType.STRING) {
+									arguments.add(new Argument(string));
+								} else if (argumentType == ArgumentType.STRING_LIST) {
+									final List<String> list = new ArrayList<>();
+									list.add(string);
+									arguments.add(new Argument(list));
+								} else {
+									throw new XPathException("Wrong argument type for custom function '" + funcName + "'. " + 
+											"String constant '" + string + "' cannot be convertedt to expected node.");
+								}
+							} else if (t.getType() == XPathToken.Type.EXPRESSION) {
+								if (argumentType == ArgumentType.STRING) {
+									arguments.add(new Argument(context.evaluateXPathToString(t.toString())));
+								} else if (argumentType == ArgumentType.STRING_LIST) {
+									arguments.add(new Argument(context.evaluateXPathToStringList(t.toString())));
+								} else {
+									final AuthorNodeWrapper node = (AuthorNodeWrapper)context.evaluateXPathToNode(t.toString());
+									arguments.add(new Argument(node));
+								}
+							}
+							++index;
 						}
 					}
-					if (customFunction.getArgCount() != arguments.size()) {
-						throw new XPathException("Invalid number of arguments for custom Function '" + funcName + "'. " + 
-								"Expected " + customFunction.getArgCount() + " argument(s).");
+					if (argumentTypes.length != arguments.size()) {
+						throw new XPathException("Too few arguments for custom Function '" + funcName + "'. " + 
+								"Expected " + argumentTypes.length + " argument(s).");
 					}
 					String result = customFunction.evaluate(arguments, context);
 					return result;
@@ -227,12 +260,44 @@ public class OxyXPathHandler {
 		}
 		return expression;
 	}
+	
+	public enum ArgumentType {
+		STRING, STRING_LIST, NODE
+	};
 
 	public static interface CustomFunction {
 		String getName();
 
-		String evaluate(List<String> arguments, AuthorNodeWrapper context);
+		String evaluate(List<Argument> arguments, AuthorNodeWrapper context);
+
+		ArgumentType[] getArgumentTypes();
+	}
+	
+	public static class Argument {
+		public final ArgumentType		type;
+		public final String 			string;
+		public final List<String> 		stringList;
+		public final AuthorNodeWrapper	node;
 		
-		int getArgCount();
+		public Argument(String string) {
+			this.type		= ArgumentType.STRING;
+			this.string 	= string;
+			this.stringList	= null;
+			this.node		= null;		
+		}
+		
+		public Argument(List<String> stringList) {
+			this.type		= ArgumentType.STRING_LIST;
+			this.string 	= null;
+			this.stringList	= stringList;
+			this.node		= null;		
+		}
+		
+		public Argument(AuthorNodeWrapper node) {
+			this.type		= ArgumentType.NODE;
+			this.string	 	= null;
+			this.stringList	= null;
+			this.node		= node;		
+		}
 	}
 }

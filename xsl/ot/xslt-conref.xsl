@@ -7,7 +7,7 @@
 	xmlns:xcrp	= "http://www.dita-semia.org/xslt-conref/custom-parameter"
 	exclude-result-prefixes		= "#all">
     
-    <xsl:template match="*[@xcr:xsl]" mode="resolve-xcr">
+    <xsl:template match="*[@xcr:xsl]" mode="resolve-xcr" priority="10">
     	<xsl:choose>
     		<xsl:when test="tokenize(@xcr:flags, '\s+') = 'copy'">
     			<xsl:copy>

@@ -680,7 +680,7 @@ public class FileCache extends TopicRefContainer implements NeedsInit {
 	}
 
 	private TopicRef parseTopicRef(NodeWrapper nodeWrapper, String classAttr, TopicRefContainer parentTopicRefContainer) throws TransformerException {
-		//logger.info("parseTopicRef");
+		//logger.info("parseTopicRef  - element: " + nodeWrapper.getName() + ", href: '" + nodeWrapper.getAttribute(DitaUtil.ATTR_HREF, null) + "'");
 		TopicRef topicRef = null;
 		if ((classAttr.contains(DitaUtil.CLASS_TOPIC_REF)) || (classAttr.contains(DitaUtil.CLASS_IMPORT))) {
 			FileCache refFile = null;

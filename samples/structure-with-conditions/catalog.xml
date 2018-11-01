@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	
+	<uri name="urn:dita-semia:structure-with-conditions:structure.xsd" 					uri="structure.xsd"/>
+	<uri name="urn:dita-semia:structure-with-conditions:structure-without-cba.xsd" 		uri="structure-without-cba.xsd"/>
+	<uri name="urn:dita-semia:structure-with-conditions:structure-with-keys.xsd" 		uri="structure-with-keys.xsd"/>
+	<uri name="urn:dita-semia:structure-with-conditions:structure-with-properties.xsd" 	uri="structure-with-properties.xsd"/>
+	
+	<system systemId="urn:dita-semia:structure-with-conditions:structure.xsd" 					uri="structure.xsd"/>
+	<system systemId="urn:dita-semia:structure-with-conditions:structure-without-cba.xsd" 		uri="structure-without-cba.xsd"/>
+	<system systemId="urn:dita-semia:structure-with-conditions:structure-with-keys.xsd" 		uri="structure-with-keys.xsd"/>
+	<system systemId="urn:dita-semia:structure-with-conditions:structure-with-properties.xsd" 	uri="structure-with-properties.xsd"/>
+	
+</catalog>

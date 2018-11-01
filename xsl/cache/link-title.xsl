@@ -11,16 +11,20 @@
 	<xsl:include href="../cba-const.xsl"/>
 
 
-	<xsl:template match="*[contains(@class, $C_BOOKMAP)]" priority="4">
-		<xsl:variable name="mainTitle" as="xs:string?" select="normalize-space(ds:extractText(*[contains(@class, $C_TITLE)]/*[contains(@class, $C_MAINBOOKTITLE)]))"/>
+	<xsl:template match="*[contains(@class, $C_BOOKMAP)]" priority="5">
+		<xsl:variable name="mainTitle" as="xs:string?" select="normalize-space(ds:extractTextFromNode(*[contains(@class, $C_TITLE)]/*[contains(@class, $C_MAINBOOKTITLE)]))"/>
 		<xsl:choose>
 			<xsl:when test="string($mainTitle) != ''">
 				<xsl:sequence select="$mainTitle"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:sequence select="normalize-space(ds:extractText(*[contains(@class, $C_TITLE)]))"/>
+				<xsl:sequence select="normalize-space(ds:extractTextFromNode(*[contains(@class, $C_TITLE)]))"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="*[@conref]" priority="4">
+		<xsl:apply-templates select="ds:getElementByHref(@conref, base-uri(.))"/>
 	</xsl:template>
 
 	<xsl:template match="*[contains(@class, $C_DL)][@outputclass = 'numbered-list-titles']/* | 
@@ -31,14 +35,14 @@
 		<xsl:variable name="number" as="xs:integer" select="count(preceding-sibling::*) + 1"/>
 		<xsl:value-of select="string-join((concat($number, '.'), $title), ' ')"/>
 	</xsl:template>
-
+	
 	<xsl:template match="*[*[contains(@class, $C_TITLE)]]" priority="2">
-		<xsl:sequence select="normalize-space(ds:extractText(*[contains(@class, $C_TITLE)]))"/>
+		<xsl:sequence select="normalize-space(ds:extractTextFromNode(*[contains(@class, $C_TITLE)]))"/>
 	</xsl:template>
 	
 	
 	<xsl:template match="*[*[contains(@class, $C_DT)]]" priority="2">
-		<xsl:sequence select="normalize-space(ds:extractText(*[contains(@class, $C_DT)]))"/>
+		<xsl:sequence select="normalize-space(ds:extractTextFromNode(*[contains(@class, $C_DT)]))"/>
 	</xsl:template>
 	
 	
@@ -59,6 +63,12 @@
 		<xsl:param name="text" 		as="xs:string"/>
 		<xsl:param name="context" 	as="node()"/>
 		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:resolveEmbeddedXPath' not registered.</xsl:message>
+	</xsl:function>
+	
+	<xsl:function name="ds:getElementByHref" as="document-node()?" use-when="not(function-available('ds:getElementByHref'))">
+		<xsl:param name="href" 		as="xs:string"/>
+		<xsl:param name="baseUrl" 	as="xs:anyURI"/>
+		<xsl:message terminate="yes">ERROR: Custom extension function 'ds:getElementByHref' not registered.</xsl:message>
 	</xsl:function>
 	
 </xsl:stylesheet>

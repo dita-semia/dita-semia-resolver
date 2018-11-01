@@ -20,7 +20,7 @@ public class GetAncestorKeyDefDef extends ExtensionFunctionDefinition {
 
 	@Override
 		public SequenceType[] getArgumentTypes() {
-			SequenceType[] sequenceType = {SequenceType.SINGLE_NODE, SequenceType.SINGLE_STRING};
+			SequenceType[] sequenceType = {SequenceType.SINGLE_NODE, SequenceType.STRING_SEQUENCE};
 			return sequenceType;
 	}
 

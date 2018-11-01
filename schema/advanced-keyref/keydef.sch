@@ -28,12 +28,12 @@
 			<sch:let name="refNode"			value="if (exists($refNodeAttr)) 	then jsu:evaluateXPathToNode($rootNode, $refNodeAttr) else $rootNode"/>
 			<sch:let name="defError"		value="if (exists($jKeyDef)) 		then jikd:getDefErrorMessage($jKeyDef) else ()"/>
 
-			<sch:let name="namespaceError"	value="if (empty($jKeyDef)) then jikd:getXPathListErrorMessage(., $namespaceAttr) 		else ()"/>
-			<sch:let name="rootError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage(., 			$rootAttr) 		else ()"/>
-			<sch:let name="refNodeError"	value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($rootNode, 	$refNodeAttr) 	else ()"/>
-			<sch:let name="nameError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode,	$nameAttr) 		else ()"/>
-			<sch:let name="descError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode, 	$descAttr) 		else ()"/>
-			<sch:let name="keyError"		value="if (empty($jKeyDef)) then jikd:getXPathErrorMessage($refNode, 	$keyAttr) 		else ()"/>
+			<sch:let name="namespaceError"	value="if (empty($jKeyDef)) 						then jikd:getXPathListErrorMessage(., $namespaceAttr) 		else ()"/>
+			<sch:let name="rootError"		value="if (empty($jKeyDef)) 						then jikd:getXPathErrorMessage(., 			$rootAttr) 		else ()"/>
+			<sch:let name="refNodeError" 	value="if (empty($jKeyDef) and exists($rootNode)) 	then jikd:getXPathErrorMessage($rootNode,  	$refNodeAttr)  	else ()"/>
+			<sch:let name="nameError" 		value="if (empty($jKeyDef) and exists($refNode)) 	then jikd:getXPathErrorMessage($refNode, 	$nameAttr)   	else ()"/>
+			<sch:let name="descError" 		value="if (empty($jKeyDef) and exists($refNode)) 	then jikd:getXPathErrorMessage($refNode,  	$descAttr)   	else ()"/>
+			<sch:let name="keyError" 		value="if (empty($jKeyDef) and exists($refNode)) 	then jikd:getXPathErrorMessage($refNode,  	$keyAttr)   	else ()"/>
 			
 			<sch:report test="exists($rootError)">
 				Invalid value for @ikd:root. It must be empty or a valid XPath: <sch:value-of select="$rootError"/> 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:dita-semia:schema:dita-semia-topic.xsd" id="gh2_vhd_xt">
+	<title>xref on conref</title>
+	<body>
+		<p id="A15-BRS-B2B">xref on local conref: <xref href="#id_ibl_1rs_b2b" format="dita"/></p>
+		<p id="LP5-CRS-B2B">xref on local original: <xref href="#ULC-4QS-B2B" format="dita"/></p>
+		<p>xref on extern conref: <xref href="#id_fwk_4ys_b2b" format="dita"/></p>
+		<p>xref on extern original: <xref href="extern.dita#ULC-4QS-B2B"/></p>
+	</body>
+	<topic id="id_ibl_1rs_b2b" conref="#ULC-4QS-B2B">
+		<title/>
+	</topic>
+	<topic id="id_fwk_4ys_b2b" conref="extern.dita#ULC-4QS-B2B">
+		<title/>
+	</topic>
+	<topic id="ULC-4QS-B2B">
+		<title>Target</title>
+		<body>
+			<p id="HHW-ZQS-B2B">Content</p>
+		</body>
+	</topic>
+</topic>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="audience.css"?>
+<structure xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cba="http://www.dita-semia.org/conbat"
+	xsi:noNamespaceSchemaLocation="urn:dita-semia:structure-with-conditions:structure-with-properties.xsd" id="SVT-FRR-GFB">
+	<title>
+		<key>Person</key>
+	</title>
+	<body>
+		<properties>
+			<validation>Yes</validation>
+			<class>libStructurePerson.so</class>
+		</properties>
+		<elements>
+			<elementList>
+				<element>
+					<name>
+						<field>Name</field>
+					</name>
+					<description>
+						<p>Name of the person</p>
+					</description>
+				</element>
+				<element>
+					<name>
+						<field>TypeOfPerson</field>
+					</name>
+					<description>
+						<p>Type of the person:</p>
+						<enumList>
+							<enum>
+								<key>1</key>
+								<name>Natural person</name>
+							</enum>
+							<enum>
+								<key>2</key>
+								<name>Juristic person</name>
+							</enum>
+						</enumList>
+					</description>
+				</element>
+				<element>
+					<name>
+						<field>DateOfBirth</field>
+					</name>
+					<description>
+						<p>Date of birth of a natural person</p>
+					</description>
+				</element>
+			</elementList>
+		</elements>
+		<conditions>
+			<conditionList>
+				<condition>
+					<name>Person.001</name>
+					<description>
+						<fieldDefinition>
+							<field>TypeOfPerson</field>
+						</fieldDefinition>
+					</description>
+				</condition>
+				<condition>
+					<name>Person.002</name>
+					<description>
+						<ifThen>
+							<if>
+								<fieldValue>
+									<field>TypeOfPerson</field>
+									<value>1</value>
+								</fieldValue>
+							</if>
+							<then>
+								<elementNotEmpty>DateOfBirth</elementNotEmpty>
+							</then>
+						</ifThen>
+					</description>
+				</condition>
+			</conditionList>
+		</conditions>
+	</body>
+</structure>

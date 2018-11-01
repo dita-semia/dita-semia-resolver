@@ -20,7 +20,7 @@ public class AncestorPathDef extends ExtensionFunctionDefinition {
 	
 	@Override
 		public SequenceType[] getArgumentTypes() {
-			SequenceType[] sequenceType = {SequenceType.SINGLE_STRING};
+			SequenceType[] sequenceType = {SequenceType.STRING_SEQUENCE};
 			return sequenceType;
 	}
 

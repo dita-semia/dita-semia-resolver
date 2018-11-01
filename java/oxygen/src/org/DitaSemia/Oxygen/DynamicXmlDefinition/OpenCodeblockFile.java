@@ -21,6 +21,7 @@ import org.DitaSemia.Base.AdvancedKeyref.KeyDef;
 import org.DitaSemia.Base.AdvancedKeyref.KeyDefInterface;
 import org.DitaSemia.Oxygen.AuthorNodeWrapper;
 import org.DitaSemia.Oxygen.BookCacheHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Attr;
@@ -187,7 +188,10 @@ public class OpenCodeblockFile implements AuthorOperation {
 	
 	
 	protected void createNewCodeFile(URL url, AuthorNode dxdCodeblockNode, AuthorAccess authorAccess, String rootType, String rootName) throws FileNotFoundException {
-		final PrintWriter writer = new PrintWriter(url.getFile());
+		final String 		filename	= FileUtil.decodeUrl(url.getFile());
+		//logger.info("url: " + url);
+		//logger.info("filename: " + filename);
+		final PrintWriter 	writer 		= new PrintWriter(filename);
 		
 		writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		writer.println("<list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
